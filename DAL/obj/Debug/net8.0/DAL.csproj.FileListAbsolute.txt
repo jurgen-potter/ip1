@@ -1,0 +1,16 @@
+C:\.net\Development\DAL\bin\Debug\net8.0\CitizenPanel.DAL.deps.json
+C:\.net\Development\DAL\bin\Debug\net8.0\CitizenPanel.DAL.dll
+C:\.net\Development\DAL\bin\Debug\net8.0\CitizenPanel.DAL.pdb
+C:\.net\Development\DAL\bin\Debug\net8.0\CitizenPanel.BL.Domain.dll
+C:\.net\Development\DAL\bin\Debug\net8.0\CitizenPanel.BL.Domain.pdb
+C:\.net\Development\DAL\obj\Debug\net8.0\DAL.csproj.AssemblyReference.cache
+C:\.net\Development\DAL\obj\Debug\net8.0\DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\.net\Development\DAL\obj\Debug\net8.0\DAL.AssemblyInfoInputs.cache
+C:\.net\Development\DAL\obj\Debug\net8.0\DAL.AssemblyInfo.cs
+C:\.net\Development\DAL\obj\Debug\net8.0\DAL.csproj.CoreCompileInputs.cache
+C:\.net\Development\DAL\obj\Debug\net8.0\DAL.sourcelink.json
+C:\.net\Development\DAL\obj\Debug\net8.0\DAL.csproj.Up2Date
+C:\.net\Development\DAL\obj\Debug\net8.0\CitizenPanel.DAL.dll
+C:\.net\Development\DAL\obj\Debug\net8.0\refint\CitizenPanel.DAL.dll
+C:\.net\Development\DAL\obj\Debug\net8.0\CitizenPanel.DAL.pdb
+C:\.net\Development\DAL\obj\Debug\net8.0\ref\CitizenPanel.DAL.dll

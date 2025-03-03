@@ -1,0 +1,12 @@
+C:\.net\Development\Domain\bin\Debug\net8.0\CitizenPanel.BL.Domain.deps.json
+C:\.net\Development\Domain\bin\Debug\net8.0\CitizenPanel.BL.Domain.dll
+C:\.net\Development\Domain\bin\Debug\net8.0\CitizenPanel.BL.Domain.pdb
+C:\.net\Development\Domain\obj\Debug\net8.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\.net\Development\Domain\obj\Debug\net8.0\Domain.AssemblyInfoInputs.cache
+C:\.net\Development\Domain\obj\Debug\net8.0\Domain.AssemblyInfo.cs
+C:\.net\Development\Domain\obj\Debug\net8.0\Domain.csproj.CoreCompileInputs.cache
+C:\.net\Development\Domain\obj\Debug\net8.0\Domain.sourcelink.json
+C:\.net\Development\Domain\obj\Debug\net8.0\CitizenPanel.BL.Domain.dll
+C:\.net\Development\Domain\obj\Debug\net8.0\refint\CitizenPanel.BL.Domain.dll
+C:\.net\Development\Domain\obj\Debug\net8.0\CitizenPanel.BL.Domain.pdb
+C:\.net\Development\Domain\obj\Debug\net8.0\ref\CitizenPanel.BL.Domain.dll
