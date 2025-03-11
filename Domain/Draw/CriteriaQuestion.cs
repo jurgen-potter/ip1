@@ -2,5 +2,5 @@
 
 public class CriteriaQuestion
 {
-    
+    public string Question { get; set; }
 }

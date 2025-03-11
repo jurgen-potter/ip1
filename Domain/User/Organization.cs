@@ -2,5 +2,5 @@
 
 public class Organization : User
 {
-    
+    public PanelRoles Roles { get; set; }
 }

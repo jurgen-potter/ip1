@@ -1,6 +1,6 @@
 ﻿namespace CitizenPanel.BL.Domain.Question;
 
-public enum QuestionType : byte
+public enum QuestionnaireType : byte
 {
     AmbitionQuestionnaire = 0,
     PanelQuestionnaire

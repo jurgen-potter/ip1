@@ -2,5 +2,5 @@
 
 public class Recommendation
 {
-    
+    public string Description { get; set; }
 }

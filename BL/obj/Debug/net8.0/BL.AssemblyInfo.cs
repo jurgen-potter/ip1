@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CitizenPanel.BL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+561881c9aaf6df58d38ce1e4b46e8e3f59f8ae9d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb869129a823432b37d81e48075a06594b0b7292")]
 [assembly: System.Reflection.AssemblyProductAttribute("CitizenPanel.BL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CitizenPanel.BL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

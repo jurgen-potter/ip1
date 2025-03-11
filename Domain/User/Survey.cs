@@ -2,5 +2,5 @@
 
 public class Survey
 {
-    
+    public string Text { get; set; }
 }

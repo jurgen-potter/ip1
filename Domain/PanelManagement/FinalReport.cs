@@ -2,5 +2,5 @@
 
 public class FinalReport
 {
-    
+    public string DocumentRef { get; set; }
 }

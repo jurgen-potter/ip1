@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.AspNetCore.Identity.UI.UIFrameworkAttribute("Bootstrap5")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("CitizenPanel.UI.MVC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+561881c9aaf6df58d38ce1e4b46e8e3f59f8ae9d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb869129a823432b37d81e48075a06594b0b7292")]
 [assembly: System.Reflection.AssemblyProductAttribute("CitizenPanel.UI.MVC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CitizenPanel.UI.MVC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

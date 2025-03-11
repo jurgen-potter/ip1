@@ -2,5 +2,6 @@
 
 public class Question
 {
-    
+    public string QuestionText { get; set; }
+    public int Weight { get; set; }
 }
