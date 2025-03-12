@@ -1,0 +1,31 @@
+﻿@model CitizenPanel.BL.Domain.Recruitment.RecruitmentResult
+
+<h2>Benodigde Panelleden</h2>
+
+<h3>Gender</h3>
+<ul>
+    <li><strong>Mannen:</strong> @Model.MaleCount</li>
+    <li><strong>Vrouwen:</strong> @Model.FemaleCount</li>
+</ul>
+
+<h3>Leeftijd</h3>
+<ul>
+    <li><strong>18-25:</strong> @Model.Age18_25Count</li>
+    <li><strong>26-40:</strong> @Model.Age26_40Count</li>
+    <li><strong>41-60:</strong> @Model.Age41_60Count</li>
+    <li><strong>60+:</strong> @Model.Age60PlusCount</li>
+</ul>
+
+@foreach (var category in Model.ExtraCriteriaResults)
+{
+    <h3>@category.Name</h3>
+    <!-- Dit is bijvoorbeeld 'Transport' of 'Eetgewoonten' -->
+    <ul>
+        @foreach (var sub in category.SubResults)
+        {
+            <li><strong>@sub.Name:</strong> @sub.Count</li>
+            <!-- Subcategorieën zoals OV, Te voet -->
+        }
+    </ul>
+}
+<a href="@Url.Action("Index", "Recruitment")" class="btn btn-secondary">Nieuwe Berekening</a>

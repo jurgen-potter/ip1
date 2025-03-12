@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CitizenPanel.BL.Domain.Recruitment.RecruitmentCriteria
+
+<h2>Demografische Invoer</h2>
+
+<form asp-action="Calculate" method="post">
+    <label>Aantal inwooners gemeente:</label>
+    <input asp-for="TotalAvailablePotentialPanelmembers" type="number" class="form-control" required />
+    
+    @* <label>Aantal inwooners deelgemeente 1:</label> *@
+    @* <input asp-for="TotalRequiredPanelists" type="number" class="form-control" required /> *@
+
+    <label>Percentage Mannen:</label>
+    <input asp-for="MalePercentage" type="number" class="form-control" required />
+
+    <label>Percentage Vrouwen:</label>
+    <input asp-for="FemalePercentage" type="number" class="form-control" required />
+
+    <label>Percentage 18-25 jaar:</label>
+    <input asp-for="Age18_25Percentage" type="number" class="form-control" required />
+
+    <label>Percentage 26-40 jaar:</label>
+    <input asp-for="Age26_40Percentage" type="number" class="form-control" required />
+
+    <label>Percentage 41-60 jaar:</label>
+    <input asp-for="Age41_60Percentage" type="number" class="form-control" required />
+
+    <label>Percentage 60+ jaar:</label>
+    <input asp-for="Age60PlusPercentage" type="number" class="form-control" required />
+
+    <h3>Extra Criteria</h3>
+    @for (int i = 0; i < Model.ExtraCriteria.Count; i++)
+    {
+    <label>Naam:</label>
+    <input asp-for="ExtraCriteria[i].Name" class="form-control" required />
+
+    <h4>Subcategorieën</h4>
+    @for (int j = 0; j < Model.ExtraCriteria[i].SubCriteria.Count; j++)
+    {
+    <label>Subcategorie Naam:</label>
+    <input asp-for="ExtraCriteria[i].SubCriteria[j].Name" class="form-control" required />
+
+    <label>Percentage:</label>
+    <input asp-for="ExtraCriteria[i].SubCriteria[j].Percentage" type="number" class="form-control" required />
+
+    <button type="submit" asp-action="RemoveSubCriteria" asp-route-criteriaIndex="@i" asp-route-subIndex="@j" class="btn btn-danger">Verwijderen</button>
+    }
+
+    <button type="submit" asp-action="AddSubCriteria" asp-route-criteriaIndex="@i" class="btn btn-secondary">Subcriterium toevoegen</button>
+    <button type="submit" asp-action="RemoveCustomCriteria" asp-route-criteriaIndex="@i" class="btn btn-danger">Verwijderen</button>
+    }
+
+    <button type="submit" asp-action="AddCustomCriteria" class="btn btn-secondary">Extra criterium toevoegen</button>
+
+
+    <button type="submit" class="btn btn-primary">Bereken</button>
+</form>
