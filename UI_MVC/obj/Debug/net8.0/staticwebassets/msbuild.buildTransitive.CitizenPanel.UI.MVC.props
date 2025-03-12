@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\CitizenPanel.UI.MVC.props" />
-</Project>
