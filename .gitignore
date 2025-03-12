@@ -15,6 +15,27 @@
 *.userosscache
 *.sln.docstates
 
+# Ignore build output directories
+bin/
+obj/
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+packages/
+
+# Ignore cache files
+*.cache
+*.log
+*.dg
+*.nuget.g.props
+*.nuget.g.targets
+
+# Ignore Visual Studio & Rider settings
+.vscode/
+.idea/
+
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
