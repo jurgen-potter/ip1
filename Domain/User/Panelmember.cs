@@ -1,6 +1,8 @@
-﻿namespace CitizenPanel.BL.Domain.User;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class Panelmember : User
+namespace CitizenPanel.BL.Domain.User;
+
+public class Panelmember : IdentityUser
 {
     public string Email { get; set; }
     public Gender Gender { get; set; }

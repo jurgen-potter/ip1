@@ -1,6 +1,6 @@
 ﻿namespace CitizenPanel.BL;
 
-public class UserManager : IManager
+public class UserManager : IUserManager
 {
     
 }

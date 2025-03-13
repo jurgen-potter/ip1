@@ -1,6 +1,6 @@
 ﻿namespace CitizenPanel.BL;
 
-public class DrawManager : IManager
+public class DrawManager : IDrawManager
 {
     
 }

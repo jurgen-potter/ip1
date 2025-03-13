@@ -1,6 +1,6 @@
 ﻿namespace CitizenPanel.BL;
 
-public interface IManager
+public class IPanelManager
 {
     
 }

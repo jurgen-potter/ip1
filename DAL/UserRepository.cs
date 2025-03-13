@@ -1,6 +1,6 @@
 ﻿namespace CitizenPanel.DAL;
 
-public class UserRepository : IRepository
+public class UserRepository : IUserRepository
 {
     
 }

@@ -1,6 +1,8 @@
-﻿namespace CitizenPanel.BL.Domain.User;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class Admin : User
+namespace CitizenPanel.BL.Domain.User;
+
+public class Admin : IdentityUser
 {
     
 }
