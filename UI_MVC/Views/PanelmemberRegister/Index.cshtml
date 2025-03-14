@@ -1,0 +1,28 @@
+@using CitizenPanel.BL.Domain.Draw
+@model List<CitizenPanel.BL.Domain.Draw.Invitation>
+
+@{
+    ViewBag.Title = "Registreer als een panelmember";
+    Layout = "_Layout";
+}
+
+<h2>Aanmelden voor een panel</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Age</th>
+        <th>Gender</th>
+        <th>PanelId</th>
+        <th>Code</th>
+    </tr>
+    </thead>
+    @foreach (Invitation invitation in Model)
+    {
+        <tr>
+            <td>@invitation.Age</td>
+            <td>@invitation.Gender</td>
+            <td>@invitation.PanelId</td>
+            <td>@invitation.Code</td>
+        </tr>
+    }
+</table>
