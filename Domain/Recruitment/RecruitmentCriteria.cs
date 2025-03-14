@@ -14,7 +14,6 @@ public class RecruitmentCriteria : IValidatableObject
     public double Age60PlusPercentage { get; set; }
 
     public List<ExtraCriteria> ExtraCriteria { get; set; } = new List<ExtraCriteria>();
-
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (MalePercentage + FemalePercentage != 100)

@@ -1,4 +1,5 @@
 ﻿using CitizenPanel.BL.Domain.Recruitment;
+using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.BL;
 
@@ -22,6 +23,8 @@ public class RecruitmentManager
             TotalNeededPanelmembers = (int)(totalAvailablePotPanelmembers),
             ExtraCriteriaResults = new List<CriteriaResult>()
         };
+        
+       
 
         foreach (var extra in criteria.ExtraCriteria)
         {
@@ -39,4 +42,5 @@ public class RecruitmentManager
 
         return result;
     }
+    
 }
