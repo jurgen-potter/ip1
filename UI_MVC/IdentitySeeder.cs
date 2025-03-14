@@ -53,7 +53,7 @@ public class IdentitySeeder
         await _userManager.AddToRoleAsync(user3, "Organization");
         
         // user 4
-        var user4 = new Panelmember()
+        var user4 = new Member()
         {
             UserName = "paul@kdg.be",
             Email = "paul@kdg.be"
