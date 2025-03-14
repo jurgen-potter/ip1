@@ -10,11 +10,7 @@ using BL.Domain.User;
 public class PanelDbContext : IdentityDbContext
 {
     private readonly IConfiguration _configuration;
-    public DbSet<Admin> Admins { get; set; }
-    public DbSet<Citizen> Citizens { get; set; }
-    public DbSet<Organization> Organizations { get; set; }
-    public DbSet<Panelmember> Panelmembers { get; set; }
-    
+        
     public PanelDbContext(DbContextOptions<PanelDbContext> options, IConfiguration configuration) : base(options)
     {
         _configuration = configuration;
