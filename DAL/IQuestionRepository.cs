@@ -1,6 +1,6 @@
 ﻿namespace CitizenPanel.DAL;
 
-public class IQuestionRepository
+public interface IQuestionRepository
 {
     
 }

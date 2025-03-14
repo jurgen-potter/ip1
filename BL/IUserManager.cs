@@ -1,6 +1,9 @@
-﻿namespace CitizenPanel.BL;
+﻿
+using CitizenPanel.BL.Domain.User;
 
-public class IUserManager
+namespace CitizenPanel.BL;
+
+public interface IUserManager
 {
-    
+    public Panelmember AddPanelmember(string code, string email);
 }

@@ -1,6 +1,6 @@
 ﻿namespace CitizenPanel.BL;
 
-public class IQuestionManager
+public interface IQuestionManager
 {
     
 }

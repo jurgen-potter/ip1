@@ -1,6 +1,8 @@
-﻿namespace CitizenPanel.DAL;
+﻿using CitizenPanel.BL.Domain.User;
 
-public class IPanelRepository
+namespace CitizenPanel.DAL;
+
+public interface IPanelRepository
 {
-    
+    public Panelmember CreatePanelmember(Panelmember panelmember);
 }
