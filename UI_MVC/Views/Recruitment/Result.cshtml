@@ -1,0 +1,33 @@
+﻿@model CitizenPanel.BL.Domain.Recruitment.RecruitmentResult
+
+<h2>Voor het aantal nodige panelleden te bereiken moeten er @Model.ReservePotPanelmembers Burgers uitgenodigd worden</h2>
+
+<h2>Benodigde Panelleden: @Model.TotalNeededPanelmembers</h2>
+
+<h3>Gender</h3>
+<ul>
+    <li><strong>Aantal mannen nodig:</strong> @Model.MaleCount</li>
+    <li><strong>Aantal vrouwen nodig:</strong> @Model.FemaleCount</li>
+</ul>
+
+<h3>Leeftijd</h3>
+<ul>
+    <li><strong>Aantal mensen tussen de 18-25 die nodig zijn:</strong> @Model.Age18_25Count</li>
+    <li><strong>Aantal mensen tussen de 26-40 die nodig zijn:</strong> @Model.Age26_40Count</li>
+    <li><strong>Aantal mensen tussen de 41-60 die nodig zijn:</strong> @Model.Age41_60Count</li>
+    <li><strong>Aantal mensen tussen de 60+ die nodig zijn:</strong> @Model.Age60PlusCount</li>
+</ul>
+
+@foreach (var category in Model.ExtraCriteriaResults)
+{
+    <h3>@category.Name</h3>
+    <!-- Dit is bijvoorbeeld 'Transport' of 'Eetgewoonten' -->
+    <ul>
+        @foreach (var sub in category.SubResults)
+        {
+            <li><strong>Aantal @sub.Name nodig:</strong> @sub.Count</li>
+            <!-- Subcategorieën zoals OV, Te voet -->
+        }
+    </ul>
+}
+<a href="@Url.Action("Index", "Recruitment")" class="btn btn-secondary">Nieuwe Berekening</a>
