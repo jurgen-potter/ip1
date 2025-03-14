@@ -31,7 +31,7 @@ public class DrawManager : IDrawManager
                 Gender = gender,
                 PanelId = panelId
             };
-            //Invitation newInvitation = _drawRepository.AddInvitation(invitation);
+            Invitation newInvitation = _drawRepository.AddInvitation(invitation);
             invitations.Add(invitation);
         }
         

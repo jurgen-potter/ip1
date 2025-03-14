@@ -2,68 +2,29 @@ using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.User;
 using Microsoft.AspNetCore.Mvc;
+using UI_MVC.Models.DTO;
 
 namespace UI_MVC.Controllers;
 
 public class PanelmemberRegisterController : Controller
 {
-    private readonly IDrawManager _drawManager;
+    private readonly IUserManager _userManager;
 
-    public PanelmemberRegisterController(IDrawManager drawManager)
+    public PanelmemberRegisterController(IUserManager userManager)
     {
-        _drawManager = drawManager;
+        _userManager = userManager;
     }
     
     // GET
     public IActionResult Index()
     {
-        List<DummyMember> members = new List<DummyMember>();
-        DummyMember dummy1 = new DummyMember()
-        {
-            Age = 10,
-            Gender = Gender.Male,
-            PanelId = 1
-        };
-        DummyMember dummy2 = new DummyMember()
-        {
-            Age = 34,
-            Gender = Gender.Male,
-            PanelId = 16
-        };
-        DummyMember dummy3 = new DummyMember()
-        {
-            Age = 52,
-            Gender = Gender.Female,
-            PanelId = 17
-        };
-        DummyMember dummy4 = new DummyMember()
-        {
-            Age = 48,
-            Gender = Gender.Female,
-            PanelId = 2
-        };
-        DummyMember dummy5 = new DummyMember()
-        {
-            Age = 80,
-            Gender = Gender.Male,
-            PanelId = 1
-        };
-        DummyMember dummy6 = new DummyMember()
-        {
-            Age = 19,
-            Gender = Gender.Female,
-            PanelId = 1
-        };
-        members.Add(dummy1);
-        members.Add(dummy2);
-        members.Add(dummy3);
-        members.Add(dummy4);
-        members.Add(dummy5);
-        members.Add(dummy6);
+        return View();
+    }
 
-        List<Invitation> invitations = _drawManager.AddInvitations(members);
-        
-        return View(invitations);
+    public IActionResult Add(PanelmemberDTO panelmemberDto)
+    {
+        Panelmember Panelmember = _userManager.AddPanelmember(panelmemberDto.Code,panelmemberDto.Email);
+        return View(Panelmember);
     }
     
     
