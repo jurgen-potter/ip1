@@ -8,4 +8,5 @@ public class Panelmember : IdentityUser
     public Gender Gender { get; set; }
     public int Age { get; set; }
     public int PanelId { get; set; }
+    public string Postcode { get; set; }
 }
