@@ -1,4 +1,5 @@
-﻿using CitizenPanel.BL.Domain.Recruitment;
+﻿using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Recruitment;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers;
@@ -18,9 +19,8 @@ public class RecruitmentController : Controller
         {
             return View("Index", model);
         }
-
-        var calculator = new RecruitmentCalculator();
-        var result = calculator.CalculateRecruitment(model);
+        var rmngr = new RecruitmentManager();
+        var result = rmngr.CalculateRecruitment(model);
 
         return View("Result", result);
     }
@@ -49,7 +49,8 @@ public class RecruitmentController : Controller
     [HttpPost]
     public IActionResult RemoveSubCriteria(RecruitmentCriteria model, int criteriaIndex, int subIndex)
     {
-        model.ExtraCriteria[criteriaIndex].SubCriteria.RemoveAt(subIndex);
+        model.ExtraCriteria.RemoveAll(c => string.IsNullOrWhiteSpace(c.Name));
+        // model.ExtraCriteria[criteriaIndex].SubCriteria.RemoveAt(subIndex);
         return View("Index", model);
     }
 }

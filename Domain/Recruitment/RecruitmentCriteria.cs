@@ -6,10 +6,8 @@ public class RecruitmentCriteria : IValidatableObject
 {
     //Bevat de gewenste percentages per doelgroep.
     public int TotalAvailablePotentialPanelmembers { get; set; }
-
     public double MalePercentage { get; set; }
     public double FemalePercentage { get; set; }
-
     public double Age18_25Percentage { get; set; }
     public double Age26_40Percentage { get; set; }
     public double Age41_60Percentage { get; set; }

@@ -3,55 +3,64 @@
 
 <h2>Demografische Invoer</h2>
 
+<!-- Validatie is nog niet tip top in orde--> 
+<div asp-validation-summary="All" class="text-danger"></div>
+
 <form asp-action="Calculate" method="post">
-    <label>Aantal inwooners gemeente:</label>
+    <label>Aantal inwoners gemeente:</label>
     <input asp-for="TotalAvailablePotentialPanelmembers" type="number" class="form-control" required />
-    
-    @* <label>Aantal inwooners deelgemeente 1:</label> *@
-    @* <input asp-for="TotalRequiredPanelists" type="number" class="form-control" required /> *@
+    <span asp-validation-for="TotalAvailablePotentialPanelmembers" class="text-danger"></span>
 
     <label>Percentage Mannen:</label>
     <input asp-for="MalePercentage" type="number" class="form-control" required />
+    <span asp-validation-for="MalePercentage" class="text-danger"></span>
 
     <label>Percentage Vrouwen:</label>
     <input asp-for="FemalePercentage" type="number" class="form-control" required />
+    <span asp-validation-for="FemalePercentage" class="text-danger"></span>
 
     <label>Percentage 18-25 jaar:</label>
     <input asp-for="Age18_25Percentage" type="number" class="form-control" required />
+    <span asp-validation-for="Age18_25Percentage" class="text-danger"></span>
 
     <label>Percentage 26-40 jaar:</label>
     <input asp-for="Age26_40Percentage" type="number" class="form-control" required />
+    <span asp-validation-for="Age26_40Percentage" class="text-danger"></span>
 
     <label>Percentage 41-60 jaar:</label>
     <input asp-for="Age41_60Percentage" type="number" class="form-control" required />
+    <span asp-validation-for="Age41_60Percentage" class="text-danger"></span>
 
     <label>Percentage 60+ jaar:</label>
     <input asp-for="Age60PlusPercentage" type="number" class="form-control" required />
+    <span asp-validation-for="Age60PlusPercentage" class="text-danger"></span>
 
     <h3>Extra Criteria</h3>
     @for (int i = 0; i < Model.ExtraCriteria.Count; i++)
     {
-    <label>Naam:</label>
-    <input asp-for="ExtraCriteria[i].Name" class="form-control" required />
+        <label>Naam:</label>
+        <input asp-for="ExtraCriteria[i].Name" class="form-control" required />
+        <span asp-validation-for="ExtraCriteria[i].Name" class="text-danger"></span>
 
-    <h4>Subcategorieën</h4>
-    @for (int j = 0; j < Model.ExtraCriteria[i].SubCriteria.Count; j++)
-    {
-    <label>Subcategorie Naam:</label>
-    <input asp-for="ExtraCriteria[i].SubCriteria[j].Name" class="form-control" required />
+        <h4>Subcategorieën</h4>
+        @for (int j = 0; j < Model.ExtraCriteria[i].SubCriteria.Count; j++)
+        {
+            <label>Subcategorie Naam:</label>
+            <input asp-for="ExtraCriteria[i].SubCriteria[j].Name" class="form-control" required />
+            <span asp-validation-for="ExtraCriteria[i].SubCriteria[j].Name" class="text-danger"></span>
 
-    <label>Percentage:</label>
-    <input asp-for="ExtraCriteria[i].SubCriteria[j].Percentage" type="number" class="form-control" required />
+            <label>Percentage:</label>
+            <input asp-for="ExtraCriteria[i].SubCriteria[j].Percentage" type="number" class="form-control" required />
+            <span asp-validation-for="ExtraCriteria[i].SubCriteria[j].Percentage" class="text-danger"></span>
 
-    <button type="submit" asp-action="RemoveSubCriteria" asp-route-criteriaIndex="@i" asp-route-subIndex="@j" class="btn btn-danger">Verwijderen</button>
-    }
+            <button type="submit" asp-action="RemoveSubCriteria" asp-route-criteriaIndex="@i" asp-route-subIndex="@j" class="btn btn-danger">Verwijderen</button>
+        }
 
-    <button type="submit" asp-action="AddSubCriteria" asp-route-criteriaIndex="@i" class="btn btn-secondary">Subcriterium toevoegen</button>
-    <button type="submit" asp-action="RemoveCustomCriteria" asp-route-criteriaIndex="@i" class="btn btn-danger">Verwijderen</button>
+        <button type="submit" asp-action="AddSubCriteria" asp-route-criteriaIndex="@i" class="btn btn-secondary">Subcriterium toevoegen</button>
+        <button type="submit" asp-action="RemoveCustomCriteria" asp-route-criteriaIndex="@i" class="btn btn-danger">Verwijderen</button>
     }
 
     <button type="submit" asp-action="AddCustomCriteria" class="btn btn-secondary">Extra criterium toevoegen</button>
-
 
     <button type="submit" class="btn btn-primary">Bereken</button>
 </form>
