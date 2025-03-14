@@ -1,0 +1,19 @@
+@model UI_MVC.Models.DTO.PanelmemberDTO
+
+@{
+    ViewBag.Title = "Registreer als een panelmember";
+    Layout = "_Layout";
+}
+
+<h2>Aanmelden voor een panel</h2>
+<form asp-controller="PanelmemberRegister" asp-action="Add" method="post">
+    <div class="form-group">
+        <label asp-for="Code">Code</label>
+        <input asp-for="Code" class="form-control" placeholder="Code"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email">E-mail</label>
+        <input asp-for="Email" class="form-control" placeholder="E-mail"/>
+    </div>
+    <input type="submit" value="Register"/>
+</form>
