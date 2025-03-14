@@ -18,7 +18,7 @@ public class RecruitmentCriteria : IValidatableObject
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (MalePercentage + FemalePercentage != 100)
-            yield return new ValidationResult("Het totaal van Male en Female moet precies 100% zijn.");
+            yield return new ValidationResult("Het totaal van man en vrouw moet precies 100% zijn.");
 
         if (Age18_25Percentage + Age26_40Percentage + Age41_60Percentage + Age60PlusPercentage != 100)
             yield return new ValidationResult("Het totaal van de leeftijdsgroepen moet precies 100% zijn.");
