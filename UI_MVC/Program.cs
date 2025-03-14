@@ -1,5 +1,6 @@
 using CitizenPanel.BL;
 using CitizenPanel.DAL;
+using CitizenPanel.UI.MVC;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,24 +23,25 @@ builder.Services.AddScoped<IPanelManager, PanelManager>();
 builder.Services.AddScoped<IQuestionManager, QuestionManager>();
 builder.Services.AddScoped<IUserManager, UserManager>();
 
+builder.Services.AddRazorPages();
+
 // Add Identity
 builder.Services.AddDefaultIdentity<IdentityUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<PanelDbContext>();
+
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
-    try
-    {
-        // Try to make a simple query to the database (for testing)
-        dbContext.Database.CanConnect();
-        Console.WriteLine("Database connection successful!");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error connecting to database: {ex.Message}");
+app.MapRazorPages();
+
+using (IServiceScope scope = app.Services.CreateScope()) {
+    PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
+    if (context.CreateDatabase(true)) {
+        var userManager = scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
+        var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+        IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
+        await identitySeeder.SeedAsync();
     }
 }
 
