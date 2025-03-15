@@ -9,4 +9,5 @@ public class Invitation
     public Gender Gender { get; set; }
     public int Age { get; set; }
     public string Postcode { get; set; }
+    
 }

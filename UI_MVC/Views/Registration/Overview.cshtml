@@ -1,0 +1,143 @@
+﻿@model IEnumerable<CitizenPanel.BL.Domain.Recruitment.RecruitmentBucket>
+@using CitizenPanel.BL.Domain.Draw;
+@{
+    ViewData["Title"] = "Registratie-overzicht";
+    var panelId = ViewBag.PanelId ?? 1;
+    var drawStatus = (DrawStatus)ViewBag.DrawStatus;
+    var hasSufficientRegistrations = (bool)ViewBag.HasSufficientRegistrations;
+}
+
+<h2>Registratie-overzicht voor panel @panelId</h2>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Lotingsstatus</h5>
+            </div>
+            <div class="card-body">
+                <p>
+                    Huidige status:
+                    <span class="badge @(drawStatus == DrawStatus.FirstPhaseActive ? "bg-primary" : drawStatus == DrawStatus.Complete ? "bg-success" : "bg-secondary")">
+                        @(drawStatus == DrawStatus.FirstPhaseActive ? "Eerste fase actief" : "idk")
+                    </span>
+                </p>
+                @if (drawStatus == DrawStatus.Complete)
+                {
+                <a asp-action="DrawResults" asp-route-panelId="@panelId" class="btn btn-info">
+                    Bekijk lotingsresultaten
+                </a>
+                }
+
+                @if (drawStatus == DrawStatus.FirstPhaseActive)
+                {
+                    <form asp-action="StartFinalDrawPhase" asp-route-panelId="@panelId" method="post" id="startSecondPhaseForm">
+                        <button type="button" class="btn btn-primary" id="startSecondPhaseBtn">
+                            Start finale loting
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<h3>Overzicht aanmeldingen per doelgroep</h3>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Geslacht</th>
+        <th>Leeftijdsgroep</th>
+        <th>Aantal Registraties</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var bucket in Model)
+    {
+        <tr>
+            <td>@bucket.Gender</td>
+            <td>@bucket.AgeGroup</td>
+            <td>@bucket.Count/@bucket.Target</td>
+            <td>
+                @if (bucket.Count >= bucket.Target)
+                {
+                    <span class="badge bg-success">Voldoende</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning text-dark">Onvoldoende</span>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Bevestiging</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="confirmationModalBody">
+                <p>Weet u zeker dat u de finale lotingsfase wilt starten?</p>
+                <div id="insufficientWarning" style="display: none;" class="alert alert-warning">
+                    <strong>Let op:</strong> Er zijn nog onvoldoende aanmeldingen bij sommige criteria. Het is aan te raden om meer deelnemers te werven voordat u doorgaat.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                <button type="button" class="btn btn-primary" id="confirmStartSecondPhase">Bevestigen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const startSecondPhaseBtn = document.getElementById('startSecondPhaseBtn');
+        const confirmStartSecondPhase = document.getElementById('confirmStartSecondPhase');
+        const startSecondPhaseForm = document.getElementById('startSecondPhaseForm');
+        const insufficientWarning = document.getElementById('insufficientWarning');
+
+        // Modal handling
+        startSecondPhaseBtn.addEventListener('click', function() {
+            const hasSufficientRegistrations = @Json.Serialize(hasSufficientRegistrations);
+
+            if (!hasSufficientRegistrations) {
+                insufficientWarning.style.display = 'block';
+            } else {
+                insufficientWarning.style.display = 'none';
+            }
+
+            // Show the modal
+            const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            confirmationModal.show();
+        });
+
+        // Form submission on confirmation
+        confirmStartSecondPhase.addEventListener('click', function() {
+            startSecondPhaseForm.submit();
+        });
+    });
+</script>
+}

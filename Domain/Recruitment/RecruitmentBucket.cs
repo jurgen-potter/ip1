@@ -4,7 +4,8 @@ namespace CitizenPanel.BL.Domain.Recruitment;
 
 public class RecruitmentBucket
 {
-    public Age Age { get; set; }
-    public Gender Gender { get; set; }
-    public int Signups { get; set; } // Aantal aanmeldingen
+    public string Gender { get; set; }
+    public string AgeGroup { get; set; }
+    public int Count { get; set; }
+    public int Target { get; set;}
 }       
