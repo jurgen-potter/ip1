@@ -1,0 +1,54 @@
+@using CitizenPanel.BL.Domain.Draw
+@model List<CitizenPanel.BL.Domain.Draw.Invitation>
+
+@{
+    ViewBag.Title = "QRCodeTryOut";
+    Layout = "_Layout";
+}
+
+<h2>QRCode try-out</h2>
+<table>
+    <tr>
+        <td>
+            PanelId
+        </td>
+        <td>
+            Gender
+        </td>
+        <td>
+            Age
+        </td>
+        <td>
+            PostCode
+        </td>
+        <td>
+            Code
+        </td>
+        <td>
+            QRCode
+        </td>
+    </tr>
+    @foreach (Invitation invitation in Model)
+    {
+        <tr>
+            <td>
+                @invitation.PanelId
+            </td>
+            <td>
+                @invitation.Gender
+            </td>
+            <td>
+                @invitation.Age
+            </td>
+            <td>
+                @invitation.Postcode
+            </td>
+            <td>
+                @invitation.Code
+            </td>
+            <td>
+                <img src="data:image/png;base64,@invitation.QRCodeString"/>
+            </td>
+        </tr>
+    }
+</table>

@@ -1,6 +1,7 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.DAL;
+using QRCoder;
 
 namespace CitizenPanel.BL;
 
@@ -15,6 +16,7 @@ public class DrawManager : IDrawManager
     
     public List<Invitation> AddInvitations(List<DummyMember> members)
     {
+        QRCodeGenerator qrGenerator = new QRCodeGenerator();
         List<Invitation> invitations = new List<Invitation>();
         foreach (DummyMember dummyMember in members)
         {
@@ -26,12 +28,20 @@ public class DrawManager : IDrawManager
             
             string code = GenerateCode(age, genderNumber, panelId, postCode);
 
+            string qrCodePlace = "https://localhost:7145/QrCode?code=" + code; 
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
+            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+            byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
+            string qrCodeString = Convert.ToBase64String(qrCodeAsPngByteArr);
+
+            
             Invitation invitation = new Invitation()
             {
                 Code = code,
                 Age = age,
                 Gender = gender,
-                PanelId = panelId
+                PanelId = panelId,
+                QRCodeString = qrCodeString,
             };
             Invitation newInvitation = _drawRepository.AddInvitation(invitation);
             invitations.Add(invitation);
