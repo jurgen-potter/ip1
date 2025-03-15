@@ -1,5 +1,6 @@
 using CitizenPanel.BL;
 using CitizenPanel.DAL;
+using CitizenPanel.DAL.EF;
 using CitizenPanel.UI.MVC;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,9 @@ builder.Services.AddScoped<IDrawManager, DrawManager>();
 builder.Services.AddScoped<IPanelManager, PanelManager>();
 builder.Services.AddScoped<IQuestionManager, QuestionManager>();
 builder.Services.AddScoped<IUserManager, UserManager>();
-
+builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
 builder.Services.AddRazorPages();
 
 // Add Identity
@@ -38,10 +41,13 @@ app.MapRazorPages();
 using (IServiceScope scope = app.Services.CreateScope()) {
     PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
     if (context.CreateDatabase(true)) {
+        
         var userManager = scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
         var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
         IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
         await identitySeeder.SeedAsync();
+        DataSeeder dataSeeder = new DataSeeder(context);
+        dataSeeder.Seed(); 
     }
 }
 

@@ -1,0 +1,144 @@
+﻿@model CitizenPanel.BL.Domain.Draw.DrawResult
+@using CitizenPanel.BL.Domain.Draw;
+@{
+ViewData["Title"] = "Lotingsresultaten";
+var panelId = ViewBag.PanelId ?? 1;
+var drawStatus = (DrawStatus)ViewBag.DrawStatus;
+}
+
+<h2>Lotingsresultaten voor panel @panelId</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+<div class="alert alert-success">
+    @TempData["SuccessMessage"]
+</div>
+}
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Lotingsstatus</h5>
+            </div>
+            <div class="card-body">
+                <p>
+                    Status:
+                    <span class="badge bg-success">Loting afgerond</span>
+                </p>
+                <a asp-action="Overview" asp-route-panelId="@panelId" class="btn btn-secondary">
+                    Terug naar overzicht
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Geselecteerde deelnemers</h3>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Naam</th>
+                <th>Email</th>
+                <th>Geslacht</th>
+                <th>Leeftijd</th>
+                <th>Categorie</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var member in Model.SelectedMembers)
+            {
+            <tr>
+                <td>@member.FirstName @member.LastName</td>
+                <td>@member.Email</td>
+                <td>@(member.Gender == CitizenPanel.BL.Domain.User.Gender.Male ? "Man" : "Vrouw")</td>
+                <td>@member.Age</td>
+                <td>
+                    @{
+                    string category = "";
+                    if (member.Gender == CitizenPanel.BL.Domain.User.Gender.Male)
+                    {
+                    category = "Mannen, ";
+                    }
+                    else
+                    {
+                    category = "Vrouwen, ";
+                    }
+
+                    if (member.Age >= 18 && member.Age <= 25)
+                    category += "18-25";
+                    else if (member.Age >= 26 && member.Age <= 40)
+                    category += "26-40";
+                    else if (member.Age >= 41 && member.Age <= 60)
+                    category += "41-60";
+                    else
+                    category += "60+";
+                    }
+                    @category
+                </td>
+            </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3>Reserve deelnemers</h3>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Naam</th>
+                <th>Email</th>
+                <th>Geslacht</th>
+                <th>Leeftijd</th>
+                <th>Categorie</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var member in Model.ReserveMembers)
+            {
+            <tr>
+                <td>@member.FirstName @member.LastName</td>
+                <td>@member.Email</td>
+                <td>@(member.Gender == CitizenPanel.BL.Domain.User.Gender.Male ? "Man" : "Vrouw")</td>
+                <td>@member.Age</td>
+                <td>
+                    @{
+                    string category = "";
+                    if (member.Gender == CitizenPanel.BL.Domain.User.Gender.Male)
+                    {
+                    category = "Mannen, ";
+                    }
+                    else
+                    {
+                    category = "Vrouwen, ";
+                    }
+
+                    if (member.Age >= 18 && member.Age <= 25)
+                    category += "18-25";
+                    else if (member.Age >= 26 && member.Age <= 40)
+                    category += "26-40";
+                    else if (member.Age >= 41 && member.Age <= 60)
+                    category += "41-60";
+                    else
+                    category += "60+";
+                    }
+                    @category
+                </td>
+            </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (!Model.SelectedMembers.Any() && !Model.ReserveMembers.Any())
+{
+<div class="alert alert-warning">
+    Er zijn geen resultaten beschikbaar. De loting moet mogelijk opnieuw worden uitgevoerd.
+</div>
+}
