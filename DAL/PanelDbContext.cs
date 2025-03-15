@@ -5,11 +5,18 @@ using Microsoft.Extensions.Logging;
 
 namespace CitizenPanel.DAL;
 
+using BL.Domain.Recruitment;
 using BL.Domain.User;
 
 public class PanelDbContext : IdentityDbContext
 {
     private readonly IConfiguration _configuration;
+    
+    public DbSet<Admin> Admins { get; set; }
+    public DbSet<Citizen> Citizens { get; set; }
+    public DbSet<Member> Members { get; set; }
+    public DbSet<Organization> Organizations { get; set; }
+    /*public DbSet<SubCriteria> SubCriteria { get; set; }*/
         
     public PanelDbContext(DbContextOptions<PanelDbContext> options, IConfiguration configuration) : base(options)
     {
@@ -27,6 +34,17 @@ public class PanelDbContext : IdentityDbContext
     override protected void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.Entity<Admin>().ToTable("Admins");
+        modelBuilder.Entity<Citizen>().ToTable("Citizens");
+        modelBuilder.Entity<Member>().ToTable("Members");
+        modelBuilder.Entity<Organization>().ToTable("Organizations");
+        /*modelBuilder.Entity<SubCriteria>().ToTable("SubCriteria");
+
+        modelBuilder.Entity<Member>()
+            .HasMany(m => m.SelectedCriteria)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("MemberSelectedCriteria"));*/
     }
     
     public bool CreateDatabase(bool delete) {

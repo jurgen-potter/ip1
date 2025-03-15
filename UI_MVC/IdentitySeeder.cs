@@ -22,8 +22,10 @@ public class IdentitySeeder
         await _roleManager.CreateAsync(citizenRole);
         var organizationRole = new IdentityRole("Organization");
         await _roleManager.CreateAsync(organizationRole);
-        var panelmemberRole = new IdentityRole("Panelmember");
-        await _roleManager.CreateAsync(panelmemberRole);
+        var potentialMemberRole = new IdentityRole("PotentialMember");
+        await _roleManager.CreateAsync(potentialMemberRole);
+        var panelMemberRole = new IdentityRole("PanelMember");
+        await _roleManager.CreateAsync(panelMemberRole);
         
         // user 1
         var user1 = new Admin()
@@ -59,6 +61,6 @@ public class IdentitySeeder
             Email = "paul@kdg.be"
         };
         await _userManager.CreateAsync(user4, "Paulpaul1!");
-        await _userManager.AddToRoleAsync(user4, "Panelmember");
+        await _userManager.AddToRoleAsync(user4, "PanelMember");
     }
 }

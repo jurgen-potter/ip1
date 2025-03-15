@@ -21,7 +21,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDrawManager, DrawManager>();
 builder.Services.AddScoped<IPanelManager, PanelManager>();
 builder.Services.AddScoped<IQuestionManager, QuestionManager>();
-builder.Services.AddScoped<IUserManager, UserManager>();
+builder.Services.AddScoped<IPanelUserManager, PanelUserManager>();
 
 builder.Services.AddRazorPages();
 
@@ -30,6 +30,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<PanelDbContext>();
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+});
 
 var app = builder.Build();
 

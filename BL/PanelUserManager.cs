@@ -1,18 +1,18 @@
 ﻿using CitizenPanel.BL.Domain.User;
-using CitizenPanel.DAL;
 
 namespace CitizenPanel.BL;
 
-public class UserManager : IUserManager
-{
-    
-    private IUserRepository _UserRepository;
+using Domain.Recruitment;
+using Microsoft.AspNetCore.Identity;
 
-    public UserManager(IUserRepository userRepository)
+public class PanelUserManager : IPanelUserManager
+{
+    private readonly UserManager<IdentityUser> _userManager;
+
+    public PanelUserManager(UserManager<IdentityUser> userManager)
     {
-        _UserRepository = userRepository;
+        _userManager = userManager;
     }
-    
     
     public Panelmember AddPanelmember(string code, string email)
     {
@@ -40,7 +40,26 @@ public class UserManager : IUserManager
         return panelmember;
     }
 
-    
+    public async Task<Member> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<SubCriteria> newMemberSelectedCriteria)
+    {
+        Member member = new Member()
+        {
+            FirstName = newMemberFirstName,
+            LastName = newMemberLastName,
+            Email = newMemberEmail,
+            UserName = newMemberEmail,
+            Gender = newMemberGender,
+            BirthDate = newMemberBirthDate,
+            Town = newMemberTown,
+            //SelectedCriteria = newMemberSelectedCriteria
+        };
+        
+        var result = await _userManager.CreateAsync(member, newMemberPassword);
+
+        return result.Succeeded ? member : null;
+    }
+
+
     public int GetNumber(string code)
     {
         int number = 0;
