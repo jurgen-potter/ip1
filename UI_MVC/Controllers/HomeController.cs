@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using UI_MVC.Models;
+using CitizenPanel.UI.MVC.Models;
 
-namespace UI_MVC.Controllers;
+namespace CitizenPanel.UI.MVC.Controllers;
 
 public class HomeController : Controller
 {
