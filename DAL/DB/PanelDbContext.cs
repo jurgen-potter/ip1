@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CitizenPanel.DAL;
 
+using BL.Domain.Recruitment;
 using BL.Domain.User;
 
 public class PanelDbContext : IdentityDbContext
@@ -13,6 +14,13 @@ public class PanelDbContext : IdentityDbContext
     private readonly IConfiguration _configuration;
     public DbSet<Member> Members { get; set; }
     public DbSet<Panel> Panels { get; set; }
+    
+    public DbSet<Admin> Admins { get; set; }
+    public DbSet<Citizen> Citizens { get; set; }
+    public DbSet<Member> Members { get; set; }
+    public DbSet<Organization> Organizations { get; set; }
+    public DbSet<ExtraCriteria> ExtraCriteria { get; set; }
+    public DbSet<SubCriteria> SubCriteria { get; set; }
         
     public PanelDbContext(DbContextOptions<PanelDbContext> options, IConfiguration configuration) : base(options)
     {
@@ -35,6 +43,23 @@ public class PanelDbContext : IdentityDbContext
             .HasMany(m => m.Members);
         modelBuilder.Entity<Member>()
             .HasOne(m => m.Panel); //momenteel gwn 1 ik weet dat het meerdere kan bevatten
+        
+        modelBuilder.Entity<Admin>();
+        modelBuilder.Entity<Citizen>();
+        modelBuilder.Entity<Member>();
+        modelBuilder.Entity<Organization>();
+        modelBuilder.Entity<ExtraCriteria>();
+        modelBuilder.Entity<SubCriteria>();
+
+        modelBuilder.Entity<Member>()
+            .HasMany(m => m.SelectedCriteria)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("MemberSelectedCriteria"));
+        
+        modelBuilder.Entity<ExtraCriteria>()
+            .HasMany(e => e.SubCriteria)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("ExtraSubCriteria"));
     }
     
     public bool CreateDatabase(bool delete) {

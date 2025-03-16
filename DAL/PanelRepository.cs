@@ -3,6 +3,9 @@ using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.DAL;
 
+using BL.Domain.Recruitment;
+using Microsoft.EntityFrameworkCore;
+
 public class PanelRepository : IPanelRepository
 {
     private readonly PanelDbContext _dbContext;
@@ -21,6 +24,21 @@ public class PanelRepository : IPanelRepository
     {
         return _dbContext.Panels.ToList();
     }
+    
+    public ExtraCriteria ReadExtraCriteria(int criteriaId)
+    {
+        return _dbContext.ExtraCriteria
+            .Where(e => e.Id == criteriaId)
+            .Include(e => e.SubCriteria)
+            .SingleOrDefault();
+    }
+    
+    public List<ExtraCriteria> ReadAllExtraCriteria()
+    {
+        return _dbContext.ExtraCriteria
+            .Include(e => e.SubCriteria)
+            .ToList();
+    }
 
     public void AddPanel(Panel panel)
     {
@@ -31,6 +49,12 @@ public class PanelRepository : IPanelRepository
     {
         _dbContext.Update(panel);
     }
+
+    public SubCriteria ReadSubCriteria(int subCriteriaId)
+    {
+        return _dbContext.SubCriteria.Find(subCriteriaId);
+    }
+
 
     public void DeletePanel(Panel panel)
     {

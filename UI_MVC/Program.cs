@@ -26,6 +26,8 @@ builder.Services.AddScoped<IUserManager, UserManager>();
 builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
+builder.Services.AddScoped<IPanelUserManager, PanelUserManager>();
+
 builder.Services.AddRazorPages();
 
 // Add Identity
@@ -33,6 +35,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<PanelDbContext>();
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+});
 
 var app = builder.Build();
 
@@ -47,7 +53,7 @@ using (IServiceScope scope = app.Services.CreateScope()) {
         IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
         await identitySeeder.SeedAsync();
         DataSeeder dataSeeder = new DataSeeder(context);
-        dataSeeder.Seed(); 
+        dataSeeder.Seed();
     }
 }
 
