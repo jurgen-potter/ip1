@@ -49,14 +49,12 @@ public class MemberRegisterController : Controller
         };
         
         /*CodeData data = _panelUserManager.GetCodeData(memberDto.Code);
-         
-        List<ExtraCriteria> criteriaList = data.CriteriaList;
-        ViewBag.CriteriaList = criteriaList;
         
         var model = new NewMemberViewModel
         {
             Gender = data.Gender,
             Town = data.Town,
+            CriteriaList = data.CriteriaList,
             SelectedCriteria = new List<SubCriteria>(new SubCriteria[extraCriteria.Count]),
             PanelId = data.PanelId
         };*/
