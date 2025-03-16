@@ -2,7 +2,13 @@
 
 namespace CitizenPanel.DAL;
 
+using BL.Domain.Recruitment;
+
 public interface IPanelRepository
 {
-    public Panelmember CreatePanelmember(Panelmember panelmember);
+    public ExtraCriteria ReadExtraCriteria(int criteriaId);
+    
+    public List<ExtraCriteria> ReadAllExtraCriteria();
+    
+    public SubCriteria ReadSubCriteria(int subCriteriaId);
 }

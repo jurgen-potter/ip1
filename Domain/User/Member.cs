@@ -11,5 +11,5 @@ public class Member : IdentityUser
     public Gender Gender { get; set; }
     public DateOnly BirthDate { get; set; }
     public string Town { get; set; }
-    /*public List<SubCriteria> SelectedCriteria { get; set; } = new List<SubCriteria>();*/
+    public List<SubCriteria> SelectedCriteria { get; set; } = new List<SubCriteria>();
 }

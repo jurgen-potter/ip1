@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using CitizenPanel.BL.Domain.Recruitment
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @model CitizenPanel.UI.MVC.Models.NewMemberViewModel
 
@@ -15,7 +16,7 @@
         <input asp-for="FirstName" type="text" class="form-control">
         <span asp-validation-for="FirstName" class="text-danger"></span>
     </div>
-    
+
     <div>
         <label>Achternaam:</label>
         <input asp-for="LastName" type="text" class="form-control">
@@ -54,6 +55,23 @@
     <div>
         <label>Gemeente:</label>
         <input asp-for="Town" type="text" class="form-control" value="@Model.Town" readonly>
+    </div>
+
+    <div>
+        @for (int i = 0; i < Model.CriteriaList.Count; i++)
+        {
+            <div class="mb-3">
+                <label>@Model.CriteriaList[i].Name</label>
+                <div class="btn-group" role="group">
+                    @foreach (var subCriteria in Model.CriteriaList[i].SubCriteria)
+                    {
+                        <input type="radio" name="SelectedCriteria[@i]" value="@subCriteria.Id" 
+                               @(Model.SelectedCriteria.Count > i && Model.SelectedCriteria[i] == subCriteria.Id ? "checked" : "")/>@subCriteria.Name
+                        <label class="btn btn-secondary">@subCriteria.Name</label>
+                    }
+                </div>
+            </div>
+        }
     </div>
 
     <button type="submit" class="btn btn-primary">Aanmelden</button>

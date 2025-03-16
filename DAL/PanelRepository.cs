@@ -2,6 +2,9 @@
 
 namespace CitizenPanel.DAL;
 
+using BL.Domain.Recruitment;
+using Microsoft.EntityFrameworkCore;
+
 public class PanelRepository : IPanelRepository
 {
     private readonly PanelDbContext _context;
@@ -11,9 +14,22 @@ public class PanelRepository : IPanelRepository
         _context = context;
     }
 
-
-    public Panelmember CreatePanelmember(Panelmember panelmember)
+    public ExtraCriteria ReadExtraCriteria(int criteriaId)
     {
-        return panelmember;
+        return _context.ExtraCriteria
+            .Where(e => e.Id == criteriaId)
+            .Include(e => e.SubCriteria)
+            .SingleOrDefault();
+    }
+    public List<ExtraCriteria> ReadAllExtraCriteria()
+    {
+        return _context.ExtraCriteria
+            .Include(e => e.SubCriteria)
+            .ToList();
+    }
+
+    public SubCriteria ReadSubCriteria(int subCriteriaId)
+    {
+        return _context.SubCriteria.Find(subCriteriaId);
     }
 }

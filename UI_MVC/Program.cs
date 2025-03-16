@@ -46,6 +46,8 @@ using (IServiceScope scope = app.Services.CreateScope()) {
         var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
         IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
         await identitySeeder.SeedAsync();
+        
+        DataSeeder.Seed(context);
     }
 }
 

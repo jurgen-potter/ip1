@@ -1,17 +1,19 @@
 ﻿using CitizenPanel.BL.Domain.User;
+using Microsoft.AspNetCore.Identity;
 
 namespace CitizenPanel.BL;
 
 using Domain.Recruitment;
-using Microsoft.AspNetCore.Identity;
 
 public class PanelUserManager : IPanelUserManager
 {
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly IPanelManager _panelManager;
 
-    public PanelUserManager(UserManager<IdentityUser> userManager)
+    public PanelUserManager(UserManager<IdentityUser> userManager, IPanelManager panelManager)
     {
         _userManager = userManager;
+        _panelManager = panelManager;
     }
     
     public Panelmember AddPanelmember(string code, string email)
@@ -40,8 +42,15 @@ public class PanelUserManager : IPanelUserManager
         return panelmember;
     }
 
-    public async Task<Member> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<SubCriteria> newMemberSelectedCriteria)
+    public async Task<(IdentityResult result, IdentityUser user)> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<int> newMemberSelectedCriteria)
     {
+        List<SubCriteria> selectedCriteria = new List<SubCriteria>();
+        foreach (var criteria in newMemberSelectedCriteria)
+        {
+            var crit = _panelManager.GetSubCriteria(criteria);
+            selectedCriteria.Add(crit);
+        }
+        
         Member member = new Member()
         {
             FirstName = newMemberFirstName,
@@ -51,12 +60,12 @@ public class PanelUserManager : IPanelUserManager
             Gender = newMemberGender,
             BirthDate = newMemberBirthDate,
             Town = newMemberTown,
-            //SelectedCriteria = newMemberSelectedCriteria
+            SelectedCriteria = selectedCriteria
         };
         
         var result = await _userManager.CreateAsync(member, newMemberPassword);
 
-        return result.Succeeded ? member : null;
+        return result.Succeeded ? (result, member) : (result, null);
     }
 
 

@@ -16,7 +16,8 @@ public class PanelDbContext : IdentityDbContext
     public DbSet<Citizen> Citizens { get; set; }
     public DbSet<Member> Members { get; set; }
     public DbSet<Organization> Organizations { get; set; }
-    /*public DbSet<SubCriteria> SubCriteria { get; set; }*/
+    public DbSet<ExtraCriteria> ExtraCriteria { get; set; }
+    public DbSet<SubCriteria> SubCriteria { get; set; }
         
     public PanelDbContext(DbContextOptions<PanelDbContext> options, IConfiguration configuration) : base(options)
     {
@@ -35,16 +36,22 @@ public class PanelDbContext : IdentityDbContext
     {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.Entity<Admin>().ToTable("Admins");
-        modelBuilder.Entity<Citizen>().ToTable("Citizens");
-        modelBuilder.Entity<Member>().ToTable("Members");
-        modelBuilder.Entity<Organization>().ToTable("Organizations");
-        /*modelBuilder.Entity<SubCriteria>().ToTable("SubCriteria");
+        modelBuilder.Entity<Admin>();
+        modelBuilder.Entity<Citizen>();
+        modelBuilder.Entity<Member>();
+        modelBuilder.Entity<Organization>();
+        modelBuilder.Entity<ExtraCriteria>();
+        modelBuilder.Entity<SubCriteria>();
 
         modelBuilder.Entity<Member>()
             .HasMany(m => m.SelectedCriteria)
             .WithMany()
-            .UsingEntity(j => j.ToTable("MemberSelectedCriteria"));*/
+            .UsingEntity(j => j.ToTable("MemberSelectedCriteria"));
+        
+        modelBuilder.Entity<ExtraCriteria>()
+            .HasMany(e => e.SubCriteria)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("ExtraSubCriteria"));
     }
     
     public bool CreateDatabase(bool delete) {
