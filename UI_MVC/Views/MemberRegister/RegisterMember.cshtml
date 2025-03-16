@@ -63,16 +63,30 @@
             <div class="mb-3">
                 <label>@Model.CriteriaList[i].Name</label>
                 <div class="btn-group" role="group">
-                    @foreach (var subCriteria in Model.CriteriaList[i].SubCriteria)
+                    @for (int j = 0; j < Model.CriteriaList[i].SubCriteria.Count(); j++)
                     {
-                        <input type="radio" name="SelectedCriteria[@i]" value="@subCriteria.Id" 
-                               @(Model.SelectedCriteria.Count > i && Model.SelectedCriteria[i] == subCriteria.Id ? "checked" : "")/>@subCriteria.Name
-                        <label class="btn btn-secondary">@subCriteria.Name</label>
+                        <input type="radio" name="SelectedCriteria[@i]" value="@Model.CriteriaList[i].SubCriteria[j].Id"
+                               @(Model.SelectedCriteria.Count > i && Model.SelectedCriteria[i] == Model.CriteriaList[i].SubCriteria[j].Id ? "checked" : "")/>
+                        @Model.CriteriaList[i].SubCriteria[j].Name
+                        <label class="btn btn-secondary">@Model.CriteriaList[i].SubCriteria[j].Name</label>
                     }
                 </div>
             </div>
         }
     </div>
+
+    @for (int i = 0; i < Model.CriteriaList.Count; i++)
+    {
+        <input type="hidden" asp-for="CriteriaList[i].Id"/>
+        <input type="hidden" asp-for="CriteriaList[i].Name"/>
+        
+        @for (int j = 0; j < Model.CriteriaList[i].SubCriteria.Count; j++)
+        {
+            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Id"/>
+            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Name"/>
+            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Percentage"/>
+        }
+    }
 
     <button type="submit" class="btn btn-primary">Aanmelden</button>
 </form>
