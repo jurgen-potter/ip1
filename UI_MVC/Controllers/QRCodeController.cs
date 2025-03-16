@@ -6,11 +6,11 @@ namespace CitizenPanel.UI.MVC.Controllers;
 
 public class QRCodeController : Controller
 {
-    private readonly IUserManager _userManager;
+    private readonly IPanelUserManager _userManager;
 
-    public QRCodeController(IUserManager userManager)
+    public QRCodeController(IPanelUserManager panelUserManager)
     {
-        _userManager = userManager;
+        _userManager = panelUserManager;
     }
     
     // GET

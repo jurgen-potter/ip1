@@ -1,6 +1,6 @@
 using CitizenPanel.BL;
 using CitizenPanel.DAL;
-using CitizenPanel.DAL.EF;
+using CitizenPanel.DAL.Data;
 using CitizenPanel.UI.MVC;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +22,6 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDrawManager, DrawManager>();
 builder.Services.AddScoped<IPanelManager, PanelManager>();
 builder.Services.AddScoped<IQuestionManager, QuestionManager>();
-builder.Services.AddScoped<IUserManager, UserManager>();
 builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();

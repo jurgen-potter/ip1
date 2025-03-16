@@ -1,23 +1,20 @@
 ﻿using CitizenPanel.BL.Domain.PanelManagement;
+using CitizenPanel.BL.Domain.Recruitment;
+using CitizenPanel.BL.Domain.User;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace CitizenPanel.DAL;
-
-using BL.Domain.Recruitment;
-using BL.Domain.User;
+namespace CitizenPanel.DAL.Data;
 
 public class PanelDbContext : IdentityDbContext
 {
     private readonly IConfiguration _configuration;
     public DbSet<Member> Members { get; set; }
     public DbSet<Panel> Panels { get; set; }
-    
     public DbSet<Admin> Admins { get; set; }
     public DbSet<Citizen> Citizens { get; set; }
-    public DbSet<Member> Members { get; set; }
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<ExtraCriteria> ExtraCriteria { get; set; }
     public DbSet<SubCriteria> SubCriteria { get; set; }

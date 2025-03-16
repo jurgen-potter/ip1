@@ -1,4 +1,5 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.DAL.Data;
 
 namespace CitizenPanel.DAL;
 

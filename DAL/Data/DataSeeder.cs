@@ -1,7 +1,8 @@
 ﻿using CitizenPanel.BL.Domain.PanelManagement;
+using CitizenPanel.BL.Domain.Recruitment;
 using CitizenPanel.BL.Domain.User;
 
-namespace CitizenPanel.DAL.EF;
+namespace CitizenPanel.DAL.Data;
 
 public class DataSeeder
 {
@@ -388,6 +389,41 @@ public class DataSeeder
         
         _panelDbContext.AddRange(members);
 
+        var subCrit1 = new SubCriteria()
+        {
+            Name = "Fiets",
+            Percentage = 10
+        };
+        var subCrit2 = new SubCriteria()
+        {
+            Name = "Auto",
+            Percentage = 90
+        };
+        var subCrit3 = new SubCriteria()
+        {
+            Name = "Hoog opgeleid",
+            Percentage = 10
+        };
+        var subCrit4 = new SubCriteria()
+        {
+            Name = "Laag opgeleid",
+            Percentage = 90
+        };
+        
+        _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4);
+
+        var extraCrit1 = new ExtraCriteria()
+        {
+            Name = "Vervoer",
+            SubCriteria = { subCrit1, subCrit2 },
+        };
+        var extraCrit2 = new ExtraCriteria()
+        {
+            Name = "Opleiding",
+            SubCriteria = { subCrit3, subCrit4 },
+        };
+        _panelDbContext.ExtraCriteria.AddRange(extraCrit1, extraCrit2);
+        
         _panelDbContext.SaveChanges();
         _panelDbContext.ChangeTracker.Clear();
     }

@@ -9,7 +9,7 @@ public class TryOutInvitationQRCodeController : Controller
 {
     private readonly IDrawManager _drawManager;
 
-    public TryOutInvitationQRCodeController(IDrawManager drawManager, IUserManager userManager)
+    public TryOutInvitationQRCodeController(IDrawManager drawManager)
     {
         _drawManager = drawManager;
     }

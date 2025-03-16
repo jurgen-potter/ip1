@@ -1,5 +1,6 @@
 ﻿using CitizenPanel.BL.Domain.PanelManagement;
 using CitizenPanel.BL.Domain.User;
+using CitizenPanel.DAL.Data;
 
 namespace CitizenPanel.DAL;
 
