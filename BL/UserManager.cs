@@ -25,8 +25,6 @@ public class UserManager : IUserManager
         int panelId = GetNumber(hexPanelId);
         string postcode = $"{GetNumber(code[0].ToString())}{GetNumber(code[10].ToString())}" +
                           $"{GetNumber(code[19].ToString())}{GetNumber(code[27].ToString())}";
-
-        Console.WriteLine($"{age},{gender},{panelId},{postcode}");
         
         Panelmember panelmember = new Panelmember()
         {
