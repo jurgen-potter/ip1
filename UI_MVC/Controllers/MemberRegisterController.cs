@@ -31,6 +31,12 @@ public class MemberRegisterController : Controller
         Panelmember Panelmember = _panelUserManager.AddPanelmember(memberDto.Code,memberDto.Email);
         return View(Panelmember);
     }*/
+
+    [HttpGet]
+    public IActionResult JoinPanelConfirmation(MemberDto memberDto)
+    {
+        return View(memberDto);
+    }
     
     [HttpGet]
     public IActionResult RegisterMember(MemberDto memberDto)
@@ -78,7 +84,12 @@ public class MemberRegisterController : Controller
             }
             return View(newMember);
         }
-        
-        return RedirectToAction("Index", "Home");
+
+        return RedirectToAction("RegistrationConfirmed");
+    }
+
+    public IActionResult RegistrationConfirmed()
+    {
+        return View();
     }
 }
