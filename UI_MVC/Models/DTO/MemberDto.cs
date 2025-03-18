@@ -1,7 +1,15 @@
-namespace UI_MVC.Models.DTO;
+using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Recruitment;
+
+namespace CitizenPanel.UI.MVC.Models.DTO;
 
 public class MemberDto
 {
     public string Code { get; set; }
     public string Email { get; set; }
+
+    public bool IsConfirmed { get; set; }
+    public Invitation Invitation { get; set; }
+    public List<ExtraCriteria> CriteriaList { get; set; }
+
 }

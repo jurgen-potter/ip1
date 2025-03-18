@@ -14,7 +14,7 @@ public class DrawManager : IDrawManager
         _drawRepository = drawRepository;
     }
     
-    public List<Invitation> AddInvitations(List<DummyMember> members)
+    public IEnumerable<Invitation> AddInvitations(List<DummyMember> members)
     {
         QRCodeGenerator qrGenerator = new QRCodeGenerator();
         List<Invitation> invitations = new List<Invitation>();
@@ -28,7 +28,7 @@ public class DrawManager : IDrawManager
             
             string code = GenerateCode(age, genderNumber, panelId, postCode);
 
-            string qrCodePlace = "https://localhost:7145/QrCode?code=" + code; 
+            string qrCodePlace = "https://localhost:7145/MemberRegister/JoinPanelConfirmation?code=" + code; 
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
             PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
             byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
@@ -48,6 +48,21 @@ public class DrawManager : IDrawManager
         }
         
         return invitations;
+    }
+
+    public Invitation GetInvitationWithCode(string code)
+    {
+        return _drawRepository.ReadInvitationWithCode(code);
+    }
+
+    public IEnumerable<Invitation> GetAllInvitations()
+    {
+        return _drawRepository.ReadAllInvitations();
+    }
+
+    public Invitation ChangeInvitation(Invitation invitation)
+    {
+        return _drawRepository.UpdateInvitation(invitation);
     }
 
 

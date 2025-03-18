@@ -1,4 +1,5 @@
-﻿using CitizenPanel.BL.Domain.PanelManagement;
+﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.PanelManagement;
 using CitizenPanel.BL.Domain.Recruitment;
 using CitizenPanel.BL.Domain.User;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -18,6 +19,7 @@ public class PanelDbContext : IdentityDbContext
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<ExtraCriteria> ExtraCriteria { get; set; }
     public DbSet<SubCriteria> SubCriteria { get; set; }
+    public DbSet<Invitation> Invitations { get; set; }
         
     public PanelDbContext(DbContextOptions<PanelDbContext> options, IConfiguration configuration) : base(options)
     {
@@ -47,6 +49,7 @@ public class PanelDbContext : IdentityDbContext
         modelBuilder.Entity<Organization>();
         modelBuilder.Entity<ExtraCriteria>();
         modelBuilder.Entity<SubCriteria>();
+        modelBuilder.Entity<Invitation>();
 
         modelBuilder.Entity<Member>()
             .HasMany(m => m.SelectedCriteria)

@@ -5,5 +5,8 @@ namespace CitizenPanel.BL;
 
 public interface IDrawManager
 {
-    public List<Invitation> AddInvitations(List<DummyMember> members);
+    public IEnumerable<Invitation> AddInvitations(List<DummyMember> members);
+    public Invitation GetInvitationWithCode(string code);
+    public IEnumerable<Invitation> GetAllInvitations();
+    public Invitation ChangeInvitation(Invitation invitation);
 }

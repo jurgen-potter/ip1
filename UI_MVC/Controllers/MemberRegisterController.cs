@@ -1,23 +1,28 @@
+using System.Text.Json;
+using System.Web;
 using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.User;
 using Microsoft.AspNetCore.Mvc;
-using UI_MVC.Models.DTO;
 using CitizenPanel.UI.MVC.Models;
+using CitizenPanel.UI.MVC.Models.DTO;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
 using BL.Domain.Recruitment;
-using Newtonsoft.Json;
 
 public class MemberRegisterController : Controller
 {
     private readonly IPanelUserManager _panelUserManager;
     private readonly IPanelManager _panelManager;
+    private readonly IDrawManager _drawManager;
 
-    public MemberRegisterController(IPanelUserManager panelUserManager, IPanelManager panelManager)
+    public MemberRegisterController(IPanelUserManager panelUserManager, IPanelManager panelManager, IDrawManager drawManager)
     {
         _panelUserManager = panelUserManager;
         _panelManager = panelManager;
+        _drawManager = drawManager;
     }
     
     // GET
@@ -25,45 +30,50 @@ public class MemberRegisterController : Controller
     {
         return View();
     }
-
-    /*public IActionResult Add(MemberDto memberDto)
-    {
-        Panelmember Panelmember = _panelUserManager.AddPanelmember(memberDto.Code,memberDto.Email);
-        return View(Panelmember);
-    }*/
-
+    
+    
     [HttpGet]
-    public IActionResult JoinPanelConfirmation(MemberDto memberDto)
+    public IActionResult InvalidCode()
     {
-        return View(memberDto);
+        return View();
     }
+    
+    [HttpGet]
+    public IActionResult UsedCode()
+    {
+        return View();
+    }
+
     
     [HttpGet]
     public IActionResult RegisterMember(MemberDto memberDto)
     {
-        Panelmember panelMember = _panelUserManager.AddPanelmember(memberDto.Code,memberDto.Email);
+        Invitation invitation = memberDto.Invitation;
+        List<ExtraCriteria> extraCriteria = memberDto.CriteriaList;
+        if (invitation == null)
+        {
+            invitation = _drawManager.GetInvitationWithCode(memberDto.Code);
+        
+            if (invitation == null)
+                return RedirectToAction("InvalidCode", "MemberRegister");
 
-        List<ExtraCriteria> extraCriteria = _panelManager.GetAllExtraCriteria();
+            if (invitation.IsUsed)
+                return RedirectToAction("UsedCode", "MemberRegister");
+            
+            extraCriteria = _panelManager.GetAllExtraCriteria();
+        }
+
 
         var model = new NewMemberViewModel
         {
-            Gender = panelMember.Gender,
-            Town = panelMember.Postcode,
+            Gender = invitation.Gender,
+            Town = invitation.Postcode,
             CriteriaList = extraCriteria,
             SelectedCriteria = new List<int>(new int[extraCriteria.Count]),
-            PanelId = 1
+            PanelId = 1,
+            Invitation = invitation,
+            IsConfirmed = memberDto.IsConfirmed
         };
-        
-        /*CodeData data = _panelUserManager.GetCodeData(memberDto.Code);
-        
-        var model = new NewMemberViewModel
-        {
-            Gender = data.Gender,
-            Town = data.Town,
-            CriteriaList = data.CriteriaList,
-            SelectedCriteria = new List<SubCriteria>(new SubCriteria[extraCriteria.Count]),
-            PanelId = data.PanelId
-        };*/
         
         return View(model);
     }
@@ -84,7 +94,8 @@ public class MemberRegisterController : Controller
             }
             return View(newMember);
         }
-
+        newMember.Invitation.IsUsed = true;
+        _drawManager.ChangeInvitation(newMember.Invitation);
         return RedirectToAction("RegistrationConfirmed");
     }
 

@@ -1,6 +1,7 @@
 ﻿using CitizenPanel.BL.Domain.Recruitment;
 using CitizenPanel.BL.Domain.User;
 using System.ComponentModel.DataAnnotations;
+using CitizenPanel.BL.Domain.Draw;
 
 namespace CitizenPanel.UI.MVC.Models;
 
@@ -34,4 +35,8 @@ public class NewMemberViewModel
     public List<int> SelectedCriteria { get; set; }
     
     public int PanelId { get; set; }
+    
+    public Invitation Invitation { get; set; }
+    
+    public bool IsConfirmed { get; set; }
 }

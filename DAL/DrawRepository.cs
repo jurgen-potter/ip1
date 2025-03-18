@@ -16,4 +16,21 @@ public class DrawRepository : IDrawRepository
     {
         return invitation;
     }
+
+    public Invitation ReadInvitationWithCode(string code)
+    {
+        return _context.Invitations.SingleOrDefault(i => i.Code == code);
+    }
+
+    public IEnumerable<Invitation> ReadAllInvitations()
+    {
+        return _context.Invitations;
+    }
+
+    public Invitation UpdateInvitation(Invitation invitation)
+    {
+        _context.Invitations.Update(invitation);
+        _context.SaveChanges();
+        return invitation;
+    }
 }

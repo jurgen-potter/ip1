@@ -1,5 +1,5 @@
 @using CitizenPanel.BL.Domain.Draw
-@model List<CitizenPanel.BL.Domain.Draw.Invitation>
+@model IEnumerable<CitizenPanel.BL.Domain.Draw.Invitation>
 
 @{
     ViewBag.Title = "QRCodeTryOut";
@@ -47,7 +47,7 @@
                 @invitation.Code
             </td>
             <td>
-                <img src="data:image/png;base64,@invitation.QRCodeString"/>
+                <img src="data:image/png;base64,@invitation.QRCodeString" style="width: 150px; height: 150px;"/>
             </td>
         </tr>
     }

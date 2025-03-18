@@ -1,5 +1,4 @@
-﻿@using CitizenPanel.BL.Domain.Recruitment
-@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @model CitizenPanel.UI.MVC.Models.NewMemberViewModel
 
@@ -95,5 +94,78 @@
         }
     }
 
+    <input type="hidden" asp-for="PanelId" value="@Model.PanelId" />
+    <input type="hidden" asp-for="IsConfirmed" value="@Model.IsConfirmed" />
+    <input type="hidden" asp-for="Invitation.Id" value="@Model.Invitation.Id"/>
+    <input type="hidden" asp-for="Invitation.Code" value="@Model.Invitation.Code"/>
+    <input type="hidden" asp-for="Invitation.QRCodeString" value="@Model.Invitation.QRCodeString"/>
+    <input type="hidden" asp-for="Invitation.PanelId" value="@Model.Invitation.PanelId"/>
+    <input type="hidden" asp-for="Invitation.Gender" value="@Model.Invitation.Gender"/>
+    <input type="hidden" asp-for="Invitation.Age" value="@Model.Invitation.Age"/>
+    <input type="hidden" asp-for="Invitation.Postcode" value="@Model.Invitation.Postcode"/>
+    <input type="hidden" asp-for="Invitation.IsUsed" value="@Model.Invitation.IsUsed"/>
+
     <button type="submit" class="btn btn-primary">Aanmelden</button>
 </form>
+
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Bevestiging</h5>
+            </div>
+            <div class="modal-body">
+                <p>Weet u zeker dat u wilt meedoen?</p>
+            </div>
+            <div class="modal-footer">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-danger">Ik wil niet meedoen</a>
+                <form id="confirmForm" method="get" asp-controller="MemberRegister" asp-action="RegisterMember">
+                    <input type="hidden" asp-for="IsConfirmed" value="true" />
+                    <input type="hidden" asp-for="Invitation.Id" value="@Model.Invitation.Id"/>
+                    <input type="hidden" asp-for="Invitation.Code" value="@Model.Invitation.Code"/>
+                    <input type="hidden" asp-for="Invitation.QRCodeString" value="@Model.Invitation.QRCodeString"/>
+                    <input type="hidden" asp-for="Invitation.PanelId" value="@Model.Invitation.PanelId"/>
+                    <input type="hidden" asp-for="Invitation.Gender" value="@Model.Invitation.Gender"/>
+                    <input type="hidden" asp-for="Invitation.Age" value="@Model.Invitation.Age"/>
+                    <input type="hidden" asp-for="Invitation.Postcode" value="@Model.Invitation.Postcode"/>
+                    <input type="hidden" asp-for="Invitation.IsUsed" value="@Model.Invitation.IsUsed"/>
+
+                    @for (int i = 0; i < Model.CriteriaList.Count; i++)
+                    {
+                        <input type="hidden" asp-for="CriteriaList[i].Id"/>
+                        <input type="hidden" asp-for="CriteriaList[i].Name"/>
+
+                        @for (int j = 0; j < Model.CriteriaList[i].SubCriteria.Count; j++)
+                        {
+                            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Id"/>
+                            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Name"/>
+                            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Percentage"/>
+                        }
+                    }
+                    <button type="submit" class="btn btn-success">Ik wil meedoen</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    @if (!Model.IsConfirmed)
+    {
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            confirmationModal.show();
+
+            document.getElementById('confirmParticipation').addEventListener('click', function () {
+                confirmationModal.hide();
+            });
+        });
+        </script>
+    }
+}
