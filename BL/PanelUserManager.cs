@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CitizenPanel.BL;
 
-using Domain.Recruitment;
-
 public class PanelUserManager : IPanelUserManager
 {
     private readonly UserManager<IdentityUser> _userManager;
@@ -40,32 +38,7 @@ public class PanelUserManager : IPanelUserManager
         return panelmember;
     }
 
-    public async Task<(IdentityResult result, IdentityUser user)> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<int> newMemberSelectedCriteria)
-    {
-        List<SubCriteria> selectedCriteria = new List<SubCriteria>();
-        foreach (var criteria in newMemberSelectedCriteria)
-        {
-            var crit = _panelManager.GetSubCriteria(criteria);
-            selectedCriteria.Add(crit);
-        }
-        
-        Member member = new Member()
-        {
-            FirstName = newMemberFirstName,
-            LastName = newMemberLastName,
-            Email = newMemberEmail,
-            UserName = newMemberEmail,
-            Gender = newMemberGender,
-            BirthDate = newMemberBirthDate,
-            Town = newMemberTown,
-            SelectedCriteria = selectedCriteria
-        };
-        
-        var result = await _userManager.CreateAsync(member, newMemberPassword);
-
-        return result.Succeeded ? (result, member) : (result, null);
-    }
-
+    
 
     public int GetNumber(string code)
     {

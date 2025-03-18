@@ -1,6 +1,7 @@
 ﻿namespace CitizenPanel.BL;
 
 using DAL;
+using Domain.PanelManagement;
 using Domain.Recruitment;
 
 public class PanelManager : IPanelManager
@@ -24,5 +25,10 @@ public class PanelManager : IPanelManager
     public SubCriteria GetSubCriteria(int subCriteriaId)
     {
         return _repository.ReadSubCriteria(subCriteriaId);
+    }
+
+    public Panel GetPanel(int panelId)
+    {
+        return _repository.ReadPanelById(panelId);
     }
 }

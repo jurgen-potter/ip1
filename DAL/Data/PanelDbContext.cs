@@ -36,6 +36,11 @@ public class PanelDbContext : IdentityDbContext
     {
         base.OnModelCreating(modelBuilder);
         
+        modelBuilder.Entity<Member>().ToTable("Members");
+        modelBuilder.Entity<Admin>().ToTable("Admins");
+        modelBuilder.Entity<Citizen>().ToTable("Citizens");
+        modelBuilder.Entity<Organization>().ToTable("Organizations");
+        
         modelBuilder.Entity<Panel>()
             .HasMany(m => m.Members);
         modelBuilder.Entity<Member>()

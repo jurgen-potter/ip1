@@ -1,23 +1,25 @@
 using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.User;
 using Microsoft.AspNetCore.Mvc;
-using UI_MVC.Models.DTO;
 using CitizenPanel.UI.MVC.Models;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
 using BL.Domain.Recruitment;
+using Models.DTO;
 using Newtonsoft.Json;
 
 public class MemberRegisterController : Controller
 {
     private readonly IPanelUserManager _panelUserManager;
     private readonly IPanelManager _panelManager;
+    private readonly IRegistrationManager _registrationManager;
 
-    public MemberRegisterController(IPanelUserManager panelUserManager, IPanelManager panelManager)
+    public MemberRegisterController(IPanelUserManager panelUserManager, IPanelManager panelManager, IRegistrationManager registrationManager)
     {
         _panelUserManager = panelUserManager;
         _panelManager = panelManager;
+        _registrationManager = registrationManager;
     }
     
     // GET
@@ -75,7 +77,7 @@ public class MemberRegisterController : Controller
             return View(newMember);
         }
         
-        var (result, member) = await _panelUserManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria);
+        var (result, member) = await _registrationManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria, newMember.PanelId);
         if (!result.Succeeded)
         {
             foreach (var error in result.Errors)

@@ -1,4 +1,4 @@
-namespace UI_MVC.Models.DTO;
+namespace CitizenPanel.UI.MVC.Models.DTO;
 
 public class MemberDto
 {

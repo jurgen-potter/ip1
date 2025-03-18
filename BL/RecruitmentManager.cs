@@ -3,7 +3,7 @@ using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.BL;
 
-public class RecruitmentManager
+public class RecruitmentManager : IRecruitmentManager
 {
     public RecruitmentResult CalculateRecruitment(RecruitmentCriteria criteria)
     {
