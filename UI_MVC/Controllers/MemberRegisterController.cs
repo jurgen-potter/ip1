@@ -89,7 +89,8 @@ public class MemberRegisterController : Controller
             }
             return View(newMember);
         }
-
+        newMember.Invitation.IsUsed = true;
+        _drawManager.ChangeInvitation(newMember.Invitation);
         return RedirectToAction("RegistrationConfirmed");
     }
 
