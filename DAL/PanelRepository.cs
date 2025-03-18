@@ -1,11 +1,9 @@
 ﻿using CitizenPanel.BL.Domain.PanelManagement;
-using CitizenPanel.BL.Domain.User;
+using CitizenPanel.BL.Domain.Recruitment;
+using Microsoft.EntityFrameworkCore;
 using CitizenPanel.DAL.Data;
 
 namespace CitizenPanel.DAL;
-
-using BL.Domain.Recruitment;
-using Microsoft.EntityFrameworkCore;
 
 public class PanelRepository : IPanelRepository
 {
@@ -16,12 +14,12 @@ public class PanelRepository : IPanelRepository
         _dbContext = dbContext;
     }
 
-    public Panel GetPanelById(int panelId)
+    public Panel ReadPanelById(int panelId)
     {
         return _dbContext.Panels.Find(panelId);
     }
 
-    public IEnumerable<Panel> GetAllPanels()
+    public IEnumerable<Panel> ReadAllPanels()
     {
         return _dbContext.Panels.ToList();
     }
@@ -41,7 +39,7 @@ public class PanelRepository : IPanelRepository
             .ToList();
     }
 
-    public void AddPanel(Panel panel)
+    public void CreatePanel(Panel panel)
     {
         _dbContext.Panels.Add(panel);
     }

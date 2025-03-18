@@ -3,18 +3,25 @@ using CitizenPanel.BL.Domain.Recruitment;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.BL.Domain.PanelManagement;
 using CitizenPanel.DAL;
+using Microsoft.AspNetCore.Identity;
 
 namespace CitizenPanel.BL;
+
+
 
 public class RegistrationManager : IRegistrationManager
 {
     private readonly IMemberRepository _memberRepository;
     private readonly Dictionary<int, DrawStatus> _panelDrawStatuses;
     private readonly Dictionary<int, DrawResult> _panelDrawResults;
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly IPanelManager _panelManager;
 
-    public RegistrationManager(IMemberRepository memberRepository)
+    public RegistrationManager(IMemberRepository memberRepository, UserManager<IdentityUser> userManager, IPanelManager panelManager)
     {
         _memberRepository = memberRepository;
+        _userManager = userManager;
+        _panelManager = panelManager;
         
         // Initialize draw statuses for panels
         _panelDrawStatuses = new Dictionary<int, DrawStatus>
@@ -206,4 +213,32 @@ public class RegistrationManager : IRegistrationManager
         }
         return result;
     }
+    
+    public async Task<(IdentityResult result, IdentityUser user)> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<int> newMemberSelectedCriteria, int newMemberPanelId)
+    {
+        List<SubCriteria> selectedCriteria = new List<SubCriteria>();
+        foreach (var criteria in newMemberSelectedCriteria)
+        {
+            var crit = _panelManager.GetSubCriteria(criteria);
+            selectedCriteria.Add(crit);
+        }
+        
+        Member member = new Member()
+        {
+            FirstName = newMemberFirstName,
+            LastName = newMemberLastName,
+            Email = newMemberEmail,
+            UserName = newMemberEmail,
+            Gender = newMemberGender,
+            BirthDate = newMemberBirthDate,
+            Town = newMemberTown,
+            SelectedCriteria = selectedCriteria,
+            Panel = _panelManager.GetPanel(newMemberPanelId)
+        };
+        
+        var result = await _userManager.CreateAsync(member, newMemberPassword);
+
+        return result.Succeeded ? (result, member) : (result, null);
+    }
+
 }

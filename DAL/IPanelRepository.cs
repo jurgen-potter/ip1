@@ -7,9 +7,9 @@ using BL.Domain.Recruitment;
 
 public interface IPanelRepository
 {
-    Panel GetPanelById(int panelId);
-    IEnumerable<Panel> GetAllPanels();
-    void AddPanel(Panel panel);
+    Panel ReadPanelById(int panelId);
+    IEnumerable<Panel> ReadAllPanels();
+    void CreatePanel(Panel panel);
     void UpdatePanel(Panel panel);
     void DeletePanel(Panel panel);
     public ExtraCriteria ReadExtraCriteria(int criteriaId);
