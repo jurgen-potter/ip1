@@ -1,26 +1,21 @@
-using System.Text.Json;
-using System.Web;
 using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
-using CitizenPanel.BL.Domain.User;
-using Microsoft.AspNetCore.Mvc;
+using CitizenPanel.BL.Domain.Recruitment;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.DTO;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
-using BL.Domain.Recruitment;
-
 public class MemberRegisterController : Controller
 {
-    private readonly IPanelUserManager _panelUserManager;
+    private readonly IRegistrationManager _registrationManager;
     private readonly IPanelManager _panelManager;
     private readonly IDrawManager _drawManager;
 
-    public MemberRegisterController(IPanelUserManager panelUserManager, IPanelManager panelManager, IDrawManager drawManager)
+    public MemberRegisterController(IRegistrationManager registrationManager, IPanelManager panelManager, IDrawManager drawManager)
     {
-        _panelUserManager = panelUserManager;
+        _registrationManager = registrationManager;
         _panelManager = panelManager;
         _drawManager = drawManager;
     }
@@ -85,7 +80,7 @@ public class MemberRegisterController : Controller
             return View(newMember);
         }
         
-        var (result, member) = await _panelUserManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria);
+        var (result, member) = await _registrationManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria, newMember.PanelId);
         if (!result.Succeeded)
         {
             foreach (var error in result.Errors)
@@ -94,8 +89,7 @@ public class MemberRegisterController : Controller
             }
             return View(newMember);
         }
-        newMember.Invitation.IsUsed = true;
-        _drawManager.ChangeInvitation(newMember.Invitation);
+
         return RedirectToAction("RegistrationConfirmed");
     }
 
