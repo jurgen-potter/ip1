@@ -28,7 +28,7 @@ public class DrawManager : IDrawManager
             
             string code = GenerateCode(age, genderNumber, panelId, postCode);
 
-            string qrCodePlace = "https://localhost:7145/MemberRegister/JoinPanelConfirmation?code=" + code; 
+            string qrCodePlace = "https://localhost:7145/MemberRegister/RegisterMember?code=" + code; 
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
             PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
             byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
