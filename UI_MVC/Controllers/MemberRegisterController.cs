@@ -12,10 +12,12 @@ public class MemberRegisterController : Controller
     private readonly IRegistrationManager _registrationManager;
     private readonly IPanelManager _panelManager;
     private readonly IDrawManager _drawManager;
+    private readonly IMailSender _mailSender;
 
-    public MemberRegisterController(IRegistrationManager registrationManager, IPanelManager panelManager, IDrawManager drawManager)
+    public MemberRegisterController(IDrawManager drawManager, IPanelManager panelManager, IRegistrationManager registrationManager, IMailSender mailSender)
     {
         _registrationManager = registrationManager;
+        _mailSender = mailSender;
         _panelManager = panelManager;
         _drawManager = drawManager;
     }
@@ -26,7 +28,7 @@ public class MemberRegisterController : Controller
         return View();
     }
     
-    
+
     [HttpGet]
     public IActionResult InvalidCode()
     {
@@ -91,11 +93,17 @@ public class MemberRegisterController : Controller
         }
         newMember.Invitation.IsUsed = true;
         _drawManager.ChangeInvitation(newMember.Invitation);
+
+        TempData["Email"] = newMember.Email;
+        
         return RedirectToAction("RegistrationConfirmed");
     }
 
     public IActionResult RegistrationConfirmed()
     {
+        var email = TempData["Email"]?.ToString();
+        _mailSender.SendMailAsync(email, "Bevestiging aanmelding", "Uw gegevens zijn opgeslagen");
+        
         return View();
     }
 }
