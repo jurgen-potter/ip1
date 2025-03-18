@@ -14,12 +14,14 @@ public class MemberRegisterController : Controller
     private readonly IPanelUserManager _panelUserManager;
     private readonly IPanelManager _panelManager;
     private readonly IRegistrationManager _registrationManager;
+    private readonly IMailSender _mailSender;
 
-    public MemberRegisterController(IPanelUserManager panelUserManager, IPanelManager panelManager, IRegistrationManager registrationManager)
+    public MemberRegisterController(IPanelUserManager panelUserManager, IPanelManager panelManager, IRegistrationManager registrationManager, IMailSender mailSender)
     {
         _panelUserManager = panelUserManager;
         _panelManager = panelManager;
         _registrationManager = registrationManager;
+        _mailSender = mailSender;
     }
     
     // GET
@@ -87,11 +89,16 @@ public class MemberRegisterController : Controller
             return View(newMember);
         }
 
+        TempData["Email"] = newMember.Email;
+        
         return RedirectToAction("RegistrationConfirmed");
     }
 
     public IActionResult RegistrationConfirmed()
     {
+        var email = TempData["Email"]?.ToString();
+        _mailSender.SendMailAsync(email, "Bevestiging aanmelding", "Uw gegevens zijn opgeslagen");
+        
         return View();
     }
 }

@@ -26,6 +26,7 @@ builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
 builder.Services.AddScoped<IPanelUserManager, PanelUserManager>();
+builder.Services.AddScoped<IMailSender, MailSender>();
 
 builder.Services.AddRazorPages();
 
