@@ -16,12 +16,49 @@ public class DataSeeder
 
     public void Seed()
     {
+        //criteria
+        var subCrit1 = new SubCriteria()
+        {
+            Name = "Fiets",
+            Percentage = 10
+        };
+        var subCrit2 = new SubCriteria()
+        {
+            Name = "Auto",
+            Percentage = 90
+        };
+        var subCrit3 = new SubCriteria()
+        {
+            Name = "Hoog opgeleid",
+            Percentage = 10
+        };
+        var subCrit4 = new SubCriteria()
+        {
+            Name = "Laag opgeleid",
+            Percentage = 90
+        };
+        _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4);
+
+        var extraCrit1 = new ExtraCriteria()
+        {
+            Name = "Vervoer",
+            SubCriteria = { subCrit1, subCrit2 },
+        };
+        var extraCrit2 = new ExtraCriteria()
+        {
+            Name = "Opleiding",
+            SubCriteria = { subCrit3, subCrit4 },
+        };
+        _panelDbContext.ExtraCriteria.AddRange(extraCrit1, extraCrit2);
+        
         // Create panel objects
         var panel1 = new Panel()
         {
             PanelId = 1,
-            Name = "Panel 1",
+            Name = "Panel 1"
         };
+        //panel1.ExtraCriteria.Add(extraCrit1);
+        //panel1.ExtraCriteria.Add(extraCrit2);
 
         var panel2 = new Panel()
         {
@@ -389,43 +426,6 @@ public class DataSeeder
             });
         
         _panelDbContext.AddRange(members);
-
-        
-        //criteria
-        var subCrit1 = new SubCriteria()
-        {
-            Name = "Fiets",
-            Percentage = 10
-        };
-        var subCrit2 = new SubCriteria()
-        {
-            Name = "Auto",
-            Percentage = 90
-        };
-        var subCrit3 = new SubCriteria()
-        {
-            Name = "Hoog opgeleid",
-            Percentage = 10
-        };
-        var subCrit4 = new SubCriteria()
-        {
-            Name = "Laag opgeleid",
-            Percentage = 90
-        };
-        
-        _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4);
-
-        var extraCrit1 = new ExtraCriteria()
-        {
-            Name = "Vervoer",
-            SubCriteria = { subCrit1, subCrit2 },
-        };
-        var extraCrit2 = new ExtraCriteria()
-        {
-            Name = "Opleiding",
-            SubCriteria = { subCrit3, subCrit4 },
-        };
-        _panelDbContext.ExtraCriteria.AddRange(extraCrit1, extraCrit2);
         
         
         //invitations

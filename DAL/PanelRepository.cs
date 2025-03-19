@@ -54,6 +54,14 @@ public class PanelRepository : IPanelRepository
         return _dbContext.SubCriteria.Find(subCriteriaId);
     }
 
+    public IEnumerable<ExtraCriteria> ReadExtraCriteriaByPanel(int panelId)
+    {
+        return _dbContext.ExtraCriteria
+            .Where(e => e.Panel.PanelId == panelId)
+            .Include(e => e.SubCriteria)
+            .ToList();
+    }
+
 
     public void DeletePanel(Panel panel)
     {

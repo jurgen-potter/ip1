@@ -65,6 +65,10 @@ public class PanelDbContext : IdentityDbContext
             .HasMany(e => e.SubCriteria)
             .WithMany()
             .UsingEntity(j => j.ToTable("ExtraSubCriteria"));
+
+        modelBuilder.Entity<Panel>()
+            .HasMany(p => p.ExtraCriteria)
+            .WithOne(e => e.Panel);
     }
     
     public bool CreateDatabase(bool delete) {

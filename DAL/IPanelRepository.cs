@@ -17,4 +17,5 @@ public interface IPanelRepository
     public List<ExtraCriteria> ReadAllExtraCriteria();
     
     public SubCriteria ReadSubCriteria(int subCriteriaId);
+    IEnumerable<ExtraCriteria> ReadExtraCriteriaByPanel(int panelId);
 }

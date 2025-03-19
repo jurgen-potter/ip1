@@ -46,7 +46,6 @@ public class MemberRegisterController : Controller
     public IActionResult RegisterMember(MemberDto memberDto)
     {
         Invitation invitation = memberDto.Invitation;
-        List<ExtraCriteria> extraCriteria = memberDto.CriteriaList;
         if (invitation == null)
         {
             invitation = _drawManager.GetInvitationWithCode(memberDto.Code);
@@ -56,10 +55,9 @@ public class MemberRegisterController : Controller
 
             if (invitation.IsUsed)
                 return RedirectToAction("UsedCode", "MemberRegister");
-            
-            extraCriteria = _panelManager.GetAllExtraCriteria();
         }
-
+        
+        List<ExtraCriteria> extraCriteria = _panelManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
 
         var model = new NewMemberViewModel
         {
