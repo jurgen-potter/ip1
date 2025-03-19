@@ -57,8 +57,8 @@ public class DataSeeder
             PanelId = 1,
             Name = "Panel 1"
         };
-        //panel1.ExtraCriteria.Add(extraCrit1);
-        //panel1.ExtraCriteria.Add(extraCrit2);
+        panel1.ExtraCriteria.Add(extraCrit1);
+        panel1.ExtraCriteria.Add(extraCrit2);
 
         var panel2 = new Panel()
         {
