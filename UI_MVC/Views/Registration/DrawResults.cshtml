@@ -26,7 +26,7 @@ var drawStatus = (DrawStatus)ViewBag.DrawStatus;
                     Status:
                     <span class="badge bg-success">Loting afgerond</span>
                 </p>
-                <a asp-action="Overview" asp-route-panelId="@panelId" class="btn btn-secondary">
+                <a asp-action="Index" asp-route-panelId="@panelId" method="get" class="btn btn-secondary">
                     Terug naar overzicht
                 </a>
             </div>

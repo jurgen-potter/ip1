@@ -33,7 +33,7 @@ public class RegistrationController : Controller
         return View(allBuckets);
     }
     
-    [HttpGet]
+    [HttpPost]
     public IActionResult EditMail(int panelId)
     {
         var model = new FinalDrawViewModel
