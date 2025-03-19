@@ -15,7 +15,7 @@ public class RegistrationController : Controller
     }
 
     [HttpGet]
-    public IActionResult Overview(int panelId)
+    public IActionResult Index(int panelId = 1)
     {
         var panel = new Panel { PanelId = panelId };
 

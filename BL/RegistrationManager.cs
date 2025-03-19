@@ -176,9 +176,6 @@ public class RegistrationManager : IRegistrationManager
                 ageRange.Max
             ).ToList();
             
-            // Debug: Print the number of members found for this bucket
-            Console.WriteLine($"Bucket {bucket.Gender} {bucket.AgeGroup}: Found {bucketMembers.Count} members");
-            
             // Randomly select members
             var shuffledMembers = bucketMembers.OrderBy(x => random.Next()).ToList();
             
