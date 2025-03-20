@@ -26,8 +26,7 @@ public class DrawManager : IDrawManager
             int genderNumber = (int)gender;
             int panelId = dummyMember.PanelId;
             string postCode = dummyMember.Postcode;
-            
-            string code = GenerateCode(age, genderNumber, panelId, postCode);
+            string code = GenerateCode();
 
             string qrCodePlace = "https://localhost:7145/MemberRegister/RegisterMember?code=" + code; 
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
@@ -66,26 +65,24 @@ public class DrawManager : IDrawManager
         return _drawRepository.UpdateInvitation(invitation);
     }
     
-    public string GenerateCode(int age, int gender, int panelId, string postcode)
+    public string GenerateCode()
     {
         Random random = new Random();
-        string code = string.Empty;
-        string hexAge = age.ToString("X4");
-        string hexGender = gender.ToString("X4");
-        string hexPanelId = panelId.ToString("X4");
-        string hexCode = $"{postcode[0]}-{hexAge}-000{postcode[1]}-{hexGender}-00{postcode[2]}-{hexPanelId}-0{postcode[3]}";
-        foreach (char c in hexCode)
+        string code = String.Empty;
+        string codeTemplate = $"0000-0000-0000-0000-0000";
+        foreach (char c in codeTemplate)
         {
-            if (c == '0')
+            char letter = c;
+            int replaceNumber = random.Next(0, 63);
+            if (replaceNumber >= 37)
             {
-                int replaceNumber = random.Next(0, 20);
-                char letter = (char)('g' + replaceNumber);
-                code += letter;
+                letter = (char)('a' + replaceNumber);
             }
-            else
+            else if (replaceNumber >= 10)
             {
-                code += c;
+                letter = (char)('A' + replaceNumber);
             }
+            code += letter;
         }
         return code;
     }

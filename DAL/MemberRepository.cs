@@ -59,14 +59,4 @@ public class MemberRepository : IMemberRepository
                         m.Age <= maxAge);
     }
 
-    public void MarkMembersAsSelected(IEnumerable<Member> members)
-    {
-        foreach (var member in members)
-        {
-            member.IsSelected = true;
-            UpdateMember(member);
-            _dbContext.SaveChanges();
-
-        }
-    }
 }

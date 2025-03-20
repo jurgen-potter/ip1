@@ -15,5 +15,4 @@ public interface IMemberRepository
     
     // Additional methods to support the RegistrationManager functionality
     int ReadMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);
-    void MarkMembersAsSelected(IEnumerable<Member> members);
 }
