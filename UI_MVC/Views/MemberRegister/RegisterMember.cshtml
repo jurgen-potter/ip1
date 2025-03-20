@@ -43,7 +43,8 @@
 
     <div>
         <label>Geslacht:</label>
-        <input asp-for="Gender" type="text" class="form-control" value="@Model.Gender.ToDutch()" readonly>
+        <input type="text" class="form-control" value="@Model.Gender.ToDutch()" readonly>
+        <input type="hidden" asp-for="Gender" value="@Model.Gender"/>
     </div>
 
     <div>
