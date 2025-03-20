@@ -1,5 +1,6 @@
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.User;
+using CitizenPanel.DAL;
 using Microsoft.AspNetCore.Identity;
 
 namespace CitizenPanel.BL;
@@ -8,12 +9,14 @@ public class MemberManager : IMemberManager
 {
     private readonly IDrawManager _drawManager;
     private readonly IPanelManager _panelManager;
+    private readonly IMemberRepository _memberRepository;
     private readonly UserManager<IdentityUser> _userManager;
 
-    public MemberManager(IDrawManager drawManager, IPanelManager panelManager, UserManager<IdentityUser> userManager)
+    public MemberManager(IDrawManager drawManager, IPanelManager panelManager, IMemberRepository memberRepository, UserManager<IdentityUser> userManager)
     {
         _drawManager = drawManager;
         _panelManager = panelManager;
+        _memberRepository = memberRepository;
         _userManager = userManager;
     }
     
@@ -53,41 +56,46 @@ public class MemberManager : IMemberManager
 
     public IEnumerable<Member> GetAllMembers()
     {
-        throw new NotImplementedException();
+        return _memberRepository.ReadAllMembers();
     }
 
     public Member GetMemberById(int memberId)
     {
-        throw new NotImplementedException();
+        return _memberRepository.ReadMemberById(memberId);
     }
 
     public void ChangeMember(Member member)
     {
-        throw new NotImplementedException();
+        _memberRepository.UpdateMember(member);
     }
 
     public void RemoveMember(Member member)
     {
-        throw new NotImplementedException();
+        _memberRepository.DeleteMember(member);
     }
 
     public IEnumerable<Member> GetMembersByPanelId(int panelId)
     {
-        throw new NotImplementedException();
+        return _memberRepository.ReadMembersByPanelId(panelId);
     }
 
     public IEnumerable<Member> GetMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge)
     {
-        throw new NotImplementedException();
+        return _memberRepository.ReadMembersByPanelIdGenderAndAgeRange(panelId, gender, minAge, maxAge);
     }
 
     public int GetMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge)
     {
-        throw new NotImplementedException();
+        return _memberRepository.ReadMemberCountByPanelIdGenderAndAgeRange(panelId, gender, minAge, maxAge);
     }
 
     public void MarkMembersAsSelected(IEnumerable<Member> members)
     {
-        throw new NotImplementedException();
+        foreach (var member in members)
+        {
+            member.IsSelected = true;
+            ChangeMember(member);
+        }
+
     }
 }

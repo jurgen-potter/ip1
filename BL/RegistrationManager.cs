@@ -10,14 +10,13 @@ namespace CitizenPanel.BL;
 
 public class RegistrationManager : IRegistrationManager
 {
-    private readonly IMemberRepository _memberRepository;
+    private readonly IMemberManager _memberManager;
     private readonly Dictionary<int, DrawStatus> _panelDrawStatuses;
     private readonly Dictionary<int, DrawResult> _panelDrawResults;
 
-    public RegistrationManager(IMemberRepository memberRepository)
+    public RegistrationManager(IMemberManager memberManager)
     {
-        _memberRepository = memberRepository;
-      
+        _memberManager = memberManager;
         
         // Initialize draw statuses for panels
         _panelDrawStatuses = new Dictionary<int, DrawStatus>
@@ -48,7 +47,7 @@ public class RegistrationManager : IRegistrationManager
             foreach (var ageGroup in ageGroups)
             {
                 // Use repository to get count instead of fetching all members
-                var count = _memberRepository.ReadMemberCountByPanelIdGenderAndAgeRange(
+                var count = _memberManager.GetMemberCountByPanelIdGenderAndAgeRange(
                     panel.PanelId, genderGroup, ageGroup.Min, ageGroup.Max);
                 
                 buckets.Add(new RecruitmentBucket
@@ -165,7 +164,7 @@ public class RegistrationManager : IRegistrationManager
             var ageRange = ageRanges[bucket.AgeGroup];
             
             // Get all members that match this bucket's criteria using repository
-            var bucketMembers = _memberRepository.ReadMembersByPanelIdGenderAndAgeRange(
+            var bucketMembers = _memberManager.GetMembersByPanelIdGenderAndAgeRange(
                 panel.PanelId, 
                 genderEnum, 
                 ageRange.Min, 
@@ -193,7 +192,7 @@ public class RegistrationManager : IRegistrationManager
             }
             
             // Update selected members in the repository
-            _memberRepository.MarkMembersAsSelected(selectedMembers);
+            _memberManager.MarkMembersAsSelected(selectedMembers);
             
             // Select reserve members
             for (int i = mainCount; i < mainCount + reserveCount; i++)
