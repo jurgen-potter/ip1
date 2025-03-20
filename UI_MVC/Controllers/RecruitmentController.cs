@@ -1,11 +1,18 @@
 ﻿using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Recruitment;
+using CitizenPanel.BL.Domain.Draw;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
 public class RecruitmentController : Controller
 {
+    private readonly IDrawManager _drawManager;
+
+    public RecruitmentController(IDrawManager drawManager)
+    {
+        _drawManager = drawManager;
+    }
+    
     [HttpGet]
     public IActionResult Index()
     {
@@ -19,8 +26,7 @@ public class RecruitmentController : Controller
         {
             return View("Index", model);
         }
-        var rmngr = new RecruitmentManager();
-        var result = rmngr.CalculateRecruitment(model);
+        var result = _drawManager.CalculateRecruitment(model);
 
         return View("Result", result);
     }

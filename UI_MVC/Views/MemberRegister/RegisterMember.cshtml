@@ -157,15 +157,7 @@
 {
     @if (!Model.IsConfirmed)
     {
-        <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-            confirmationModal.show();
-
-            document.getElementById('confirmParticipation').addEventListener('click', function () {
-                confirmationModal.hide();
-            });
-        });
+        <script defer src="/js/memberRegister/registerMember.js">
         </script>
     }
 }

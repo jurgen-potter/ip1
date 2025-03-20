@@ -1,9 +1,6 @@
-﻿using CitizenPanel.BL.Domain.PanelManagement;
-using CitizenPanel.BL.Domain.User;
+﻿using CitizenPanel.BL.Domain.Panel;
 
 namespace CitizenPanel.DAL;
-
-using BL.Domain.Recruitment;
 
 public interface IPanelRepository
 {
@@ -12,10 +9,4 @@ public interface IPanelRepository
     void CreatePanel(Panel panel);
     void UpdatePanel(Panel panel);
     void DeletePanel(Panel panel);
-    public ExtraCriteria ReadExtraCriteria(int criteriaId);
-    
-    public List<ExtraCriteria> ReadAllExtraCriteria();
-    
-    public SubCriteria ReadSubCriteria(int subCriteriaId);
-    IEnumerable<ExtraCriteria> ReadExtraCriteriaByPanel(int panelId);
 }

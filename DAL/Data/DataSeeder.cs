@@ -1,6 +1,5 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
-using CitizenPanel.BL.Domain.PanelManagement;
-using CitizenPanel.BL.Domain.Recruitment;
+using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.DAL.Data;
@@ -15,6 +14,15 @@ public class DataSeeder
     }
 
     public void Seed()
+    {
+        SeedPanels();
+        SeedInvitations();
+        
+        _panelDbContext.SaveChanges();
+        _panelDbContext.ChangeTracker.Clear();
+    }
+
+    private void SeedPanels()
     {
         //criteria
         var subCrit1 = new SubCriteria()
@@ -426,9 +434,12 @@ public class DataSeeder
             });
         
         _panelDbContext.AddRange(members);
-        
-        
-        //invitations
+
+    }
+    
+    private void SeedInvitations()
+    {
+                //invitations
         var invitation1 = new Invitation()
         {
             Age = 30,
@@ -483,8 +494,6 @@ public class DataSeeder
         _panelDbContext.Invitations.Add(invitation3);
         _panelDbContext.Invitations.Add(invitation4);
         _panelDbContext.Invitations.Add(invitation5);
-        
-        _panelDbContext.SaveChanges();
-        _panelDbContext.ChangeTracker.Clear();
+
     }
 }

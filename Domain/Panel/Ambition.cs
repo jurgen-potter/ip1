@@ -1,4 +1,4 @@
-﻿namespace CitizenPanel.BL.Domain.PanelManagement;
+﻿namespace CitizenPanel.BL.Domain.Panel;
 
 public enum Ambition : byte
 {

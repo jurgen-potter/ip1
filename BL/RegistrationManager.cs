@@ -1,7 +1,6 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
-using CitizenPanel.BL.Domain.Recruitment;
+using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
-using CitizenPanel.BL.Domain.PanelManagement;
 using CitizenPanel.DAL;
 using Microsoft.AspNetCore.Identity;
 
@@ -16,6 +15,7 @@ public class RegistrationManager : IRegistrationManager
     private readonly Dictionary<int, DrawResult> _panelDrawResults;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IPanelManager _panelManager;
+    private readonly IDrawManager _drawManager;
 
     public RegistrationManager(IMemberRepository memberRepository, UserManager<IdentityUser> userManager, IPanelManager panelManager)
     {
@@ -52,7 +52,7 @@ public class RegistrationManager : IRegistrationManager
             foreach (var ageGroup in ageGroups)
             {
                 // Use repository to get count instead of fetching all members
-                var count = _memberRepository.GetMemberCountByPanelIdGenderAndAgeRange(
+                var count = _memberRepository.ReadMemberCountByPanelIdGenderAndAgeRange(
                     panel.PanelId, genderGroup, ageGroup.Min, ageGroup.Max);
                 
                 buckets.Add(new RecruitmentBucket
@@ -169,7 +169,7 @@ public class RegistrationManager : IRegistrationManager
             var ageRange = ageRanges[bucket.AgeGroup];
             
             // Get all members that match this bucket's criteria using repository
-            var bucketMembers = _memberRepository.GetMembersByPanelIdGenderAndAgeRange(
+            var bucketMembers = _memberRepository.ReadMembersByPanelIdGenderAndAgeRange(
                 panel.PanelId, 
                 genderEnum, 
                 ageRange.Min, 
@@ -211,38 +211,5 @@ public class RegistrationManager : IRegistrationManager
         return result;
     }
     
-    public async Task<(IdentityResult result, IdentityUser user)> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<int> newMemberSelectedCriteria, int newMemberPanelId)
-    {
-        List<SubCriteria> selectedCriteria = new List<SubCriteria>();
-        
-        if (newMemberSelectedCriteria != null && newMemberSelectedCriteria.Any())
-        {
-            foreach (var criteria in newMemberSelectedCriteria)
-            {
-                var crit = _panelManager.GetSubCriteria(criteria);
-                if (crit != null)
-                {
-                    selectedCriteria.Add(crit);
-                }
-            }
-        }
-        
-        Member member = new Member()
-        {
-            FirstName = newMemberFirstName,
-            LastName = newMemberLastName,
-            Email = newMemberEmail,
-            UserName = newMemberEmail,
-            Gender = newMemberGender,
-            BirthDate = newMemberBirthDate,
-            Town = newMemberTown,
-            SelectedCriteria = selectedCriteria,
-            Panel = _panelManager.GetPanel(newMemberPanelId)
-        };
-        
-        var result = await _userManager.CreateAsync(member, newMemberPassword);
-
-        return result.Succeeded ? (result, member) : (result, null);
-    }
 
 }

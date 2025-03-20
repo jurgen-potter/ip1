@@ -1,9 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model CitizenPanel.BL.Domain.Recruitment.RecruitmentCriteria
+@model CitizenPanel.BL.Domain.Draw.RecruitmentCriteria
+
+@{
+    ViewBag.Title = "Bereken panel";
+}
 
 <h2>Demografische Invoer</h2>
 
-<!-- Validatie is nog niet tip top in orde--> 
+<!-- Validatie is nog niet tiptop in orde--> 
 <div asp-validation-summary="All" class="text-danger"></div>
 
 <form asp-action="Calculate" method="post">

@@ -1,3 +1,4 @@
+using AspNetCoreLiveMonitoring.Extensions;
 using CitizenPanel.BL;
 using CitizenPanel.DAL;
 using CitizenPanel.DAL.Data;
@@ -18,16 +19,16 @@ builder.Services.AddDbContext<PanelDbContext>(options =>
 builder.Services.AddScoped<IDrawRepository, DrawRepository>();
 builder.Services.AddScoped<IPanelRepository, PanelRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddScoped<IDrawManager, DrawManager>();
 builder.Services.AddScoped<IPanelManager, PanelManager>();
 builder.Services.AddScoped<IQuestionManager, QuestionManager>();
 builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
-builder.Services.AddScoped<IPanelUserManager, PanelUserManager>();
 builder.Services.AddScoped<IMailSender, MailSender>();
-
+builder.Services.AddScoped<IMemberManager, MemberManager>();
+builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
 // Add Identity
@@ -64,11 +65,12 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAndMapLiveMonitoring();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,4 +1,4 @@
-﻿namespace CitizenPanel.BL.Domain.PanelManagement;
+﻿namespace CitizenPanel.BL.Domain.Panel;
 
 public class Meeting
 {

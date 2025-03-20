@@ -1,6 +1,5 @@
 ﻿using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Draw;
-using CitizenPanel.BL.Domain.PanelManagement;
+using CitizenPanel.BL.Domain.Panel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers;

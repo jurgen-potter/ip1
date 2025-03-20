@@ -1,6 +1,4 @@
-﻿using CitizenPanel.BL.Domain.User;
-
-namespace CitizenPanel.BL.Domain.Recruitment;
+﻿namespace CitizenPanel.BL.Domain.Draw;
 
 public class RecruitmentBucket
 {

@@ -4,17 +4,16 @@ namespace CitizenPanel.DAL;
 
 public interface IMemberRepository
 {
-    IEnumerable<Member> GetAllMembers();
-    Member GetMemberById(int memberId);
-    void AddMember(Member member);
+    IEnumerable<Member> ReadAllMembers();
+    Member ReadMemberById(int memberId);
     void UpdateMember(Member member);
     void DeleteMember(Member member);
     
     // Specialized queries for the RegistrationManager
-    IEnumerable<Member> GetMembersByPanelId(int panelId);
-    IEnumerable<Member> GetMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);
+    IEnumerable<Member> ReadMembersByPanelId(int panelId);
+    IEnumerable<Member> ReadMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);
     
     // Additional methods to support the RegistrationManager functionality
-    int GetMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);
+    int ReadMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);
     void MarkMembersAsSelected(IEnumerable<Member> members);
 }
