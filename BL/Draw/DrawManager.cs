@@ -108,26 +108,26 @@ public class DrawManager : IDrawManager
         return _drawRepository.ReadExtraCriteriaByPanel(panelId);
     }
 
-    public RecruitmentResult CalculateRecruitment(RecruitmentCriteria criteria)
+    public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, double malePercentage, double femalePercentage, double age18_25Percentage, double age26_40Percentage, double age41_60Percentage, double age60PlusPercentage, List<ExtraCriteria> extraCriteria)
     {
         var reservePerc = 0.08;
-        var totalAvailablePotPanelmembers = 0.424 * Math.Sqrt(criteria.TotalAvailablePotentialPanelmembers);
+        var totalAvailablePotPanelmembers = 0.424 * Math.Sqrt(totalAvailablePotentialPanelmembers);
 
         var result = new RecruitmentResult
         {
-            MaleCount = (int)(totalAvailablePotPanelmembers * (criteria.MalePercentage / 100)),
-            FemaleCount = (int)(totalAvailablePotPanelmembers * (criteria.FemalePercentage / 100)),
-            Age18_25Count = (int)(totalAvailablePotPanelmembers * (criteria.Age18_25Percentage / 100)),
-            Age26_40Count = (int)(totalAvailablePotPanelmembers * (criteria.Age26_40Percentage / 100)),
-            Age41_60Count = (int)(totalAvailablePotPanelmembers * (criteria.Age41_60Percentage / 100)),
-            Age60PlusCount = (int)(totalAvailablePotPanelmembers * (criteria.Age60PlusPercentage / 100)),
+            MaleCount = (int)(totalAvailablePotPanelmembers * (malePercentage / 100)),
+            FemaleCount = (int)(totalAvailablePotPanelmembers * (femalePercentage / 100)),
+            Age18_25Count = (int)(totalAvailablePotPanelmembers * (age18_25Percentage / 100)),
+            Age26_40Count = (int)(totalAvailablePotPanelmembers * (age26_40Percentage / 100)),
+            Age41_60Count = (int)(totalAvailablePotPanelmembers * (age41_60Percentage / 100)),
+            Age60PlusCount = (int)(totalAvailablePotPanelmembers * (age60PlusPercentage / 100)),
             ReservePotPanelmembers = (int)(totalAvailablePotPanelmembers / reservePerc),
             TotalNeededPanelmembers = (int)(totalAvailablePotPanelmembers),
-            ExtraCriteriaResults = new System.Collections.Generic.List<CriteriaResult>(),
+            ExtraCriteriaResults = new List<CriteriaResult>()
         };
 
         // Extra criteria (wordt overgenomen zoals eerder)
-        foreach (var extra in criteria.ExtraCriteria)
+        foreach (var extra in extraCriteria)
         {
             var criteriaResult = new CriteriaResult
             {

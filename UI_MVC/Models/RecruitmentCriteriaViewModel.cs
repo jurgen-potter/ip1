@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CitizenPanel.BL.Domain.Draw;
+using System.ComponentModel.DataAnnotations;
 
-namespace CitizenPanel.BL.Domain.Draw;
+namespace CitizenPanel.UI.MVC.Models;
 
-public class RecruitmentCriteria : IValidatableObject
+public class RecruitmentCriteriaViewModel : IValidatableObject
 {
-    //Bevat de gewenste percentages per doelgroep.
     public int TotalAvailablePotentialPanelmembers { get; set; }
     public double MalePercentage { get; set; }
     public double FemalePercentage { get; set; }
@@ -12,8 +12,9 @@ public class RecruitmentCriteria : IValidatableObject
     public double Age26_40Percentage { get; set; }
     public double Age41_60Percentage { get; set; }
     public double Age60PlusPercentage { get; set; }
-
     public List<ExtraCriteria> ExtraCriteria { get; set; } = new List<ExtraCriteria>();
+    
+    
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (MalePercentage + FemalePercentage != 100)
@@ -27,5 +28,5 @@ public class RecruitmentCriteria : IValidatableObject
             if (criteria.SubCriteria.Sum(s => s.Percentage) != 100)
                 yield return new ValidationResult($"De subcategorieën van '{criteria.Name}' moeten samen 100% zijn.");
         }
-    } 
+    }
 }
