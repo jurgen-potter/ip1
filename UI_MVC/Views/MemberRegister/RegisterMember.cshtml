@@ -81,7 +81,7 @@
         }
     }
 
-    @for (int i = 0; i < Model.CriteriaList.Count; i++)
+    @for (int i = 0; i < Model?.CriteriaList?.Count; i++)
     {
         <input type="hidden" asp-for="CriteriaList[i].Id"/>
         <input type="hidden" asp-for="CriteriaList[i].Name"/>

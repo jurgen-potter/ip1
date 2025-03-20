@@ -214,10 +214,17 @@ public class RegistrationManager : IRegistrationManager
     public async Task<(IdentityResult result, IdentityUser user)> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<int> newMemberSelectedCriteria, int newMemberPanelId)
     {
         List<SubCriteria> selectedCriteria = new List<SubCriteria>();
-        foreach (var criteria in newMemberSelectedCriteria)
+        
+        if (newMemberSelectedCriteria != null && newMemberSelectedCriteria.Any())
         {
-            var crit = _panelManager.GetSubCriteria(criteria);
-            selectedCriteria.Add(crit);
+            foreach (var criteria in newMemberSelectedCriteria)
+            {
+                var crit = _panelManager.GetSubCriteria(criteria);
+                if (crit != null)
+                {
+                    selectedCriteria.Add(crit);
+                }
+            }
         }
         
         Member member = new Member()

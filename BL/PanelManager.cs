@@ -31,4 +31,8 @@ public class PanelManager : IPanelManager
     {
         return _repository.ReadPanelById(panelId);
     }
+    public IEnumerable<ExtraCriteria> GetExtraCriteriaByPanel(int panelId)
+    {
+        return _repository.ReadExtraCriteriaByPanel(panelId);
+    }
 }

@@ -12,4 +12,6 @@ public interface IPanelManager
     public SubCriteria GetSubCriteria(int subCriteriaId);
     
     public Panel GetPanel(int panelId);
+    
+    public IEnumerable<ExtraCriteria> GetExtraCriteriaByPanel(int panelId);
 }

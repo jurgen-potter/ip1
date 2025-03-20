@@ -1,0 +1,33 @@
+﻿@model FinalDrawViewModel
+
+@{
+    ViewBag.Title = "Bewerk bericht naar deelnemers";
+}
+
+<h2>Bewerk hier uw bericht naar de deelnemers en reserves</h2>
+
+<form asp-action="StartFinalDrawPhase" asp-route-panelId="@Model.PanelId" method="post">
+    <input type="hidden" asp-for="PanelId" />
+
+    <div class="mb-3">
+        <label asp-for="SelectedSubject" class="form-label">Onderwerp</label>
+        <input type="text" asp-for="SelectedSubject" class="form-control" value="Selectie burgerpanel"/>
+    </div>
+    
+    <div class="mb-3">
+        <label asp-for="SelectedMessage" class="form-label">Bericht aan geselecteerde panelleden</label>
+        <textarea asp-for="SelectedMessage" class="form-control" rows="4">U bent geselecteerd voor het burgerpanel.</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ReserveSubject" class="form-label">Onderwerp</label>
+        <input type="text" asp-for="ReserveSubject" class="form-control" value="Selectie burgerpanel"/>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ReserveMessage" class="form-label">Bericht aan reserve panelleden</label>
+        <textarea asp-for="ReserveMessage" class="form-control" rows="4">U bent niet geselecteerd voor het burgerpanel, maar u bent nog wel geregistreerd als reserve.</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Bevestig berichten</button>
+</form>

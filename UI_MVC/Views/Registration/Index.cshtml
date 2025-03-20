@@ -31,7 +31,7 @@
 
                 @if (drawStatus == DrawStatus.FirstPhaseActive)
                 {
-                    <form asp-action="StartFinalDrawPhase" asp-route-panelId="@panelId" method="post" id="startSecondPhaseForm">
+                    <form asp-action="EditMail" asp-route-panelId="@panelId" method="post" id="startSecondPhaseForm">
                         <button type="button" class="btn btn-primary" id="startSecondPhaseBtn">
                             Start finale loting
                         </button>
