@@ -13,15 +13,11 @@ public class RegistrationManager : IRegistrationManager
     private readonly IMemberRepository _memberRepository;
     private readonly Dictionary<int, DrawStatus> _panelDrawStatuses;
     private readonly Dictionary<int, DrawResult> _panelDrawResults;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly IPanelManager _panelManager;
-    private readonly IDrawManager _drawManager;
 
-    public RegistrationManager(IMemberRepository memberRepository, UserManager<IdentityUser> userManager, IPanelManager panelManager)
+    public RegistrationManager(IMemberRepository memberRepository)
     {
         _memberRepository = memberRepository;
-        _userManager = userManager;
-        _panelManager = panelManager;
+      
         
         // Initialize draw statuses for panels
         _panelDrawStatuses = new Dictionary<int, DrawStatus>

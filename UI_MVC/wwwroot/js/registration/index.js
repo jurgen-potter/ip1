@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
     const startSecondPhaseBtn = document.getElementById('startSecondPhaseBtn');
-    const confirmStartSecondPhase = document.getElementById('confirmStartSecondPhase');
-    const startSecondPhaseForm = document.getElementById('startSecondPhaseForm');
+    const confirmStartFinalPhase = document.getElementById('confirmStartFinalPhase');
+    const StartFinalPhaseForm = document.getElementById('StartFinalPhaseForm');
     const insufficientWarning = document.getElementById('insufficientWarning');
 
     // Modal handling
     startSecondPhaseBtn.addEventListener('click', function() {
-        //const hasSufficientRegistrations = @Json.Serialize(hasSufficientRegistrations);
 
+        let hasSufficientRegistrations;
+        
         if (!hasSufficientRegistrations) {
             insufficientWarning.style.display = 'block';
         } else {
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Form submission on confirmation
-    confirmStartSecondPhase.addEventListener('click', function() {
-        startSecondPhaseForm.submit();
+    confirmStartFinalPhase.addEventListener('click', function() {
+        StartFinalPhaseForm.submit();
     });
 });

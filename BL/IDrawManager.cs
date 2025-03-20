@@ -18,13 +18,5 @@ public interface IDrawManager
 
     public RecruitmentResult CalculateRecruitment(RecruitmentCriteria criteria);
     
-    IEnumerable<RecruitmentBucket> GetInvitationBuckets(Panel panel);
-    IEnumerable<RecruitmentBucket> GetAllBuckets(Panel panel);
     
-    DrawStatus GetDrawStatus(Panel panel);
-    bool StartFinalDraw(Panel panel);
-    DrawResult PerformFinalDraw(Panel panel);
-    bool HasSufficientRegistrations(Panel panel);
-    DrawResult GetDrawResults(Panel panel);
-
 }

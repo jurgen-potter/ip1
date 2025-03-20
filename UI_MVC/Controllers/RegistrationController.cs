@@ -57,12 +57,12 @@ public class RegistrationController : Controller
         _registrationManager.StartFinalDraw(panel);
     
         // Always set success message
-        TempData.Remove("ErrorMessage");
-        TempData["SuccessMessage"] = "De loting is succesvol afgerond.";
-        TempData["SelectedSubject"] = finalDraw.SelectedSubject;
-        TempData["SelectedMessage"] = finalDraw.SelectedMessage;
-        TempData["ReserveSubject"] = finalDraw.ReserveSubject;
-        TempData["ReserveMessage"] = finalDraw.ReserveMessage;
+        // TempData.Remove("ErrorMessage");
+        // TempData["SuccessMessage"] = "De loting is succesvol afgerond.";
+        // TempData["SelectedSubject"] = finalDraw.SelectedSubject;
+        // TempData["SelectedMessage"] = finalDraw.SelectedMessage;
+        // TempData["ReserveSubject"] = finalDraw.ReserveSubject;
+        // TempData["ReserveMessage"] = finalDraw.ReserveMessage;
     
         // Always redirect to results
         return RedirectToAction("DrawResults", new { finalDraw.PanelId });

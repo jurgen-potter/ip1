@@ -80,54 +80,54 @@ public class DataSeeder
             // Panel 1 members
             new Member
             {
-                Id = "1", FirstName = "Jan", LastName = "Janssen", Email = "jan@example.com", Gender = Gender.Male,
+                FirstName = "Jan", LastName = "Janssen", Email = "jan@zonderid.com", Gender = Gender.Male,
                 Age = 22, Town = "Antwerpen", Panel = panel1, IsSelected = false
             },
             new Member
-            {
-                Id = "2", FirstName = "Els", LastName = "Peeters", Email = "els@example.com", Gender = Gender.Female,
+            { 
+                FirstName = "Els", LastName = "Peeters", Email = "els@example.com", Gender = Gender.Female,
                 Age = 35, Town = "Antwerpen", Panel = panel1, IsSelected = false
             },
             new Member
             {
-                Id = "3", FirstName = "Bart", LastName = "Mertens", Email = "bart@example.com", Gender = Gender.Male,
+                FirstName = "Bart", LastName = "Mertens", Email = "bart@example.com", Gender = Gender.Male,
                 Age = 50, Town = "Gent", Panel = panel1, IsSelected = false
             },
             new Member
             {
-                Id = "4", FirstName = "Sophie", LastName = "Vermeulen", Email = "sophie@example.com",
+                FirstName = "Sophie", LastName = "Vermeulen", Email = "sophie@example.com",
                 Gender = Gender.Female, Age = 28, Town = "Antwerpen", Panel = panel1, IsSelected = false
             },
             new Member
             {
-                Id = "5", FirstName = "Tom", LastName = "Wouters", Email = "tom@example.com", Gender = Gender.Male,
+                FirstName = "Tom", LastName = "Wouters", Email = "tom@example.com", Gender = Gender.Male,
                 Age = 45, Town = "Antwerpen", Panel = panel1, IsSelected = false
             },
 
             // Panel 2 members
             new Member
             {
-                Id = "6", FirstName = "Lisa", LastName = "Jacobs", Email = "lisa@example.com", Gender = Gender.Female,
+                 FirstName = "Lisa", LastName = "Jacobs", Email = "lisa@example.com", Gender = Gender.Female,
                 Age = 33, Town = "Mechelen", Panel = panel2, IsSelected = false
             },
             new Member
             {
-                Id = "7", FirstName = "Mark", LastName = "Stevens", Email = "mark@example.com", Gender = Gender.Male,
+                FirstName = "Mark", LastName = "Stevens", Email = "mark@example.com", Gender = Gender.Male,
                 Age = 67, Town = "Antwerpen", Panel = panel2, IsSelected = false
             },
             new Member
             {
-                Id = "8", FirstName = "Lotte", LastName = "Maes", Email = "lotte@example.com", Gender = Gender.Female,
+                FirstName = "Lotte", LastName = "Maes", Email = "lotte@example.com", Gender = Gender.Female,
                 Age = 72, Town = "Antwerpen", Panel = panel2, IsSelected = false
             },
             new Member
             {
-                Id = "9", FirstName = "Pieter", LastName = "Vandenberghe", Email = "pieter@example.com",
+                FirstName = "Pieter", LastName = "Vandenberghe", Email = "pieter@example.com",
                 Gender = Gender.Male, Age = 19, Town = "Antwerpen", Panel = panel2, IsSelected = false
             },
             new Member
             {
-                Id = "10", FirstName = "Emma", LastName = "De Smet", Email = "emma@example.com", Gender = Gender.Female,
+                FirstName = "Emma", LastName = "De Smet", Email = "emma@example.com", Gender = Gender.Female,
                 Age = 21, Town = "Leuven", Panel = panel2, IsSelected = false
             }
         };
@@ -137,32 +137,32 @@ public class DataSeeder
         {
             new Member
             {
-                Id = "101", FirstName = "Jan", LastName = "Janssen", Email = "jan@example.com", Gender = Gender.Male,
+                 FirstName = "Jan", LastName = "Janssen", Email = "jan@example.com", Gender = Gender.Male,
                 Age = 22, Town = "Antwerpen", Panel = panel1
             },
             new Member
             {
-                Id = "102", FirstName = "Peter", LastName = "Peters", Email = "peter@example.com", Gender = Gender.Male,
+                 FirstName = "Peter", LastName = "Peters", Email = "peter@example.com", Gender = Gender.Male,
                 Age = 19, Town = "Antwerpen", Panel = panel1
             },
             new Member
             {
-                Id = "103", FirstName = "David", LastName = "Davids", Email = "david@example.com", Gender = Gender.Male,
+                FirstName = "David", LastName = "Davids", Email = "david@example.com", Gender = Gender.Male,
                 Age = 24, Town = "Antwerpen", Panel = panel1
             },
             new Member
             {
-                Id = "104", FirstName = "Johan", LastName = "Johanssen", Email = "johan@example.com",
+                FirstName = "Johan", LastName = "Johanssen", Email = "johan@example.com",
                 Gender = Gender.Male, Age = 21, Town = "Antwerpen", Panel = panel1
             },
             new Member
             {
-                Id = "105", FirstName = "Koen", LastName = "Koens", Email = "koen@example.com", Gender = Gender.Male,
+                FirstName = "Koen", LastName = "Koens", Email = "koen@example.com", Gender = Gender.Male,
                 Age = 25, Town = "Antwerpen", Panel = panel1
             },
             new Member
             {
-                Id = "106", FirstName = "Simon", LastName = "Simons", Email = "simon@example.com", Gender = Gender.Male,
+                FirstName = "Simon", LastName = "Simons", Email = "simon@example.com", Gender = Gender.Male,
                 Age = 18, Town = "Antwerpen", Panel = panel1
             },
         });
@@ -174,32 +174,32 @@ public class DataSeeder
         {
             new Member
             {
-                Id = "107", FirstName = "Thomas", LastName = "Thomassen", Email = "thomas@example.com",
+                FirstName = "Thomas", LastName = "Thomassen", Email = "thomas@example.com",
                 Gender = Gender.Male, Age = 35, Town = "Gent", Panel = panel1
             },
             new Member
             {
-                Id = "108", FirstName = "Maarten", LastName = "Maartens", Email = "maarten@example.com",
+                FirstName = "Maarten", LastName = "Maartens", Email = "maarten@example.com",
                 Gender = Gender.Male, Age = 28, Town = "Gent", Panel = panel1
             },
             new Member
             {
-                Id = "109", FirstName = "Jeroen", LastName = "Jeroens", Email = "jeroen@example.com",
+                FirstName = "Jeroen", LastName = "Jeroens", Email = "jeroen@example.com",
                 Gender = Gender.Male, Age = 37, Town = "Gent", Panel = panel1
             },
             new Member
             {
-                Id = "110", FirstName = "Pieter", LastName = "Pieters", Email = "pieter@example.com",
+                 FirstName = "Pieter", LastName = "Pieters", Email = "pieter@example.com",
                 Gender = Gender.Male, Age = 30, Town = "Gent", Panel = panel1
             },
             new Member
             {
-                Id = "111", FirstName = "Wouter", LastName = "Wouters", Email = "wouter@example.com",
+                FirstName = "Wouter", LastName = "Wouters", Email = "wouter@example.com",
                 Gender = Gender.Male, Age = 33, Town = "Gent", Panel = panel1
             },
             new Member
             {
-                Id = "112", FirstName = "Michel", LastName = "Michels", Email = "michel@example.com",
+                FirstName = "Michel", LastName = "Michels", Email = "michel@example.com",
                 Gender = Gender.Male, Age = 39, Town = "Gent", Panel = panel1
             },
         });
@@ -209,19 +209,19 @@ public class DataSeeder
             {
                 new Member
                 {
-                    Id = "113", FirstName = "Frank", LastName = "Franks", Email = "frank@example.com",
+                    FirstName = "Frank", LastName = "Franks", Email = "frank@example.com",
                     Gender = Gender.Male,
                     Age = 45, Town = "Leuven", Panel = panel1
                 },
                 new Member
                 {
-                    Id = "114", FirstName = "Marc", LastName = "Marcs", Email = "marc@example.com",
+                    FirstName = "Marc", LastName = "Marcs", Email = "marc@example.com",
                     Gender = Gender.Male,
                     Age = 58, Town = "Leuven", Panel = panel1
                 },
                 new Member
                 {
-                    Id = "115", FirstName = "Patrick", LastName = "Patricks", Email = "patrick@example.com",
+                    FirstName = "Patrick", LastName = "Patricks", Email = "patrick@example.com",
                     Gender = Gender.Male, Age = 52, Town = "Leuven", Panel = panel1
                 },
                 new Member
