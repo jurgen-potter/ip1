@@ -1,36 +1,65 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.DAL.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CitizenPanel.DAL;
 
 public class DrawRepository : IDrawRepository
 {
-    private readonly PanelDbContext _context;
+    private readonly PanelDbContext _dbContext;
 
-    public DrawRepository(PanelDbContext context)
+    public DrawRepository(PanelDbContext dbContext)
     {
-        _context = context;
+        _dbContext = dbContext;
     }
     
-    public Invitation AddInvitation(Invitation invitation)
+    public Invitation CreateInvitation(Invitation invitation)
     {
         return invitation;
     }
 
     public Invitation ReadInvitationWithCode(string code)
     {
-        return _context.Invitations.SingleOrDefault(i => i.Code == code);
+        return _dbContext.Invitations.SingleOrDefault(i => i.Code == code);
     }
 
     public IEnumerable<Invitation> ReadAllInvitations()
     {
-        return _context.Invitations;
+        return _dbContext.Invitations;
     }
 
     public Invitation UpdateInvitation(Invitation invitation)
     {
-        _context.Invitations.Update(invitation);
-        _context.SaveChanges();
+        _dbContext.Invitations.Update(invitation);
+        _dbContext.SaveChanges();
         return invitation;
+    }
+    
+    public ExtraCriteria ReadExtraCriteria(int criteriaId)
+    {
+        return _dbContext.ExtraCriteria
+            .Where(e => e.Id == criteriaId)
+            .Include(e => e.SubCriteria)
+            .SingleOrDefault();
+    }
+    
+    public IEnumerable<ExtraCriteria> ReadAllExtraCriteria()
+    {
+        return _dbContext.ExtraCriteria
+            .Include(e => e.SubCriteria)
+            .ToList();
+    }
+    
+    public SubCriteria ReadSubCriteria(int subCriteriaId)
+    {
+        return _dbContext.SubCriteria.Find(subCriteriaId);
+    }
+
+    public IEnumerable<ExtraCriteria> ReadExtraCriteriaByPanel(int panelId)
+    {
+        return _dbContext.ExtraCriteria
+            .Where(e => e.Panel.PanelId == panelId)
+            .Include(e => e.SubCriteria)
+            .ToList();
     }
 }

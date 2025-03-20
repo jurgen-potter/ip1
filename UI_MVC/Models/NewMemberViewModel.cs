@@ -1,5 +1,4 @@
-﻿using CitizenPanel.BL.Domain.Recruitment;
-using CitizenPanel.BL.Domain.User;
+﻿using CitizenPanel.BL.Domain.User;
 using System.ComponentModel.DataAnnotations;
 using CitizenPanel.BL.Domain.Draw;
 

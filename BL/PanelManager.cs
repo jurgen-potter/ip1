@@ -1,38 +1,19 @@
-﻿namespace CitizenPanel.BL;
+﻿using CitizenPanel.BL.Domain.Panel;
+
+namespace CitizenPanel.BL;
 
 using DAL;
-using Domain.PanelManagement;
-using Domain.Recruitment;
 
 public class PanelManager : IPanelManager
 {
-    private readonly IPanelRepository _repository;
+    private readonly IPanelRepository _panelRepository;
 
     public PanelManager(IPanelRepository repository) {
-        _repository = repository;
-    }
-
-    public ExtraCriteria GetExtraCriteria(int criteriaId)
-    {
-        return _repository.ReadExtraCriteria(criteriaId);
+        _panelRepository = repository;
     }
     
-    public List<ExtraCriteria> GetAllExtraCriteria()
-    {
-        return _repository.ReadAllExtraCriteria();
-    }
-    
-    public SubCriteria GetSubCriteria(int subCriteriaId)
-    {
-        return _repository.ReadSubCriteria(subCriteriaId);
-    }
-
     public Panel GetPanel(int panelId)
     {
-        return _repository.ReadPanelById(panelId);
-    }
-    public IEnumerable<ExtraCriteria> GetExtraCriteriaByPanel(int panelId)
-    {
-        return _repository.ReadExtraCriteriaByPanel(panelId);
+        return _panelRepository.ReadPanelById(panelId);
     }
 }

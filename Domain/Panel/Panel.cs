@@ -1,8 +1,7 @@
-﻿using CitizenPanel.BL.Domain.User;
+﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.User;
 
-namespace CitizenPanel.BL.Domain.PanelManagement;
-
-using Recruitment;
+namespace CitizenPanel.BL.Domain.Panel;
 
 public class Panel
 {

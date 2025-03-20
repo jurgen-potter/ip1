@@ -1,4 +1,5 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.DAL;
 using QRCoder;
@@ -25,8 +26,7 @@ public class DrawManager : IDrawManager
             int genderNumber = (int)gender;
             int panelId = dummyMember.PanelId;
             string postCode = dummyMember.Postcode;
-            
-            string code = GenerateCode(age, genderNumber, panelId, postCode);
+            string code = GenerateCode();
 
             string qrCodePlace = "https://localhost:7145/MemberRegister/RegisterMember?code=" + code; 
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
@@ -43,8 +43,8 @@ public class DrawManager : IDrawManager
                 PanelId = panelId,
                 QRCodeString = qrCodeString,
             };
-            Invitation newInvitation = _drawRepository.AddInvitation(invitation);
-            invitations.Add(invitation);
+            Invitation newInvitation = _drawRepository.CreateInvitation(invitation);
+            invitations.Add(newInvitation);
         }
         
         return invitations;
@@ -64,30 +64,83 @@ public class DrawManager : IDrawManager
     {
         return _drawRepository.UpdateInvitation(invitation);
     }
-
-
-    public string GenerateCode(int age, int gender, int panelId, string postcode)
+    
+    public string GenerateCode()
     {
         Random random = new Random();
-        string code = string.Empty;
-        string hexAge = age.ToString("X4");
-        string hexGender = gender.ToString("X4");
-        string hexPanelId = panelId.ToString("X4");
-        string hexCode = $"{postcode[0]}-{hexAge}-000{postcode[1]}-{hexGender}-00{postcode[2]}-{hexPanelId}-0{postcode[3]}";
-        foreach (char c in hexCode)
+        string code = String.Empty;
+        string codeTemplate = $"0000-0000-0000-0000-0000";
+        foreach (char c in codeTemplate)
         {
-            
-            if (c == '0')
+            char letter = c;
+            int replaceNumber = random.Next(0, 63);
+            if (replaceNumber >= 37)
             {
-                int replaceNumber = random.Next(0, 20);
-                char letter = (char)('g' + replaceNumber);
-                code += letter;
+                letter = (char)('a' + replaceNumber);
             }
-            else
+            else if (replaceNumber >= 10)
             {
-                code += c;
+                letter = (char)('A' + replaceNumber);
             }
+            code += letter;
         }
         return code;
+    }
+    
+    
+    public ExtraCriteria GetExtraCriteria(int criteriaId)
+    {
+        return _drawRepository.ReadExtraCriteria(criteriaId);
+    }
+    
+    public IEnumerable<ExtraCriteria> GetAllExtraCriteria()
+    {
+        return _drawRepository.ReadAllExtraCriteria();
+    }
+    
+    public SubCriteria GetSubCriteria(int subCriteriaId)
+    {
+        return _drawRepository.ReadSubCriteria(subCriteriaId);
+    }
+    
+    public IEnumerable<ExtraCriteria> GetExtraCriteriaByPanel(int panelId)
+    {
+        return _drawRepository.ReadExtraCriteriaByPanel(panelId);
+    }
+
+    public RecruitmentResult CalculateRecruitment(RecruitmentCriteria criteria)
+    {
+        var reservePerc = 0.08;
+        var totalAvailablePotPanelmembers = 0.424 * Math.Sqrt(criteria.TotalAvailablePotentialPanelmembers);
+
+        var result = new RecruitmentResult
+        {
+            MaleCount = (int)(totalAvailablePotPanelmembers * (criteria.MalePercentage / 100)),
+            FemaleCount = (int)(totalAvailablePotPanelmembers * (criteria.FemalePercentage / 100)),
+            Age18_25Count = (int)(totalAvailablePotPanelmembers * (criteria.Age18_25Percentage / 100)),
+            Age26_40Count = (int)(totalAvailablePotPanelmembers * (criteria.Age26_40Percentage / 100)),
+            Age41_60Count = (int)(totalAvailablePotPanelmembers * (criteria.Age41_60Percentage / 100)),
+            Age60PlusCount = (int)(totalAvailablePotPanelmembers * (criteria.Age60PlusPercentage / 100)),
+            ReservePotPanelmembers = (int)(totalAvailablePotPanelmembers / reservePerc),
+            TotalNeededPanelmembers = (int)(totalAvailablePotPanelmembers),
+            ExtraCriteriaResults = new System.Collections.Generic.List<CriteriaResult>(),
+        };
+
+        // Extra criteria (wordt overgenomen zoals eerder)
+        foreach (var extra in criteria.ExtraCriteria)
+        {
+            var criteriaResult = new CriteriaResult
+            {
+                Name = extra.Name,
+                SubResults = extra.SubCriteria.Select(sub => new SubCriteriaResult
+                {
+                    Name = sub.Name,
+                    Count = (int)(totalAvailablePotPanelmembers * (sub.Percentage / 100))
+                }).ToList()
+            };
+            result.ExtraCriteriaResults.Add(criteriaResult);
+        }
+
+        return result;
     }
 }

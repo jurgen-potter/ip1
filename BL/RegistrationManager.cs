@@ -1,7 +1,6 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
-using CitizenPanel.BL.Domain.Recruitment;
+using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
-using CitizenPanel.BL.Domain.PanelManagement;
 using CitizenPanel.DAL;
 using Microsoft.AspNetCore.Identity;
 
@@ -11,17 +10,13 @@ namespace CitizenPanel.BL;
 
 public class RegistrationManager : IRegistrationManager
 {
-    private readonly IMemberRepository _memberRepository;
+    private readonly IMemberManager _memberManager;
     private readonly Dictionary<int, DrawStatus> _panelDrawStatuses;
     private readonly Dictionary<int, DrawResult> _panelDrawResults;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly IPanelManager _panelManager;
 
-    public RegistrationManager(IMemberRepository memberRepository, UserManager<IdentityUser> userManager, IPanelManager panelManager)
+    public RegistrationManager(IMemberManager memberManager)
     {
-        _memberRepository = memberRepository;
-        _userManager = userManager;
-        _panelManager = panelManager;
+        _memberManager = memberManager;
         
         // Initialize draw statuses for panels
         _panelDrawStatuses = new Dictionary<int, DrawStatus>
@@ -52,7 +47,7 @@ public class RegistrationManager : IRegistrationManager
             foreach (var ageGroup in ageGroups)
             {
                 // Use repository to get count instead of fetching all members
-                var count = _memberRepository.GetMemberCountByPanelIdGenderAndAgeRange(
+                var count = _memberManager.GetMemberCountByPanelIdGenderAndAgeRange(
                     panel.PanelId, genderGroup, ageGroup.Min, ageGroup.Max);
                 
                 buckets.Add(new RecruitmentBucket
@@ -169,7 +164,7 @@ public class RegistrationManager : IRegistrationManager
             var ageRange = ageRanges[bucket.AgeGroup];
             
             // Get all members that match this bucket's criteria using repository
-            var bucketMembers = _memberRepository.GetMembersByPanelIdGenderAndAgeRange(
+            var bucketMembers = _memberManager.GetMembersByPanelIdGenderAndAgeRange(
                 panel.PanelId, 
                 genderEnum, 
                 ageRange.Min, 
@@ -197,7 +192,7 @@ public class RegistrationManager : IRegistrationManager
             }
             
             // Update selected members in the repository
-            _memberRepository.MarkMembersAsSelected(selectedMembers);
+            _memberManager.MarkMembersAsSelected(selectedMembers);
             
             // Select reserve members
             for (int i = mainCount; i < mainCount + reserveCount; i++)
@@ -211,38 +206,5 @@ public class RegistrationManager : IRegistrationManager
         return result;
     }
     
-    public async Task<(IdentityResult result, IdentityUser user)> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<int> newMemberSelectedCriteria, int newMemberPanelId)
-    {
-        List<SubCriteria> selectedCriteria = new List<SubCriteria>();
-        
-        if (newMemberSelectedCriteria != null && newMemberSelectedCriteria.Any())
-        {
-            foreach (var criteria in newMemberSelectedCriteria)
-            {
-                var crit = _panelManager.GetSubCriteria(criteria);
-                if (crit != null)
-                {
-                    selectedCriteria.Add(crit);
-                }
-            }
-        }
-        
-        Member member = new Member()
-        {
-            FirstName = newMemberFirstName,
-            LastName = newMemberLastName,
-            Email = newMemberEmail,
-            UserName = newMemberEmail,
-            Gender = newMemberGender,
-            BirthDate = newMemberBirthDate,
-            Town = newMemberTown,
-            SelectedCriteria = selectedCriteria,
-            Panel = _panelManager.GetPanel(newMemberPanelId)
-        };
-        
-        var result = await _userManager.CreateAsync(member, newMemberPassword);
-
-        return result.Succeeded ? (result, member) : (result, null);
-    }
 
 }

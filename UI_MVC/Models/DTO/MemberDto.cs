@@ -1,5 +1,4 @@
 using CitizenPanel.BL.Domain.Draw;
-using CitizenPanel.BL.Domain.Recruitment;
 
 namespace CitizenPanel.UI.MVC.Models.DTO;
 

@@ -12,21 +12,16 @@ public class MemberRepository : IMemberRepository
         _dbContext = dbContext;
     }
 
-    public IEnumerable<Member> GetAllMembers()
+    public IEnumerable<Member> ReadAllMembers()
     {
         return _dbContext.Members.ToList();
     }
 
-    public Member GetMemberById(int memberId)
+    public Member ReadMemberById(int memberId)
     {
         return _dbContext.Members.Find(memberId);
     }
-
-    public void AddMember(Member member)
-    {
-        _dbContext.Members.Add(member);
-    }
-
+    
     public void UpdateMember(Member member)
     {
         _dbContext.Update(member);
@@ -37,14 +32,14 @@ public class MemberRepository : IMemberRepository
         _dbContext.Members.Remove(member);
     }
 
-    public IEnumerable<Member> GetMembersByPanelId(int panelId)
+    public IEnumerable<Member> ReadMembersByPanelId(int panelId)
     {
         return _dbContext.Members
             .Where(m => m.Panel.PanelId == panelId)
             .ToList();
     }
 
-    public IEnumerable<Member> GetMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge,
+    public IEnumerable<Member> ReadMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge,
         int maxAge)
     {
         return _dbContext.Members
@@ -55,7 +50,7 @@ public class MemberRepository : IMemberRepository
             .ToList();
     }
 
-    public int GetMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge)
+    public int ReadMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge)
     {
         return _dbContext.Members
             .Count(m => m.Panel.PanelId == panelId &&
@@ -64,14 +59,4 @@ public class MemberRepository : IMemberRepository
                         m.Age <= maxAge);
     }
 
-    public void MarkMembersAsSelected(IEnumerable<Member> members)
-    {
-        foreach (var member in members)
-        {
-            member.IsSelected = true;
-            UpdateMember(member);
-            _dbContext.SaveChanges();
-
-        }
-    }
 }

@@ -1,4 +1,4 @@
-﻿namespace CitizenPanel.BL.Domain.Recruitment;
+﻿namespace CitizenPanel.BL.Domain.Draw;
 
 public class RecruitmentResult
 {//Opslag van het berekende aantal panelleden per demografische groep.

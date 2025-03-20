@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using CitizenPanel.BL.Domain.User
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @model CitizenPanel.UI.MVC.Models.NewMemberViewModel
 
@@ -42,7 +43,7 @@
 
     <div>
         <label>Geslacht:</label>
-        <input asp-for="Gender" type="text" class="form-control" value="@Model.Gender.ToString()" readonly>
+        <input asp-for="Gender" type="text" class="form-control" value="@Model.Gender.ToDutch()" readonly>
     </div>
 
     <div>
@@ -157,15 +158,7 @@
 {
     @if (!Model.IsConfirmed)
     {
-        <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-            confirmationModal.show();
-
-            document.getElementById('confirmParticipation').addEventListener('click', function () {
-                confirmationModal.hide();
-            });
-        });
+        <script defer src="/js/memberRegister/registerMember.js">
         </script>
     }
 }

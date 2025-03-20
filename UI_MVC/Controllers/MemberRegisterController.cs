@@ -1,6 +1,5 @@
 using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
-using CitizenPanel.BL.Domain.Recruitment;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
@@ -9,17 +8,15 @@ namespace CitizenPanel.UI.MVC.Controllers;
 
 public class MemberRegisterController : Controller
 {
-    private readonly IRegistrationManager _registrationManager;
-    private readonly IPanelManager _panelManager;
     private readonly IDrawManager _drawManager;
     private readonly IMailSender _mailSender;
+    private readonly IMemberManager _memberManager;
 
-    public MemberRegisterController(IDrawManager drawManager, IPanelManager panelManager, IRegistrationManager registrationManager, IMailSender mailSender)
+    public MemberRegisterController(IDrawManager drawManager, IMailSender mailSender, IMemberManager memberManager)
     {
-        _registrationManager = registrationManager;
         _mailSender = mailSender;
-        _panelManager = panelManager;
         _drawManager = drawManager;
+        _memberManager = memberManager;
     }
     
     // GET
@@ -57,7 +54,7 @@ public class MemberRegisterController : Controller
                 return RedirectToAction("UsedCode", "MemberRegister");
         }
         
-        List<ExtraCriteria> extraCriteria = _panelManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
+        List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
 
         var model = new NewMemberViewModel
         {
@@ -80,7 +77,7 @@ public class MemberRegisterController : Controller
             return View(newMember);
         }
         
-        var (result, member) = await _registrationManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria, newMember.PanelId);
+        var (result, member) = await _memberManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria, newMember.PanelId);
         if (!result.Succeeded)
         {
             foreach (var error in result.Errors)
