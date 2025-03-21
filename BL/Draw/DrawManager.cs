@@ -28,7 +28,7 @@ public class DrawManager : IDrawManager
             string postCode = dummyMember.Postcode;
             string code = GenerateCode();
 
-            string qrCodePlace = "https://localhost:7145/MemberRegister/RegisterMember?code=" + code; 
+            string qrCodePlace = "https://whimp-24.ew.r.appspot.com/MemberRegister/RegisterMember?code=" + code; 
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
             PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
             byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
@@ -72,17 +72,25 @@ public class DrawManager : IDrawManager
         string codeTemplate = $"0000-0000-0000-0000-0000";
         foreach (char c in codeTemplate)
         {
-            char letter = c;
-            int replaceNumber = random.Next(0, 63);
-            if (replaceNumber >= 37)
+            char newLetDig = c;
+            if (newLetDig == '0')
             {
-                letter = (char)('a' + replaceNumber);
+                int replaceNumber = random.Next(0, 62);
+                if (replaceNumber >= 36)
+                {
+                    newLetDig = (char)('a' + replaceNumber - 36);
+                }
+                else if (replaceNumber >= 10)
+                {
+                    newLetDig = (char)('A' + replaceNumber - 10);
+                }
+                else
+                {
+                    newLetDig = (char)('0' + replaceNumber);
+                }
             }
-            else if (replaceNumber >= 10)
-            {
-                letter = (char)('A' + replaceNumber);
-            }
-            code += letter;
+            code += newLetDig;
+
         }
         return code;
     }

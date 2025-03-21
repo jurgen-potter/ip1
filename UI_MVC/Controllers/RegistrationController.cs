@@ -59,10 +59,10 @@ public class RegistrationController : Controller
         // Always set success message
         // TempData.Remove("ErrorMessage");
         // TempData["SuccessMessage"] = "De loting is succesvol afgerond.";
-        // TempData["SelectedSubject"] = finalDraw.SelectedSubject;
-        // TempData["SelectedMessage"] = finalDraw.SelectedMessage;
-        // TempData["ReserveSubject"] = finalDraw.ReserveSubject;
-        // TempData["ReserveMessage"] = finalDraw.ReserveMessage;
+        TempData["SelectedSubject"] = finalDraw.SelectedSubject;
+        TempData["SelectedMessage"] = finalDraw.SelectedMessage;
+        TempData["ReserveSubject"] = finalDraw.ReserveSubject;
+        TempData["ReserveMessage"] = finalDraw.ReserveMessage;
     
         // Always redirect to results
         return RedirectToAction("DrawResults", new { finalDraw.PanelId });
@@ -86,12 +86,12 @@ public class RegistrationController : Controller
         var reserveMessage = TempData["ReserveMessage"] as string;
         foreach (var selected in drawResults.SelectedMembers)
         {
-            _mailSender.SendMailAsync(selected.Email, selectedSubject, selectedMessage);
+            _mailSender.SendMailAsync("donaldduckie313@gmail.com", selectedSubject, selectedMessage);
         }
         
         foreach (var reserve in drawResults.ReserveMembers)
         {
-            _mailSender.SendMailAsync(reserve.Email, reserveSubject, reserveMessage);
+            _mailSender.SendMailAsync("donaldduckie313@gmail.com", reserveSubject, reserveMessage);
         }
     
         ViewBag.PanelId = panelId;
