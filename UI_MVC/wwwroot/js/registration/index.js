@@ -3,12 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirmStartFinalPhase = document.getElementById('confirmStartFinalPhase');
     const StartFinalPhaseForm = document.getElementById('StartFinalPhaseForm');
     const insufficientWarning = document.getElementById('insufficientWarning');
+    const hasSufficientRegistrations = document.getElementById('hasSufficientRegistrations');
 
     // Modal handling
     startSecondPhaseBtn.addEventListener('click', function() {
-
-        let hasSufficientRegistrations;
-        
         if (!hasSufficientRegistrations) {
             insufficientWarning.style.display = 'block';
         } else {

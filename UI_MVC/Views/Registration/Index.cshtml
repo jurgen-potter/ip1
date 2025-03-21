@@ -111,10 +111,9 @@
     </div>
 </div>
 
+<div id="hasSufficientRegistrations" type="hidden" data-list="@Json.Serialize(hasSufficientRegistrations)"></div>
+
 @section Scripts {
-<script>
-    const hasSufficientRegistrations = @Json.Serialize(hasSufficientRegistrations);
+    <script defer src="js/registration/index.js">
 </script>
-<script defer src="js/registration/index.js">
-    </script>
 }
