@@ -12,7 +12,4 @@ public class Panel
     public int MemberCount { get; set; }
     public ICollection<Member> Members { get; set; }
     public ICollection<ExtraCriteria> ExtraCriteria { get; set; } = new List<ExtraCriteria>();
-    public Ambition AmbitionPhase1 { get; set; }
-    public Ambition AmbitionPhase2 { get; set; }
-    public Ambition AmbitionPhase3 { get; set; }
 }
