@@ -39,7 +39,7 @@ public class MemberRegisterController : Controller
     }
 
     
-    [HttpGet]
+    /*[HttpGet]
     public IActionResult RegisterMember(MemberDto memberDto)
     {
         Invitation invitation = memberDto.Invitation;
@@ -65,6 +65,29 @@ public class MemberRegisterController : Controller
             PanelId = 1,
             Invitation = invitation,
             IsConfirmed = memberDto.IsConfirmed
+        };
+        
+        return View(model);
+    }*/
+    
+    [HttpGet]
+    public IActionResult RegisterMember(string code)
+    {
+        Invitation invitation = _drawManager.GetInvitationWithCode(code);
+        if (invitation.IsUsed)
+            return RedirectToAction("UsedCode", "MemberRegister");
+        
+        List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
+
+        var model = new NewMemberViewModel
+        {
+            Gender = invitation.Gender,
+            Town = invitation.Postcode,
+            CriteriaList = extraCriteria,
+            SelectedCriteria = new List<int>(new int[extraCriteria.Count]),
+            PanelId = 1,
+            Invitation = invitation,
+            IsConfirmed = true
         };
         
         return View(model);
