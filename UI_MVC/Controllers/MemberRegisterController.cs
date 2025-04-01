@@ -31,6 +31,12 @@ public class MemberRegisterController : Controller
     {
         return View();
     }
+
+    [HttpGet]
+    public IActionResult Registered()
+    {
+        return View();
+    }
     
     [HttpGet]
     public IActionResult UsedCode()
@@ -50,6 +56,9 @@ public class MemberRegisterController : Controller
             if (invitation == null)
                 return RedirectToAction("InvalidCode", "MemberRegister");
 
+            if (invitation.IsRegistered)
+                return RedirectToAction("Registered", "MemberRegister");
+            
             if (invitation.IsUsed)
                 return RedirectToAction("UsedCode", "MemberRegister");
         }
@@ -77,6 +86,7 @@ public class MemberRegisterController : Controller
             return View(newMember);
         }
         
+        /*
         var (result, member) = await _memberManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria, newMember.PanelId);
         if (!result.Succeeded)
         {
@@ -85,8 +95,10 @@ public class MemberRegisterController : Controller
                 ModelState.AddModelError("Password", error.Description);
             }
             return View(newMember);
-        }
-        newMember.Invitation.IsUsed = true;
+        }*/
+        
+        newMember.Invitation.SelectedCriteria = newMember.SelectedCriteria;
+        newMember.Invitation.IsRegistered = true;
         _drawManager.ChangeInvitation(newMember.Invitation);
 
         TempData["Email"] = newMember.Email;
