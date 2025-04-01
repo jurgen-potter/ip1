@@ -12,4 +12,7 @@ public class Panel
     public int MemberCount { get; set; }
     public ICollection<Member> Members { get; set; }
     public ICollection<ExtraCriteria> ExtraCriteria { get; set; } = new List<ExtraCriteria>();
+    public ICollection<RecruitmentBucket> RecruitmentBuckets { get; set; }
+    public DrawStatus DrawStatus { get; set; }
+    public DrawResult DrawResult { get; set; }
 }

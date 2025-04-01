@@ -39,7 +39,9 @@ public class PanelDbContext : IdentityDbContext
         modelBuilder.Entity<Member>().ToTable("Members");
         modelBuilder.Entity<Citizen>().ToTable("Citizens");
         modelBuilder.Entity<Organization>().ToTable("Organizations");
-        
+
+        modelBuilder.Entity<Panel>()
+            .OwnsMany(p => p.RecruitmentBuckets);
         modelBuilder.Entity<Panel>()
             .HasMany(m => m.Members);
         modelBuilder.Entity<Member>()

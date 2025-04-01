@@ -12,9 +12,6 @@ public interface IRegistrationManager
     
     // New methods for draw phase management
     DrawStatus GetDrawStatus(Panel panel);
-    bool StartFinalDraw(Panel panel);
-    DrawResult PerformFinalDraw(Panel panel);
+    DrawResult StartFinalDraw(Panel panel);
     bool HasSufficientRegistrations(Panel panel);
-    DrawResult GetDrawResults(Panel panel);
-    
 }
