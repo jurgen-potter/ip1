@@ -10,9 +10,10 @@
     <div class="col-md-4">
         <h2>Maak een nieuw account.</h2>
         <div class="btn-group w-100">
-            <button type="button" class="btn btn-lg btn-outline-primary account-type-btn active" data-type="Panelmember">Panellid</button>
-            <button type="button" class="btn btn-lg btn-outline-primary account-type-btn" data-type="Organization">Organisatie</button>
+            <button type="button" id="panelMemberBtn" class="btn btn-lg btn-outline-primary account-type-btn" data-type="PanelMember">Panellid</button>
+            <button type="button" id="organizationBtn" class="btn btn-lg btn-outline-primary account-type-btn" data-type="Organization">Organisatie</button>
         </div>
+        <input type="hidden" id="selectedAccount" for="Input.AccountType" value="@(TempData["SelectedAccountType"] ?? "PanelMember")"/>
         <hr/>
 
         <div id="organizationFields">
@@ -33,15 +34,21 @@
                     <label asp-for="Input.ConfirmPassword">Confirm Password</label>
                     <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                 </div>
+                <input type="hidden" asp-for="Input.AccountType" value="Organization"/>
                 <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
             </form>
         </div>
         
-        <div id="panelmemberFields">
+        <div id="panelMemberFields">
             <form id="codeForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                <input type="text" asp-for="Input.Code" placeholder="Enter your code">
-                <span asp-validation-for="Input.Code" class="text-danger"></span>
-                <button type="submit">Registreer</button>
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Code" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Registratiecode">
+                    <label asp-for="Input.Code">Registratiecode</label>
+                    <span asp-validation-for="Input.Code" class="text-danger"></span>
+                </div>
+                <input type="hidden" asp-for="Input.AccountType" value="PanelMember"/>
+                <button id="codeSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Registreer</button>
             </form>
         </div>
     </div>

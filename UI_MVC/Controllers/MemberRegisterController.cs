@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
+using Newtonsoft.Json;
+
 public class MemberRegisterController : Controller
 {
     private readonly IDrawManager _drawManager;
@@ -37,9 +39,8 @@ public class MemberRegisterController : Controller
     {
         return View();
     }
-
     
-    /*[HttpGet]
+    [HttpGet]
     public IActionResult RegisterMember(MemberDto memberDto)
     {
         Invitation invitation = memberDto.Invitation;
@@ -68,12 +69,12 @@ public class MemberRegisterController : Controller
         };
         
         return View(model);
-    }*/
+    }
     
     [HttpGet]
     public IActionResult RegisterMember(string code)
     {
-        Invitation invitation = _drawManager.GetInvitationWithCode(code);
+        Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string);
         if (invitation.IsUsed)
             return RedirectToAction("UsedCode", "MemberRegister");
         
