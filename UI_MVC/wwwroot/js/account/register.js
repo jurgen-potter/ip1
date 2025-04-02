@@ -3,22 +3,31 @@
 })
 
 function init() {
-    const initialSelectedButton = document.querySelector(".account-type-btn.active");
-    const selectedType = initialSelectedButton.getAttribute("data-type");
+    let selectedType = document.getElementById("selectedAccount").value;
+    let selectedBtn = document.getElementById("panelMemberBtn");
+    if (selectedType !== "PanelMember") {
+        selectedType = "Organization";
+        selectedBtn = document.getElementById("organizationBtn");
+    }
+    
+    selectedBtn.classList.add("active");
     showCorrectFields(selectedType);
     setEventListener();
 }
 
 function showCorrectFields(selectedType) {
-    const panelmemberFields = document.getElementById("panelmemberFields");
+    const panelMemberFields = document.getElementById("panelMemberFields");
     const organizationFields = document.getElementById("organizationFields");
+    const selectedAccount = document.getElementById("selectedAccount")
 
-    if (selectedType === "Panelmember") {
+    if (selectedType === "PanelMember") {
         organizationFields.classList.add("d-none");
-        panelmemberFields.classList.remove("d-none");
+        panelMemberFields.classList.remove("d-none");
+        selectedAccount.value = "PanelMember";
     } else {
         organizationFields.classList.remove("d-none");
-        panelmemberFields.classList.add("d-none");
+        panelMemberFields.classList.add("d-none");
+        selectedAccount.value = "Organization";
     }
 }
 
@@ -31,6 +40,7 @@ function setEventListener() {
             
             this.classList.add("active");
             const selectedType = this.getAttribute("data-type");
+            
             showCorrectFields(selectedType);
         });
     });

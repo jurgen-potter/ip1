@@ -18,12 +18,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Draw;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
-    using BL;
-    using BL.Domain.Draw;
-
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -80,6 +80,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -88,6 +89,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
@@ -97,12 +99,15 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            [Required]
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
             
             public string Code { get; set; }
+            
+            public string AccountType { get; set; }
         }
 
 
@@ -117,17 +122,8 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             
-            if (Input.Code is null)
+            if (Input.AccountType == "Organization")
             {
-                if (Input.Email is null)
-                {
-                    ModelState.AddModelError("Email", "Please enter a valid email address.");
-                }
-                else if (Input.Password is null)
-                {
-                    ModelState.AddModelError("Password", "Please enter a password.");
-                }
-                
                 if (ModelState.IsValid)
                 {
                     var user = CreateUser();
@@ -168,11 +164,17 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 Invitation invitation = _drawManager.GetInvitationWithCode(Input.Code);
                 if (invitation is not null)
                 {
-                    return RedirectToAction("RegisterMember", "MemberRegister", new { code = invitation.Code });
+                    TempData["Invitation"] = JsonConvert.SerializeObject(invitation);
+                    return RedirectToAction("RegisterMember", "MemberRegister");
+                }
+                else
+                {
+                    ModelState.AddModelError("Input.Code", "Please enter a valid code.");
                 }
             }
 
             // If we got this far, something failed, redisplay form
+            TempData["SelectedAccountType"] = Input.AccountType;
             return Page();
         }
 
