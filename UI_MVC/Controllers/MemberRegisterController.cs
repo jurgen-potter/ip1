@@ -65,6 +65,15 @@ public class MemberRegisterController : Controller
         
         List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
 
+        var model = new RegisterViewModel()
+        {
+            Invitation = invitation,
+            SelectedCriteria = new List<int>(new int[extraCriteria.Count]),
+            CriteriaList = extraCriteria,
+            IsConfirmed = memberDto.IsConfirmed
+            
+        };
+        /*
         var model = new NewMemberViewModel
         {
             Gender = invitation.Gender,
@@ -74,13 +83,13 @@ public class MemberRegisterController : Controller
             PanelId = 1,
             Invitation = invitation,
             IsConfirmed = memberDto.IsConfirmed
-        };
+        };*/
         
         return View(model);
     }
     
     [HttpPost]
-    public async Task<IActionResult> RegisterMember(NewMemberViewModel newMember)
+    public async Task<IActionResult> RegisterMember(RegisterViewModel newMember)
     {
         if (!ModelState.IsValid) {
             return View(newMember);
@@ -101,16 +110,16 @@ public class MemberRegisterController : Controller
         newMember.Invitation.IsRegistered = true;
         _drawManager.ChangeInvitation(newMember.Invitation);
 
-        TempData["Email"] = newMember.Email;
-        
+        //TempData["Email"] = newMember.Email;
         return RedirectToAction("RegistrationConfirmed");
     }
 
     public IActionResult RegistrationConfirmed()
     {
+        /*
         var email = TempData["Email"]?.ToString();
         _mailSender.SendMailAsync(email, "Bevestiging aanmelding", "Uw gegevens zijn opgeslagen");
-        
+        */
         return View();
     }
 }
