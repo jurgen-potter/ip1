@@ -30,7 +30,6 @@ public class IdentitySeeder
         await _userManager.CreateAsync(user1, "Admin123!");
         await _userManager.AddToRoleAsync(user1, "Admin");
         
-        
         // user 2
         var user2 = new Organization()
         {
