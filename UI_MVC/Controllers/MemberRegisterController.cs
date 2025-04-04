@@ -160,6 +160,29 @@ public class MemberRegisterController : Controller
         return View(model);
     }
     
+    [HttpGet]
+    public IActionResult RegisterMember(string code)
+    {
+        Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string);
+        if (invitation.IsUsed)
+            return RedirectToAction("UsedCode", "MemberRegister");
+        
+        List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
+
+        var model = new NewMemberViewModel
+        {
+            Gender = invitation.Gender,
+            Town = invitation.Postcode,
+            CriteriaList = extraCriteria,
+            SelectedCriteria = new List<int>(new int[extraCriteria.Count]),
+            PanelId = 1,
+            Invitation = invitation,
+            IsConfirmed = true
+        };
+        
+        return View(model);
+    }
+    
     [HttpPost]
     public async Task<IActionResult> RegisterMember(NewMemberViewModel newMember)
     {
