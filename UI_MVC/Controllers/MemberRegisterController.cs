@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.UI.MVC.Models;
@@ -31,6 +32,12 @@ public class MemberRegisterController : Controller
     {
         return View();
     }
+
+    [HttpGet]
+    public IActionResult Registered()
+    {
+        return View();
+    }
     
     [HttpGet]
     public IActionResult UsedCode()
@@ -50,12 +57,24 @@ public class MemberRegisterController : Controller
             if (invitation == null)
                 return RedirectToAction("InvalidCode", "MemberRegister");
 
+            if (invitation.IsRegistered)
+                return RedirectToAction("Registered", "MemberRegister");
+            
             if (invitation.IsUsed)
                 return RedirectToAction("UsedCode", "MemberRegister");
         }
         
         List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
 
+        var model = new RegisterViewModel()
+        {
+            Invitation = invitation,
+            SelectedCriteria = new List<int>(new int[extraCriteria.Count]),
+            CriteriaList = extraCriteria,
+            IsConfirmed = memberDto.IsConfirmed
+            
+        };
+        /*
         var model = new NewMemberViewModel
         {
             Gender = invitation.Gender,
@@ -65,18 +84,35 @@ public class MemberRegisterController : Controller
             PanelId = 1,
             Invitation = invitation,
             IsConfirmed = memberDto.IsConfirmed
-        };
+        };*/
         
         return View(model);
     }
     
     [HttpPost]
-    public async Task<IActionResult> RegisterMember(NewMemberViewModel newMember)
+    public async Task<IActionResult> RegisterMember(RegisterViewModel newMember)
     {
+        if (newMember is IValidatableObject validatable && newMember.Email == null)
+        {
+            var context = new ValidationContext(newMember);
+            var validationResults = validatable.Validate(context);
+
+            foreach (var validationResult in validationResults)
+            {
+                foreach (var memberName in validationResult.MemberNames)
+                {
+                    if (!ModelState.ContainsKey(memberName) || ModelState[memberName].Errors.All(e => e.ErrorMessage != validationResult.ErrorMessage))
+                    {
+                        ModelState.AddModelError(memberName, validationResult.ErrorMessage);
+                    }
+                }
+            }
+        }
         if (!ModelState.IsValid) {
             return View(newMember);
         }
         
+        /*
         var (result, member) = await _memberManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria, newMember.PanelId);
         if (!result.Succeeded)
         {
@@ -85,12 +121,14 @@ public class MemberRegisterController : Controller
                 ModelState.AddModelError("Password", error.Description);
             }
             return View(newMember);
-        }
-        newMember.Invitation.IsUsed = true;
+        }*/
+        
+        newMember.Invitation.SelectedCriteria = newMember.SelectedCriteria;
+        newMember.Invitation.IsRegistered = true;
+        newMember.Invitation.Email = newMember.Email;
         _drawManager.ChangeInvitation(newMember.Invitation);
 
         TempData["Email"] = newMember.Email;
-        
         return RedirectToAction("RegistrationConfirmed");
     }
 

@@ -11,6 +11,9 @@ public class Invitation
     public Gender Gender { get; set; }
     public int Age { get; set; }
     public string Postcode { get; set; }
+    public bool IsRegistered { get; set; }
     public bool IsUsed { get; set; }
+    public List<int> SelectedCriteria { get; set; }
+    public string Email { get; set; }
     
 }

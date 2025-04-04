@@ -1,16 +1,18 @@
 ﻿@using CitizenPanel.BL.Domain.User
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
-@model CitizenPanel.UI.MVC.Models.NewMemberViewModel
+@*model CitizenPanel.UI.MVC.Models.NewMemberViewModel*@
+@model RegisterViewModel
 
 @{
     ViewBag.Title = "Aanmelden";
 }
 
 <h2>Vul uw gegevens in</h2>
-
 <div asp-validation-summary="All" class="text-danger"></div>
 <form asp-controller="MemberRegister" asp-action="RegisterMember" method="post">
+    
+    @*
     <div>
         <label>Voornaam:</label>
         <input asp-for="FirstName" type="text" class="form-control">
@@ -22,13 +24,7 @@
         <input asp-for="LastName" type="text" class="form-control">
         <span asp-validation-for="LastName" class="text-danger"></span>
     </div>
-
-    <div>
-        <label>Email:</label>
-        <input asp-for="Email" type="email" class="form-control">
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
+    
     <div>
         <label>Wachtwoord:</label>
         <input asp-for="Password" type="password" class="form-control">
@@ -57,6 +53,14 @@
         <label>Gemeente:</label>
         <input asp-for="Town" type="text" class="form-control" value="@Model.Town" readonly>
     </div>
+    *@
+
+    <div>
+        <label>Email:</label>
+        <input asp-for="Email" type="email" class="form-control">
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
 
     @if (Model?.CriteriaList != null && Model.CriteriaList.Any())
     {
@@ -96,8 +100,7 @@
         }
     }
 
-    <input type="hidden" asp-for="PanelId" value="@Model.PanelId" />
-    <input type="hidden" asp-for="IsConfirmed" value="@Model.IsConfirmed" />
+    <input type="hidden" asp-for="IsConfirmed" value="@Model.IsConfirmed"/>
     <input type="hidden" asp-for="Invitation.Id" value="@Model.Invitation.Id"/>
     <input type="hidden" asp-for="Invitation.Code" value="@Model.Invitation.Code"/>
     <input type="hidden" asp-for="Invitation.QRCodeString" value="@Model.Invitation.QRCodeString"/>
