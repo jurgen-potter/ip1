@@ -46,7 +46,7 @@ public class MemberManager : IMemberManager
             BirthDate = newMemberBirthDate,
             Town = newMemberTown,
             SelectedCriteria = selectedCriteria,
-            Panel = _panelManager.GetPanel(newMemberPanelId)
+            Panel = _panelManager.GetPanelById(newMemberPanelId)
         };
         
         var result = await _userManager.CreateAsync(member, newMemberPassword);
@@ -88,14 +88,5 @@ public class MemberManager : IMemberManager
     {
         return _memberRepository.ReadMemberCountByPanelIdGenderAndAgeRange(panelId, gender, minAge, maxAge);
     }
-
-    public void MarkMembersAsSelected(IEnumerable<Member> members)
-    {
-        foreach (var member in members)
-        {
-            member.IsSelected = true;
-            ChangeMember(member);
-        }
-
-    }
+    
 }

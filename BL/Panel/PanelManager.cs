@@ -1,4 +1,5 @@
-﻿using CitizenPanel.BL.Domain.Panel;
+﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Panel;
 
 namespace CitizenPanel.BL;
 
@@ -12,8 +13,28 @@ public class PanelManager : IPanelManager
         _panelRepository = repository;
     }
     
-    public Panel GetPanel(int panelId)
+    public Panel GetPanelById(int panelId)
     {
         return _panelRepository.ReadPanelById(panelId);
+    }
+
+    public void AddPanel(Panel panel)
+    {
+        _panelRepository.CreatePanel(panel);
+    }
+
+    public void EditPanel(Panel panel)
+    {
+        _panelRepository.UpdatePanel(panel);
+    }
+
+    public void RemovePanel(Panel panel)
+    {
+        _panelRepository.DeletePanel(panel);
+    }
+
+    public IEnumerable<RecruitmentBucket> GetTargetBucketsByPanel(Panel panel)
+    {
+        return _panelRepository.ReadTargetBucketsByPanel(panel);
     }
 }

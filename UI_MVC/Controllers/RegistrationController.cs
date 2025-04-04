@@ -22,7 +22,7 @@ public class RegistrationController : Controller
     [HttpGet]
     public IActionResult Index(int panelId = 1)
     {
-        var panel = _panelManager.GetPanel(panelId);
+        var panel = _panelManager.GetPanelById(panelId);
 
         var allBuckets = _registrationManager.GetAllBuckets(panel);
 
@@ -52,13 +52,12 @@ public class RegistrationController : Controller
             return View("EditMail", finalDraw);
         }
         
-        var panel = _panelManager.GetPanel(finalDraw.PanelId);
+        var panel = _panelManager.GetPanelById(finalDraw.PanelId);
 
         // Always proceed with the draw regardless of sufficient registrations
         _registrationManager.StartFinalDraw(panel);
         
-    
-       
+        
         TempData["SelectedSubject"] = finalDraw.SelectedSubject;
         TempData["SelectedMessage"] = finalDraw.SelectedMessage;
         TempData["ReserveSubject"] = finalDraw.ReserveSubject;
@@ -72,16 +71,17 @@ public class RegistrationController : Controller
     public IActionResult DrawResults(int panelId)
     {
         // Create a panel object that matches the one in the RegistrationManager
-        var panel = _panelManager.GetPanel(panelId);
+        var panel = _panelManager.GetPanelById(panelId);
     
         // Get draw status
-        var drawResults = _registrationManager.getDrawResults(panel);
-        
-        // Get draw results
+        var drawResults = panel.DrawResult;
+
         var selectedSubject = TempData["SelectedSubject"] as string;
         var selectedMessage = TempData["SelectedMessage"] as string;
         var reserveSubject = TempData["ReserveSubject"] as string;
         var reserveMessage = TempData["ReserveMessage"] as string;
+        
+        
         
         foreach (var selected in drawResults.SelectedMembers)
         {
@@ -92,9 +92,14 @@ public class RegistrationController : Controller
         {
             _mailSender.SendMailAsync("donaldduckie313@gmail.com", reserveSubject, reserveMessage);
         }
+
+        foreach (var notSelected in drawResults.NotSelectedMembers)
+        {
+            _mailSender.SendMailAsync("donaldduckie313@gmail.com", "unlucky", "better luck next time");
+        }
     
         ViewBag.PanelId = panelId;
-        ViewBag.DrawStatus = drawStatus;
+        ViewBag.DrawStatus = panel.DrawStatus;
     
         return View(drawResults);
     }

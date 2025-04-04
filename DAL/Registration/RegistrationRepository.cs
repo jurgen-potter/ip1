@@ -15,19 +15,9 @@ public class RegistrationRepository : IRegistrationRepository
         _dbContext = dbContext;
     }
 
-    public ICollection<RecruitmentBucket> ReadTargetBucketsByPanel(Panel panel)
-    {
-        var panelWithBuckets = _dbContext.Panels
-            .Include(p => p.RecruitmentBuckets)
-            .FirstOrDefault(p => p.PanelId == panel.PanelId);
-        if (panelWithBuckets == null)
-        {
-            return null;
-        } //mss weg, momenteel hier gezet voor error te vermeiden
-        return panelWithBuckets.RecruitmentBuckets.ToList();
-    }
+    
 
-    public void updateDrawStatus(Panel panel)
+    public void UpdateDrawStatus(Panel panel)
     {
         panel.DrawStatus = DrawStatus.Complete;
         _dbContext.Update(panel);

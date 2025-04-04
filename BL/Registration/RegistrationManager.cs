@@ -1,25 +1,16 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
+using CitizenPanel.DAL;
 using CitizenPanel.DAL.Registration;
 
 namespace CitizenPanel.BL.Registration;
 
-public class RegistrationManager : IRegistrationManager
+public class RegistrationManager(IMemberManager memberManager, IPanelManager panelManager) : IRegistrationManager
 {
-    private readonly IMemberManager _memberManager;
-    private readonly IRegistrationRepository _repository;
-
-    public RegistrationManager(IMemberManager memberManager, IRegistrationRepository repository)
-    {
-        _memberManager = memberManager;
-        _repository = repository;
-       
-    }
-
     public IEnumerable<RecruitmentBucket> GetInvitationBuckets(Panel panel)
     {
-        // Define age groups
+        // Dit moet nog gekoppelt worden aan de criteria van het panel zelf
         var ageGroups = new List<(string Name, int Min, int Max)>
         {
             ("18-25", 18, 25),
@@ -36,7 +27,7 @@ public class RegistrationManager : IRegistrationManager
             foreach (var ageGroup in ageGroups)
             {
                 // Use repository to get count instead of fetching all members
-                var count = _memberManager.GetMemberCountByPanelIdGenderAndAgeRange(
+                var count = memberManager.GetMemberCountByPanelIdGenderAndAgeRange(
                     panel.PanelId, genderGroup, ageGroup.Min, ageGroup.Max);
                 
                 buckets.Add(new RecruitmentBucket
@@ -54,7 +45,7 @@ public class RegistrationManager : IRegistrationManager
     {
         var existingBuckets = GetInvitationBuckets(panel).ToList();
 
-        var targetBuckets = _repository.ReadTargetBucketsByPanel(panel);
+        var targetBuckets = panelManager.GetTargetBucketsByPanel(panel);
         
         
         // // Update existing buckets with real values
@@ -77,11 +68,8 @@ public class RegistrationManager : IRegistrationManager
     }
 
     // Start the final draw for a panel
-    public DrawResult StartFinalDraw(Panel panel)
+    public void StartFinalDraw(Panel panel)
     {
-        // Update draw status to complete
-        _repository.updateDrawStatus(panel);
-
         // Perform the draw
         var buckets = GetAllBuckets(panel);
         var result = new DrawResult();
@@ -101,7 +89,7 @@ public class RegistrationManager : IRegistrationManager
             Gender genderEnum = bucket.Gender == "Mannen" ? Gender.Male : Gender.Female;
             var ageRange = ageRanges[bucket.AgeGroup];
 
-            var bucketMembers = _memberManager.GetMembersByPanelIdGenderAndAgeRange(
+            var bucketMembers = memberManager.GetMembersByPanelIdGenderAndAgeRange(
                 panel.PanelId,
                 genderEnum,
                 ageRange.Min,
@@ -111,36 +99,32 @@ public class RegistrationManager : IRegistrationManager
             var shuffledMembers = bucketMembers.OrderBy(x => random.Next()).ToList();
 
             int mainCount = Math.Min(bucket.Target, shuffledMembers.Count);
-            int reserveCount = (int)Math.Ceiling(mainCount * 0.1); // 10% reserves, rounded up
-
-            var selectedMembers = new List<Member>();
-            for (int i = 0; i < mainCount; i++)
+            int reserveCount = (int)Math.Ceiling(mainCount * 0.1); // 10% reserves, afgerond
+            
+            for (int i = 0; i < shuffledMembers.Count; i++)
             {
-                if (i < shuffledMembers.Count)
+                var member = shuffledMembers[i];
+
+                if (i < mainCount)
                 {
-                    var member = shuffledMembers[i];
-                    member.IsSelected = true;
                     result.SelectedMembers.Add(member);
-                    selectedMembers.Add(member);
                 }
-            }
-
-            _memberManager.MarkMembersAsSelected(selectedMembers);
-
-            for (int i = mainCount; i < mainCount + reserveCount; i++)
-            {
-                if (i < shuffledMembers.Count)
+                else if (i < mainCount + reserveCount)
                 {
-                    var reserveMember = shuffledMembers[i];
-                    result.ReserveMembers.Add(reserveMember);
+                    result.ReserveMembers.Add(member);
+                }
+                else
+                {
+                    result.NotSelectedMembers.Add(member);
                 }
             }
-        }
 
-        // Get all members in the panel and filter out selected/reserved ones
-        var allPanelMembers = _memberManager.GetMembersByPanelId(panel.PanelId).ToList();
-        _repository.addSelectedMembersAndReservesToPanel(panel, allPanelMembers);
-        return result;
+            panel.DrawResult = result;
+
+            panel.DrawStatus = DrawStatus.Complete;
+
+            panelManager.EditPanel(panel);
+        }
     }
 
     // Check if there are sufficient registrations for all criteria

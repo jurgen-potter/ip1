@@ -5,7 +5,7 @@ namespace CitizenPanel.DAL.Registration;
 
 public interface IRegistrationRepository
 {
-    public ICollection<RecruitmentBucket> ReadTargetBucketsByPanel(Panel panel);
     
-    public void updateDrawStatus(Panel panel);
+    
+    public void UpdateDrawStatus(Panel panel);
 }

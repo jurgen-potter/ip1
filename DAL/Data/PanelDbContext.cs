@@ -18,6 +18,7 @@ public class PanelDbContext : IdentityDbContext
     public DbSet<ExtraCriteria> ExtraCriteria { get; set; }
     public DbSet<SubCriteria> SubCriteria { get; set; }
     public DbSet<Invitation> Invitations { get; set; }
+    public DbSet<DrawResult> DrawResults { get; set; }
         
     public PanelDbContext(DbContextOptions<PanelDbContext> options, IConfiguration configuration) : base(options)
     {
@@ -40,6 +41,10 @@ public class PanelDbContext : IdentityDbContext
         modelBuilder.Entity<Citizen>().ToTable("Citizens");
         modelBuilder.Entity<Organization>().ToTable("Organizations");
 
+        modelBuilder.Entity<DrawResult>()
+            .HasMany(m => m.SelectedMembers);
+        modelBuilder.Entity<DrawResult>()
+            .HasMany(m => m.ReserveMembers);
         modelBuilder.Entity<Panel>()
             .OwnsMany(p => p.RecruitmentBuckets);
         modelBuilder.Entity<Panel>()
