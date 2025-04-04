@@ -37,4 +37,24 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadTargetBucketsByPanel(panel);
     }
+    
+    public void addRecommendationOfPanel(Recommendation recommendation, Panel panel)
+    {
+        _panelRepository.CreateRecommendationOfPanel(recommendation, panel);
+    }
+
+    public Panel getPanelByIdWithRecommendations(int panelId)
+    {
+        return _panelRepository.ReadPanelByIdWithRecommendations(panelId);
+    }
+
+    public Recommendation GetRecommendationById(int recommendationId)
+    {
+        return _panelRepository.ReadRecommendationById(recommendationId);
+    }
+
+    public void editRecommendation(Recommendation recommendation)
+    {
+        _panelRepository.UpdateRecommendation(recommendation);
+    }
 }

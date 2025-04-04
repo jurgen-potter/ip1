@@ -75,7 +75,12 @@ public class DataSeeder
                 new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "41-60", Count = 0, Target = 5 },
                 new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "60+", Count = 0, Target = 5 }
             },
-            DrawStatus = DrawStatus.FirstPhaseActive
+            DrawStatus = DrawStatus.FirstPhaseActive,
+            Recommendations = new List<Recommendation>()
+            {
+                new Recommendation(1,"Kick Jurgen","jurgen uit de groep gooien omdat hij niet voldoet aan de eisen",0),
+                new Recommendation(2,"Kick Xander","Xander heeft een te groot ego",10)
+            }   
         };
         panel1.ExtraCriteria.Add(extraCrit1);
         panel1.ExtraCriteria.Add(extraCrit2);
