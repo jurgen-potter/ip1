@@ -24,13 +24,7 @@
         <input asp-for="LastName" type="text" class="form-control">
         <span asp-validation-for="LastName" class="text-danger"></span>
     </div>
-
-    <div>
-        <label>Email:</label>
-        <input asp-for="Email" type="email" class="form-control">
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
+    
     <div>
         <label>Wachtwoord:</label>
         <input asp-for="Password" type="password" class="form-control">
@@ -60,6 +54,13 @@
         <input asp-for="Town" type="text" class="form-control" value="@Model.Town" readonly>
     </div>
     *@
+
+    <div>
+        <label>Email:</label>
+        <input asp-for="Email" type="email" class="form-control">
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
 
     @if (Model?.CriteriaList != null && Model.CriteriaList.Any())
     {

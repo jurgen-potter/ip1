@@ -14,5 +14,6 @@ public class Invitation
     public bool IsRegistered { get; set; }
     public bool IsUsed { get; set; }
     public List<int> SelectedCriteria { get; set; }
+    public string Email { get; set; }
     
 }

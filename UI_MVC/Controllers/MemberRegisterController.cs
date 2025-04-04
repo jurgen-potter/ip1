@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.UI.MVC.Models;
@@ -91,6 +92,23 @@ public class MemberRegisterController : Controller
     [HttpPost]
     public async Task<IActionResult> RegisterMember(RegisterViewModel newMember)
     {
+        if (newMember is IValidatableObject validatable && newMember.Email == null)
+        {
+            var context = new ValidationContext(newMember);
+            var validationResults = validatable.Validate(context);
+
+            foreach (var validationResult in validationResults)
+            {
+                foreach (var memberName in validationResult.MemberNames)
+                {
+                    // 🧠 Only add it if it doesn't already exist in ModelState
+                    if (!ModelState.ContainsKey(memberName) || ModelState[memberName].Errors.All(e => e.ErrorMessage != validationResult.ErrorMessage))
+                    {
+                        ModelState.AddModelError(memberName, validationResult.ErrorMessage);
+                    }
+                }
+            }
+        }
         if (!ModelState.IsValid) {
             return View(newMember);
         }
@@ -108,18 +126,18 @@ public class MemberRegisterController : Controller
         
         newMember.Invitation.SelectedCriteria = newMember.SelectedCriteria;
         newMember.Invitation.IsRegistered = true;
+        newMember.Invitation.Email = newMember.Email;
         _drawManager.ChangeInvitation(newMember.Invitation);
 
-        //TempData["Email"] = newMember.Email;
+        TempData["Email"] = newMember.Email;
         return RedirectToAction("RegistrationConfirmed");
     }
 
     public IActionResult RegistrationConfirmed()
     {
-        /*
         var email = TempData["Email"]?.ToString();
         _mailSender.SendMailAsync(email, "Bevestiging aanmelding", "Uw gegevens zijn opgeslagen");
-        */
+        
         return View();
     }
 }
