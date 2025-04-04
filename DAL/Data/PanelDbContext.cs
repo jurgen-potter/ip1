@@ -13,7 +13,6 @@ public class PanelDbContext : IdentityDbContext
     private readonly IConfiguration _configuration;
     public DbSet<Member> Members { get; set; }
     public DbSet<Panel> Panels { get; set; }
-    public DbSet<Citizen> Citizens { get; set; }
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<ExtraCriteria> ExtraCriteria { get; set; }
     public DbSet<SubCriteria> SubCriteria { get; set; }
@@ -37,7 +36,6 @@ public class PanelDbContext : IdentityDbContext
         base.OnModelCreating(modelBuilder);
         
         modelBuilder.Entity<Member>().ToTable("Members");
-        modelBuilder.Entity<Citizen>().ToTable("Citizens");
         modelBuilder.Entity<Organization>().ToTable("Organizations");
         
         modelBuilder.Entity<Panel>()

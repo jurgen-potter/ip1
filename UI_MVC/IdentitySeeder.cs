@@ -18,14 +18,8 @@ public class IdentitySeeder
     {
         var adminRole = new IdentityRole("Admin");
         await _roleManager.CreateAsync(adminRole);
-        var citizenRole = new IdentityRole("Citizen");
-        await _roleManager.CreateAsync(citizenRole);
         var organizationRole = new IdentityRole("Organization");
         await _roleManager.CreateAsync(organizationRole);
-        var potentialMemberRole = new IdentityRole("PotentialMember");
-        await _roleManager.CreateAsync(potentialMemberRole);
-        var panelMemberRole = new IdentityRole("PanelMember");
-        await _roleManager.CreateAsync(panelMemberRole);
         
         // user 1
         var user1 = new IdentityUser()
@@ -36,31 +30,22 @@ public class IdentitySeeder
         await _userManager.CreateAsync(user1, "Admin123!");
         await _userManager.AddToRoleAsync(user1, "Admin");
         
-        // user 2
-        var user2 = new Citizen()
-        {
-            UserName = "chris@kdg.be",
-            Email = "chris@kdg.be"
-        };
-        await _userManager.CreateAsync(user2, "Chrischris1!");
-        await _userManager.AddToRoleAsync(user2, "Citizen");
         
-        // user 3
-        var user3 = new Organization()
+        // user 2
+        var user2 = new Organization()
         {
             UserName = "antwerpen@antwerpen.be",
             Email = "antwerpen@antwerpen.be"
         };
-        await _userManager.CreateAsync(user3, "Antwerpen1!");
-        await _userManager.AddToRoleAsync(user3, "Organization");
+        await _userManager.CreateAsync(user2, "Antwerpen1!");
+        await _userManager.AddToRoleAsync(user2, "Organization");
         
-        // user 4
-        var user4 = new Member()
+        // user 3
+        var user3 = new Member()
         {
             UserName = "paul@kdg.be",
             Email = "paul@kdg.be"
         };
-        await _userManager.CreateAsync(user4, "Paulpaul1!");
-        await _userManager.AddToRoleAsync(user4, "PanelMember");
+        await _userManager.CreateAsync(user3, "Paulpaul1!");
     }
 }

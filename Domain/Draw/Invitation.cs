@@ -1,9 +1,11 @@
-﻿using CitizenPanel.BL.Domain.User;
+﻿using System.ComponentModel.DataAnnotations;
+using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.BL.Domain.Draw;
 
 public class Invitation
 {
+    [Key]
     public int Id { get; set; }
     public string Code { get; set; }
     public string QRCodeString { get; set; }
