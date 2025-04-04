@@ -3,7 +3,7 @@ using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
 using Microsoft.AspNetCore.Identity;
 
-namespace CitizenPanel.BL;
+namespace CitizenPanel.BL.Registration;
 
 public interface IRegistrationManager
 {

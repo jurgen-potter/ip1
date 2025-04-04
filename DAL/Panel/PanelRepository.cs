@@ -21,7 +21,7 @@ public class PanelRepository : IPanelRepository
             .ThenInclude(dr => dr.SelectedMembers)
             .Include(p => p.DrawResult)
             .ThenInclude(dr => dr.ReserveMembers)
-            .FirstOrDefault(p => p.PanelId == panelId);
+            .SingleOrDefault(p => p.PanelId == panelId);
     }
     
     

@@ -4,31 +4,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
+using BL.Registration;
 using Models;
 
-public class RegistrationController : Controller
+public class RegistrationController(IRegistrationManager registrationManager, IMailSender mailSender, IPanelManager panelManager) : Controller
 {
-    private readonly IRegistrationManager _registrationManager;
-    private readonly IMailSender _mailSender;
-    private readonly IPanelManager _panelManager;
-
-    public RegistrationController(IRegistrationManager registrationManager, IMailSender mailSender, IPanelManager panelManager)
-    {
-        _registrationManager = registrationManager;
-        _mailSender = mailSender;
-        _panelManager = panelManager;
-    }
-
     [HttpGet]
     public IActionResult Index(int panelId = 1)
     {
-        var panel = _panelManager.GetPanelById(panelId);
+        var panel = panelManager.GetPanelById(panelId);
 
-        var allBuckets = _registrationManager.GetAllBuckets(panel);
+        var allBuckets = registrationManager.GetAllBuckets(panel);
 
         ViewBag.PanelId = panelId;
         ViewBag.DrawStatus = panel.DrawStatus;
-        ViewBag.HasSufficientRegistrations = _registrationManager.HasSufficientRegistrations(panel);
+        ViewBag.HasSufficientRegistrations = registrationManager.HasSufficientRegistrations(panel);
 
         return View(allBuckets);
     }
@@ -52,10 +42,10 @@ public class RegistrationController : Controller
             return View("EditMail", finalDraw);
         }
         
-        var panel = _panelManager.GetPanelById(finalDraw.PanelId);
+        var panel = panelManager.GetPanelById(finalDraw.PanelId);
 
         // Always proceed with the draw regardless of sufficient registrations
-        _registrationManager.StartFinalDraw(panel);
+        registrationManager.StartFinalDraw(panel);
         
         
         TempData["SelectedSubject"] = finalDraw.SelectedSubject;
@@ -71,7 +61,7 @@ public class RegistrationController : Controller
     public IActionResult DrawResults(int panelId)
     {
         // Create a panel object that matches the one in the RegistrationManager
-        var panel = _panelManager.GetPanelById(panelId);
+        var panel = panelManager.GetPanelById(panelId);
     
         // Get draw status
         var drawResults = panel.DrawResult;
@@ -85,17 +75,17 @@ public class RegistrationController : Controller
         
         foreach (var selected in drawResults.SelectedMembers)
         {
-            _mailSender.SendMailAsync("donaldduckie313@gmail.com", selectedSubject, selectedMessage);
+            mailSender.SendMailAsync("donaldduckie313@gmail.com", selectedSubject, selectedMessage);
         }
         
         foreach (var reserve in drawResults.ReserveMembers)
         {
-            _mailSender.SendMailAsync("donaldduckie313@gmail.com", reserveSubject, reserveMessage);
+            mailSender.SendMailAsync("donaldduckie313@gmail.com", reserveSubject, reserveMessage);
         }
 
         foreach (var notSelected in drawResults.NotSelectedMembers)
         {
-            _mailSender.SendMailAsync("donaldduckie313@gmail.com", "unlucky", "better luck next time");
+            mailSender.SendMailAsync("donaldduckie313@gmail.com", "unlucky", "better luck next time");
         }
     
         ViewBag.PanelId = panelId;
