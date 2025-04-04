@@ -1,7 +1,9 @@
 using AspNetCoreLiveMonitoring.Extensions;
 using CitizenPanel.BL;
+using CitizenPanel.BL.Registration;
 using CitizenPanel.DAL;
 using CitizenPanel.DAL.Data;
+using CitizenPanel.DAL.Registration;
 using CitizenPanel.UI.MVC;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +20,7 @@ builder.Services.AddDbContext<PanelDbContext>(options =>
 // Add Repositories and Managers
 builder.Services.AddScoped<IDrawRepository, DrawRepository>();
 builder.Services.AddScoped<IPanelRepository, PanelRepository>();
+builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddScoped<IDrawManager, DrawManager>();

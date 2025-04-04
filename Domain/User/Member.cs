@@ -13,7 +13,5 @@ public class Member : IdentityUser
     public DateOnly BirthDate { get; set; }
     public string Town { get; set; }
     public Panel.Panel Panel { get; set; }
-    public bool IsSelected { get; set; }
-
     public List<SubCriteria> SelectedCriteria { get; set; } = new List<SubCriteria>();
 }

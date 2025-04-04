@@ -40,7 +40,6 @@ var drawStatus = (DrawStatus)ViewBag.DrawStatus;
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>Naam</th>
                 <th>Email</th>
                 <th>Geslacht</th>
                 <th>Leeftijd</th>
@@ -51,7 +50,6 @@ var drawStatus = (DrawStatus)ViewBag.DrawStatus;
             @foreach (var member in Model.SelectedMembers)
             {
             <tr>
-                <td>@member.FirstName @member.LastName</td>
                 <td>@member.Email</td>
                 <td>@(member.Gender == CitizenPanel.BL.Domain.User.Gender.Male ? "Man" : "Vrouw")</td>
                 <td>@member.Age</td>
@@ -91,7 +89,6 @@ var drawStatus = (DrawStatus)ViewBag.DrawStatus;
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>Naam</th>
                 <th>Email</th>
                 <th>Geslacht</th>
                 <th>Leeftijd</th>
@@ -102,7 +99,6 @@ var drawStatus = (DrawStatus)ViewBag.DrawStatus;
             @foreach (var member in Model.ReserveMembers)
             {
             <tr>
-                <td>@member.FirstName @member.LastName</td>
                 <td>@member.Email</td>
                 <td>@(member.Gender == CitizenPanel.BL.Domain.User.Gender.Male ? "Man" : "Vrouw")</td>
                 <td>@member.Age</td>
