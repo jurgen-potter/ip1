@@ -101,7 +101,6 @@ public class MemberRegisterController : Controller
             {
                 foreach (var memberName in validationResult.MemberNames)
                 {
-                    // 🧠 Only add it if it doesn't already exist in ModelState
                     if (!ModelState.ContainsKey(memberName) || ModelState[memberName].Errors.All(e => e.ErrorMessage != validationResult.ErrorMessage))
                     {
                         ModelState.AddModelError(memberName, validationResult.ErrorMessage);
