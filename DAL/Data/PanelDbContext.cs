@@ -13,6 +13,7 @@ public class PanelDbContext : IdentityDbContext
     private readonly IConfiguration _configuration;
     public DbSet<Member> Members { get; set; }
     public DbSet<Panel> Panels { get; set; }
+    public DbSet<Recommendation> Recommendations { get; set; }
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<ExtraCriteria> ExtraCriteria { get; set; }
     public DbSet<SubCriteria> SubCriteria { get; set; }

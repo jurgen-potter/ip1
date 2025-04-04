@@ -1,0 +1,29 @@
+﻿@model IEnumerable<CitizenPanel.BL.Domain.Panel.Recommendation>
+
+@{
+    ViewData["Title"] = "Recommendations";
+}
+
+<h1>Aanbevelingen</h1>
+
+<div class="row">
+    @foreach (var recommendation in Model)
+    {
+        <div class="col-md-4">
+            <div class="card" style="margin-bottom: 20px;">
+                <img src="path_to_your_image" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">@recommendation.Title</h5>
+                    <p class="card-text">@recommendation.Description</p>
+                    <p>Aantal stemmen: @recommendation.Votes</p>
+                    <form method="post" asp-action="Vote">
+                        <input type="hidden" name="id" value="@recommendation.Id" />
+                        <button type="submit" class="btn btn-primary">Stem</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<a asp-action="AddRecommendation" asp-controller="Recommendation" class="btn btn-success">Add Recommendation</a>

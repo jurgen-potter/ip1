@@ -23,6 +23,13 @@ public class PanelRepository : IPanelRepository
             .ThenInclude(dr => dr.ReserveMembers)
             .SingleOrDefault(p => p.PanelId == panelId);
     }
+
+    public Panel ReadPanelByIdWithRecommendations(int panelId)
+    {
+        return _dbContext.Panels
+            .Include(r => r.Recommendations)
+            .SingleOrDefault(p => p.PanelId == panelId);
+    }
     
     
     public void CreatePanel(Panel panel)
@@ -47,5 +54,22 @@ public class PanelRepository : IPanelRepository
             .Include(p => p.RecruitmentBuckets)
             .FirstOrDefault(p => p.PanelId == panel.PanelId);
         return panelWithBuckets?.RecruitmentBuckets.ToList();
+    }
+
+    public void CreateRecommendationOfPanel(Recommendation recommendation, Panel panel)
+    {
+        panel.Recommendations.Add(recommendation);
+        UpdatePanel(panel);
+    }
+
+    public Recommendation ReadRecommendationById(int recommendationId)
+    {
+        return _dbContext.Recommendations
+            .Find(recommendationId);
+    }
+
+    public void UpdateRecommendation(Recommendation recommendation)
+    {
+        _dbContext.Update(recommendation);
     }
 }
