@@ -90,29 +90,6 @@ public class MemberRegisterController : Controller
         return View(model);
     }
     
-    [HttpGet]
-    public IActionResult RegisterMember(string code)
-    {
-        Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string);
-        if (invitation.IsUsed)
-            return RedirectToAction("UsedCode", "MemberRegister");
-        
-        List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
-
-        var model = new NewMemberViewModel
-        {
-            Gender = invitation.Gender,
-            Town = invitation.Postcode,
-            CriteriaList = extraCriteria,
-            SelectedCriteria = new List<int>(new int[extraCriteria.Count]),
-            PanelId = 1,
-            Invitation = invitation,
-            IsConfirmed = true
-        };
-        
-        return View(model);
-    }
-    
     [HttpPost]
     public async Task<IActionResult> RegisterMember(RegisterViewModel newMember)
     {
@@ -162,5 +139,48 @@ public class MemberRegisterController : Controller
         _mailSender.SendMailAsync(email, "Bevestiging aanmelding", "Uw gegevens zijn opgeslagen");
         
         return View();
+    }
+    
+    [HttpGet]
+    public IActionResult RegisterMember()
+    {
+        Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string ?? throw new InvalidOperationException(message:"AAAAAAAAAAAAAAH PANIEK PANIEK PANIEK"));
+        
+        List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
+
+        var model = new NewMemberViewModel
+        {
+            Gender = invitation.Gender,
+            Town = invitation.Postcode,
+            CriteriaList = extraCriteria,
+            SelectedCriteria = invitation.SelectedCriteria,
+            PanelId = 1
+        };
+        
+        return View(model);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> RegisterMember(NewMemberViewModel newMember)
+    {
+        if (!ModelState.IsValid) {
+            return View(newMember);
+        }
+        
+        var (result, member) = await _memberManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria, newMember.PanelId);
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("Password", error.Description);
+            }
+            return View(newMember);
+        }
+        newMember.Invitation.IsUsed = true;
+        _drawManager.ChangeInvitation(newMember.Invitation);
+
+        TempData["Email"] = newMember.Email;
+        
+        return RedirectToAction("RegistrationConfirmed");
     }
 }
