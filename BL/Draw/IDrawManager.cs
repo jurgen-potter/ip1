@@ -18,5 +18,5 @@ public interface IDrawManager
 
     public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, double malePercentage, double femalePercentage, double age18_25Percentage, double age26_40Percentage, double age41_60Percentage, double age60PlusPercentage, List<ExtraCriteria> extraCriteria);
     
-    
+    public bool RemoveInvitation(int invitationId);
 }

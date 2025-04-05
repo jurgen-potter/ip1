@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using CitizenPanel.BL;
+using CitizenPanel.BL.Email;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.DTO;
@@ -12,12 +13,12 @@ using Newtonsoft.Json;
 public class MemberRegisterController : Controller
 {
     private readonly IDrawManager _drawManager;
-    private readonly IMailSender _mailSender;
+    private readonly IEmailSender _emailSender;
     private readonly IMemberManager _memberManager;
 
-    public MemberRegisterController(IDrawManager drawManager, IMailSender mailSender, IMemberManager memberManager)
+    public MemberRegisterController(IDrawManager drawManager, IEmailSender emailSender, IMemberManager memberManager)
     {
-        _mailSender = mailSender;
+        _emailSender = emailSender;
         _drawManager = drawManager;
         _memberManager = memberManager;
     }
@@ -136,13 +137,13 @@ public class MemberRegisterController : Controller
     public IActionResult RegistrationConfirmed()
     {
         var email = TempData["Email"]?.ToString();
-        _mailSender.SendMailAsync(email, "Bevestiging aanmelding", "Uw gegevens zijn opgeslagen");
+        _emailSender.SendEmailAsync(email, "Bevestiging aanmelding", "Uw gegevens zijn opgeslagen");
         
         return View();
     }
     
     [HttpGet]
-    public IActionResult RegisterMember()
+    public IActionResult CreateMemberAccount()
     {
         Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string ?? throw new InvalidOperationException(message:"AAAAAAAAAAAAAAH PANIEK PANIEK PANIEK"));
         
@@ -150,41 +151,20 @@ public class MemberRegisterController : Controller
 
         var model = new NewMemberViewModel
         {
+            Email = invitation.Email,
             Gender = invitation.Gender,
             Town = invitation.Postcode,
             CriteriaList = extraCriteria,
             SelectedCriteria = invitation.SelectedCriteria,
-            PanelId = 1
-        };
-        
-        return View(model);
-    }
-    
-    [HttpGet]
-    public IActionResult RegisterMember(string code)
-    {
-        Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string);
-        if (invitation.IsUsed)
-            return RedirectToAction("UsedCode", "MemberRegister");
-        
-        List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
-
-        var model = new NewMemberViewModel
-        {
-            Gender = invitation.Gender,
-            Town = invitation.Postcode,
-            CriteriaList = extraCriteria,
-            SelectedCriteria = new List<int>(new int[extraCriteria.Count]),
             PanelId = 1,
-            Invitation = invitation,
-            IsConfirmed = true
+            InvitationId = invitation.Id
         };
         
         return View(model);
     }
     
     [HttpPost]
-    public async Task<IActionResult> RegisterMember(NewMemberViewModel newMember)
+    public async Task<IActionResult> CreateMemberAccount(NewMemberViewModel newMember)
     {
         if (!ModelState.IsValid) {
             return View(newMember);
@@ -199,11 +179,8 @@ public class MemberRegisterController : Controller
             }
             return View(newMember);
         }
-        newMember.Invitation.IsUsed = true;
-        _drawManager.ChangeInvitation(newMember.Invitation);
-
-        TempData["Email"] = newMember.Email;
         
-        return RedirectToAction("RegistrationConfirmed");
+        _drawManager.RemoveInvitation(newMember.InvitationId);
+        return RedirectToAction("Index", "Home");
     }
 }

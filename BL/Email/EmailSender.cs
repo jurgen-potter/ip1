@@ -2,11 +2,11 @@
 using System.Net;
 using System.Net.Mail;
 
-namespace CitizenPanel.BL;
+namespace CitizenPanel.BL.Email;
 
-public class MailSender(IConfiguration config) : IMailSender
+public class EmailSender(IConfiguration config) : IEmailSender
 {
-    public async Task SendMailAsync(string to, string subject, string body)
+    public async Task SendEmailAsync(string to, string subject, string body)
     {
         string host = config["Smtp:Host"];
         int port = int.TryParse(config["Smtp:Port"], out var parsedPort) && parsedPort > 0 

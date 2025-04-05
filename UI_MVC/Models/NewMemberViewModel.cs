@@ -35,7 +35,5 @@ public class NewMemberViewModel
     
     public int PanelId { get; set; }
     
-    public Invitation Invitation { get; set; }
-    
-    public bool IsConfirmed { get; set; }
+    public int InvitationId { get; set; }
 }

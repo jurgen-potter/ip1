@@ -18,9 +18,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Draw;
-using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
@@ -32,15 +29,13 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly IDrawManager _drawManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
-            IDrawManager drawManager)
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -48,7 +43,6 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _drawManager = drawManager;
         }
 
         /// <summary>
@@ -99,15 +93,10 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-            
-            public string Code { get; set; }
-            
-            public string AccountType { get; set; }
         }
 
 
@@ -121,60 +110,47 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            
-            if (Input.AccountType == "Organization")
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                var user = CreateUser();
+
+                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                var result = await _userManager.CreateAsync(user, Input.Password);
+
+                if (result.Succeeded)
                 {
-                    var user = CreateUser();
+                    _logger.LogInformation("User created a new account with password.");
 
-                    await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                    await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                    var result = await _userManager.CreateAsync(user, Input.Password);
+                    var userId = await _userManager.GetUserIdAsync(user);
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var callbackUrl = Url.Page(
+                        "/Account/ConfirmEmail",
+                        pageHandler: null,
+                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                        protocol: Request.Scheme);
 
-                    if (result.Succeeded)
+                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        _logger.LogInformation("User created a new account with password.");
-
-                        var userId = await _userManager.GetUserIdAsync(user);
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                            protocol: Request.Scheme);
-
-                        await _emailSender.SendEmailAsync(Input.Email,
-                            "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                        if (_userManager.Options.SignIn.RequireConfirmedAccount) { return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl }); }
-                        else
-                        {
-                            await _signInManager.SignInAsync(user, isPersistent: false);
-                            return LocalRedirect(returnUrl);
-                        }
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
-                    foreach (var error in result.Errors) { ModelState.AddModelError(string.Empty, error.Description); }
+                    else
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
                 }
-            }
-            else
-            {
-                Invitation invitation = _drawManager.GetInvitationWithCode(Input.Code);
-                if (invitation is not null)
+                foreach (var error in result.Errors)
                 {
-                    TempData["Invitation"] = JsonConvert.SerializeObject(invitation);
-                    return RedirectToAction("RegisterMember", "MemberRegister");
-                }
-                else
-                {
-                    ModelState.AddModelError("Input.Code", "Please enter a valid code.");
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
 
             // If we got this far, something failed, redisplay form
-            TempData["SelectedAccountType"] = Input.AccountType;
             return Page();
         }
 

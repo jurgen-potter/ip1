@@ -16,4 +16,5 @@ public interface IDrawRepository
     
     public SubCriteria ReadSubCriteria(int subCriteriaId);
     IEnumerable<ExtraCriteria> ReadExtraCriteriaByPanel(int panelId);
+    public bool DeleteInvitation(int invitationId);
 }

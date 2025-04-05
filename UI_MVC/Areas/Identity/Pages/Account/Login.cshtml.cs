@@ -128,10 +128,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                         _logger.LogInformation("User logged in.");
                         return LocalRedirect(returnUrl);
                     }
-                    if (result.RequiresTwoFactor)
-                    {
-                        return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                    }
+                    if (result.RequiresTwoFactor) { return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe }); }
                     if (result.IsLockedOut)
                     {
                         _logger.LogWarning("User account locked out.");
@@ -143,22 +140,23 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                         return Page();
                     }
                 }
+            }
+            else
+            {
+                Invitation invitation = _drawManager.GetInvitationWithCode(Input.Code);
+                if (invitation is not null && invitation.IsRegistered)
+                {
+                    TempData["Invitation"] = JsonConvert.SerializeObject(invitation);
+                    return RedirectToAction("CreateMemberAccount", "MemberRegister");
+                }
                 else
                 {
-                    Invitation invitation = _drawManager.GetInvitationWithCode(Input.Code);
-                    if (invitation is not null && invitation.IsUsed)
-                    {
-                        TempData["Invitation"] = JsonConvert.SerializeObject(invitation);
-                        return RedirectToAction("RegisterMember", "MemberRegister");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("Input.Code", "Please enter a valid code.");
-                    }
+                    ModelState.AddModelError("Input.Code", "Please enter a valid code.");
                 }
             }
 
             // If we got this far, something failed, redisplay form
+            TempData["SelectedLoginType"] = Input.LoginType;
             return Page();
         }
     }

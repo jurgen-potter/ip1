@@ -1,5 +1,6 @@
 ﻿using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Email;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers;
@@ -9,12 +10,12 @@ using Models;
 public class RegistrationController : Controller
 {
     private readonly IRegistrationManager _registrationManager;
-    private readonly IMailSender _mailSender;
+    private readonly IEmailSender _emailSender;
 
-    public RegistrationController(IRegistrationManager registrationManager, IMailSender mailSender)
+    public RegistrationController(IRegistrationManager registrationManager, IEmailSender mailSender)
     {
         _registrationManager = registrationManager;
-        _mailSender = mailSender;
+        _emailSender = mailSender;
     }
 
     [HttpGet]
@@ -86,12 +87,12 @@ public class RegistrationController : Controller
         var reserveMessage = TempData["ReserveMessage"] as string;
         foreach (var selected in drawResults.SelectedMembers)
         {
-            _mailSender.SendMailAsync("donaldduckie313@gmail.com", selectedSubject, selectedMessage);
+            _emailSender.SendEmailAsync("donaldduckie313@gmail.com", selectedSubject, selectedMessage);
         }
         
         foreach (var reserve in drawResults.ReserveMembers)
         {
-            _mailSender.SendMailAsync("donaldduckie313@gmail.com", reserveSubject, reserveMessage);
+            _emailSender.SendEmailAsync("donaldduckie313@gmail.com", reserveSubject, reserveMessage);
         }
     
         ViewBag.PanelId = panelId;

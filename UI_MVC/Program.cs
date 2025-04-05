@@ -1,5 +1,6 @@
 using AspNetCoreLiveMonitoring.Extensions;
 using CitizenPanel.BL;
+using CitizenPanel.BL.Email;
 using CitizenPanel.DAL;
 using CitizenPanel.DAL.Data;
 using CitizenPanel.UI.MVC;
@@ -25,7 +26,7 @@ builder.Services.AddScoped<IPanelManager, PanelManager>();
 builder.Services.AddScoped<IQuestionManager, QuestionManager>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
-builder.Services.AddScoped<IMailSender, MailSender>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IMemberManager, MemberManager>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
