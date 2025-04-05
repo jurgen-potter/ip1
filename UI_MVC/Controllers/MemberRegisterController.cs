@@ -1,14 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using CitizenPanel.BL;
-using CitizenPanel.BL.Email;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
-
-using Newtonsoft.Json;
 
 public class MemberRegisterController : Controller
 {

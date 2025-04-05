@@ -1,11 +1,10 @@
 ﻿using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Panel;
-using CitizenPanel.BL.Email;
+using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace CitizenPanel.UI.MVC.Controllers;
-
-using Models;
 
 public class RegistrationController : Controller
 {

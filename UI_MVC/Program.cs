@@ -1,10 +1,12 @@
 using AspNetCoreLiveMonitoring.Extensions;
 using CitizenPanel.BL;
-using CitizenPanel.BL.Email;
 using CitizenPanel.DAL;
 using CitizenPanel.DAL.Data;
 using CitizenPanel.UI.MVC;
+using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
+using CitizenPanel.UI.MVC.Areas.Identity.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,11 +36,13 @@ builder.Services.AddRazorPages();
 // Add Identity
 builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<PanelDbContext>();
+    .AddEntityFrameworkStores<PanelDbContext>()
+    .AddErrorDescriber<DutchIdentityErrorDescriber>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedAccount = true;
 });
 
 var app = builder.Build();

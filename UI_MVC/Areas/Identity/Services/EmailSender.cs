@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
-namespace CitizenPanel.BL.Email;
+namespace CitizenPanel.UI.MVC.Areas.Identity.Services;
 
 public class EmailSender(IConfiguration config) : IEmailSender
 {
