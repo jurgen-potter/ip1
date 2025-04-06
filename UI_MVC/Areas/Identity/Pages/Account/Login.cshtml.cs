@@ -69,15 +69,15 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "Email is verplicht.")]
+            [EmailAddress(ErrorMessage = "Dit e-mailadres is ongeldig.")]
             public string Email { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Wachtwoord is verplicht.")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -85,7 +85,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Onthoud mij?")]
             public bool RememberMe { get; set; }
             
             public string Code { get; set; }
@@ -136,7 +136,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        ModelState.AddModelError(string.Empty, "Ongeldige aanmelding.");
                         return Page();
                     }
                 }
@@ -146,12 +146,19 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 Invitation invitation = _drawManager.GetInvitationWithCode(Input.Code);
                 if (invitation is not null && invitation.IsRegistered)
                 {
-                    TempData["Invitation"] = JsonConvert.SerializeObject(invitation);
-                    return RedirectToAction("CreateMemberAccount", "MemberRegister");
+                    if (!invitation.IsDrawn)
+                    {
+                        TempData["Invitation"] = JsonConvert.SerializeObject(invitation);
+                        return RedirectToPage("./RegisterMember");
+                    }
+                    else
+                    {
+                        return RedirectToPage("./DrawPending");
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError("Input.Code", "Please enter a valid code.");
+                    ModelState.AddModelError("Input.Code", "Voer een geregistreerde code in. Als u al een account heeft aangemaakt is uw code niet meer geldig.");
                 }
             }
 

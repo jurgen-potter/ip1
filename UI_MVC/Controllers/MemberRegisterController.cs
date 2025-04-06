@@ -61,7 +61,7 @@ public class MemberRegisterController : Controller
             if (invitation.IsRegistered)
                 return RedirectToAction("Registered", "MemberRegister");
             
-            if (invitation.IsUsed)
+            if (invitation.IsDrawn)
                 return RedirectToAction("UsedCode", "MemberRegister");
         }
         

@@ -2,7 +2,7 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Inloggen";
+    ViewData["Title"] = "Aanmelden";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -11,8 +11,8 @@
         <section>
             <h2>Selecteer een methode om mee in te loggen</h2>
             <div class="btn-group w-100">
-                <button type="button" id="accountBtn" class="btn btn-lg btn-outline-primary login-type-btn" data-type="Account">Inloggen met account</button>
-                <button type="button" id="codeBtn" class="btn btn-lg btn-outline-primary login-type-btn" data-type="Code">Inloggen met code</button>
+                <button type="button" id="accountBtn" class="btn btn-lg btn-outline-primary login-type-btn" data-type="Account">Aanmelden met account</button>
+                <button type="button" id="codeBtn" class="btn btn-lg btn-outline-primary login-type-btn" data-type="Code">Aanmelden met code</button>
             </div>
             <input type="hidden" id="selectedLogin" for="Input.LoginType" value="@(TempData["SelectedLoginType"] ?? "Account")"/>
             <hr/>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="form-floating mb-3">
                         <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password"/>
-                        <label asp-for="Input.Password" class="form-label">Password</label>
+                        <label asp-for="Input.Password" class="form-label">Wachtwoord</label>
                         <span asp-validation-for="Input.Password" class="text-danger @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "d-none" : "")"></span>
                     </div>
                     <div class="checkbox mb-3">
@@ -37,17 +37,17 @@
                         </label>
                     </div>
                     <div>
-                        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Aanmelden</button>
                     </div>
                     <div>
                         <p>
-                            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                            <a id="forgot-password" asp-page="./ForgotPassword">Wachtwoord vergeten?</a>
                         </p>
                         <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registreer als nieuwe organisatie</a>
                         </p>
                         <p>
-                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Verzend bevestigingsmail opnieuw</a>
                         </p>
                     </div>
                     <input type="hidden" asp-for="Input.LoginType" value="Account"/>
@@ -63,7 +63,7 @@
                         <span asp-validation-for="Input.Code" class="text-danger @(TempData["SelectedLoginType"]?.ToString() == "Account" ? "d-none" : "")"></span>
                     </div>
                     <input type="hidden" asp-for="Input.LoginType" value="Code"/>
-                    <button id="codeSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    <button id="codeSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Aanmelden</button>
                     <div>
                         <p>
                             <a asp-controller="MemberRegister" asp-action="Index">Code nog niet geregistreerd?</a>

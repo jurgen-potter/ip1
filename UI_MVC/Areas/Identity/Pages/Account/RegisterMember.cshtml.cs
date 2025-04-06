@@ -18,25 +18,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using CitizenPanel.BL.Domain.User;
+using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
-    public class RegisterModel : PageModel
+    public class RegisterMemberModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
-        private readonly ILogger<RegisterModel> _logger;
+        private readonly ILogger<RegisterMemberModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IDrawManager _drawManager;
 
-        public RegisterModel(
+        public RegisterMemberModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            ILogger<RegisterMemberModel> logger,
+            IEmailSender emailSender,
+            IDrawManager drawManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +49,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _drawManager = drawManager;
         }
 
         /// <summary>
@@ -64,6 +70,10 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        
+        public int PanelId { get; set; }
+        
+        public int InvitationId { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -71,6 +81,13 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            [Required(ErrorMessage = "Voornaam is verplicht.")]
+            [Display(Name = "Voornaam")]
+            public string FirstName { get; set; }
+            
+            [Required(ErrorMessage = "Achternaam is verplicht.")]
+            [Display(Name = "Achternaam")]
+            public string LastName { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -98,6 +115,19 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             [Display(Name = "Bevestig wachtwoord")]
             [Compare("Password", ErrorMessage = "De wachtwoorden komen niet overeen.")]
             public string ConfirmPassword { get; set; }
+            
+            [Display(Name = "Geslacht")]
+            public Gender Gender { get; set; }
+            
+            [Display(Name = "Geboortedatum")]
+            public DateOnly BirthDate { get; set; }
+            
+            [Display(Name = "Gemeente")]
+            public string Town { get; set; }
+            
+            public List<ExtraCriteria> CriteriaList { get; set; }
+            
+            public List<int> SelectedCriteria { get; set; }
         }
 
 
@@ -105,6 +135,18 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string ?? throw new InvalidOperationException("No valid invitation was given."));
+            Input ??= new InputModel();
+            
+            List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
+            Input.Email = invitation.Email;
+            Input.Gender = invitation.Gender;
+            Input.Town = invitation.Postcode;
+            Input.CriteriaList = extraCriteria;
+            Input.SelectedCriteria = invitation.SelectedCriteria;
+            PanelId = invitation.PanelId;
+            InvitationId = invitation.Id;
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -113,7 +155,20 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = CreateOrganization();
+                var user = CreateMember();
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                user.Gender = Input.Gender;
+                user.BirthDate = Input.BirthDate;
+                user.Town = Input.Town;
+                
+                List<SubCriteria> selectedCriteria = new List<SubCriteria>();
+                if (Input.SelectedCriteria != null && Input.SelectedCriteria.Count != 0)
+                {
+                    selectedCriteria.AddRange(Input.SelectedCriteria.Select(subCriteriaId => 
+                        _drawManager.GetSubCriteria(subCriteriaId)).Where(subCriteria => subCriteria != null));
+                }
+                user.SelectedCriteria = selectedCriteria;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -123,6 +178,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    _drawManager.RemoveInvitation(InvitationId);
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -160,17 +216,17 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private Organization CreateOrganization()
+        private Member CreateMember()
         {
             try
             {
-                return Activator.CreateInstance<Organization>();
+                return Activator.CreateInstance<Member>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(Organization)}'. " +
-                    $"Ensure that '{nameof(Organization)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(Member)}'. " +
+                    $"Ensure that '{nameof(Member)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                    $"override the register page in /Areas/Identity/Pages/Account/RegisterMember.cshtml");
             }
         }
 
