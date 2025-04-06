@@ -146,10 +146,10 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 Invitation invitation = _drawManager.GetInvitationWithCode(Input.Code);
                 if (invitation is not null && invitation.IsRegistered)
                 {
-                    if (!invitation.IsDrawn)
+                    if (invitation.IsDrawn)
                     {
                         TempData["Invitation"] = JsonConvert.SerializeObject(invitation);
-                        return RedirectToPage("./RegisterMember");
+                        return RedirectToPage("./RegisterMember", new { ReturnUrl = returnUrl});
                     }
                     else
                     {

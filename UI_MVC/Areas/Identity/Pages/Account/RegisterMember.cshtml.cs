@@ -70,10 +70,6 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
-        
-        public int PanelId { get; set; }
-        
-        public int InvitationId { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -128,6 +124,10 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             public List<ExtraCriteria> CriteriaList { get; set; }
             
             public List<int> SelectedCriteria { get; set; }
+            
+            public int PanelId { get; set; }
+        
+            public int InvitationId { get; set; }
         }
 
 
@@ -145,8 +145,8 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             Input.Town = invitation.Postcode;
             Input.CriteriaList = extraCriteria;
             Input.SelectedCriteria = invitation.SelectedCriteria;
-            PanelId = invitation.PanelId;
-            InvitationId = invitation.Id;
+            Input.PanelId = invitation.PanelId;
+            Input.InvitationId = invitation.Id;
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -178,7 +178,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    _drawManager.RemoveInvitation(InvitationId);
+                    _drawManager.RemoveInvitation(Input.InvitationId);
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

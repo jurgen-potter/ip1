@@ -42,7 +42,7 @@
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.Gender" class="form-control" autocomplete="gender" aria-required="true" value="@Model.Input.Gender.ToDutch()" readonly />
+                <input class="form-control" autocomplete="gender" aria-required="true" value="@Model.Input.Gender.ToDutch()" readonly />
                 <input type="hidden" asp-for="Input.Gender" value="@Model.Input.Gender"/>
                 <label asp-for="Input.Gender"></label>
             </div>
@@ -95,9 +95,11 @@
             }
             @for (int i = 0; i < Model?.Input.SelectedCriteria?.Count; i++)
             {
-                <input type="hidden" name="SelectedCriteria[@i]" value="@Model.Input.SelectedCriteria[i]" />
+                <input type="hidden" asp-for="Input.SelectedCriteria[i]" value="@Model.Input.SelectedCriteria[i]" />
             }
             
+            <input type="hidden" asp-for="Input.PanelId" value="@Model?.Input.PanelId"></input>
+            <input type="hidden" asp-for="Input.InvitationId" value="@Model?.Input.InvitationId"></input>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Registreer</button>
         </form>
     </div>
