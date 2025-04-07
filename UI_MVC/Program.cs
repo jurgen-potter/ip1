@@ -5,7 +5,10 @@ using CitizenPanel.DAL;
 using CitizenPanel.DAL.Data;
 using CitizenPanel.DAL.Registration;
 using CitizenPanel.UI.MVC;
+using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
+using CitizenPanel.UI.MVC.Areas.Identity.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,7 +31,7 @@ builder.Services.AddScoped<IPanelManager, PanelManager>();
 builder.Services.AddScoped<IQuestionManager, QuestionManager>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
-builder.Services.AddScoped<IMailSender, MailSender>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IMemberManager, MemberManager>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
@@ -36,11 +39,13 @@ builder.Services.AddRazorPages();
 // Add Identity
 builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<PanelDbContext>();
+    .AddEntityFrameworkStores<PanelDbContext>()
+    .AddErrorDescriber<DutchIdentityErrorDescriber>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedAccount = true;
 });
 
 var app = builder.Build();

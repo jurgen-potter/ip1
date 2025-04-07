@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
-namespace CitizenPanel.BL;
+namespace CitizenPanel.UI.MVC.Areas.Identity.Services;
 
-public class MailSender(IConfiguration config) : IMailSender
+public class EmailSender(IConfiguration config) : IEmailSender
 {
-    public async Task SendMailAsync(string to, string subject, string body)
+    public async Task SendEmailAsync(string to, string subject, string body)
     {
         string host = config["Smtp:Host"];
         int port = int.TryParse(config["Smtp:Port"], out var parsedPort) && parsedPort > 0 

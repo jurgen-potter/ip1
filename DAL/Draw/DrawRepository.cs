@@ -62,4 +62,13 @@ public class DrawRepository : IDrawRepository
             .Include(e => e.SubCriteria)
             .ToList();
     }
+    public bool DeleteInvitation(int invitationId)
+    {
+        var invitation = _dbContext.Invitations.Find(invitationId);
+        if (invitation == null)
+            return false;
+
+        _dbContext.Invitations.Remove(invitation);
+        return _dbContext.SaveChanges() > 0;
+    }
 }

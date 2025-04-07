@@ -1,0 +1,17 @@
+﻿@page
+@model DrawPendingModel
+
+@{
+    ViewBag.Title = "Loting nog niet uitgevoerd";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h2>De loting is nog niet uitgevoerd</h2>
+    <p>Wees gerust! U ontvangt een email zodra de trekking is voltooid.</p>
+
+    <form method="post" asp-page-handler="BackToHome">
+        <button type="submit" class="w-10 btn btn-lg btn-primary">Terug naar Home</button>
+    </form>
+</div>
