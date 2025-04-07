@@ -1,6 +1,4 @@
 ﻿using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Panel;
-using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
@@ -9,7 +7,7 @@ namespace CitizenPanel.UI.MVC.Controllers;
 using BL.Registration;
 using Models;
 
-public class RegistrationController(IRegistrationManager registrationManager, IMailSender mailSender, IPanelManager panelManager) : Controller
+public class RegistrationController(IRegistrationManager registrationManager,IEmailSender mailSender, IPanelManager panelManager) : Controller
 {
     [HttpGet]
     public IActionResult Index(int panelId = 1)
@@ -77,17 +75,17 @@ public class RegistrationController(IRegistrationManager registrationManager, IM
         
         foreach (var selected in drawResults.SelectedMembers)
         {
-            mailSender.SendMailAsync("donaldduckie313@gmail.com", selectedSubject, selectedMessage);
+            mailSender.SendEmailAsync("donaldduckie313@gmail.com", selectedSubject, selectedMessage);
         }
         
         foreach (var reserve in drawResults.ReserveMembers)
         {
-            mailSender.SendMailAsync("donaldduckie313@gmail.com", reserveSubject, reserveMessage);
+            mailSender.SendEmailAsync("donaldduckie313@gmail.com", reserveSubject, reserveMessage);
         }
 
         foreach (var notSelected in drawResults.NotSelectedMembers)
         {
-            mailSender.SendMailAsync("donaldduckie313@gmail.com", "unlucky", "better luck next time");
+            mailSender.SendEmailAsync("donaldduckie313@gmail.com", "unlucky", "better luck next time");
         }
     
         ViewBag.PanelId = panelId;
