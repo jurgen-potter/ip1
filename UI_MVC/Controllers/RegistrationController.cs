@@ -75,17 +75,17 @@ public class RegistrationController(IRegistrationManager registrationManager,IEm
         
         foreach (var selected in drawResults.SelectedMembers)
         {
-            mailSender.SendEmailAsync("donaldduckie313@gmail.com", selectedSubject, selectedMessage);
+            mailSender.SendEmailAsync(selected.Email, selectedSubject, selectedMessage);
         }
         
         foreach (var reserve in drawResults.ReserveMembers)
         {
-            mailSender.SendEmailAsync("donaldduckie313@gmail.com", reserveSubject, reserveMessage);
+            mailSender.SendEmailAsync(reserve.Email, reserveSubject, reserveMessage);
         }
 
         foreach (var notSelected in drawResults.NotSelectedMembers)
         {
-            mailSender.SendEmailAsync("donaldduckie313@gmail.com", "unlucky", "better luck next time");
+            mailSender.SendEmailAsync(notSelected.Email, "unlucky", "better luck next time");
         }
     
         ViewBag.PanelId = panelId;
