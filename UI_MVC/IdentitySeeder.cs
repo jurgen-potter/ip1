@@ -1,7 +1,7 @@
-﻿namespace CitizenPanel.UI.MVC;
+﻿using Microsoft.AspNetCore.Identity;
+using CitizenPanel.BL.Domain.User;
 
-using BL.Domain.User;
-using Microsoft.AspNetCore.Identity;
+namespace CitizenPanel.UI.MVC;
 
 public class IdentitySeeder
 {
@@ -18,49 +18,39 @@ public class IdentitySeeder
     {
         var adminRole = new IdentityRole("Admin");
         await _roleManager.CreateAsync(adminRole);
-        var citizenRole = new IdentityRole("Citizen");
-        await _roleManager.CreateAsync(citizenRole);
         var organizationRole = new IdentityRole("Organization");
         await _roleManager.CreateAsync(organizationRole);
-        var potentialMemberRole = new IdentityRole("PotentialMember");
-        await _roleManager.CreateAsync(potentialMemberRole);
-        var panelMemberRole = new IdentityRole("PanelMember");
-        await _roleManager.CreateAsync(panelMemberRole);
         
         // user 1
         var user1 = new IdentityUser()
         {
-            UserName = "admin@kdg.be",
-            Email = "admin@kdg.be"
+            UserName = "admin@example.com",
+            Email = "admin@example.com"
         };
         await _userManager.CreateAsync(user1, "Admin123!");
+        var token1 = await _userManager.GenerateEmailConfirmationTokenAsync(user1);
+        await _userManager.ConfirmEmailAsync(user1, token1);
         await _userManager.AddToRoleAsync(user1, "Admin");
         
         // user 2
-        var user2 = new Citizen()
+        var user2 = new Organization()
         {
-            UserName = "chris@kdg.be",
-            Email = "chris@kdg.be"
+            UserName = "antwerpen@example.com",
+            Email = "antwerpen@example.com"
         };
-        await _userManager.CreateAsync(user2, "Chrischris1!");
-        await _userManager.AddToRoleAsync(user2, "Citizen");
+        await _userManager.CreateAsync(user2, "Antwerpen1!");
+        var token2 = await _userManager.GenerateEmailConfirmationTokenAsync(user2);
+        await _userManager.ConfirmEmailAsync(user2, token2);
+        await _userManager.AddToRoleAsync(user2, "Organization");
         
         // user 3
-        var user3 = new Organization()
+        var user3 = new Member()
         {
-            UserName = "antwerpen@antwerpen.be",
-            Email = "antwerpen@antwerpen.be"
+            UserName = "paul@example.com",
+            Email = "paul@example.com"
         };
-        await _userManager.CreateAsync(user3, "Antwerpen1!");
-        await _userManager.AddToRoleAsync(user3, "Organization");
-        
-        // user 4
-        var user4 = new Member()
-        {
-            UserName = "paul@kdg.be",
-            Email = "paul@kdg.be"
-        };
-        await _userManager.CreateAsync(user4, "Paulpaul1!");
-        await _userManager.AddToRoleAsync(user4, "PanelMember");
+        await _userManager.CreateAsync(user3, "Paulpaul1!");
+        var token3 = await _userManager.GenerateEmailConfirmationTokenAsync(user3);
+        await _userManager.ConfirmEmailAsync(user3, token3);
     }
 }

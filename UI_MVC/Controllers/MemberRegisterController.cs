@@ -140,46 +140,4 @@ public class MemberRegisterController : Controller
         
         return View();
     }
-    
-    [HttpGet]
-    public IActionResult CreateMemberAccount()
-    {
-        Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string ?? throw new InvalidOperationException(message:"AAAAAAAAAAAAAAH PANIEK PANIEK PANIEK"));
-        
-        List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
-
-        var model = new NewMemberViewModel
-        {
-            Email = invitation.Email,
-            Gender = invitation.Gender,
-            Town = invitation.Postcode,
-            CriteriaList = extraCriteria,
-            SelectedCriteria = invitation.SelectedCriteria,
-            PanelId = 1,
-            InvitationId = invitation.Id
-        };
-        
-        return View(model);
-    }
-    
-    [HttpPost]
-    public async Task<IActionResult> CreateMemberAccount(NewMemberViewModel newMember)
-    {
-        if (!ModelState.IsValid) {
-            return View(newMember);
-        }
-        
-        var (result, member) = await _memberManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria, newMember.PanelId);
-        if (!result.Succeeded)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("Password", error.Description);
-            }
-            return View(newMember);
-        }
-        
-        _drawManager.RemoveInvitation(newMember.InvitationId);
-        return RedirectToAction("Index", "Home");
-    }
 }
