@@ -1,5 +1,6 @@
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.DAL.Data;
@@ -17,6 +18,7 @@ public class DataSeeder
     {
         SeedPanels();
         SeedInvitations();
+        SeedQuestionnaires();
 
         _panelDbContext.SaveChanges();
         _panelDbContext.ChangeTracker.Clear();
@@ -88,361 +90,361 @@ public class DataSeeder
 
         // Create initial list with members for Panel 1 and Panel 2
         var members = new List<Member>
-{
-    // Panel 1 members
-    new Member
-    {
-        Email = "jan@zonderid.com", Gender = Gender.Male,
-        Age = 22, Town = "Antwerpen", Panel = panel1
-    },
-    new Member
-    {
-        Email = "els@example.com", Gender = Gender.Female,
-        Age = 35, Town = "Antwerpen", Panel = panel1
-    },
-    new Member
-    {
-        Email = "bart@example.com", Gender = Gender.Male,
-        Age = 50, Town = "Antwerpen", Panel = panel1 
-    },
-    new Member
-    {
-        Email = "sophie@example.com",
-        Gender = Gender.Female, Age = 28, Town = "Antwerpen", Panel = panel1
-    },
-    new Member
-    {
-        Email = "tom@example.com", Gender = Gender.Male,
-        Age = 45, Town = "Antwerpen", Panel = panel1
-    },
+        {
+            // Panel 1 members
+            new Member
+            {
+                Email = "jan@zonderid.com", Gender = Gender.Male,
+                Age = 22, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "els@example.com", Gender = Gender.Female,
+                Age = 35, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "bart@example.com", Gender = Gender.Male,
+                Age = 50, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "sophie@example.com",
+                Gender = Gender.Female, Age = 28, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "tom@example.com", Gender = Gender.Male,
+                Age = 45, Town = "Antwerpen", Panel = panel1
+            },
 
-    // Panel 2 members
-    new Member
-    {
-        Email = "lisa@example.com", Gender = Gender.Female,
-        Age = 33, Town = "Antwerpen", Panel = panel2 
-    },
-    new Member
-    {
-        Email = "mark@example.com", Gender = Gender.Male,
-        Age = 67, Town = "Antwerpen", Panel = panel2
-    },
-    new Member
-    {
-        Email = "lotte@example.com", Gender = Gender.Female,
-        Age = 72, Town = "Antwerpen", Panel = panel2
-    },
-    new Member
-    {
-        Email = "pieter@example.com",
-        Gender = Gender.Male, Age = 19, Town = "Antwerpen", Panel = panel2
-    },
-    new Member
-    {
-        Email = "emma@example.com", Gender = Gender.Female,
-        Age = 21, Town = "Antwerpen", Panel = panel2 
-    }
-};
+            // Panel 2 members
+            new Member
+            {
+                Email = "lisa@example.com", Gender = Gender.Female,
+                Age = 33, Town = "Antwerpen", Panel = panel2
+            },
+            new Member
+            {
+                Email = "mark@example.com", Gender = Gender.Male,
+                Age = 67, Town = "Antwerpen", Panel = panel2
+            },
+            new Member
+            {
+                Email = "lotte@example.com", Gender = Gender.Female,
+                Age = 72, Town = "Antwerpen", Panel = panel2
+            },
+            new Member
+            {
+                Email = "pieter@example.com",
+                Gender = Gender.Male, Age = 19, Town = "Antwerpen", Panel = panel2
+            },
+            new Member
+            {
+                Email = "emma@example.com", Gender = Gender.Female,
+                Age = 21, Town = "Antwerpen", Panel = panel2
+            }
+        };
 
-// Add additional members for Panel 1
-members.AddRange(new[]
-{
-    new Member
-    {
-        Email = "jan@example.com", Gender = Gender.Male,
-        Age = 22, Town = "Antwerpen", Panel = panel1
-    },
-    new Member
-    {
-        Email = "peter@example.com", Gender = Gender.Male,
-        Age = 19, Town = "Antwerpen", Panel = panel1
-    },
-    new Member
-    {
-        Email = "david@example.com", Gender = Gender.Male,
-        Age = 24, Town = "Antwerpen", Panel = panel1
-    },
-    new Member
-    {
-        Email = "johan@example.com",
-        Gender = Gender.Male, Age = 21, Town = "Antwerpen", Panel = panel1
-    },
-    new Member
-    {
-        Email = "koen@example.com", Gender = Gender.Male,
-        Age = 25, Town = "Antwerpen", Panel = panel1
-    },
-    new Member
-    {
-        Email = "simon@example.com", Gender = Gender.Male,
-        Age = 18, Town = "Antwerpen", Panel = panel1
-    },
-});
+        // Add additional members for Panel 1
+        members.AddRange(new[]
+        {
+            new Member
+            {
+                Email = "jan@example.com", Gender = Gender.Male,
+                Age = 22, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "peter@example.com", Gender = Gender.Male,
+                Age = 19, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "david@example.com", Gender = Gender.Male,
+                Age = 24, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "johan@example.com",
+                Gender = Gender.Male, Age = 21, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "koen@example.com", Gender = Gender.Male,
+                Age = 25, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "simon@example.com", Gender = Gender.Male,
+                Age = 18, Town = "Antwerpen", Panel = panel1
+            },
+        });
 
-// Additional groups for Panel 1 (Men 26-40, 41-60, 60+; Women 18-25, 26-40, 41-60, 60+)
-// Men 26-40
-members.AddRange(new[]
-{
-    new Member
-    {
-        Email = "thomas@example.com",
-        Gender = Gender.Male, Age = 35, Town = "Antwerpen", Panel = panel1 
-    },
-    new Member
-    {
-        Email = "maarten@example.com",
-        Gender = Gender.Male, Age = 28, Town = "Antwerpen", Panel = panel1 
-    },
-    new Member
-    {
-        Email = "jeroen@example.com",
-        Gender = Gender.Male, Age = 37, Town = "Antwerpen", Panel = panel1 
-    },
-    new Member
-    {
-        Email = "pieter@example.com",
-        Gender = Gender.Male, Age = 30, Town = "Antwerpen", Panel = panel1 
-    },
-    new Member
-    {
-        Email = "wouter@example.com",
-        Gender = Gender.Male, Age = 33, Town = "Antwerpen", Panel = panel1 
-    },
-    new Member
-    {
-        Email = "michel@example.com",
-        Gender = Gender.Male, Age = 39, Town = "Antwerpen", Panel = panel1 
-    },
-});
-// Men 41-60
-members
-    .AddRange(new[]
-    {
-        new Member
+        // Additional groups for Panel 1 (Men 26-40, 41-60, 60+; Women 18-25, 26-40, 41-60, 60+)
+        // Men 26-40
+        members.AddRange(new[]
         {
-            Email = "frank@example.com",
-            Gender = Gender.Male,
-            Age = 45, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "marc@example.com",
-            Gender = Gender.Male,
-            Age = 58, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "patrick@example.com",
-            Gender = Gender.Male, Age = 52, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "dirk@example.com",
-            Gender = Gender.Male,
-            Age = 49, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "hans@example.com",
-            Gender = Gender.Male,
-            Age = 44, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "erik@example.com",
-            Gender = Gender.Male,
-            Age = 55, Town = "Antwerpen", Panel = panel1 
-        },
-    });
+            new Member
+            {
+                Email = "thomas@example.com",
+                Gender = Gender.Male, Age = 35, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "maarten@example.com",
+                Gender = Gender.Male, Age = 28, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "jeroen@example.com",
+                Gender = Gender.Male, Age = 37, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "pieter@example.com",
+                Gender = Gender.Male, Age = 30, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "wouter@example.com",
+                Gender = Gender.Male, Age = 33, Town = "Antwerpen", Panel = panel1
+            },
+            new Member
+            {
+                Email = "michel@example.com",
+                Gender = Gender.Male, Age = 39, Town = "Antwerpen", Panel = panel1
+            },
+        });
+        // Men 41-60
+        members
+            .AddRange(new[]
+            {
+                new Member
+                {
+                    Email = "frank@example.com",
+                    Gender = Gender.Male,
+                    Age = 45, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "marc@example.com",
+                    Gender = Gender.Male,
+                    Age = 58, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "patrick@example.com",
+                    Gender = Gender.Male, Age = 52, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "dirk@example.com",
+                    Gender = Gender.Male,
+                    Age = 49, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "hans@example.com",
+                    Gender = Gender.Male,
+                    Age = 44, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "erik@example.com",
+                    Gender = Gender.Male,
+                    Age = 55, Town = "Antwerpen", Panel = panel1
+                },
+            });
 
-// Men 60+
-members
-    .AddRange(new[]
-    {
-        new Member
-        {
-            Email = "jozef@example.com",
-            Gender = Gender.Male,
-            Age = 68, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "willem@example.com",
-            Gender = Gender.Male, Age = 71, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "gerard@example.com",
-            Gender = Gender.Male, Age = 65, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "robert@example.com",
-            Gender = Gender.Male, Age = 77, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "hugo@example.com",
-            Gender = Gender.Male,
-            Age = 69, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "albert@example.com",
-            Gender = Gender.Male, Age = 73, Town = "Antwerpen", Panel = panel1 
-        },
-    });
+        // Men 60+
+        members
+            .AddRange(new[]
+            {
+                new Member
+                {
+                    Email = "jozef@example.com",
+                    Gender = Gender.Male,
+                    Age = 68, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "willem@example.com",
+                    Gender = Gender.Male, Age = 71, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "gerard@example.com",
+                    Gender = Gender.Male, Age = 65, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "robert@example.com",
+                    Gender = Gender.Male, Age = 77, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "hugo@example.com",
+                    Gender = Gender.Male,
+                    Age = 69, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "albert@example.com",
+                    Gender = Gender.Male, Age = 73, Town = "Antwerpen", Panel = panel1
+                },
+            });
 
-// Women 18-25
-members
-    .AddRange(new[]
-    {
-        new Member
-        {
-            Email = "anna@example.com",
-            Gender = Gender.Female,
-            Age = 22, Town = "Antwerpen", Panel = panel1
-        },
-        new Member
-        {
-            Email = "lisa@example.com",
-            Gender = Gender.Female,
-            Age = 19, Town = "Antwerpen", Panel = panel1
-        },
-        new Member
-        {
-            Email = "emma@example.com",
-            Gender = Gender.Female,
-            Age = 24, Town = "Antwerpen", Panel = panel1
-        },
-        new Member
-        {
-            Email = "sara@example.com",
-            Gender = Gender.Female,
-            Age = 21, Town = "Antwerpen", Panel = panel1
-        },
-        new Member
-        {
-            Email = "laura@example.com",
-            Gender = Gender.Female, Age = 25, Town = "Antwerpen", Panel = panel1
-        },
-        new Member
-        {
-            Email = "nina@example.com",
-            Gender = Gender.Female,
-            Age = 18, Town = "Antwerpen", Panel = panel1
-        },
-    });
+        // Women 18-25
+        members
+            .AddRange(new[]
+            {
+                new Member
+                {
+                    Email = "anna@example.com",
+                    Gender = Gender.Female,
+                    Age = 22, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "lisa@example.com",
+                    Gender = Gender.Female,
+                    Age = 19, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "emma@example.com",
+                    Gender = Gender.Female,
+                    Age = 24, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "sara@example.com",
+                    Gender = Gender.Female,
+                    Age = 21, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "laura@example.com",
+                    Gender = Gender.Female, Age = 25, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "nina@example.com",
+                    Gender = Gender.Female,
+                    Age = 18, Town = "Antwerpen", Panel = panel1
+                },
+            });
 
-// Women 26-40
-members
-    .AddRange(new[]
-    {
-        new Member
-        {
-            Email = "eva@example.com", Gender = Gender.Female,
-            Age = 35, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "sophie@example.com",
-            Gender = Gender.Female, Age = 28, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "julie@example.com",
-            Gender = Gender.Female, Age = 37, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "els@example.com", Gender = Gender.Female,
-            Age = 30, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "lieve@example.com",
-            Gender = Gender.Female, Age = 33, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "anja@example.com",
-            Gender = Gender.Female,
-            Age = 39, Town = "Antwerpen", Panel = panel1 
-        },
-    });
+        // Women 26-40
+        members
+            .AddRange(new[]
+            {
+                new Member
+                {
+                    Email = "eva@example.com", Gender = Gender.Female,
+                    Age = 35, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "sophie@example.com",
+                    Gender = Gender.Female, Age = 28, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "julie@example.com",
+                    Gender = Gender.Female, Age = 37, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "els@example.com", Gender = Gender.Female,
+                    Age = 30, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "lieve@example.com",
+                    Gender = Gender.Female, Age = 33, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "anja@example.com",
+                    Gender = Gender.Female,
+                    Age = 39, Town = "Antwerpen", Panel = panel1
+                },
+            });
 
-// Women 41-60
-members
-    .AddRange(new[]
-    {
-        new Member
-        {
-            Email = "maria@example.com",
-            Gender = Gender.Female, Age = 45, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "ann@example.com", Gender = Gender.Female,
-            Age = 58, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "ingrid@example.com",
-            Gender = Gender.Female, Age = 52, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "martine@example.com",
-            Gender = Gender.Female, Age = 49, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "hilde@example.com",
-            Gender = Gender.Female, Age = 44, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "sonja@example.com",
-            Gender = Gender.Female, Age = 55, Town = "Antwerpen", Panel = panel1 
-        },
-    });
+        // Women 41-60
+        members
+            .AddRange(new[]
+            {
+                new Member
+                {
+                    Email = "maria@example.com",
+                    Gender = Gender.Female, Age = 45, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "ann@example.com", Gender = Gender.Female,
+                    Age = 58, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "ingrid@example.com",
+                    Gender = Gender.Female, Age = 52, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "martine@example.com",
+                    Gender = Gender.Female, Age = 49, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "hilde@example.com",
+                    Gender = Gender.Female, Age = 44, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "sonja@example.com",
+                    Gender = Gender.Female, Age = 55, Town = "Antwerpen", Panel = panel1
+                },
+            });
 
-// Women 60+
-members
-    .AddRange(new[]
-    {
-        new Member
-        {
-            Email = "helena@example.com",
-            Gender = Gender.Female, Age = 68, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "godelieve@example.com",
-            Gender = Gender.Female, Age = 71, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "rosa@example.com",
-            Gender = Gender.Female,
-            Age = 65, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "margareta@example.com",
-            Gender = Gender.Female, Age = 77, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "mariette@example.com",
-            Gender = Gender.Female, Age = 69, Town = "Antwerpen", Panel = panel1 
-        },
-        new Member
-        {
-            Email = "alice@example.com",
-            Gender = Gender.Female, Age = 73, Town = "Antwerpen", Panel = panel1 
-        },
-    });
+        // Women 60+
+        members
+            .AddRange(new[]
+            {
+                new Member
+                {
+                    Email = "helena@example.com",
+                    Gender = Gender.Female, Age = 68, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "godelieve@example.com",
+                    Gender = Gender.Female, Age = 71, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "rosa@example.com",
+                    Gender = Gender.Female,
+                    Age = 65, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "margareta@example.com",
+                    Gender = Gender.Female, Age = 77, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "mariette@example.com",
+                    Gender = Gender.Female, Age = 69, Town = "Antwerpen", Panel = panel1
+                },
+                new Member
+                {
+                    Email = "alice@example.com",
+                    Gender = Gender.Female, Age = 73, Town = "Antwerpen", Panel = panel1
+                },
+            });
 
         _panelDbContext.AddRange(members);
     }
@@ -501,16 +503,68 @@ members
             Gender = Gender.Male,
             PanelId = 1,
             Postcode = "Antwerpen",
-            QRCodeString = "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",
+            QRCodeString =
+                "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",
             Email = "drawn@example.com",
             IsRegistered = true,
             IsDrawn = true,
             SelectedCriteria = new List<int>([1, 4]),
-           };
+        };
         _panelDbContext.Invitations.Add(invitation1);
         _panelDbContext.Invitations.Add(invitation2);
         _panelDbContext.Invitations.Add(invitation3);
         _panelDbContext.Invitations.Add(invitation4);
         _panelDbContext.Invitations.Add(invitation5);
+    }
+
+    private void SeedQuestionnaires()
+    {
+        var questionnaire = new Questionnaire
+        {
+            Title = "Verkenningsmodule"
+        };
+        var question1 = new Question
+        {
+            Description = "Beschik je als organisator nog over minstens 6 maanden voordat de input van de participatie klaar moet zijn voor de politieke besluitvorming?",
+            Weight = 5
+        };
+        var answer1 = new Answer
+        {
+            Description = "Ja"
+        };
+        var answer2 = new Answer
+        {
+            Description = "Nee"
+        };
+        var question2 = new Question
+        {
+            Description = "Is de gemeente bereid om de realisatie van de voorstellen van het burgerpanel ernstig te overwegen en minstens publiek te motiveren waarom dat niet is gebeurd?",
+            Weight = 3
+        };
+        var answer3 = new Answer
+        {
+            Description = "Ja"
+        };
+        var answer4 = new Answer
+        {
+            Description = "Nee"
+        };
+        answer1.Question = question1;
+        answer2.Question = question1;
+        question1.Answers.Add(answer1);
+        question1.Answers.Add(answer2);
+        question1.Questionnaire = questionnaire;
+        questionnaire.Questions.Add(question1);
+
+        answer3.Question = question2;
+        answer4.Question = question2;
+        question2.Answers.Add(answer3);
+        question2.Answers.Add(answer4);
+        question2.Questionnaire = questionnaire;
+        questionnaire.Questions.Add(question2);
+
+        _panelDbContext.Questionnaires.Add(questionnaire);
+        _panelDbContext.Questions.AddRange(question1, question2);
+        _panelDbContext.Answers.AddRange(answer1, answer2, answer3, answer4);
     }
 }
