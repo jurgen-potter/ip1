@@ -33,4 +33,8 @@
       <_ContentIncludedByDefault Remove="Views\QRCode\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <TypeScriptCompile Include="wwwroot\js\recommendation\vote.ts" />
+    </ItemGroup>
+
 </Project>

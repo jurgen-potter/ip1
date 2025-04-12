@@ -19,15 +19,21 @@ public class RecommendationController(IPanelManager panelManager) : Controller
     }
     
     [HttpPost]
-    public IActionResult Vote(int id)
+    [HttpPost]
+    public IActionResult Vote([FromBody] int id)
     {
         var recommendation = panelManager.GetRecommendationById(id);
-        recommendation.Votes = recommendation.Votes++;
-        panelManager.editRecommendation(recommendation);
-        
-        return RedirectToAction(nameof(Index));
-    }
+        if (recommendation == null)
+        {
+            return NotFound();
+        }
 
+        recommendation.Votes++;
+        panelManager.editRecommendation(recommendation);
+
+        // Retourneer het nieuwe aantal stemmen
+        return Json(new { id = recommendation.Id, votes = recommendation.Votes });
+    }
     public IActionResult Create()
     {
         return View();
