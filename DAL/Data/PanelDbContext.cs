@@ -14,6 +14,7 @@ public class PanelDbContext : IdentityDbContext
     public DbSet<Member> Members { get; set; }
     public DbSet<Panel> Panels { get; set; }
     public DbSet<Recommendation> Recommendations { get; set; }
+    public DbSet<UserVote> UserVotes { get; set; } 
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<ExtraCriteria> ExtraCriteria { get; set; }
     public DbSet<SubCriteria> SubCriteria { get; set; }
@@ -64,6 +65,18 @@ public class PanelDbContext : IdentityDbContext
         modelBuilder.Entity<Panel>()
             .HasMany(p => p.ExtraCriteria)
             .WithOne(e => e.Panel);
+        
+        modelBuilder.Entity<UserVote>()
+            .HasKey(uv => uv.Id);
+
+        modelBuilder.Entity<UserVote>()
+            .HasOne(uv => uv.Recommendation)
+            .WithMany(r => r.UserVotes)
+            .HasForeignKey(uv => uv.RecommendationId);
+
+        modelBuilder.Entity<UserVote>()
+            .HasIndex(uv => new { uv.UserId, uv.RecommendationId })
+            .IsUnique();
     }
     
     public bool CreateDatabase(bool delete) {

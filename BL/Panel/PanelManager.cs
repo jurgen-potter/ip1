@@ -38,12 +38,12 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadTargetBucketsByPanel(panel);
     }
     
-    public void addRecommendationOfPanel(Recommendation recommendation, Panel panel)
+    public void AddRecommendationOfPanel(Recommendation recommendation, Panel panel)
     {
         _panelRepository.CreateRecommendationOfPanel(recommendation, panel);
     }
 
-    public Panel getPanelByIdWithRecommendations(int panelId)
+    public Panel GetPanelByIdWithRecommendations(int panelId)
     {
         return _panelRepository.ReadPanelByIdWithRecommendations(panelId);
     }
@@ -53,8 +53,28 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadRecommendationById(recommendationId);
     }
 
-    public void editRecommendation(Recommendation recommendation)
+    public void EditRecommendation(Recommendation recommendation)
     {
         _panelRepository.UpdateRecommendation(recommendation);
+    }
+    
+    public bool HasUserVotedForRecommendation(string userId, int recommendationId)
+    {
+        return _panelRepository.HasUserVotedForRecommendation(userId, recommendationId);
+    }
+
+    public void AddVoteToRecommendation(string userId, int recommendationId)
+    {
+        _panelRepository.CreateVoteToRecommendation(userId, recommendationId);
+    }
+
+    public void RemoveVoteFromRecommendation(string userId, int recommendationId)
+    {
+        _panelRepository.DeleteVoteFromRecommendation(userId, recommendationId);
+    }
+    
+    public IEnumerable<int> GetVotedRecommendationIdsByUser(string userId)
+    {
+        return _panelRepository.ReadVotedRecommendationIdsByUser(userId);
     }
 }

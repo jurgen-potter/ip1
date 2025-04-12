@@ -1,11 +1,13 @@
-﻿@model IEnumerable<CitizenPanel.BL.Domain.Panel.Recommendation>
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<CitizenPanel.BL.Domain.Panel.Recommendation>
 
 @{
     ViewData["Title"] = "Recommendations";
 }
 
 <h1>Aanbevelingen</h1>
-
+<div id="current-user-id" data-user-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)" style="display: none;"></div>
 <div class="row">
     @foreach (var recommendation in Model)
     {
@@ -26,9 +28,10 @@
     }
 
 </div>
-
+@if (User.IsInRole("Admin"))
+{
 <a asp-action="AddRecommendation" asp-controller="Recommendation" class="btn btn-success">Add Recommendation</a>
-
+}
 @section Scripts {
     <script defer src="js/recommendation/vote.js">
 </script>

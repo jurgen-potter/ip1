@@ -14,4 +14,10 @@ public interface IPanelRepository
     Panel ReadPanelByIdWithRecommendations(int panelId);
     Recommendation ReadRecommendationById(int recommendationId);
     public void UpdateRecommendation(Recommendation recommendation);
+    
+    bool HasUserVotedForRecommendation(string userId, int recommendationId);
+    void CreateVoteToRecommendation(string userId, int recommendationId);
+    void DeleteVoteFromRecommendation(string userId, int recommendationId);
+    
+    IEnumerable<int> ReadVotedRecommendationIdsByUser(string userId);
 }

@@ -10,6 +10,7 @@ public class Recommendation
     public string Description { get; set; }
     public int Votes { get; set; }
 
+    public ICollection<UserVote> UserVotes { get; set; }
 
     public Recommendation(int id,string title, string description, int votes)
     {
@@ -17,5 +18,9 @@ public class Recommendation
         Title = title;
         Description = description;
         Votes = votes;
+    }
+    public Recommendation()
+    {
+        UserVotes = new List<UserVote>();
     }
 }
