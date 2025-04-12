@@ -47,8 +47,7 @@ public class RecommendationController(IPanelManager panelManager) : Controller
         {
             return NotFound();
         }
-
-        // Controleer of gebruiker al heeft gestemd
+        
         var hasVoted = panelManager.HasUserVotedForRecommendation(userId, id);
         if (hasVoted)
         {
