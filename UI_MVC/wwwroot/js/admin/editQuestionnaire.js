@@ -1,5 +1,6 @@
 ﻿let allCollapsed = false;
 let dragSrcEl = null;
+let sourceListId = "";
 
 window.addEventListener('DOMContentLoaded', (event) => {
     initQuestions();
@@ -17,7 +18,7 @@ function initQuestions() {
     // Let all fields be collapsed/expanded by pressing toggle all
     const toggleAllBtn = document.getElementById('toggle-all-btn');
     toggleAllBtn.addEventListener('click', () => {
-        const collapseQuestions = document.querySelectorAll('.question-item');
+        const collapseQuestions = document.querySelectorAll('.question-body');
         collapseQuestions.forEach(c => {
             const bsCollapse = bootstrap.Collapse.getOrCreateInstance(c);
             if (allCollapsed) {
@@ -71,14 +72,8 @@ function initAnswers() {
 
 function toggleArrow(button) {
     const arrow = button.querySelector('i');
-
-    if (arrow.classList.contains('bi-chevron-up')) {
-        arrow.classList.remove('bi-chevron-up');
-        arrow.classList.add('bi-chevron-down');
-    } else {
-        arrow.classList.remove('bi-chevron-down');
-        arrow.classList.add('bi-chevron-up');
-    }
+    arrow.classList.toggle('bi-chevron-up');
+    arrow.classList.toggle('bi-chevron-down');
 }
 
 function addAnswer(questionIndex) {
@@ -116,6 +111,8 @@ function addDnDHandlers(li) {
     const handle = li.querySelector('.drag-handle');
     if (!handle) return;
 
+    li.draggable = false;
+
     handle.addEventListener('mousedown', (e) => {
         li.draggable = true;
     });
@@ -135,6 +132,7 @@ function handleDragStart(e) {
     dragSrcEl = this;
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', this.outerHTML);
+    sourceListId = this.closest('ul').id;
     this.classList.add('dragged');
 }
 
@@ -142,9 +140,15 @@ function handleDragOver(e) {
     if (e.preventDefault) {
         e.preventDefault();
     }
+    
+    const currentListId = this.closest('ul').id;
 
-    this.classList.add('over');
-    e.dataTransfer.dropEffect = 'move';
+    if (sourceListId === currentListId) {
+        this.classList.add('over');
+        e.dataTransfer.dropEffect = 'move';
+    } else {
+        e.dataTransfer.dropEffect = 'none';
+    }
 
     return false;
 }
@@ -166,14 +170,15 @@ function handleDrop(e) {
         const droppedElem = this.previousSibling;
         addDnDHandlers(droppedElem);
     }
-
+    
     this.classList.remove('over');
     updateAnswerIndices(this.closest("ul"));
     return false;
 }
 
 function handleDragEnd(e) {
-    this.classList.remove('dragElem');
+    this.draggable = false;
+    this.classList.remove('dragged');
     document.querySelectorAll('.answer-item.over').forEach(el => el.classList.remove('over'));
 }
 
