@@ -1,34 +1,84 @@
-﻿let dragSrcEl = null;
+﻿let allCollapsed = false;
+let dragSrcEl = null;
 
 window.addEventListener('DOMContentLoaded', (event) => {
-    init();
+    initQuestions();
+    initAnswers();
 })
 
-function init() {
-    const addButtons = document.querySelectorAll('.add-answer-btn');
-    const removeButtons = document.querySelectorAll('.remove-answer-btn');
-    const inputs = document.querySelectorAll('input');
+function initQuestions() {
+    // Let arrow of button point up/down depending on collapsed/expanded
+    document.querySelectorAll('.toggle-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            toggleArrow(button);
+        });
+    });
+    
+    // Let all fields be collapsed/expanded by pressing toggle all
+    const toggleAllBtn = document.getElementById('toggle-all-btn');
+    toggleAllBtn.addEventListener('click', () => {
+        const collapseQuestions = document.querySelectorAll('.question-item');
+        collapseQuestions.forEach(c => {
+            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(c);
+            if (allCollapsed) {
+                bsCollapse.show();
+            } else {
+                bsCollapse.hide();
+            }
+        });
 
-    addButtons.forEach(button => {
+        allCollapsed = !allCollapsed;
+        toggleAllBtn.innerHTML = allCollapsed
+            ? 'Alles uitvouwen'
+            : 'Alles invouwen';
+
+        const toggleButtons = document.querySelectorAll('.toggle-btn');            
+        toggleButtons.forEach(button => {
+            const icon = button.querySelector('i');
+
+            if (icon && icon.classList.contains('bi-chevron-up') && allCollapsed) {
+                toggleArrow(button);
+            } else if (icon && icon.classList.contains('bi-chevron-down') && !allCollapsed) {
+                toggleArrow(button);
+            }
+        });
+    });
+}
+
+function initAnswers() {
+    document.querySelectorAll('.add-answer-btn').forEach(button => {
         button.addEventListener('click', () => {
             const questionIndex = button.getAttribute('question-index');
             addAnswer(questionIndex);
         });
     });
 
-    removeButtons.forEach(button => {
+    document.querySelectorAll('.remove-answer-btn').forEach(button => {
         button.addEventListener('click', () => {
             removeAnswer(button);
         })
     })
 
     document.querySelectorAll('.answer-item').forEach(addDnDHandlers);
-
-    inputs.forEach((input) => {
+    
+    // Have HTML synced with input
+    document.querySelectorAll('input').forEach((input) => {
         input.addEventListener('input', () => {
             input.setAttribute('value', input.value);
         })
     })
+}
+
+function toggleArrow(button) {
+    const arrow = button.querySelector('i');
+
+    if (arrow.classList.contains('bi-chevron-up')) {
+        arrow.classList.remove('bi-chevron-up');
+        arrow.classList.add('bi-chevron-down');
+    } else {
+        arrow.classList.remove('bi-chevron-down');
+        arrow.classList.add('bi-chevron-up');
+    }
 }
 
 function addAnswer(questionIndex) {
@@ -36,11 +86,7 @@ function addAnswer(questionIndex) {
     const index = answers.children.length;
 
     const newAnswer = document.createElement("li");
-    newAnswer.classList.add("row");
-    newAnswer.classList.add("answer-item");
-    newAnswer.classList.add("mb-2")
-    newAnswer.classList.add("align-items-center");
-    newAnswer.classList.add("p-2");
+    newAnswer.classList.add("row", "answer-item", "mb-2", "align-items-center", "p-2");
     newAnswer.draggable = true;
     newAnswer.innerHTML = `
             <div class="col-auto fs-5 p-0">
@@ -55,8 +101,7 @@ function addAnswer(questionIndex) {
         `;
     addDnDHandlers(newAnswer);
 
-    const input = newAnswer.querySelector('input');
-    input.addEventListener('input', function () {
+    newAnswer.querySelector('input').addEventListener('input', function () {
         this.setAttribute('value', this.value);
     });
     

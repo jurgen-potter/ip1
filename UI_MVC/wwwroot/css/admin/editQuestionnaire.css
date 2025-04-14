@@ -3,14 +3,14 @@
     user-select: none;
 }
 
-.answer-item {
-    border: 1px solid #ccc;
-}
-
 .answer-item.over {
     border-top: 2px solid blue;
 }
 
-.dragElem {
+.question-item.over {
+    border-top: 2px solid blue;
+}
+
+.dragged {
     opacity: 1;
 }
