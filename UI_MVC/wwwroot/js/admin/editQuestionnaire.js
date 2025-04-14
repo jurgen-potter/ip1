@@ -20,6 +20,12 @@ function initQuestions() {
         addQuestion();
     });
 
+    document.querySelectorAll('.remove-question-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            removeQuestion(this);
+        });
+    });
+
     // Let all fields be collapsed/expanded by pressing toggle all
     const toggleAllBtn = document.getElementById('toggle-all-btn');
     toggleAllBtn.addEventListener('click', () => {
@@ -96,10 +102,15 @@ function addQuestion() {
                 </div>
                 <div class="flex-grow-1">
                     <label class="form-label fw-bold">Vraag ${index + 1}</label>
-                    <input name="Questions[${index}].Description" class="form-control mb-0"/>
+                    <div class="d-flex align-items-center">
+                        <input name="Questions[${index}].Description" class="form-control mb-0"/>
+                        <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 </div>
                 <button class="btn btn-sm toggle-btn ms-2 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#question-body-${index}" aria-expanded="true" aria-controls="question-body-@i">
-                    <i class="bi-chevron-up"></i>
+                    <i class="bi bi-chevron-up"></i>
                 </button>
             </div>
             <div class="collapse show question-body" id="question-body-${index}">
@@ -142,6 +153,13 @@ function addQuestion() {
     questions.appendChild(newQuestion);
 }
 
+function removeQuestion(button) {
+    const questionCard = button.closest('.question-item');
+    questionCard.remove();
+
+    updateQuestionIndices();
+}
+
 function addQuestionHandlers(newQuestion) {
     const addAnswerButton = newQuestion.querySelector(".add-answer-btn");
     addAnswerButton.addEventListener("click", function () {
@@ -153,6 +171,11 @@ function addQuestionHandlers(newQuestion) {
     removeAnswerButton.addEventListener("click", function () {
         removeAnswer(removeAnswerButton);
     });
+    
+    const removeQuestionButton = newQuestion.querySelector(".remove-question-btn");
+    removeQuestionButton.addEventListener("click", function () {
+        removeQuestion(removeQuestionButton);
+    })
 
     newQuestion.querySelectorAll('.answer-item').forEach(addAnswerDnDHandlers);
 
@@ -365,6 +388,12 @@ function updateQuestionIndices() {
     const questions = document.querySelectorAll('.question-item');
 
     questions.forEach((question, qIndex) => {
+        // Update question index in label
+        const questionLabel = question.querySelector('.flex-grow-1 label');
+        if (questionLabel) {
+            questionLabel.textContent = `Vraag ${qIndex + 1}`;
+        }
+        
         // Update question index
         const questionDescription = question.querySelector('.flex-grow-1 input');
         if (questionDescription) {

@@ -29,10 +29,15 @@
                 </div>
                 <div class="flex-grow-1">
                     <label class="form-label fw-bold">Vraag @(i + 1)</label>
-                    <input asp-for="@Model.Questions[@i].Description" class="form-control mb-0"/>
+                    <div class="d-flex align-items-center">
+                        <input asp-for="@Model.Questions[@i].Description" class="form-control mb-0"/>
+                        <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 </div>
                 <button class="btn btn-sm toggle-btn ms-2 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#question-body-@i" aria-expanded="true" aria-controls="question-body-@i">
-                    <i class="bi-chevron-up"></i>
+                    <i class="bi bi-chevron-up"></i>
                 </button>
             </div>
             <div class="collapse show question-body" id="question-body-@i">
