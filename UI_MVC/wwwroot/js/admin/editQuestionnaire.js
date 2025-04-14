@@ -1,6 +1,7 @@
 ﻿let allCollapsed = false;
 let dragSrcEl = null;
 let sourceListId = "";
+let dragType = "";
 
 window.addEventListener('DOMContentLoaded', (event) => {
     initQuestions();
@@ -44,6 +45,8 @@ function initQuestions() {
             }
         });
     });
+
+    document.querySelectorAll('.question-item').forEach(addQuestionDnDHandlers);
 }
 
 function initAnswers() {
@@ -60,7 +63,7 @@ function initAnswers() {
         })
     })
 
-    document.querySelectorAll('.answer-item').forEach(addDnDHandlers);
+    document.querySelectorAll('.answer-item').forEach(addAnswerDnDHandlers);
     
     // Have HTML synced with input
     document.querySelectorAll('input').forEach((input) => {
@@ -94,7 +97,7 @@ function addAnswer(questionIndex) {
                 <button type="button" class="btn btn-danger btn-sm" onclick="removeAnswer(this)">Verwijder</button>
             </div>
         `;
-    addDnDHandlers(newAnswer);
+    addAnswerDnDHandlers(newAnswer);
 
     newAnswer.querySelector('input').addEventListener('input', function () {
         this.setAttribute('value', this.value);
@@ -107,25 +110,67 @@ function removeAnswer(button) {
     button.closest("li").remove();
 }
 
-function addDnDHandlers(li) {
-    const handle = li.querySelector('.drag-handle');
+function addAnswerDnDHandlers(answer) {
+    const handle = answer.querySelector('.drag-handle');
     if (!handle) return;
 
-    li.draggable = false;
+    answer.draggable = false;
 
     handle.addEventListener('mousedown', (e) => {
-        li.draggable = true;
+        answer.draggable = true;
     });
 
     handle.addEventListener('mouseup', (e) => {
-        li.draggable = false;
+        answer.draggable = false;
     });
 
-    li.addEventListener('dragstart', handleDragStart, false);
-    li.addEventListener('dragover', handleDragOver, false);
-    li.addEventListener('dragleave', handleDragLeave, false);
-    li.addEventListener('drop', handleDrop, false);
-    li.addEventListener('dragend', handleDragEnd, false);
+    answer.addEventListener('dragstart', function(e) {
+        dragType = "answer";
+        e.stopPropagation();
+        handleDragStart.call(this, e);
+    }, false);
+    answer.addEventListener('dragover', function(e) {
+        e.stopPropagation();
+        handleDragOver.call(this, e);
+    }, false);
+    answer.addEventListener('dragleave', function(e) {
+        e.stopPropagation();
+        handleDragLeave.call(this, e);
+    }, false);
+    answer.addEventListener('drop', function(e) {
+        e.stopPropagation();
+        handleDrop.call(this, e);
+    }, false);
+    answer.addEventListener('dragend', function(e) {
+        e.stopPropagation();
+        handleDragEnd.call(this, e);
+    }, false);
+}
+
+function addQuestionDnDHandlers(question) {
+    const handle = question.querySelector('.card-header .drag-handle');
+    if (!handle) return;
+
+    question.draggable = false;
+
+    handle.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        question.draggable = true;
+    });
+
+    handle.addEventListener('mouseup', (e) => {
+        e.stopPropagation();
+        question.draggable = false;
+    });
+
+    question.addEventListener('dragstart', function(e) {
+        dragType = "question";
+        handleDragStart.call(this, e);
+    }, false);
+    question.addEventListener('dragover', handleDragOver, false);
+    question.addEventListener('dragleave', handleDragLeave, false);
+    question.addEventListener('drop', handleDrop, false);
+    question.addEventListener('dragend', handleDragEnd, false);
 }
 
 function handleDragStart(e) {
@@ -140,13 +185,21 @@ function handleDragOver(e) {
     if (e.preventDefault) {
         e.preventDefault();
     }
-    
-    const currentListId = this.closest('ul').id;
 
-    if (sourceListId === currentListId) {
+    if (dragType === "answer" && this.classList.contains('answer-item')) {
+        const currentListId = this.closest('ul').id;
+        if (sourceListId === currentListId) {
+            this.classList.add('over');
+            e.dataTransfer.dropEffect = 'move';
+        } else {
+            e.dataTransfer.dropEffect = 'none';
+        }
+    }
+    else if (dragType === "question" && this.classList.contains('question-item')) {
         this.classList.add('over');
         e.dataTransfer.dropEffect = 'move';
-    } else {
+    }
+    else {
         e.dataTransfer.dropEffect = 'none';
     }
 
@@ -162,31 +215,152 @@ function handleDrop(e) {
         e.stopPropagation();
     }
 
-    if (dragSrcEl !== this) {
+    // Check if the drop target is valid based on drag type
+    if (dragSrcEl !== this && dragType === "answer" && this.classList.contains('answer-item')) {
+        const currentListId = this.closest('ul').id;
+        if (sourceListId !== currentListId) {
+            this.classList.remove('over');
+            return false;
+        }
+
+        // Handle answer dropping
         const dropHTML = e.dataTransfer.getData('text/html');
         dragSrcEl.parentNode.removeChild(dragSrcEl);
         this.insertAdjacentHTML('beforebegin', dropHTML);
 
         const droppedElem = this.previousSibling;
-        addDnDHandlers(droppedElem);
+        addAnswerDnDHandlers(droppedElem);
+
+        // Ensure input listener is reattached
+        droppedElem.querySelector('input')?.addEventListener('input', function() {
+            this.setAttribute('value', this.value);
+        });
+
+        updateAnswerIndices(this.closest("ul"));
     }
-    
+    else if (dragSrcEl !== this && dragType === "question" && this.classList.contains('question-item')) {
+        // Handle question dropping
+        const dropHTML = e.dataTransfer.getData('text/html');
+        dragSrcEl.parentNode.removeChild(dragSrcEl);
+        this.insertAdjacentHTML('beforebegin', dropHTML);
+
+        const droppedElem = this.previousSibling;
+        addQuestionDnDHandlers(droppedElem);
+
+        // Reattach all event handlers within the question
+        setupDroppedQuestion(droppedElem);
+
+        // Update all question indices
+        updateQuestionIndices();
+    }
+
     this.classList.remove('over');
-    updateAnswerIndices(this.closest("ul"));
     return false;
 }
 
 function handleDragEnd(e) {
     this.draggable = false;
     this.classList.remove('dragged');
-    document.querySelectorAll('.answer-item.over').forEach(el => el.classList.remove('over'));
+
+    if (dragType === "answer") {
+        document.querySelectorAll('.answer-item.over').forEach(el => el.classList.remove('over'));
+    } else if (dragType === "question") {
+        document.querySelectorAll('.question-item.over').forEach(el => el.classList.remove('over'));
+    }
+
+    // Reset drag type
+    dragType = "";
 }
 
 function updateAnswerIndices(ul) {
     const liItems = ul.querySelectorAll('li');
-    const questionIndex = ul.id.split('-')[2]; // answers-list-<i>
+    const questionIndex = ul.id.split('-')[2];
     liItems.forEach((li, idx) => {
         const input = li.querySelector('input');
         input.name = `Questions[${questionIndex}].Answers[${idx}].Description`;
     });
+}
+
+function updateQuestionIndices() {
+    const questions = document.querySelectorAll('.question-item');
+
+    questions.forEach((question, qIndex) => {
+        // Update question index
+        const questionDescription = question.querySelector('.flex-grow-1 input');
+        if (questionDescription) {
+            questionDescription.name = `Questions[${qIndex}].Description`;
+        }
+
+        // Update weight input
+        const weightInput = question.querySelector('input[type="range"]');
+        if (weightInput) {
+            weightInput.name = `Questions[${qIndex}].Weight`;
+            // Update oninput for the weight display
+            weightInput.setAttribute('oninput', `document.getElementById('weightDisplay${qIndex}').textContent = this.value;`);
+        }
+
+        // Update the question body ID and data-bs-target reference
+        const collapseBody = question.querySelector('.question-body');
+        if (collapseBody) {
+            collapseBody.id = `question-body-${qIndex}`;
+        }
+
+        const toggleBtn = question.querySelector('.toggle-btn');
+        if (toggleBtn) {
+            toggleBtn.setAttribute('data-bs-target', `#question-body-${qIndex}`);
+            toggleBtn.setAttribute('aria-controls', `question-body-${qIndex}`);
+        }
+
+        // Update answers list ID
+        const answersList = question.querySelector('ul[id^="answers-list-"]');
+        if (answersList) {
+            answersList.id = `answers-list-${qIndex}`;
+
+            // Update add answer button question-index
+            const addAnswerBtn = question.querySelector('.add-answer-btn');
+            if (addAnswerBtn) {
+                addAnswerBtn.setAttribute('question-index', qIndex);
+            }
+
+            // Update all answer indices
+            updateAnswerIndices(answersList);
+        }
+    });
+}
+
+// Setup all event handlers for a dropped question
+function setupDroppedQuestion(question) {
+    // Setup toggle button
+    const toggleBtn = question.querySelector('.toggle-btn');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+            toggleArrow(this);
+        });
+    }
+
+    // Setup add answer button
+    const addAnswerBtn = question.querySelector('.add-answer-btn');
+    if (addAnswerBtn) {
+        addAnswerBtn.addEventListener('click', function() {
+            const questionIndex = this.getAttribute('question-index');
+            addAnswer(questionIndex);
+        });
+    }
+
+    // Setup remove answer buttons
+    question.querySelectorAll('.remove-answer-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            removeAnswer(this);
+        });
+    });
+
+    // Setup input listeners
+    question.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', function() {
+            this.setAttribute('value', this.value);
+        });
+    });
+
+    // Setup answer drag and drop
+    question.querySelectorAll('.answer-item').forEach(addAnswerDnDHandlers);
 }
