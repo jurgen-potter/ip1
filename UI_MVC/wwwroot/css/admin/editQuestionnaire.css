@@ -1,0 +1,16 @@
+﻿.drag-handle {
+    cursor: move;
+    user-select: none;
+}
+
+.answer-item {
+    border: 1px solid #ccc;
+}
+
+.answer-item.over {
+    border-top: 2px solid blue;
+}
+
+.dragElem {
+    opacity: 1;
+}

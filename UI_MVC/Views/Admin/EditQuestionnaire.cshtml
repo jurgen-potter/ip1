@@ -4,6 +4,10 @@
     ViewBag.Title = "Bewerk vragenlijst";
 }
 
+@section Styles {
+    <link href="~/css/admin/editQuestionnaire.css" rel="stylesheet" />
+}
+
 <h2>Bewerk vragenlijst</h2>
 
 <form asp-action="EditQuestionnaire" method="post">
@@ -17,11 +21,12 @@
     {
         <div class="card mb-3">
             <div class="card-body">
-                <label class="form-label fw-bold">Vraag @(i+1)</label>
+                <label class="form-label fw-bold">Vraag @(i + 1)</label>
                 <input asp-for="@Model.Questions[@i].Description" class="form-control mb-2"/>
-                
+
                 <label class="form-label fw-bold">Weging</label>
-                <input asp-for="@Model.Questions[@i].Weight" type="range" min="1" max="10" class="form-range mb-2" oninput="document.getElementById('weightDisplay@i').textContent = this.value;"/>
+                <input asp-for="@Model.Questions[@i].Weight" type="range" min="1" max="10" class="form-range mb-2"
+                       oninput="document.getElementById('weightDisplay@i').textContent = this.value;"/>
                 <div class="d-flex justify-content-between px-1 text-muted small">
                     @for (int val = 1; val <= 10; val++)
                     {
@@ -33,14 +38,20 @@
                 <ul id="answers-list-@i">
                     @for (int j = 0; j < Model.Questions[i].Answers.Count; j++)
                     {
-                        <li>
-                            <input asp-for="@Model.Questions[@i].Answers[@j].Description"
-                                   class="form-control d-inline-block" style="width: 80%;"/>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="removeAnswer(this)">Remove</button>
+                        <li class="row answer-item mb-2 align-items-center p-2">
+                            <div class="col-auto fs-5 p-0">
+                                <span class="drag-handle">&#x2630</span>
+                            </div>
+                            <div class="col">
+                                <input asp-for="@Model.Questions[@i].Answers[@j].Description" class="form-control" />
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
+                            </div>
                         </li>
                     }
                 </ul>
-                <button type="button" class="btn btn-sm btn-secondary" onclick="addAnswer(@i)">Add Answer</button>
+                <button type="button" class="btn btn-sm btn-secondary add-answer-btn" question-index="@i">Voeg antwoordoptie toe</button>
             </div>
         </div>
     }
@@ -49,21 +60,6 @@
 </form>
 
 @section Scripts {
-    <script>
-        function addAnswer(questionIndex) {
-            const list = document.getElementById(`answers-list-${questionIndex}`);
-            const index = list.children.length;
-
-            const newAnswer = document.createElement("li");
-            newAnswer.innerHTML = `
-            <input name="Questions[${questionIndex}].AnswerOptions[${index}].Text" class="form-control d-inline-block" style="width: 80%;" />
-            <button type="button" class="btn btn-danger btn-sm" onclick="removeAnswer(this)">Remove</button>
-        `;
-            list.appendChild(newAnswer);
-        }
-
-        function removeAnswer(button) {
-            button.closest("li").remove();
-        }
+    <script defer src="/js/admin/editQuestionnaire.js">
     </script>
 }
