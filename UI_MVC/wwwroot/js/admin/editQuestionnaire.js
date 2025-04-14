@@ -11,11 +11,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
 function initQuestions() {
     // Let arrow of button point up/down depending on collapsed/expanded
     document.querySelectorAll('.toggle-btn').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             toggleArrow(button);
         });
     });
-    
+
+    document.querySelector('.add-question-btn').addEventListener('click', () => {
+        addQuestion();
+    });
+
     // Let all fields be collapsed/expanded by pressing toggle all
     const toggleAllBtn = document.getElementById('toggle-all-btn');
     toggleAllBtn.addEventListener('click', () => {
@@ -34,7 +38,7 @@ function initQuestions() {
             ? 'Alles uitvouwen'
             : 'Alles invouwen';
 
-        const toggleButtons = document.querySelectorAll('.toggle-btn');            
+        const toggleButtons = document.querySelectorAll('.toggle-btn');
         toggleButtons.forEach(button => {
             const icon = button.querySelector('i');
 
@@ -64,7 +68,7 @@ function initAnswers() {
     })
 
     document.querySelectorAll('.answer-item').forEach(addAnswerDnDHandlers);
-    
+
     // Have HTML synced with input
     document.querySelectorAll('input').forEach((input) => {
         input.addEventListener('input', () => {
@@ -79,13 +83,92 @@ function toggleArrow(button) {
     arrow.classList.toggle('bi-chevron-down');
 }
 
+function addQuestion() {
+    const questions = document.getElementById(`questions-list`);
+    const index = questions.children.length;
+
+    const newQuestion = document.createElement("li");
+    newQuestion.classList.add("card", "mb-3", "question-item");
+    newQuestion.innerHTML = `
+            <div class="card-header d-flex align-items-start">
+                <div class="fs-5 me-3">
+                    <span class="drag-handle">&#x2630;</span>
+                </div>
+                <div class="flex-grow-1">
+                    <label class="form-label fw-bold">Vraag ${index + 1}</label>
+                    <input name="Questions[${index}].Description" class="form-control mb-0"/>
+                </div>
+                <button class="btn btn-sm toggle-btn ms-2 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#question-body-${index}" aria-expanded="true" aria-controls="question-body-@i">
+                    <i class="bi-chevron-up"></i>
+                </button>
+            </div>
+            <div class="collapse show question-body" id="question-body-${index}">
+                <div class="card-body">
+                    <label class="form-label fw-bold">Weging</label>
+                    <input name="Questions[${index}].Weight" type="range" min="1" max="10" class="form-range mb-2" value="1"/>
+                    <div class="d-flex justify-content-between px-1 text-muted small">
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span>4</span>
+                        <span>5</span>
+                        <span>6</span>
+                        <span>7</span>
+                        <span>8</span>
+                        <span>9</span>
+                        <span>10</span>
+                    </div>
+
+                    <label class="form-label fw-bold">Antwoorden</label>
+                    <ul id="answers-list-${index}">
+                        <li class="row answer-item mb-2 align-items-center p-2">
+                            <div class="col-auto fs-5 p-0">
+                                <span class="drag-handle">&#x2630;</span>
+                            </div>
+                            <div class="col">
+                                <input name="Questions[${index}].Answers[0].Description" class="form-control" />
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
+                            </div>
+                        </li>
+                    </ul>
+                    <button type="button" class="btn btn-sm btn-secondary add-answer-btn" question-index=${index}>Voeg antwoordoptie toe</button>
+                </div>
+            </div>
+        `;
+    addQuestionDnDHandlers(newQuestion);
+    addQuestionHandlers(newQuestion);
+    questions.appendChild(newQuestion);
+}
+
+function addQuestionHandlers(newQuestion) {
+    const addAnswerButton = newQuestion.querySelector(".add-answer-btn");
+    addAnswerButton.addEventListener("click", function () {
+        const questionIndex = addAnswerButton.getAttribute('question-index');
+        addAnswer(questionIndex);
+    });
+    
+    const removeAnswerButton = newQuestion.querySelector(".remove-answer-btn");
+    removeAnswerButton.addEventListener("click", function () {
+        removeAnswer(removeAnswerButton);
+    });
+
+    newQuestion.querySelectorAll('.answer-item').forEach(addAnswerDnDHandlers);
+
+    newQuestion.querySelectorAll('input').forEach((input) => {
+        input.addEventListener('input', () => {
+            input.setAttribute('value', input.value);
+        })
+    })
+}
+
 function addAnswer(questionIndex) {
     const answers = document.getElementById(`answers-list-${questionIndex}`);
     const index = answers.children.length;
 
     const newAnswer = document.createElement("li");
     newAnswer.classList.add("row", "answer-item", "mb-2", "align-items-center", "p-2");
-    newAnswer.draggable = true;
     newAnswer.innerHTML = `
             <div class="col-auto fs-5 p-0">
                 <span class="drag-handle">&#x2630</span>
@@ -102,7 +185,7 @@ function addAnswer(questionIndex) {
     newAnswer.querySelector('input').addEventListener('input', function () {
         this.setAttribute('value', this.value);
     });
-    
+
     answers.appendChild(newAnswer);
 }
 
@@ -124,24 +207,24 @@ function addAnswerDnDHandlers(answer) {
         answer.draggable = false;
     });
 
-    answer.addEventListener('dragstart', function(e) {
+    answer.addEventListener('dragstart', function (e) {
         dragType = "answer";
         e.stopPropagation();
         handleDragStart.call(this, e);
     }, false);
-    answer.addEventListener('dragover', function(e) {
+    answer.addEventListener('dragover', function (e) {
         e.stopPropagation();
         handleDragOver.call(this, e);
     }, false);
-    answer.addEventListener('dragleave', function(e) {
+    answer.addEventListener('dragleave', function (e) {
         e.stopPropagation();
         handleDragLeave.call(this, e);
     }, false);
-    answer.addEventListener('drop', function(e) {
+    answer.addEventListener('drop', function (e) {
         e.stopPropagation();
         handleDrop.call(this, e);
     }, false);
-    answer.addEventListener('dragend', function(e) {
+    answer.addEventListener('dragend', function (e) {
         e.stopPropagation();
         handleDragEnd.call(this, e);
     }, false);
@@ -163,7 +246,7 @@ function addQuestionDnDHandlers(question) {
         question.draggable = false;
     });
 
-    question.addEventListener('dragstart', function(e) {
+    question.addEventListener('dragstart', function (e) {
         dragType = "question";
         handleDragStart.call(this, e);
     }, false);
@@ -194,12 +277,10 @@ function handleDragOver(e) {
         } else {
             e.dataTransfer.dropEffect = 'none';
         }
-    }
-    else if (dragType === "question" && this.classList.contains('question-item')) {
+    } else if (dragType === "question" && this.classList.contains('question-item')) {
         this.classList.add('over');
         e.dataTransfer.dropEffect = 'move';
-    }
-    else {
+    } else {
         e.dataTransfer.dropEffect = 'none';
     }
 
@@ -232,13 +313,12 @@ function handleDrop(e) {
         addAnswerDnDHandlers(droppedElem);
 
         // Ensure input listener is reattached
-        droppedElem.querySelector('input')?.addEventListener('input', function() {
+        droppedElem.querySelector('input')?.addEventListener('input', function () {
             this.setAttribute('value', this.value);
         });
 
         updateAnswerIndices(this.closest("ul"));
-    }
-    else if (dragSrcEl !== this && dragType === "question" && this.classList.contains('question-item')) {
+    } else if (dragSrcEl !== this && dragType === "question" && this.classList.contains('question-item')) {
         // Handle question dropping
         const dropHTML = e.dataTransfer.getData('text/html');
         dragSrcEl.parentNode.removeChild(dragSrcEl);
@@ -333,7 +413,7 @@ function setupDroppedQuestion(question) {
     // Setup toggle button
     const toggleBtn = question.querySelector('.toggle-btn');
     if (toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
+        toggleBtn.addEventListener('click', function () {
             toggleArrow(this);
         });
     }
@@ -341,7 +421,7 @@ function setupDroppedQuestion(question) {
     // Setup add answer button
     const addAnswerBtn = question.querySelector('.add-answer-btn');
     if (addAnswerBtn) {
-        addAnswerBtn.addEventListener('click', function() {
+        addAnswerBtn.addEventListener('click', function () {
             const questionIndex = this.getAttribute('question-index');
             addAnswer(questionIndex);
         });
@@ -349,14 +429,14 @@ function setupDroppedQuestion(question) {
 
     // Setup remove answer buttons
     question.querySelectorAll('.remove-answer-btn').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             removeAnswer(this);
         });
     });
 
     // Setup input listeners
     question.querySelectorAll('input').forEach(input => {
-        input.addEventListener('input', function() {
+        input.addEventListener('input', function () {
             this.setAttribute('value', this.value);
         });
     });

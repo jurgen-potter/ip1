@@ -19,7 +19,7 @@
 <form asp-action="EditQuestionnaire" method="post">
     <input type="hidden" asp-for="Id" value="@Model.Id"/>
 
-    <ul>
+    <ul id="questions-list">
     @for (int i = 0; i < Model.Questions.Count; i++)
     {
         <li class="card mb-3 question-item">
@@ -38,8 +38,7 @@
             <div class="collapse show question-body" id="question-body-@i">
                 <div class="card-body">
                     <label class="form-label fw-bold">Weging</label>
-                    <input asp-for="@Model.Questions[@i].Weight" type="range" min="1" max="10" class="form-range mb-2"
-                           oninput="document.getElementById('weightDisplay@i').textContent = this.value;" />
+                    <input asp-for="@Model.Questions[@i].Weight" type="range" min="1" max="10" class="form-range mb-2" />
                     <div class="d-flex justify-content-between px-1 text-muted small">
                         @for (int val = 1; val <= 10; val++)
                         {
@@ -71,7 +70,10 @@
     }
     </ul>
 
-    <button type="submit" class="btn btn-primary">Save All</button>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Opslaan</button>
+        <button type="button" class="btn btn-secondary add-question-btn">Voeg vraag toe</button>
+    </div>
 </form>
 
 @section Scripts {
