@@ -13,6 +13,8 @@ public class Question
     [Range(1, 10)]
     public int Weight { get; set; }
     
+    public int Position { get; set; }
+    
     public Questionnaire Questionnaire { get; set; }
     
     public ICollection<Answer> Answers { get; set; } = new List<Answer>();

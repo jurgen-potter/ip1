@@ -96,6 +96,7 @@ function addQuestion() {
     const newQuestion = document.createElement("li");
     newQuestion.classList.add("card", "mb-3", "question-item");
     newQuestion.innerHTML = `
+            <input name="Questions[${index}].Id" type="hidden" class="question-id" value="0" />
             <div class="card-header d-flex align-items-start">
                 <div class="fs-5 me-3">
                     <span class="drag-handle">&#x2630;</span>
@@ -103,7 +104,7 @@ function addQuestion() {
                 <div class="flex-grow-1">
                     <label class="form-label fw-bold">Vraag ${index + 1}</label>
                     <div class="d-flex align-items-center">
-                        <input name="Questions[${index}].Description" class="form-control mb-0"/>
+                        <input name="Questions[${index}].Description" class="form-control mb-0 question-description"/>
                         <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
                             <i class="bi bi-trash"></i>
                         </button>
@@ -133,11 +134,12 @@ function addQuestion() {
                     <label class="form-label fw-bold">Antwoorden</label>
                     <ul id="answers-list-${index}">
                         <li class="row answer-item mb-2 align-items-center p-2">
+                            <input name="Questions[${index}].Answers[0].Id" type="hidden" class="answer-id" value="0" />
                             <div class="col-auto fs-5 p-0">
                                 <span class="drag-handle">&#x2630;</span>
                             </div>
                             <div class="col">
-                                <input name="Questions[${index}].Answers[0].Description" class="form-control" />
+                                <input name="Questions[${index}].Answers[0].Description" class="form-control answer-description" />
                             </div>
                             <div class="col-auto">
                                 <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
@@ -193,20 +195,28 @@ function addAnswer(questionIndex) {
     const newAnswer = document.createElement("li");
     newAnswer.classList.add("row", "answer-item", "mb-2", "align-items-center", "p-2");
     newAnswer.innerHTML = `
+            <input name="@Model.Questions[@i].Answers[@j].Id" type="hidden" class="answer-id" value="0" />
             <div class="col-auto fs-5 p-0">
                 <span class="drag-handle">&#x2630</span>
             </div>
             <div class="col">
-                <input name="Questions[${questionIndex}].Answers[${index}].Description" class="form-control d-inline-block"/>
+                <input name="Questions[${questionIndex}].Answers[${index}].Description" class="form-control answer-description" />
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-danger btn-sm" onclick="removeAnswer(this)">Verwijder</button>
+                <button type="button" class="btn btn-danger btn-sm remove-answer-btn" onclick="removeAnswer(this)">Verwijder</button>
             </div>
         `;
     addAnswerDnDHandlers(newAnswer);
 
-    newAnswer.querySelector('input').addEventListener('input', function () {
-        this.setAttribute('value', this.value);
+    newAnswer.querySelectorAll('input.answer-description').forEach((input) => {
+        input.addEventListener('input', () => {
+            input.setAttribute('value', input.value);
+        })
+    })
+
+    const removeAnswerButton = newAnswer.querySelector(".remove-answer-btn");
+    removeAnswerButton.addEventListener("click", function () {
+        removeAnswer(removeAnswerButton);
     });
 
     answers.appendChild(newAnswer);
@@ -379,8 +389,11 @@ function updateAnswerIndices(ul) {
     const liItems = ul.querySelectorAll('li');
     const questionIndex = ul.id.split('-')[2];
     liItems.forEach((li, idx) => {
-        const input = li.querySelector('input');
-        input.name = `Questions[${questionIndex}].Answers[${idx}].Description`;
+        const description = li.querySelector('input.answer-description');
+        description.name = `Questions[${questionIndex}].Answers[${idx}].Description`;
+
+        const id = li.querySelector('input.answer-id');
+        id.name = `Questions[${questionIndex}].Answers[${idx}].Id`;
     });
 }
 
@@ -394,8 +407,14 @@ function updateQuestionIndices() {
             questionLabel.textContent = `Vraag ${qIndex + 1}`;
         }
         
-        // Update question index
-        const questionDescription = question.querySelector('.flex-grow-1 input');
+        // Update question id
+        const questionId = question.querySelector('input.question-id');
+        if (questionId) {
+            questionId.name = `Questions[${qIndex}].Id`;
+        }
+
+        // Update question description
+        const questionDescription = question.querySelector('input.question-description');
         if (questionDescription) {
             questionDescription.name = `Questions[${qIndex}].Description`;
         }
@@ -404,8 +423,6 @@ function updateQuestionIndices() {
         const weightInput = question.querySelector('input[type="range"]');
         if (weightInput) {
             weightInput.name = `Questions[${qIndex}].Weight`;
-            // Update oninput for the weight display
-            weightInput.setAttribute('oninput', `document.getElementById('weightDisplay${qIndex}').textContent = this.value;`);
         }
 
         // Update the question body ID and data-bs-target reference

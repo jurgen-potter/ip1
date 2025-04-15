@@ -16,12 +16,12 @@ public class QuestionnaireModuleRepository : IQuestionnaireModuleRepository
     public Questionnaire ReadQuestionnaire(int questionnaireId)
     {
         return _dbContext.Questionnaires
-            .Include(q => q.Questions)
-            .ThenInclude(q => q.Answers)
+            .Include(q => q.Questions.OrderBy(qp => qp.Position))
+            .ThenInclude(a => a.Answers.OrderBy(ap => ap.Position))
             .SingleOrDefault(q => q.Id == questionnaireId);
     }
 
-    public bool UpdateRepository(Questionnaire questionnaire)
+    public bool UpdateQuestionnaire(Questionnaire questionnaire)
     {
         _dbContext.Questionnaires.Update(questionnaire);
         return _dbContext.SaveChanges() > 0;

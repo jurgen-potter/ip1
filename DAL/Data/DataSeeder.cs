@@ -526,28 +526,34 @@ public class DataSeeder
         var question1 = new Question
         {
             Description = "Beschik je als organisator nog over minstens 6 maanden voordat de input van de participatie klaar moet zijn voor de politieke besluitvorming?",
-            Weight = 5
+            Weight = 5,
+            Position = 1
         };
         var answer1 = new Answer
         {
-            Description = "Ja"
+            Description = "Ja",
+            Position = 1
         };
         var answer2 = new Answer
         {
-            Description = "Nee"
+            Description = "Nee",
+            Position = 2
         };
         var question2 = new Question
         {
             Description = "Is de gemeente bereid om de realisatie van de voorstellen van het burgerpanel ernstig te overwegen en minstens publiek te motiveren waarom dat niet is gebeurd?",
-            Weight = 3
+            Weight = 3,
+            Position = 2
         };
         var answer3 = new Answer
         {
-            Description = "Ja"
+            Description = "Ja",
+            Position = 1
         };
         var answer4 = new Answer
         {
-            Description = "Nee"
+            Description = "Nee",
+            Position = 2
         };
         answer1.Question = question1;
         answer2.Question = question1;

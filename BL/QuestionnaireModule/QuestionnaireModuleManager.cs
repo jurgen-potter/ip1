@@ -19,6 +19,6 @@ public class QuestionnaireModuleManager : IQuestionnaireModuleManager
 
     public bool EditQuestionnaire(Questionnaire questionnaire)
     {
-        return _repository.UpdateRepository(questionnaire);
+        return _repository.UpdateQuestionnaire(questionnaire);
     }
 }
