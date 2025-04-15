@@ -16,4 +16,17 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadPanelById(panelId);
     }
+
+    public Panel AddPanel(string name, string description, DateOnly endDate)
+    {
+        Panel newPanel = new Panel()
+        {
+            Name = name,
+            Description = description,
+            EndDate = endDate,
+            MemberCount = 0
+        };
+        _panelRepository.CreatePanel(newPanel);
+        return newPanel;
+    }
 }

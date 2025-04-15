@@ -1,4 +1,5 @@
 using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Panel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,9 +15,13 @@ public class PanelController : Controller
     }
     
     // GET
-    public IActionResult Index()
+    public IActionResult Index(int? panelId)
     {
-        return View(_panelManager.GetPanel(1));
+        if (panelId == null)
+        {
+            panelId = 1;
+        }
+        return View(_panelManager.GetPanel(panelId?? 1));
     }
 
     [Authorize(Roles = "Organization,Admin")]
@@ -25,4 +30,18 @@ public class PanelController : Controller
     {
         return View();
     }
+    
+    [Authorize(Roles = "Organization,Admin")]
+    [HttpPost]
+    public IActionResult MakePanel(Panel panel)
+    {
+        if(!ModelState.IsValid)
+            return View();
+
+        
+        Panel newPanel = _panelManager.AddPanel(panel.Name,panel.Description,panel.EndDate);
+        
+        return RedirectToAction("Index","Panel",new {panelId=newPanel.PanelId});
+    }
+
 }

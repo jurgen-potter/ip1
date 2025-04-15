@@ -14,6 +14,7 @@ public class Panel
     public DateOnly StartDate { get; set; }
     public DateOnly EndDate { get; set; }
     public int MemberCount { get; set; }
+    public ICollection<Invitation> Invitations { get; set; }
     public ICollection<Member> Members { get; set; }
     public ICollection<ExtraCriteria> ExtraCriteria { get; set; } = new List<ExtraCriteria>();
 }

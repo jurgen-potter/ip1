@@ -16,6 +16,9 @@ public class DataSeeder
     public void Seed()
     {
         SeedPanels();
+        _panelDbContext.SaveChanges();
+        _panelDbContext.ChangeTracker.Clear();
+
         SeedInvitations();
         
         _panelDbContext.SaveChanges();
@@ -62,17 +65,19 @@ public class DataSeeder
         // Create panel objects
         var panel1 = new Panel()
         {
-            PanelId = 1,
-            Name = "Panel 1"
+            Name = "Panel 1",
+            Description = "Panel 1"
         };
+        _panelDbContext.Panels.Add(panel1);
         panel1.ExtraCriteria.Add(extraCrit1);
         panel1.ExtraCriteria.Add(extraCrit2);
 
         var panel2 = new Panel()
         {
-            PanelId = 2,
             Name = "Panel 2",
+            Description = "Panel 2"
         };
+        _panelDbContext.Panels.Add(panel2);
 
         // Create initial list with members for Panel 1 and Panel 2
         var members = new List<Member>

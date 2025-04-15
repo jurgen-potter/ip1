@@ -7,14 +7,26 @@
 <h2>Begin met uw panel te maken</h2>
 <div asp-validation-summary="All" class="text-danger"></div>
 <form asp-controller="Panel" asp-action="MakePanel" method="post">
-    <label>Naam van uw panel:</label>
-    <input asp-for="Name" type="number" class="form-control" required />
-    <span asp-validation-for="Name" class="text-danger"></span>
+    
+    <div>
+        <label>Naam van uw panel:</label>
+        <input asp-for="Name" type="text" class="form-control" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
 
-    <label>Beschrijving van uw panel:</label>
-    <textarea rows="10" asp-for="Description" type="number" class="form-control" required>Geef hier uw beschrijving</textarea>
-    <span asp-validation-for="Description" class="text-danger"></span>
+    <div>
+        <label>Beschrijving van uw panel:</label>
+        <textarea rows="5" asp-for="Description" type="number" class="form-control" required>Geef hier uw beschrijving</textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
 
+    <div>
+        <label>Einddatum:</label>
+        <input asp-for="EndDate" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
 
-    <button type="submit" class="btn btn-primary">Maak uw panel</button>
+    <div>
+        <button type="submit" class="btn btn-primary">Maak uw panel</button>
+    </div>
 </form>
