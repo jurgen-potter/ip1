@@ -32,7 +32,10 @@
                 <div class="flex-grow-1">
                     <label class="form-label fw-bold">Vraag @(i + 1)</label>
                     <div class="d-flex align-items-center">
-                        <input asp-for="@Model.Questions[@i].Description" class="form-control mb-0 question-description"/>
+                        <div class="flex-grow-1 w-100">
+                            <input asp-for="@Model.Questions[@i].Description" class="form-control mb-0 question-description"/>
+                            <span asp-validation-for="@Model.Questions[@i].Description" class="text-danger small"></span>
+                        </div>
                         <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
                             <i class="bi bi-trash"></i>
                         </button>
@@ -64,9 +67,16 @@
                                 </div>
                                 <div class="col">
                                     <input asp-for="@Model.Questions[@i].Answers[@j].Description" class="form-control answer-description" />
+                                    <span asp-validation-for="@Model.Questions[@i].Answers[@j].Description" class="text-danger small"></span>
                                 </div>
                                 <div class="col-auto">
                                     <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="form-check">
+                                        <input asp-for="@Model.Questions[@i].Answers[@j].IsCritical" class="form-check-input" type="checkbox" />
+                                        <label class="form-check-label">Breekpunt</label>
+                                    </div>
                                 </div>
                             </li>
                         }

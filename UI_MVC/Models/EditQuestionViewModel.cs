@@ -6,8 +6,8 @@ public class EditQuestionViewModel
 {
     public int Id { get; set; }
 
-    [Required]
-    [MaxLength(1000)]
+    [Required(ErrorMessage = "Vraag mag niet leeg zijn.")]
+    [MaxLength(1000, ErrorMessage = "Vraag mag maximaal 1000 karakters bevatten.")]
     public string Description { get; set; }
     
     [Range(1, 10)]

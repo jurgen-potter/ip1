@@ -104,7 +104,10 @@ function addQuestion() {
                 <div class="flex-grow-1">
                     <label class="form-label fw-bold">Vraag ${index + 1}</label>
                     <div class="d-flex align-items-center">
-                        <input name="Questions[${index}].Description" class="form-control mb-0 question-description"/>
+                        <div class="flex-grow-1 w-100">
+                            <input name="Questions[${index}].Description" class="form-control mb-0 question-description"/>
+                            <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${index}].Description" data-valmsg-replace="true"></span>
+                        </div>
                         <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
                             <i class="bi bi-trash"></i>
                         </button>
@@ -140,9 +143,16 @@ function addQuestion() {
                             </div>
                             <div class="col">
                                 <input name="Questions[${index}].Answers[0].Description" class="form-control answer-description" />
+                                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${index}].Answers[0].Description" data-valmsg-replace="true"></span>
                             </div>
                             <div class="col-auto">
                                 <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
+                            </div>
+                            <div class="col-auto">
+                                <div class="form-check">
+                                    <input name="Questions[${index}].Answers[0].IsCritical" class="form-check-input" type="checkbox" />
+                                    <label class="form-check-label">Breekpunt</label>
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -201,9 +211,16 @@ function addAnswer(questionIndex) {
             </div>
             <div class="col">
                 <input name="Questions[${questionIndex}].Answers[${index}].Description" class="form-control answer-description" />
+                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${index}].Description" data-valmsg-replace="true"></span>
             </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-danger btn-sm remove-answer-btn" onclick="removeAnswer(this)">Verwijder</button>
+            </div>
+            <div class="col-auto">
+                <div class="form-check">
+                    <input name="Questions[${questionIndex}].Answers[${index}].IsCritical" class="form-check-input" type="checkbox" />
+                        <label class="form-check-label">Breekpunt</label>
+                </div>
             </div>
         `;
     addAnswerDnDHandlers(newAnswer);

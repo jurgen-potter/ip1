@@ -45,7 +45,8 @@ public class AdminController : Controller
                 EditAnswerViewModel answerModel = new EditAnswerViewModel
                 {
                     Id = answer.Id,
-                    Description = answer.Description
+                    Description = answer.Description,
+                    IsCritical = answer.IsCritical
                 };
                 questionModel.Answers.Add(answerModel);
             }
@@ -97,6 +98,7 @@ public class AdminController : Controller
                             {
                                 existingAnswer.Description = answerModel.Description;
                                 existingAnswer.Position = answerPosition++;
+                                existingAnswer.IsCritical = answerModel.IsCritical;
                                 updatedAnswers.Add(existingAnswer);
                             }
                         }
@@ -105,7 +107,8 @@ public class AdminController : Controller
                             var newAnswer = new Answer
                             {
                                 Description = answerModel.Description,
-                                Position = answerPosition++
+                                Position = answerPosition++,
+                                IsCritical = answerModel.IsCritical
                             };
                             updatedAnswers.Add(newAnswer);
                         }
@@ -117,6 +120,7 @@ public class AdminController : Controller
             }
             else
             {
+                int answerPosition = 0;
                 var newQuestion = new Question
                 {
                     Description = questionModel.Description,
@@ -124,7 +128,9 @@ public class AdminController : Controller
                     Position = questionPosition++,
                     Answers = questionModel.Answers.Select(a => new Answer
                     {
-                        Description = a.Description
+                        Description = a.Description,
+                        Position = answerPosition++,
+                        IsCritical = a.IsCritical
                     }).ToList()
                 };
                 updatedQuestions.Add(newQuestion);
