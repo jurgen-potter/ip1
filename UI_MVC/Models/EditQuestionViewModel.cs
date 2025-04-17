@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CitizenPanel.BL.Domain.QuestionnaireModule;
+using System.ComponentModel.DataAnnotations;
 
 namespace CitizenPanel.UI.MVC.Models;
 
@@ -13,5 +14,6 @@ public class EditQuestionViewModel
     [Range(1, 10)]
     public int Weight { get; set; }
 
+    [MinCount(1, ErrorMessage = "Er moet minstens een antwoord aangemaakt zijn.")]
     public List<EditAnswerViewModel> Answers { get; set; } = new();
 }

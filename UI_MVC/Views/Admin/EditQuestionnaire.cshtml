@@ -74,7 +74,8 @@
                                 </div>
                                 <div class="col-auto">
                                     <div class="form-check">
-                                        <input asp-for="@Model.Questions[@i].Answers[@j].IsCritical" class="form-check-input" type="checkbox" />
+                                        <input type="hidden" value="@Model.Questions[@i].Answers[@j].IsCritical" class="critical-value" />
+                                        <input asp-for="@Model.Questions[@i].Answers[@j].IsCritical" class="form-check-input critical-check" type="checkbox" />
                                         <label class="form-check-label">Breekpunt</label>
                                     </div>
                                 </div>

@@ -21,7 +21,7 @@ function initQuestions() {
     });
 
     document.querySelectorAll('.remove-question-btn').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             removeQuestion(this);
         });
     });
@@ -79,6 +79,15 @@ function initAnswers() {
     document.querySelectorAll('input').forEach((input) => {
         input.addEventListener('input', () => {
             input.setAttribute('value', input.value);
+        })
+        input.addEventListener('change', (e) => {
+            if (input.classList.contains('critical-check')) {
+                const li = input.closest('li');
+                const hiddenInput = li.querySelector('.critical-value');
+                if (hiddenInput) {
+                    hiddenInput.value = input.checked;
+                }
+            }
         })
     })
 }
@@ -150,7 +159,8 @@ function addQuestion() {
                             </div>
                             <div class="col-auto">
                                 <div class="form-check">
-                                    <input name="Questions[${index}].Answers[0].IsCritical" class="form-check-input" type="checkbox" />
+                                    <input type="hidden" value="false" class="critical-value" />
+                                    <input name="Questions[${index}].Answers[0].IsCritical" class="form-check-input critical-check" type="checkbox" />
                                     <label class="form-check-label">Breekpunt</label>
                                 </div>
                             </div>
@@ -172,30 +182,35 @@ function removeQuestion(button) {
     updateQuestionIndices();
 }
 
-function addQuestionHandlers(newQuestion) {
-    const addAnswerButton = newQuestion.querySelector(".add-answer-btn");
+function addQuestionHandlers(question) {
+    const addAnswerButton = question.querySelector(".add-answer-btn");
     addAnswerButton.addEventListener("click", function () {
         const questionIndex = addAnswerButton.getAttribute('question-index');
         addAnswer(questionIndex);
     });
-    
-    const removeAnswerButton = newQuestion.querySelector(".remove-answer-btn");
+
+    const removeAnswerButton = question.querySelector(".remove-answer-btn");
     removeAnswerButton.addEventListener("click", function () {
         removeAnswer(removeAnswerButton);
     });
-    
-    const removeQuestionButton = newQuestion.querySelector(".remove-question-btn");
+
+    const removeQuestionButton = question.querySelector(".remove-question-btn");
     removeQuestionButton.addEventListener("click", function () {
         removeQuestion(removeQuestionButton);
     })
 
-    newQuestion.querySelectorAll('.answer-item').forEach(addAnswerDnDHandlers);
+    question.querySelectorAll('.answer-item').forEach(addAnswerDnDHandlers);
 
-    newQuestion.querySelectorAll('input').forEach((input) => {
+    question.querySelectorAll('input').forEach((input) => {
         input.addEventListener('input', () => {
             input.setAttribute('value', input.value);
         })
     })
+
+    const toggleBtn = question.querySelector('.toggle-btn');
+    toggleBtn.addEventListener('click', function () {
+        toggleArrow(this);
+    });
 }
 
 function addAnswer(questionIndex) {
@@ -218,8 +233,9 @@ function addAnswer(questionIndex) {
             </div>
             <div class="col-auto">
                 <div class="form-check">
-                    <input name="Questions[${questionIndex}].Answers[${index}].IsCritical" class="form-check-input" type="checkbox" />
-                        <label class="form-check-label">Breekpunt</label>
+                    <input type="hidden" value="false" class="critical-value" />
+                    <input name="Questions[${questionIndex}].Answers[${index}].IsCritical" class="form-check-input critical-check" type="checkbox" />
+                    <label class="form-check-label">Breekpunt</label>
                 </div>
             </div>
         `;
@@ -235,6 +251,16 @@ function addAnswer(questionIndex) {
     removeAnswerButton.addEventListener("click", function () {
         removeAnswer(removeAnswerButton);
     });
+
+    newAnswer.querySelectorAll('input.critical-check').forEach((input) => {
+        input.addEventListener('change', (e) => {
+            const li = input.closest('li');
+            const hiddenInput = li.querySelector('.critical-value');
+            if (hiddenInput) {
+                hiddenInput.value = input.checked;
+            }
+        })
+    })
 
     answers.appendChild(newAnswer);
 }
@@ -362,10 +388,23 @@ function handleDrop(e) {
         const droppedElem = this.previousSibling;
         addAnswerDnDHandlers(droppedElem);
 
+        addAnswerHandlers(droppedElem);
+
         // Ensure input listener is reattached
-        droppedElem.querySelector('input')?.addEventListener('input', function () {
-            this.setAttribute('value', this.value);
-        });
+        droppedElem.querySelectorAll('input').forEach((input) => {
+            input.addEventListener('input', () => {
+                input.setAttribute('value', input.value);
+            })
+            input.addEventListener('change', (e) => {
+                if (input.classList.contains('critical-check')) {
+                    const li = input.closest('li');
+                    const hiddenInput = li.querySelector('.critical-value');
+                    if (hiddenInput) {
+                        hiddenInput.value = input.checked;
+                    }
+                }
+            })
+        })
 
         updateAnswerIndices(this.closest("ul"));
     } else if (dragSrcEl !== this && dragType === "question" && this.classList.contains('question-item')) {
@@ -378,7 +417,7 @@ function handleDrop(e) {
         addQuestionDnDHandlers(droppedElem);
 
         // Reattach all event handlers within the question
-        setupDroppedQuestion(droppedElem);
+        addQuestionHandlers(droppedElem);
 
         // Update all question indices
         updateQuestionIndices();
@@ -402,12 +441,39 @@ function handleDragEnd(e) {
     dragType = "";
 }
 
+function addAnswerHandlers(answer) {
+    const removeAnswerButton = answer.querySelector(".remove-answer-btn");
+    removeAnswerButton.addEventListener("click", function () {
+        removeAnswer(removeAnswerButton);
+    });
+
+    // Have HTML synced with input
+    answer.querySelectorAll('input').forEach((input) => {
+        input.addEventListener('input', () => {
+            input.setAttribute('value', input.value);
+        })
+        input.addEventListener('change', (e) => {
+            if (input.classList.contains('critical-check')) {
+                const li = input.closest('li');
+                const hiddenInput = li.querySelector('.critical-value');
+                if (hiddenInput) {
+                    hiddenInput.value = input.checked;
+                }
+            }
+        })
+    })
+}
+
 function updateAnswerIndices(ul) {
     const liItems = ul.querySelectorAll('li');
     const questionIndex = ul.id.split('-')[2];
     liItems.forEach((li, idx) => {
         const description = li.querySelector('input.answer-description');
         description.name = `Questions[${questionIndex}].Answers[${idx}].Description`;
+
+        const criticalCheck = li.querySelector('.critical-check');
+        const isCriticalValue = li.querySelector('.critical-value').value;
+        criticalCheck.checked = isCriticalValue === "true";
 
         const id = li.querySelector('input.answer-id');
         id.name = `Questions[${questionIndex}].Answers[${idx}].Id`;
@@ -423,7 +489,7 @@ function updateQuestionIndices() {
         if (questionLabel) {
             questionLabel.textContent = `Vraag ${qIndex + 1}`;
         }
-        
+
         // Update question id
         const questionId = question.querySelector('input.question-id');
         if (questionId) {
@@ -469,41 +535,4 @@ function updateQuestionIndices() {
             updateAnswerIndices(answersList);
         }
     });
-}
-
-// Setup all event handlers for a dropped question
-function setupDroppedQuestion(question) {
-    // Setup toggle button
-    const toggleBtn = question.querySelector('.toggle-btn');
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', function () {
-            toggleArrow(this);
-        });
-    }
-
-    // Setup add answer button
-    const addAnswerBtn = question.querySelector('.add-answer-btn');
-    if (addAnswerBtn) {
-        addAnswerBtn.addEventListener('click', function () {
-            const questionIndex = this.getAttribute('question-index');
-            addAnswer(questionIndex);
-        });
-    }
-
-    // Setup remove answer buttons
-    question.querySelectorAll('.remove-answer-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            removeAnswer(this);
-        });
-    });
-
-    // Setup input listeners
-    question.querySelectorAll('input').forEach(input => {
-        input.addEventListener('input', function () {
-            this.setAttribute('value', this.value);
-        });
-    });
-
-    // Setup answer drag and drop
-    question.querySelectorAll('.answer-item').forEach(addAnswerDnDHandlers);
 }

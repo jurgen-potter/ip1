@@ -17,5 +17,6 @@ public class Question
     
     public Questionnaire Questionnaire { get; set; }
     
+    [MinCount(1)]
     public ICollection<Answer> Answers { get; set; } = new List<Answer>();
 }

@@ -10,5 +10,6 @@ public class Questionnaire
     [MaxLength(1000)]
     public string Title { get; set; }
     
+    [MinCount(1)]
     public ICollection<Question> Questions { get; set; } = new List<Question>();
 }
