@@ -4,100 +4,115 @@ let sourceListId = "";
 let dragType = "";
 
 window.addEventListener('DOMContentLoaded', (event) => {
-    initQuestions();
-    initAnswers();
+    init();
 })
 
-function initQuestions() {
-    // Let arrow of button point up/down depending on collapsed/expanded
-    document.querySelectorAll('.toggle-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            toggleArrow(button);
-        });
+// Set up all event handlers
+function init() {
+    const questionItems = document.querySelectorAll('.question-item');
+    questionItems.forEach(question => {
+        addQuestionHandlers(question);
     });
 
-    document.querySelector('.add-question-btn').addEventListener('click', () => {
+    const addQuestionButton = document.getElementById('add-question-btn');
+    addQuestionButton.addEventListener('click', () => {
         addQuestion();
     });
-
-    document.querySelectorAll('.remove-question-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            removeQuestion(this);
-        });
-    });
-
-    // Let all fields be collapsed/expanded by pressing toggle all
+    
     const toggleAllBtn = document.getElementById('toggle-all-btn');
     toggleAllBtn.addEventListener('click', () => {
-        const collapseQuestions = document.querySelectorAll('.question-body');
-        collapseQuestions.forEach(c => {
-            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(c);
-            if (allCollapsed) {
-                bsCollapse.show();
-            } else {
-                bsCollapse.hide();
-            }
-        });
-
-        allCollapsed = !allCollapsed;
-        toggleAllBtn.innerHTML = allCollapsed
-            ? 'Alles uitvouwen'
-            : 'Alles invouwen';
-
-        const toggleButtons = document.querySelectorAll('.toggle-btn');
-        toggleButtons.forEach(button => {
-            const icon = button.querySelector('i');
-
-            if (icon && icon.classList.contains('bi-chevron-up') && allCollapsed) {
-                toggleArrow(button);
-            } else if (icon && icon.classList.contains('bi-chevron-down') && !allCollapsed) {
-                toggleArrow(button);
-            }
-        });
+        toggleExpandAll(toggleAllBtn);
     });
-
-    document.querySelectorAll('.question-item').forEach(addQuestionDnDHandlers);
 }
 
-function initAnswers() {
-    document.querySelectorAll('.add-answer-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const questionIndex = button.getAttribute('question-index');
-            addAnswer(questionIndex);
-        });
+// Add all event handlers for a question and its answers
+function addQuestionHandlers(question) {
+    const expandButton = question.querySelector('.expand-btn');
+    expandButton.addEventListener('click', function () {
+        toggleArrow(this);
+    });
+    
+    const removeQuestionButton = question.querySelector(".remove-question-btn");
+    removeQuestionButton.addEventListener("click", function () {
+        removeQuestion(removeQuestionButton);
+    })
+    
+    const addAnswerButton = question.querySelector(".add-answer-btn");
+    addAnswerButton.addEventListener("click", function () {
+        const questionIndex = addAnswerButton.getAttribute('question-index');
+        addAnswer(questionIndex);
     });
 
-    document.querySelectorAll('.remove-answer-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            removeAnswer(button);
-        })
+    const questionDescription = question.querySelector(".question-description");
+    questionDescription.addEventListener('input', () => {
+        questionDescription.setAttribute('value', questionDescription.value);
     })
+    
+    addQuestionDnDHandlers(question);
 
-    document.querySelectorAll('.answer-item').forEach(addAnswerDnDHandlers);
-
-    // Have HTML synced with input
-    document.querySelectorAll('input').forEach((input) => {
-        input.addEventListener('input', () => {
-            input.setAttribute('value', input.value);
-        })
-        input.addEventListener('change', (e) => {
-            if (input.classList.contains('critical-check')) {
-                const li = input.closest('li');
-                const hiddenInput = li.querySelector('.critical-value');
-                if (hiddenInput) {
-                    hiddenInput.value = input.checked;
-                }
-            }
-        })
-    })
+    const answerItems = document.querySelectorAll('.answer-item');
+    answerItems.forEach(answer => {
+        addAnswerHandlers(answer);
+    });
 }
 
+// Add all event handlers for an answer
+function addAnswerHandlers(answer) {
+    const removeAnswerButton = answer.querySelector(".remove-answer-btn");
+    removeAnswerButton.addEventListener("click", function () {
+        removeAnswer(removeAnswerButton);
+    });
+
+    const answerDescription = answer.querySelector(".answer-description");
+    answerDescription.addEventListener('input', () => {
+        answerDescription.setAttribute('value', answerDescription.value);
+    })
+
+    const criticalCheck = answer.querySelector(".critical-check");
+    criticalCheck.addEventListener('change', () => {
+        const isCritical = answer.querySelector('.critical-value');
+        isCritical.value = criticalCheck.checked;
+    })
+    
+    addAnswerDnDHandlers(answer);
+}
+
+// Change arrow direction when question is expanded/collapsed
 function toggleArrow(button) {
     const arrow = button.querySelector('i');
     arrow.classList.toggle('bi-chevron-up');
     arrow.classList.toggle('bi-chevron-down');
 }
 
+// Expand/collapse all questions
+function toggleExpandAll(button) {
+    const collapseQuestions = document.querySelectorAll('.question-body');
+    collapseQuestions.forEach(c => {
+        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(c);
+        if (allCollapsed) {
+            bsCollapse.show();
+        } else {
+            bsCollapse.hide();
+        }
+    });
+
+    allCollapsed = !allCollapsed;
+    button.innerHTML = allCollapsed
+        ? 'Alles uitvouwen'
+        : 'Alles invouwen';
+
+    const expandButtons = document.querySelectorAll('.expand-btn');
+    expandButtons.forEach(expandButton => {
+        const arrow = expandButton.querySelector('i');
+        if (arrow.classList.contains('bi-chevron-up') && allCollapsed) {
+            toggleArrow(expandButton);
+        } else if (arrow.classList.contains('bi-chevron-down') && !allCollapsed) {
+            toggleArrow(expandButton);
+        }
+    });
+}
+
+// Create a new question
 function addQuestion() {
     const questions = document.getElementById(`questions-list`);
     const index = questions.children.length;
@@ -123,7 +138,7 @@ function addQuestion() {
                         </button>
                     </div>
                 </div>
-                <button class="btn btn-sm toggle-btn ms-2 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#question-body-${index}" aria-expanded="true" aria-controls="question-body-@i">
+                <button class="btn btn-sm expand-btn ms-2 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#question-body-${index}" aria-expanded="true" aria-controls="question-body-@i">
                     <i class="bi bi-chevron-up"></i>
                 </button>
             </div>
@@ -172,7 +187,6 @@ function addQuestion() {
                 </div>
             </div>
         `;
-    addQuestionDnDHandlers(newQuestion);
     addQuestionHandlers(newQuestion);
     questions.appendChild(newQuestion);
 }
@@ -189,37 +203,6 @@ function removeQuestion(button) {
     }
 
     updateQuestionIndices();
-}
-
-function addQuestionHandlers(question) {
-    const addAnswerButton = question.querySelector(".add-answer-btn");
-    addAnswerButton.addEventListener("click", function () {
-        const questionIndex = addAnswerButton.getAttribute('question-index');
-        addAnswer(questionIndex);
-    });
-
-    const removeAnswerButton = question.querySelector(".remove-answer-btn");
-    removeAnswerButton.addEventListener("click", function () {
-        removeAnswer(removeAnswerButton);
-    });
-
-    const removeQuestionButton = question.querySelector(".remove-question-btn");
-    removeQuestionButton.addEventListener("click", function () {
-        removeQuestion(removeQuestionButton);
-    })
-
-    question.querySelectorAll('.answer-item').forEach(addAnswerDnDHandlers);
-
-    question.querySelectorAll('input').forEach((input) => {
-        input.addEventListener('input', () => {
-            input.setAttribute('value', input.value);
-        })
-    })
-
-    const toggleBtn = question.querySelector('.toggle-btn');
-    toggleBtn.addEventListener('click', function () {
-        toggleArrow(this);
-    });
 }
 
 function addAnswer(questionIndex) {
@@ -462,29 +445,6 @@ function handleDragEnd(e) {
     dragType = "";
 }
 
-function addAnswerHandlers(answer) {
-    const removeAnswerButton = answer.querySelector(".remove-answer-btn");
-    removeAnswerButton.addEventListener("click", function () {
-        removeAnswer(removeAnswerButton);
-    });
-
-    // Have HTML synced with input
-    answer.querySelectorAll('input').forEach((input) => {
-        input.addEventListener('input', () => {
-            input.setAttribute('value', input.value);
-        })
-        input.addEventListener('change', (e) => {
-            if (input.classList.contains('critical-check')) {
-                const li = input.closest('li');
-                const hiddenInput = li.querySelector('.critical-value');
-                if (hiddenInput) {
-                    hiddenInput.value = input.checked;
-                }
-            }
-        })
-    })
-}
-
 function updateAnswerIndices(ul) {
     const liItems = ul.querySelectorAll('li');
     const questionIndex = ul.id.split('-')[2];
@@ -541,7 +501,7 @@ function updateQuestionIndices() {
         const toDelete = question.querySelector('input.question-delete');
         toDelete.name = `Questions[${qIndex}].ToDelete`;
 
-        const toggleBtn = question.querySelector('.toggle-btn');
+        const toggleBtn = question.querySelector('.expand-btn');
         if (toggleBtn) {
             toggleBtn.setAttribute('data-bs-target', `#question-body-${qIndex}`);
             toggleBtn.setAttribute('aria-controls', `question-body-${qIndex}`);
