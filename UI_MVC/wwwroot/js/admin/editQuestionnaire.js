@@ -18,7 +18,7 @@ function init() {
     addQuestionButton.addEventListener('click', () => {
         addQuestion();
     });
-    
+
     const toggleAllBtn = document.getElementById('toggle-all-btn');
     toggleAllBtn.addEventListener('click', () => {
         toggleExpandAll(toggleAllBtn);
@@ -31,12 +31,12 @@ function addQuestionHandlers(question) {
     expandButton.addEventListener('click', function () {
         toggleArrow(this);
     });
-    
+
     const removeQuestionButton = question.querySelector(".remove-question-btn");
     removeQuestionButton.addEventListener("click", function () {
-        removeQuestion(removeQuestionButton);
+        removeQuestion(question);
     })
-    
+
     const addAnswerButton = question.querySelector(".add-answer-btn");
     addAnswerButton.addEventListener("click", function () {
         const questionIndex = addAnswerButton.getAttribute('question-index');
@@ -47,7 +47,7 @@ function addQuestionHandlers(question) {
     questionDescription.addEventListener('input', () => {
         questionDescription.setAttribute('value', questionDescription.value);
     })
-    
+
     addQuestionDnDHandlers(question);
 
     const answerItems = document.querySelectorAll('.answer-item');
@@ -60,7 +60,7 @@ function addQuestionHandlers(question) {
 function addAnswerHandlers(answer) {
     const removeAnswerButton = answer.querySelector(".remove-answer-btn");
     removeAnswerButton.addEventListener("click", function () {
-        removeAnswer(removeAnswerButton);
+        removeAnswer(answer);
     });
 
     const answerDescription = answer.querySelector(".answer-description");
@@ -73,7 +73,7 @@ function addAnswerHandlers(answer) {
         const isCritical = answer.querySelector('.critical-value');
         isCritical.value = criticalCheck.checked;
     })
-    
+
     addAnswerDnDHandlers(answer);
 }
 
@@ -117,35 +117,53 @@ function addQuestion() {
     const questions = document.getElementById(`questions-list`);
     const index = questions.children.length;
 
+    const newQuestion = generateQuestionHtml(index);
+    questions.appendChild(newQuestion);
+    addAnswer(index);
+    addQuestionHandlers(newQuestion);
+}
+
+// Create a new answer
+function addAnswer(questionIndex) {
+    const answers = document.getElementById(`answers-list-${questionIndex}`);
+    const index = answers.children.length;
+
+    const newAnswer = generateAnswerHtml(questionIndex, index);
+    addAnswerHandlers(newAnswer);
+    answers.appendChild(newAnswer);
+}
+
+// Generate HTML for a new question given the question index
+function generateQuestionHtml(questionIndex) {
     const newQuestion = document.createElement("li");
     newQuestion.classList.add("card", "mb-3", "question-item");
     newQuestion.innerHTML = `
-            <input name="Questions[${index}].Id" type="hidden" class="question-id" value="0" />
-            <input name="Questions[${index}].ToDelete" type="hidden" class="question-delete" value="false" />
+            <input name="Questions[${questionIndex}].Id" type="hidden" class="question-id" value="0" />
+            <input name="Questions[${questionIndex}].ToDelete" type="hidden" class="question-delete" value="false" />
             <div class="card-header d-flex align-items-start">
                 <div class="fs-5 me-3">
                     <span class="drag-handle">&#x2630;</span>
                 </div>
                 <div class="flex-grow-1">
-                    <label class="form-label fw-bold">Vraag ${index + 1}</label>
+                    <label class="form-label fw-bold question-number">Vraag ${questionIndex + 1}</label>
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 w-100">
-                            <input name="Questions[${index}].Description" class="form-control mb-0 question-description"/>
-                            <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${index}].Description" data-valmsg-replace="true"></span>
+                            <input name="Questions[${questionIndex}].Description" class="form-control mb-0 question-description"/>
+                            <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Description" data-valmsg-replace="true"></span>
                         </div>
                         <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
                 </div>
-                <button class="btn btn-sm expand-btn ms-2 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#question-body-${index}" aria-expanded="true" aria-controls="question-body-@i">
+                <button class="btn btn-sm expand-btn ms-2 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#question-body-${questionIndex}" aria-expanded="true" aria-controls="question-body-@i">
                     <i class="bi bi-chevron-up"></i>
                 </button>
             </div>
-            <div class="collapse show question-body" id="question-body-${index}">
+            <div class="collapse show question-body" id="question-body-${questionIndex}">
                 <div class="card-body">
                     <label class="form-label fw-bold">Weging</label>
-                    <input name="Questions[${index}].Weight" type="range" min="1" max="10" class="form-range mb-2" value="1"/>
+                    <input name="Questions[${questionIndex}].Weight" type="range" min="1" max="10" class="form-range mb-2 question-weight" value="1"/>
                     <div class="d-flex justify-content-between px-1 text-muted small">
                         <span>1</span>
                         <span>2</span>
@@ -158,125 +176,89 @@ function addQuestion() {
                         <span>9</span>
                         <span>10</span>
                     </div>
-
                     <label class="form-label fw-bold">Antwoorden</label>
-                    <ul id="answers-list-${index}">
-                        <li class="row answer-item mb-2 align-items-center p-2">
-                            <input name="Questions[${index}].Answers[0].Id" type="hidden" class="answer-id" value="0" />
-                            <input name="Questions[${index}].Answers[0].ToDelete" type="hidden" class="answer-delete" value="false" />
-                            <div class="col-auto fs-5 p-0">
-                                <span class="drag-handle">&#x2630;</span>
-                            </div>
-                            <div class="col">
-                                <input name="Questions[${index}].Answers[0].Description" class="form-control answer-description" />
-                                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${index}].Answers[0].Description" data-valmsg-replace="true"></span>
-                            </div>
-                            <div class="col-auto">
-                                <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
-                            </div>
-                            <div class="col-auto">
-                                <div class="form-check">
-                                    <input type="hidden" value="false" class="critical-value" />
-                                    <input name="Questions[${index}].Answers[0].IsCritical" class="form-check-input critical-check" type="checkbox" />
-                                    <label class="form-check-label">Breekpunt</label>
-                                </div>
-                            </div>
-                        </li>
+                    <ul id="answers-list-${questionIndex}">
                     </ul>
-                    <button type="button" class="btn btn-sm btn-secondary add-answer-btn" question-index=${index}>Voeg antwoordoptie toe</button>
+                    <button type="button" class="btn btn-sm btn-secondary add-answer-btn" question-index=${questionIndex}>Voeg antwoordoptie toe</button>
                 </div>
             </div>
         `;
-    addQuestionHandlers(newQuestion);
-    questions.appendChild(newQuestion);
+    return newQuestion;
 }
 
-function removeQuestion(button) {
-    const questionCard = button.closest('.question-item');
-    const toDeleteInput = questionCard.querySelector('input.question-delete');
-
-    if (toDeleteInput) {
-        toDeleteInput.value = "true";
-        questionCard.classList.add('d-none');
-    } else {
-        questionCard.remove();
-    }
-
-    updateQuestionIndices();
-}
-
-function addAnswer(questionIndex) {
-    const answers = document.getElementById(`answers-list-${questionIndex}`);
-    const index = answers.children.length;
-
+// Generate HTML for a new answer given the question and answer index
+function generateAnswerHtml(questionIndex, answerIndex) {
     const newAnswer = document.createElement("li");
     newAnswer.classList.add("row", "answer-item", "mb-2", "align-items-center", "p-2");
     newAnswer.innerHTML = `
-            <input name="Questions[${questionIndex}].Answers[${index}].Id" type="hidden" class="answer-id" value="0" />
-            <input name="Questions[${questionIndex}].Answers[${index}].ToDelete" type="hidden" class="answer-delete" value="false" />
+            <input name="Questions[${questionIndex}].Answers[${answerIndex}].Id" type="hidden" class="answer-id" value="0" />
+            <input name="Questions[${questionIndex}].Answers[${answerIndex}].ToDelete" type="hidden" class="answer-delete" value="false" />
             <div class="col-auto fs-5 p-0">
                 <span class="drag-handle">&#x2630</span>
             </div>
             <div class="col">
-                <input name="Questions[${questionIndex}].Answers[${index}].Description" class="form-control answer-description" />
-                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${index}].Description" data-valmsg-replace="true"></span>
+                <input name="Questions[${questionIndex}].Answers[${answerIndex}].Description" class="form-control answer-description" />
+                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Description" data-valmsg-replace="true"></span>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-danger btn-sm remove-answer-btn" onclick="removeAnswer(this)">Verwijder</button>
+                <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
             </div>
             <div class="col-auto">
                 <div class="form-check">
                     <input type="hidden" value="false" class="critical-value" />
-                    <input name="Questions[${questionIndex}].Answers[${index}].IsCritical" class="form-check-input critical-check" type="checkbox" />
+                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].IsCritical" class="form-check-input critical-check" type="checkbox" />
                     <label class="form-check-label">Breekpunt</label>
                 </div>
             </div>
         `;
-    addAnswerDnDHandlers(newAnswer);
-
-    newAnswer.querySelectorAll('input.answer-description').forEach((input) => {
-        input.addEventListener('input', () => {
-            input.setAttribute('value', input.value);
-        })
-    })
-
-    const removeAnswerButton = newAnswer.querySelector(".remove-answer-btn");
-    removeAnswerButton.addEventListener("click", function () {
-        removeAnswer(removeAnswerButton);
-    });
-
-    newAnswer.querySelectorAll('input.critical-check').forEach((input) => {
-        input.addEventListener('change', (e) => {
-            const li = input.closest('li');
-            const hiddenInput = li.querySelector('.critical-value');
-            if (hiddenInput) {
-                hiddenInput.value = input.checked;
-            }
-        })
-    })
-
-    answers.appendChild(newAnswer);
+    return newAnswer;
 }
 
-function removeAnswer(button) {
-    const answerItem = button.closest("li");
-    const toDeleteInput = answerItem.querySelector('input.answer-delete');
+// Sets a question to be deleted and ensures it is not visible anymore
+function removeQuestion(question) {
+    const toDeleteInput = question.querySelector('.question-delete');
+    toDeleteInput.value = "true";
+    question.classList.add('d-none');
+    updateQuestionIndices();
+}
 
-    if (toDeleteInput) {
-        toDeleteInput.value = "true";
-        answerItem.classList.add('d-none');
-    } else {
-        answerItem.remove();
-    }
-
-    const answersList = answerItem.closest("ul");
+// Sets an answer to be deleted and ensures it is not visible anymore
+function removeAnswer(answer) {
+    const toDeleteInput = answer.querySelector('.answer-delete');
+    toDeleteInput.value = "true";
+    answer.classList.add('d-none');
+    const answersList = answer.closest("ul");
     updateAnswerIndices(answersList);
 }
 
+// Add drag and drop event handlers for a question
+function addQuestionDnDHandlers(question) {
+    const handle = question.querySelector('.card-header .drag-handle');
+    question.draggable = false;
+
+    handle.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        question.draggable = true;
+    });
+
+    handle.addEventListener('mouseup', (e) => {
+        e.stopPropagation();
+        question.draggable = false;
+    });
+
+    question.addEventListener('dragstart', function (e) {
+        dragType = "question";
+        handleDragStart.call(this, e);
+    }, false);
+    question.addEventListener('dragover', handleDragOver, false);
+    question.addEventListener('dragleave', handleDragLeave, false);
+    question.addEventListener('drop', handleDrop, false);
+    question.addEventListener('dragend', handleDragEnd, false);
+}
+
+// Add drag and drop event handlers for an answer
 function addAnswerDnDHandlers(answer) {
     const handle = answer.querySelector('.drag-handle');
-    if (!handle) return;
-
     answer.draggable = false;
 
     handle.addEventListener('mousedown', (e) => {
@@ -310,32 +292,7 @@ function addAnswerDnDHandlers(answer) {
     }, false);
 }
 
-function addQuestionDnDHandlers(question) {
-    const handle = question.querySelector('.card-header .drag-handle');
-    if (!handle) return;
-
-    question.draggable = false;
-
-    handle.addEventListener('mousedown', (e) => {
-        e.stopPropagation();
-        question.draggable = true;
-    });
-
-    handle.addEventListener('mouseup', (e) => {
-        e.stopPropagation();
-        question.draggable = false;
-    });
-
-    question.addEventListener('dragstart', function (e) {
-        dragType = "question";
-        handleDragStart.call(this, e);
-    }, false);
-    question.addEventListener('dragover', handleDragOver, false);
-    question.addEventListener('dragleave', handleDragLeave, false);
-    question.addEventListener('drop', handleDrop, false);
-    question.addEventListener('dragend', handleDragEnd, false);
-}
-
+// Set currently dragged element
 function handleDragStart(e) {
     dragSrcEl = this;
     e.dataTransfer.effectAllowed = 'move';
@@ -344,6 +301,7 @@ function handleDragStart(e) {
     this.classList.add('dragged');
 }
 
+// Set behaviour when dragging another element over this element
 function handleDragOver(e) {
     if (e.preventDefault) {
         e.preventDefault();
@@ -367,63 +325,39 @@ function handleDragOver(e) {
     return false;
 }
 
+// Reset behaviour when dragging another element away from this element
 function handleDragLeave(e) {
     this.classList.remove('over');
 }
 
+// Drop the currently dragged element and set add all data to the correct position in the page
 function handleDrop(e) {
     if (e.stopPropagation) {
         e.stopPropagation();
     }
 
-    // Check if the drop target is valid based on drag type
+    // Check if the drop target is valid
     if (dragSrcEl !== this && dragType === "answer" && this.classList.contains('answer-item')) {
         const currentListId = this.closest('ul').id;
         if (sourceListId !== currentListId) {
             this.classList.remove('over');
             return false;
         }
-
-        // Handle answer dropping
+        
         const dropHTML = e.dataTransfer.getData('text/html');
         dragSrcEl.parentNode.removeChild(dragSrcEl);
         this.insertAdjacentHTML('beforebegin', dropHTML);
-
         const droppedElem = this.previousSibling;
-        addAnswerDnDHandlers(droppedElem);
 
         addAnswerHandlers(droppedElem);
-
-        // Ensure input listener is reattached
-        droppedElem.querySelectorAll('input').forEach((input) => {
-            input.addEventListener('input', () => {
-                input.setAttribute('value', input.value);
-            })
-            input.addEventListener('change', (e) => {
-                if (input.classList.contains('critical-check')) {
-                    const li = input.closest('li');
-                    const hiddenInput = li.querySelector('.critical-value');
-                    if (hiddenInput) {
-                        hiddenInput.value = input.checked;
-                    }
-                }
-            })
-        })
-
         updateAnswerIndices(this.closest("ul"));
     } else if (dragSrcEl !== this && dragType === "question" && this.classList.contains('question-item')) {
-        // Handle question dropping
         const dropHTML = e.dataTransfer.getData('text/html');
         dragSrcEl.parentNode.removeChild(dragSrcEl);
         this.insertAdjacentHTML('beforebegin', dropHTML);
-
         const droppedElem = this.previousSibling;
-        addQuestionDnDHandlers(droppedElem);
 
-        // Reattach all event handlers within the question
         addQuestionHandlers(droppedElem);
-
-        // Update all question indices
         updateQuestionIndices();
     }
 
@@ -431,6 +365,7 @@ function handleDrop(e) {
     return false;
 }
 
+// Reset everything related to the drag
 function handleDragEnd(e) {
     this.draggable = false;
     this.classList.remove('dragged');
@@ -445,81 +380,63 @@ function handleDragEnd(e) {
     dragType = "";
 }
 
-function updateAnswerIndices(ul) {
-    const liItems = ul.querySelectorAll('li');
-    const questionIndex = ul.id.split('-')[2];
-    liItems.forEach((li, idx) => {
-        const description = li.querySelector('input.answer-description');
-        description.name = `Questions[${questionIndex}].Answers[${idx}].Description`;
+// Set all data of the corresponding question of the model behind the page to the correct values after changing the order of the answers
+function updateAnswerIndices(answerList) {
+    const answers = answerList.querySelectorAll('.answer-item');
+    const questionIndex = answerList.id.split('-')[2];
+    
+    answers.forEach((answer, index) => {
+        const id = answer.querySelector('.answer-id');
+        id.name = `Questions[${questionIndex}].Answers[${index}].Id`;
 
-        const criticalCheck = li.querySelector('.critical-check');
-        const isCriticalValue = li.querySelector('.critical-value').value;
+        const toDelete = answer.querySelector('.answer-delete');
+        toDelete.name = `Questions[${questionIndex}].Answers[${index}].ToDelete`;
+        
+        const description = answer.querySelector('.answer-description');
+        description.name = `Questions[${questionIndex}].Answers[${index}].Description`;
+
+        const criticalCheck = answer.querySelector('.critical-check');
+        const isCriticalValue = answer.querySelector('.critical-value').value;
         criticalCheck.checked = isCriticalValue === "true";
-
-        const id = li.querySelector('input.answer-id');
-        id.name = `Questions[${questionIndex}].Answers[${idx}].Id`;
-
-        const toDelete = li.querySelector('input.answer-delete');
-        toDelete.name = `Questions[${questionIndex}].Answers[${idx}].ToDelete`;
     });
 }
 
+// Set all data of the model behind the page to the correct values after changing the order of the questions
 function updateQuestionIndices() {
     const questions = document.querySelectorAll('.question-item');
-
-    questions.forEach((question, qIndex) => {
-        // Update question index in label
-        const questionLabel = question.querySelector('.flex-grow-1 label');
-        if (questionLabel) {
-            questionLabel.textContent = `Vraag ${qIndex + 1}`;
-        }
-
-        // Update question id
-        const questionId = question.querySelector('input.question-id');
-        if (questionId) {
-            questionId.name = `Questions[${qIndex}].Id`;
-        }
-
-        // Update question description
-        const questionDescription = question.querySelector('input.question-description');
-        if (questionDescription) {
-            questionDescription.name = `Questions[${qIndex}].Description`;
-        }
-
-        // Update weight input
-        const weightInput = question.querySelector('input[type="range"]');
-        if (weightInput) {
-            weightInput.name = `Questions[${qIndex}].Weight`;
-        }
-
-        // Update the question body ID and data-bs-target reference
+    let questionNumber = 1;
+    
+    questions.forEach((question, index) => {
         const collapseBody = question.querySelector('.question-body');
-        if (collapseBody) {
-            collapseBody.id = `question-body-${qIndex}`;
+        collapseBody.id = `question-body-${index}`;
+        
+        const expandButton = question.querySelector('.expand-btn');
+        expandButton.setAttribute('data-bs-target', `#question-body-${index}`);
+        expandButton.setAttribute('aria-controls', `question-body-${index}`);
+        
+        const questionId = question.querySelector('.question-id');
+        questionId.name = `Questions[${index}].Id`;
+
+        const toDelete = question.querySelector('.question-delete');
+        toDelete.name = `Questions[${index}].ToDelete`;
+        
+        const questionLabel = question.querySelector('.question-number');
+        if (toDelete.value.toLowerCase() === "false") {
+            questionLabel.textContent = `Vraag ${questionNumber++}`;
         }
 
-        const toDelete = question.querySelector('input.question-delete');
-        toDelete.name = `Questions[${qIndex}].ToDelete`;
+        const questionDescription = question.querySelector('.question-description');
+        questionDescription.name = `Questions[${index}].Description`;
+        
+        const weightInput = question.querySelector('.question-weight');
+        weightInput.name = `Questions[${index}].Weight`;
 
-        const toggleBtn = question.querySelector('.expand-btn');
-        if (toggleBtn) {
-            toggleBtn.setAttribute('data-bs-target', `#question-body-${qIndex}`);
-            toggleBtn.setAttribute('aria-controls', `question-body-${qIndex}`);
-        }
-
-        // Update answers list ID
+        const addAnswerBtn = question.querySelector('.add-answer-btn');
+        addAnswerBtn.setAttribute('question-index', `${index}`);
+        
         const answersList = question.querySelector('ul[id^="answers-list-"]');
-        if (answersList) {
-            answersList.id = `answers-list-${qIndex}`;
-
-            // Update add answer button question-index
-            const addAnswerBtn = question.querySelector('.add-answer-btn');
-            if (addAnswerBtn) {
-                addAnswerBtn.setAttribute('question-index', qIndex);
-            }
-
-            // Update all answer indices
-            updateAnswerIndices(answersList);
-        }
+        answersList.id = `answers-list-${index}`;
+        
+        updateAnswerIndices(answersList);
     });
 }

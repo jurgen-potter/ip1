@@ -32,7 +32,7 @@
                     <span class="drag-handle">&#x2630;</span>
                 </div>
                 <div class="flex-grow-1">
-                    <label class="form-label fw-bold">Vraag @(i + 1)</label>
+                    <label class="form-label fw-bold question-number">Vraag @(i + 1)</label>
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 w-100">
                             <input asp-for="@Model.Questions[@i].Description" class="form-control mb-0 question-description"/>
@@ -50,7 +50,7 @@
             <div class="collapse show question-body" id="question-body-@i">
                 <div class="card-body">
                     <label class="form-label fw-bold">Weging</label>
-                    <input asp-for="@Model.Questions[@i].Weight" type="range" min="1" max="10" class="form-range mb-2" />
+                    <input asp-for="@Model.Questions[@i].Weight" type="range" min="1" max="10" class="form-range mb-2 question-weight" />
                     <div class="d-flex justify-content-between px-1 text-muted small">
                         @for (int val = 1; val <= 10; val++)
                         {
