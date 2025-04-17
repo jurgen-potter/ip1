@@ -16,4 +16,6 @@ public class EditQuestionViewModel
 
     [MinCount(1, ErrorMessage = "Er moet minstens een antwoord aangemaakt zijn.")]
     public List<EditAnswerViewModel> Answers { get; set; } = new();
+    
+    public bool ToDelete { get; set; }
 }

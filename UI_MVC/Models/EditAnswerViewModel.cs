@@ -11,4 +11,6 @@ public class EditAnswerViewModel
     public string Description { get; set; }
     
     public bool IsCritical{ get; set; }
+    
+    public bool ToDelete { get; set; }
 }

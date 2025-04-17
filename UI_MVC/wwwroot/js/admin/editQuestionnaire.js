@@ -106,6 +106,7 @@ function addQuestion() {
     newQuestion.classList.add("card", "mb-3", "question-item");
     newQuestion.innerHTML = `
             <input name="Questions[${index}].Id" type="hidden" class="question-id" value="0" />
+            <input name="Questions[${index}].ToDelete" type="hidden" class="question-delete" value="false" />
             <div class="card-header d-flex align-items-start">
                 <div class="fs-5 me-3">
                     <span class="drag-handle">&#x2630;</span>
@@ -147,6 +148,7 @@ function addQuestion() {
                     <ul id="answers-list-${index}">
                         <li class="row answer-item mb-2 align-items-center p-2">
                             <input name="Questions[${index}].Answers[0].Id" type="hidden" class="answer-id" value="0" />
+                            <input name="Questions[${index}].Answers[0].ToDelete" type="hidden" class="answer-delete" value="false" />
                             <div class="col-auto fs-5 p-0">
                                 <span class="drag-handle">&#x2630;</span>
                             </div>
@@ -177,7 +179,14 @@ function addQuestion() {
 
 function removeQuestion(button) {
     const questionCard = button.closest('.question-item');
-    questionCard.remove();
+    const toDeleteInput = questionCard.querySelector('input.question-delete');
+
+    if (toDeleteInput) {
+        toDeleteInput.value = "true";
+        questionCard.classList.add('d-none');
+    } else {
+        questionCard.remove();
+    }
 
     updateQuestionIndices();
 }
@@ -220,7 +229,8 @@ function addAnswer(questionIndex) {
     const newAnswer = document.createElement("li");
     newAnswer.classList.add("row", "answer-item", "mb-2", "align-items-center", "p-2");
     newAnswer.innerHTML = `
-            <input name="@Model.Questions[@i].Answers[@j].Id" type="hidden" class="answer-id" value="0" />
+            <input name="Questions[${questionIndex}].Answers[${index}].Id" type="hidden" class="answer-id" value="0" />
+            <input name="Questions[${questionIndex}].Answers[${index}].ToDelete" type="hidden" class="answer-delete" value="false" />
             <div class="col-auto fs-5 p-0">
                 <span class="drag-handle">&#x2630</span>
             </div>
@@ -266,7 +276,18 @@ function addAnswer(questionIndex) {
 }
 
 function removeAnswer(button) {
-    button.closest("li").remove();
+    const answerItem = button.closest("li");
+    const toDeleteInput = answerItem.querySelector('input.answer-delete');
+
+    if (toDeleteInput) {
+        toDeleteInput.value = "true";
+        answerItem.classList.add('d-none');
+    } else {
+        answerItem.remove();
+    }
+
+    const answersList = answerItem.closest("ul");
+    updateAnswerIndices(answersList);
 }
 
 function addAnswerDnDHandlers(answer) {
@@ -477,6 +498,9 @@ function updateAnswerIndices(ul) {
 
         const id = li.querySelector('input.answer-id');
         id.name = `Questions[${questionIndex}].Answers[${idx}].Id`;
+
+        const toDelete = li.querySelector('input.answer-delete');
+        toDelete.name = `Questions[${questionIndex}].Answers[${idx}].ToDelete`;
     });
 }
 
@@ -513,6 +537,9 @@ function updateQuestionIndices() {
         if (collapseBody) {
             collapseBody.id = `question-body-${qIndex}`;
         }
+
+        const toDelete = question.querySelector('input.question-delete');
+        toDelete.name = `Questions[${qIndex}].ToDelete`;
 
         const toggleBtn = question.querySelector('.toggle-btn');
         if (toggleBtn) {

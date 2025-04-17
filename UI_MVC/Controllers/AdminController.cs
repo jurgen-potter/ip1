@@ -38,7 +38,8 @@ public class AdminController : Controller
             {
                 Id = question.Id,
                 Description = question.Description,
-                Weight = question.Weight
+                Weight = question.Weight,
+                ToDelete = false
             };
             foreach (Answer answer in question.Answers)
             {
@@ -46,7 +47,8 @@ public class AdminController : Controller
                 {
                     Id = answer.Id,
                     Description = answer.Description,
-                    IsCritical = answer.IsCritical
+                    IsCritical = answer.IsCritical,
+                    ToDelete = false
                 };
                 questionModel.Answers.Add(answerModel);
             }
@@ -59,6 +61,31 @@ public class AdminController : Controller
     [HttpPost]
     public IActionResult EditQuestionnaire(EditQuestionnaireViewModel model)
     {
+        ModelState.Clear();
+    
+        // Clean up the data
+        var existingQuestionsList = new List<EditQuestionViewModel>();
+        foreach (EditQuestionViewModel question in model.Questions.ToList())
+        {
+            var existingAnswersList = new List<EditAnswerViewModel>();
+            foreach (EditAnswerViewModel answer in question.Answers.ToList())
+            {
+                if (!answer.ToDelete)
+                {
+                    existingAnswersList.Add(answer);
+                }
+            }
+            question.Answers = existingAnswersList;
+            
+            if (!question.ToDelete)
+            {
+                existingQuestionsList.Add(question);
+            }
+        }
+        model.Questions = existingQuestionsList;
+    
+        TryValidateModel(model);
+        
         if (!ModelState.IsValid)
         {
             return View(model);
