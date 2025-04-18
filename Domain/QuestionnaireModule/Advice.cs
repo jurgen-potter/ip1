@@ -1,0 +1,17 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CitizenPanel.BL.Domain.QuestionnaireModule;
+
+public class Advice
+{
+    public int Id { get; set; }
+    
+    [Required]
+    public string Description { get; set; }
+    
+    public int minScore { get; set; }
+    
+    public int maxScore { get; set; }
+    
+    public ICollection<string> Links { get; set; }
+}

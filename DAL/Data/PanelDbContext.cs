@@ -1,5 +1,6 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.BL.Domain.User;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,9 @@ public class PanelDbContext : IdentityDbContext
     public DbSet<SubCriteria> SubCriteria { get; set; }
     public DbSet<Invitation> Invitations { get; set; }
     public DbSet<DrawResult> DrawResults { get; set; }
+    public DbSet<Questionnaire> Questionnaires { get; set; }
+    public DbSet<Question> Questions { get; set; }
+    public DbSet<Answer> Answers { get; set; }
         
     public PanelDbContext(DbContextOptions<PanelDbContext> options, IConfiguration configuration) : base(options)
     {
@@ -63,6 +67,13 @@ public class PanelDbContext : IdentityDbContext
         modelBuilder.Entity<Panel>()
             .HasMany(p => p.ExtraCriteria)
             .WithOne(e => e.Panel);
+        
+        modelBuilder.Entity<Questionnaire>()
+            .HasMany(q => q.Questions)
+            .WithOne(q => q.Questionnaire);
+        modelBuilder.Entity<Question>()
+            .HasMany(q => q.Answers)
+            .WithOne(a => a.Question);
     }
     
     public bool CreateDatabase(bool delete) {
