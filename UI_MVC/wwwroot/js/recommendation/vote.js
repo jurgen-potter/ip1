@@ -1,98 +1,76 @@
 "use strict";
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
+    // ----- Elements & Storage Key -----
     const voteForms = document.querySelectorAll('.vote-form');
-    const currentUserIdElement = document.getElementById('current-user-id');
-    const currentUserId = currentUserIdElement?.getAttribute('data-user-id') || 'anonymous';
-    const voteStorageKey = `userVotes_${currentUserId}`;
-    const storedVotes = localStorage.getItem(voteStorageKey);
-    const userVotes = storedVotes ? JSON.parse(storedVotes) : {};
-    fetch('/Recommendation/GetUserVotes')
-        .then(response => response.json())
-        .then(data => {
-        const serverVotes = {};
-        data.forEach(recommendationId => {
-            serverVotes[recommendationId] = true;
-        });
-        localStorage.setItem(voteStorageKey, JSON.stringify(serverVotes));
-        updateButtonStates(serverVotes);
-    })
-        .catch(error => {
-        console.error('Fout bij ophalen van gebruikersstemmen:', error);
-        updateButtonStates(userVotes);
-    });
-    function updateButtonStates(votes) {
+    const userId = document.getElementById('current-user-id')?.dataset.userId ?? 'anonymous';
+    const storageKey = `userVotes_${userId}`;
+    // ----- Vote Map Helpers -----
+    // Reads current votes from localStorage or returns empty map
+    const getVotes = () => JSON.parse(localStorage.getItem(storageKey) ?? '{}');
+    // Saves updated vote map back to localStorage
+    const setVotes = (votes) => localStorage.setItem(storageKey, JSON.stringify(votes));
+    // ----- UI Updates -----
+    // Toggles button text and class based on vote state
+    const updateButtons = (votes) => {
         voteForms.forEach(form => {
             const idInput = form.querySelector('input[name="id"]');
-            if (!idInput)
+            const btn = form.querySelector('button');
+            if (!idInput || !btn)
                 return;
-            const recommendationId = idInput.value;
-            const submitButton = form.querySelector('button');
-            if (submitButton) {
-                if (votes[recommendationId]) {
-                    submitButton.textContent = 'Stem terugtrekken';
-                    submitButton.classList.add('voted');
-                }
-                else {
-                    submitButton.textContent = 'Stem';
-                    submitButton.classList.remove('voted');
-                }
-            }
+            const voted = votes[idInput.value];
+            btn.textContent = voted ? 'Stem terugtrekken' : 'Stem';
+            btn.classList.toggle('voted', voted);
         });
-    }
+    };
+    // ----- Initial Sync -----
+    // Fetch server votes; on failure, fallback to localStorage
+    fetch('/Recommendation/GetUserVotes')
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then(ids => {
+        const votes = {};
+        ids.forEach(id => votes[id] = true);
+        setVotes(votes);
+        updateButtons(votes);
+    })
+        .catch(() => updateButtons(getVotes()));
+    // ----- Vote/Unvote Handler -----
+    // On form submit, send vote toggle to server, update count+UI
     voteForms.forEach(form => {
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // prevent page reload
             const idInput = form.querySelector('input[name="id"]');
             if (!idInput)
                 return;
-            const recommendationId = idInput.value;
-            const storedVotes = localStorage.getItem(voteStorageKey);
-            const currentVotes = storedVotes ? JSON.parse(storedVotes) : {};
-            const submitButton = form.querySelector('button');
-            if (submitButton)
-                submitButton.disabled = true;
-            const isVoteRemoval = currentVotes[recommendationId] === true;
-            const endpoint = isVoteRemoval ? '/Recommendation/RemoveVote' : '/Recommendation/Vote';
-            const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
-            const token = tokenInput?.value || '';
-            fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': token
-                },
-                body: JSON.stringify(parseInt(recommendationId, 10))
-            })
-                .then(response => {
-                if (!response.ok) {
-                    return response.json().then((errorData) => {
-                        throw new Error(errorData.message || (isVoteRemoval ? 'Stem terugtrekken mislukt' : 'Stemmen mislukt'));
-                    });
-                }
-                return response.json();
-            })
-                .then((data) => {
-                const voteCountSpan = document.getElementById('vote-count-' + data.id);
-                if (voteCountSpan) {
-                    voteCountSpan.textContent = data.votes.toString();
-                }
-                if (isVoteRemoval) {
-                    delete currentVotes[recommendationId];
-                }
-                else {
-                    currentVotes[recommendationId] = true;
-                }
-                localStorage.setItem(voteStorageKey, JSON.stringify(currentVotes));
-                updateButtonStates(currentVotes);
-            })
-                .catch(error => {
-                console.error('Error bij stemactie:', error);
-                alert(error.message || 'Er is een fout opgetreden bij het verwerken van uw stem.');
-            })
-                .finally(() => {
-                if (submitButton)
-                    submitButton.disabled = false;
-            });
+            const recId = idInput.value;
+            const votes = getVotes();
+            const removing = votes[recId];
+            const url = removing ? '/Recommendation/RemoveVote' : '/Recommendation/Vote';
+            const btn = form.querySelector('button');
+            btn?.setAttribute('disabled', '');
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(+recId) //cast to number
+                });
+                const data = await res.json();
+                const countEl = document.getElementById(`vote-count-${data.id}`);
+                if (countEl)
+                    countEl.textContent = String(data.votes);
+                // Update local map and UI
+                if (removing)
+                    delete votes[recId];
+                else
+                    votes[recId] = true;
+                setVotes(votes);
+                updateButtons(votes);
+            }
+            catch {
+                alert('Fout bij verwerken van uw stem.');
+            }
+            finally {
+                btn?.removeAttribute('disabled');
+            }
         });
     });
 });
