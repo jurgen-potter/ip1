@@ -1,0 +1,105 @@
+﻿@model EditQuestionnaireViewModel
+
+@{
+    ViewBag.Title = "Bewerk vragenlijst";
+}
+
+@section Styles {
+    <link href="~/css/admin/editQuestionnaire.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Bewerk @Model.Title</h2>
+    <button type="button" class="btn btn-outline-primary btn-sm" id="toggle-all-btn">
+        Alles invouwen
+    </button>
+</div>
+
+<form asp-action="EditQuestionnaire" method="post">
+    <input type="hidden" asp-for="Id" value="@Model.Id"/>
+    <input type="hidden" asp-for="Title" value="@Model.Title"/>
+    <span asp-validation-for="@Model.Questions" class="text-danger small"></span>
+
+    <ul id="questions-list">
+    @for (int i = 0; i < Model.Questions.Count; i++)
+    {
+        <li class="card mb-3 question-item">
+            <input asp-for="@Model.Questions[@i].Id" type="hidden" value="@Model.Questions[@i].Id" class="question-id" />
+            <input asp-for="@Model.Questions[@i].ToDelete" type="hidden" class="question-delete" />
+            <div class="card-header d-flex align-items-start">
+                <div class="fs-5 me-3">
+                    <span class="drag-handle">&#x2630;</span>
+                </div>
+                <div class="flex-grow-1">
+                    <label class="form-label fw-bold question-number">Vraag @(i + 1)</label>
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1 w-100">
+                            <input asp-for="@Model.Questions[@i].Description" class="form-control mb-0 question-description"/>
+                            <span asp-validation-for="@Model.Questions[@i].Description" class="text-danger small"></span>
+                        </div>
+                        <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="btn btn-sm expand-btn ms-2 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#question-body-@i" aria-expanded="true" aria-controls="question-body-@i">
+                    <i class="bi bi-chevron-up"></i>
+                </button>
+            </div>
+            <div class="collapse show question-body" id="question-body-@i">
+                <div class="card-body">
+                    <label class="form-label fw-bold">Weging</label>
+                    <input asp-for="@Model.Questions[@i].Weight" type="range" min="1" max="10" class="form-range mb-2 question-weight" />
+                    <div class="d-flex justify-content-between px-1 text-muted small">
+                        @for (int val = 1; val <= 10; val++)
+                        {
+                            <span>@val</span>
+                        }
+                    </div>
+
+                    <label class="form-label fw-bold">Antwoorden</label>
+                    <span asp-validation-for="@Model.Questions[@i].Answers" class="text-danger small"></span>
+                    <ul id="answers-list-@i">
+                        @for (int j = 0; j < Model.Questions[i].Answers.Count; j++)
+                        {
+                            <li class="row answer-item mb-2 align-items-center p-2">
+                                <input asp-for="@Model.Questions[@i].Answers[@j].Id" type="hidden" class="answer-id" value="@Model.Questions[@i].Answers[@j].Id" />
+                                <input asp-for="@Model.Questions[@i].Answers[@j].ToDelete" type="hidden" class="answer-delete" />
+                                <div class="col-auto fs-5 p-0">
+                                    <span class="drag-handle">&#x2630;</span>
+                                </div>
+                                <div class="col">
+                                    <input asp-for="@Model.Questions[@i].Answers[@j].Description" class="form-control answer-description" />
+                                    <span asp-validation-for="@Model.Questions[@i].Answers[@j].Description" class="text-danger small"></span>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="form-check">
+                                        <input type="hidden" value="@Model.Questions[@i].Answers[@j].IsCritical" class="critical-value" />
+                                        <input asp-for="@Model.Questions[@i].Answers[@j].IsCritical" class="form-check-input critical-check" type="checkbox" />
+                                        <label class="form-check-label">Breekpunt</label>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    <button type="button" class="btn btn-sm btn-secondary add-answer-btn" question-index="@i">Voeg antwoordoptie toe</button>
+                </div>
+            </div>
+        </li>
+    }
+    </ul>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Opslaan</button>
+        <button type="button" class="btn btn-secondary" id="add-question-btn">Voeg vraag toe</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script defer src="/js/admin/editQuestionnaire.js">
+    </script>
+}
