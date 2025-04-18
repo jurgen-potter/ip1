@@ -1,8 +1,10 @@
 using AspNetCoreLiveMonitoring.Extensions;
 using CitizenPanel.BL;
+using CitizenPanel.BL.QuestionnaireModule;
 using CitizenPanel.BL.Registration;
 using CitizenPanel.DAL;
 using CitizenPanel.DAL.Data;
+using CitizenPanel.DAL.QuestionnaireModule;
 using CitizenPanel.DAL.Registration;
 using CitizenPanel.UI.MVC;
 using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
@@ -24,11 +26,11 @@ builder.Services.AddDbContext<PanelDbContext>(options =>
 builder.Services.AddScoped<IDrawRepository, DrawRepository>();
 builder.Services.AddScoped<IPanelRepository, PanelRepository>();
 builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();
-builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+builder.Services.AddScoped<IQuestionnaireModuleRepository, QuestionnaireModuleRepository>();
 builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddScoped<IDrawManager, DrawManager>();
 builder.Services.AddScoped<IPanelManager, PanelManager>();
-builder.Services.AddScoped<IQuestionManager, QuestionManager>();
+builder.Services.AddScoped<IQuestionnaireModuleManager, QuestionnaireModuleManager>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
