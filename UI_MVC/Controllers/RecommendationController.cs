@@ -95,7 +95,7 @@ public class RecommendationController(IPanelManager panelManager) : Controller
     }
 
     
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Organization")]
     [HttpPost]
     public IActionResult AddRecommendation(string title, string description)
     {
