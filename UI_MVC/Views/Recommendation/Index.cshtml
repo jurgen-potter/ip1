@@ -11,27 +11,33 @@
 <div class="row">
     @foreach (var recommendation in Model)
     {
-        <div class="col-md-4">
-            <div class="card" style="margin-bottom: 20px;">
-                @* <img src="img moet hier" class="card-img-top" alt="..."> *@
-                <div class="card-body">
+        <div class="col-md-4 d-flex">
+            <div class="card h-100 w-100">
+                <div class="card-body d-flex flex-column">
                     <h5 class="card-title">@recommendation.Title</h5>
-                    <p class="card-text">@recommendation.Description</p>
-                    <p>Aantal stemmen: <span id="vote-count-@recommendation.Id">@recommendation.Votes</span></p>
-                    <form class="vote-form">
-                        <input type="hidden" name="id" value="@recommendation.Id" />
-                        <button type="submit" class="btn btn-primary">Stem</button>
-                    </form>
+                    <p class="card-text flex-grow-1">@recommendation.Description</p>
+                    @if (User.IsInRole("Organization"))
+                    {
+                        <p>Aantal stemmen: <span id="vote-count-@recommendation.Id">@recommendation.Votes</span></p> 
+                    }
+                    @if (!User.IsInRole("Organization"))
+                    {
+                        <form class="vote-form mt-auto">
+                            <input type="hidden" name="id" value="@recommendation.Id"/>
+                            <button type="submit" class="btn btn-primary">Stem</button>
+                        </form>
+                    }
                 </div>
             </div>
         </div>
     }
 
 </div>
-@if (User.IsInRole("Admin"))
+@if (User.IsInRole("Organization"))
 {
-<a asp-action="AddRecommendation" asp-controller="Recommendation" class="btn btn-success">Add Recommendation</a>
+    <a asp-action="AddRecommendation" asp-controller="Recommendation" class="btn btn-success">Add Recommendation</a>
 }
+
 @section Scripts {
     <script defer src="js/recommendation/vote.js">
 </script>

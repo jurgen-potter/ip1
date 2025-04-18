@@ -10,7 +10,7 @@ public interface IPanelManager
     void EditPanel(Panel panel);
     void RemovePanel(Panel panel);
     public IEnumerable<RecruitmentBucket> GetTargetBucketsByPanel(Panel panel);
-    void AddRecommendationOfPanel(Recommendation recommendation, Panel panel);
+    void AddRecommendationOfPanel(string title, string description, Panel panel);
     
     public Panel GetPanelByIdWithRecommendations(int panelId);
     public Recommendation GetRecommendationById(int recommendationId);

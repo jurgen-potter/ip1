@@ -38,8 +38,9 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadTargetBucketsByPanel(panel);
     }
     
-    public void AddRecommendationOfPanel(Recommendation recommendation, Panel panel)
+    public void AddRecommendationOfPanel(string title, string description, Panel panel)
     {
+        var recommendation = new Recommendation(title, description, 0);
         _panelRepository.CreateRecommendationOfPanel(recommendation, panel);
     }
 
@@ -57,7 +58,6 @@ public class PanelManager : IPanelManager
     {
         _panelRepository.UpdateRecommendation(recommendation);
     }
-    
     public bool HasUserVotedForRecommendation(string userId, int recommendationId)
     {
         return _panelRepository.HasUserVotedForRecommendation(userId, recommendationId);

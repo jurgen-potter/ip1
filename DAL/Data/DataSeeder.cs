@@ -78,8 +78,8 @@ public class DataSeeder
             DrawStatus = DrawStatus.FirstPhaseActive,
             Recommendations = new List<Recommendation>()
             {
-                new Recommendation(1,"Kick Jurgen","jurgen uit de groep gooien omdat hij niet voldoet aan de eisen",0),
-                new Recommendation(2,"Kick Xander","Xander heeft een te groot ego",10)
+                new Recommendation("Kick Jurgen","jurgen uit de groep gooien omdat hij niet voldoet aan de eisen",0),
+                new Recommendation("Kick Xander","Xander heeft een te groot ego",10)
             }   
         };
         panel1.ExtraCriteria.Add(extraCrit1);

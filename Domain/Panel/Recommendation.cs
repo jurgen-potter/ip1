@@ -12,9 +12,8 @@ public class Recommendation
 
     public ICollection<UserVote> UserVotes { get; set; }
 
-    public Recommendation(int id,string title, string description, int votes)
+    public Recommendation(string title, string description, int votes)
     {
-        Id = id;
         Title = title;
         Description = description;
         Votes = votes;

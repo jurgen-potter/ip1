@@ -33,7 +33,6 @@ public class RecommendationController(IPanelManager panelManager) : Controller
     }
     
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public IActionResult Vote([FromBody] int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -62,7 +61,6 @@ public class RecommendationController(IPanelManager panelManager) : Controller
     }
     
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public IActionResult RemoveVote([FromBody] int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -91,7 +89,7 @@ public class RecommendationController(IPanelManager panelManager) : Controller
         return Json(new { id = recommendation.Id, votes = recommendation.Votes });
     }
 
-    public IActionResult Create()
+    public IActionResult AddRecommendation()
     {
         return View();
     }
@@ -99,14 +97,14 @@ public class RecommendationController(IPanelManager panelManager) : Controller
     
     [Authorize(Roles = "Admin")]
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult AddRecommendation(Recommendation recommendation, Panel panel)
+    public IActionResult AddRecommendation(string title, string description)
     {
+        var panel = panelManager.GetPanelById(1); //gehardcode omdat panels nog niet echt gelinked zijn aan gebruikers.
         if (ModelState.IsValid)
         {
-            panelManager.AddRecommendationOfPanel(recommendation, panel);
+            panelManager.AddRecommendationOfPanel(title, description, panel);
             return RedirectToAction(nameof(Index));
         }
-        return View(recommendation);
+        return View("Index");
     }
 }
