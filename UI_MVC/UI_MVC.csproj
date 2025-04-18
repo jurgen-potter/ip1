@@ -37,4 +37,11 @@
       <TypeScriptCompile Include="wwwroot\js\recommendation\vote.ts" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Update="main.js">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

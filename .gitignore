@@ -8,6 +8,8 @@
 # dotenv files
 .env
 
+UI_MVC/wwwroot/dist
+
 # User-specific files
 *.rsuser
 *.suo
