@@ -4,20 +4,22 @@
     ViewData["Title"] = "Add Recommendation";
 }
 
-<h1>Add Recommendation</h1>
-
+<h1>Aanbeveling Toevoegen</h1>
 <form asp-action="AddRecommendation" method="post">
+    <div class="mt-4 mb-2">
     <div class="form-group">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
+        <label asp-for="Title">Titel</label>
+        <input asp-for="Title" class="form-control"/>
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="form-group">
+            <label asp-for="Description">Beschrijving</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    <div class="mt-4 mb-2">
+        <button type="submit" class="btn btn-primary">Voeg Toe</button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary">Terug</a>
+    </div>
 </form>
-
-<a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>

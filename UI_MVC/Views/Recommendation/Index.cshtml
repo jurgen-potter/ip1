@@ -35,7 +35,9 @@
 </div>
 @if (User.IsInRole("Organization"))
 {
-    <a asp-action="AddRecommendation" asp-controller="Recommendation" class="btn btn-success">Add Recommendation</a>
+<div class="mt-4 mb-2">
+    <a asp-action="AddRecommendation" asp-controller="Recommendation" class="btn btn-success">Aanbeveling Toevoegen</a>
+</div>
 }
 
 @section Scripts {

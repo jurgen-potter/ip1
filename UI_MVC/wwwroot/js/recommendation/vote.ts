@@ -1,81 +1,75 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
-    // ----- Elements & Storage Key -----
+    // Zoek alle formulieren met de klasse 'vote-form'
     const voteForms = document.querySelectorAll<HTMLFormElement>('.vote-form');
-    const userId = document.getElementById('current-user-id')?.dataset.userId ?? 'anonymous';
-    const storageKey = `userVotes_${userId}`;
+    // Houd bij op welke items al gestemd is 
+    const votes: Record<string, boolean> = {};
 
-    // ----- Vote Map Helpers -----
-    // Reads current votes from localStorage or returns empty map
-    const getVotes = () =>
-        JSON.parse(localStorage.getItem(storageKey) ?? '{}') as Record<string, boolean>;
+    // Functie om één knop bij te werken op basis van stemstatus
+    const updateButton = (form: HTMLFormElement, voted: boolean) => {
+        // Vind de knop in het formulier
+        const btn = form.querySelector<HTMLButtonElement>('button');
+        if (!btn) return; // typescript validatie
+        // Past de tekst van de btn aan
+        btn.textContent = voted ? 'Stem terugtrekken' : 'Stem';
+        btn.classList.toggle('voted', voted);
+    };
 
-    // Saves updated vote map back to localStorage
-    const setVotes = (votes: Record<string, boolean>) =>
-        localStorage.setItem(storageKey, JSON.stringify(votes));
-
-    // ----- UI Updates -----
-    // Toggles button text and class based on vote state
-    const updateButtons = (votes: Record<string, boolean>) => {
+    // Functie om alle knoppen op de pagina bij te werken
+    const updateAllButtons = () => {
         voteForms.forEach(form => {
-            const idInput = form.querySelector<HTMLInputElement>('input[name="id"]');
-            const btn = form.querySelector<HTMLButtonElement>('button');
-            if (!idInput || !btn) return;
-
-            const voted = votes[idInput.value];
-            btn.textContent = voted ? 'Stem terugtrekken' : 'Stem';
-            btn.classList.toggle('voted', voted);
+            // Haal het id op van recommendation
+            const id = form.querySelector<HTMLInputElement>('input[name="id"]')?.value;
+            if (id) updateButton(form, votes[id]);
         });
     };
 
-    // ----- Initial Sync -----
-    // Fetch server votes; on failure, fallback to localStorage
-    fetch('/Recommendation/GetUserVotes')
-        .then(res => res.ok ? res.json() as Promise<string[]> : Promise.reject())
-        .then(ids => {
-            const votes: Record<string, boolean> = {};
+    // Haal bij het laden van de pagina de lijst met reeds uitgebrachte stemmen op van de server
+    fetch('/api/Recommendations/votes')
+        .then(res => res.ok ? res.json() : Promise.reject()) //bij fout gaat naar de catch
+        .then((ids: string[]) => {
+            // Zet voor elk ontvangen id de stemstatus op true
             ids.forEach(id => votes[id] = true);
-            setVotes(votes);
-            updateButtons(votes);
-        })
-        .catch(() => updateButtons(getVotes()));
+            // Werk de knoppen bij volgens de opgehaalde data
+            updateAllButtons();
+        });
 
-    // ----- Vote/Unvote Handler -----
-    // On form submit, send vote toggle to server, update count+UI
+    // Voeg submit-handler toe aan elk stem-formulier
     voteForms.forEach(form => {
         form.addEventListener('submit', async e => {
-            e.preventDefault();  // prevent page reload
+            e.preventDefault(); // Voorkom herladen van de pagina
+            const id = form.querySelector<HTMLInputElement>('input[name="id"]')?.value;
+            if (!id) return; 
 
-            const idInput = form.querySelector<HTMLInputElement>('input[name="id"]');
-            if (!idInput) return;
-            const recId = idInput.value;
-
-            const votes = getVotes();
-            const removing = votes[recId];
-            const url = removing ? '/Recommendation/RemoveVote' : '/Recommendation/Vote';
-
+            // Bepaal of we een stem trekken of uitbrengen
+            const voted = votes[id];
+            const url = voted ? '/api/Recommendations/remove-vote' : '/api/Recommendations/vote';
+            // Vind de knop en zet deze tijdelijk uit
             const btn = form.querySelector<HTMLButtonElement>('button');
             btn?.setAttribute('disabled', '');
 
             try {
+                // Stuur het stemverzoek naar de server
                 const res = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(+recId)  //cast to number
+                    // Stuur het id als getal
+                    body: JSON.stringify(+id)
                 });
 
-                const data = await res.json() as { id: string; votes: number };
-                const countEl = document.getElementById(`vote-count-${data.id}`);
-                if (countEl) countEl.textContent = String(data.votes);
+                // Ontvang het nieuwe stemtotaal
+                const { id: returnedId, votes: voteCount } = await res.json();
+                // Werk de teller op de pagina bij
+                const countEl = document.getElementById(`vote-count-${returnedId}`);
+                if (countEl) countEl.textContent = String(voteCount); //if statement staat er voor typescript
 
-                // Update local map and UI
-                if (removing) delete votes[recId];
-                else votes[recId] = true;
-                setVotes(votes);
-                updateButtons(votes);
-
+                // Update in-memory stemstatus en pas knoppen aan
+                votes[id] = !voted;
+                updateAllButtons();
             } catch {
-                alert('Fout bij verwerken van uw stem.');
+                // Toon foutmelding bij mislukking
+                console.log('Fout bij verwerken van uw stem.');
             } finally {
+                // Zet de knop weer aan
                 btn?.removeAttribute('disabled');
             }
         });
