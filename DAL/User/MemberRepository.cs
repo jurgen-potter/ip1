@@ -17,7 +17,7 @@ public class MemberRepository : IMemberRepository
         return _dbContext.Members.ToList();
     }
 
-    public Member ReadMemberById(int memberId)
+    public Member ReadMemberById(string memberId)
     {
         return _dbContext.Members.Find(memberId);
     }

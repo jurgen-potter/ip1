@@ -59,7 +59,7 @@ public class MemberManager : IMemberManager
         return _memberRepository.ReadAllMembers();
     }
 
-    public Member GetMemberById(int memberId)
+    public Member GetMemberById(string memberId)
     {
         return _memberRepository.ReadMemberById(memberId);
     }

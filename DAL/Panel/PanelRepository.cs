@@ -1,5 +1,6 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.User;
 using Microsoft.EntityFrameworkCore;
 using CitizenPanel.DAL.Data;
 
@@ -74,32 +75,30 @@ public class PanelRepository : IPanelRepository
         _dbContext.SaveChanges();
     }
 
-    public bool HasUserVotedForRecommendation(string userId, int recommendationId)
+    public bool HasUserVotedForRecommendation(Member member, Recommendation recommendation)
     {
         return _dbContext.UserVotes
-            .Any(uv => uv.UserId == userId && uv.RecommendationId == recommendationId);
+            .Any(uv => uv.Voter == member && uv.Recommendation == recommendation);
     }
 
-    public void CreateVoteToRecommendation(string userId, int recommendationId)
+    public void CreateVoteToRecommendation(Member member, Recommendation recommendation)
     {
         // Controleer eerst of de aanbeveling bestaat
-        var recommendation = ReadRecommendationById(recommendationId);
         if (recommendation == null)
         {
-            throw new ArgumentException($"Aanbeveling met ID {recommendationId} bestaat niet.");
+            throw new ArgumentException($"Aanbeveling met bestaat niet.");
         }
 
         // Controleer of gebruiker al heeft gestemd
-        if (HasUserVotedForRecommendation(userId, recommendationId))
+        if (HasUserVotedForRecommendation(member, recommendation))
         {
             throw new InvalidOperationException("Gebruiker heeft al gestemd op deze aanbeveling.");
         }
-
         // Creëer een nieuwe stem
         var userVote = new UserVote
         {
-            UserId = userId,
-            RecommendationId = recommendationId,
+            Voter = member,
+            Recommendation = recommendation,
             VotedAt = DateTime.UtcNow
         };
 
@@ -112,18 +111,17 @@ public class PanelRepository : IPanelRepository
         _dbContext.SaveChanges();
     }
 
-    public void DeleteVoteFromRecommendation(string userId, int recommendationId)
+    public void DeleteVoteFromRecommendation(Member member, Recommendation recommendation)
     {
         // Controleer eerst of de aanbeveling bestaat
-        var recommendation = ReadRecommendationById(recommendationId);
         if (recommendation == null)
         {
-            throw new ArgumentException($"Aanbeveling met ID {recommendationId} bestaat niet.");
+            throw new ArgumentException($"Aanbeveling bestaat niet.");
         }
 
         // Zoek de stem van de gebruiker
         var userVote = _dbContext.UserVotes
-            .FirstOrDefault(uv => uv.UserId == userId && uv.RecommendationId == recommendationId);
+            .FirstOrDefault(uv => uv.Voter == member && uv.Recommendation == recommendation);
 
         // Als er geen stem is, kan er niets worden teruggetrokken
         if (userVote == null)
@@ -143,10 +141,10 @@ public class PanelRepository : IPanelRepository
         _dbContext.SaveChanges();
     }
 
-    public IEnumerable<int> ReadVotedRecommendationIdsByUser(string userId)
+    public IEnumerable<int> ReadVotedRecommendationsByUser(string userId)
     {
         return _dbContext.UserVotes
-            .Where(uv => uv.UserId == userId)
+            .Where(uv => uv.Voter.Id == userId)
             .Select(uv => uv.RecommendationId)
             .ToList();
     }

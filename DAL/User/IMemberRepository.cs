@@ -5,7 +5,7 @@ namespace CitizenPanel.DAL;
 public interface IMemberRepository
 {
     IEnumerable<Member> ReadAllMembers();
-    Member ReadMemberById(int memberId);
+    Member ReadMemberById(string memberId);
     void UpdateMember(Member member);
     void DeleteMember(Member member);
     

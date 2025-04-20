@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using CitizenPanel.BL;
+using CitizenPanel.DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 [ApiController]
 [Route("/api/[controller]")]
 [Authorize]
-public class RecommendationsController(IPanelManager panelManager) : ControllerBase
+public class RecommendationsController(IPanelManager panelManager, IMemberManager memberManager) : ControllerBase
 {
     
     [HttpGet("votes")]
@@ -21,14 +22,15 @@ public class RecommendationsController(IPanelManager panelManager) : ControllerB
             return Unauthorized();
         }
 
-        var votedRecommendationIds = panelManager.GetVotedRecommendationIdsByUser(userId);
-        return Ok(votedRecommendationIds);
+        var votedRecommendation = panelManager.GetVotedRecommendationsByUser(userId);
+        return Ok(votedRecommendation);
     }
 
     [HttpPost("vote")]
     public IActionResult Vote([FromBody] int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var member = memberManager.GetMemberById(userId);
         if (string.IsNullOrEmpty(userId))
         {
             return Unauthorized();
@@ -40,13 +42,13 @@ public class RecommendationsController(IPanelManager panelManager) : ControllerB
             return NotFound();
         }
 
-        var hasVoted = panelManager.HasUserVotedForRecommendation(userId, id);
+        var hasVoted = panelManager.HasUserVotedForRecommendation(member, recommendation);
         if (hasVoted)
         {
             return BadRequest(new { message = "U heeft al gestemd op deze aanbeveling" });
         }
 
-        panelManager.AddVoteToRecommendation(userId, id);
+        panelManager.AddVoteToRecommendation(member, recommendation);
         recommendation = panelManager.GetRecommendationById(id);
 
         return Ok(new { id = recommendation.Id, votes = recommendation.Votes });
@@ -56,6 +58,7 @@ public class RecommendationsController(IPanelManager panelManager) : ControllerB
     public IActionResult RemoveVote([FromBody] int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var member = memberManager.GetMemberById(userId);
         if (string.IsNullOrEmpty(userId))
         {
             return Unauthorized();
@@ -67,13 +70,13 @@ public class RecommendationsController(IPanelManager panelManager) : ControllerB
             return NotFound();
         }
 
-        var hasVoted = panelManager.HasUserVotedForRecommendation(userId, id);
+        var hasVoted = panelManager.HasUserVotedForRecommendation(member, recommendation);
         if (!hasVoted)
         {
             return BadRequest(new { message = "U heeft niet gestemd op deze aanbeveling" });
         }
 
-        panelManager.RemoveVoteFromRecommendation(userId, id);
+        panelManager.RemoveVoteFromRecommendation(member, recommendation);
         recommendation = panelManager.GetRecommendationById(id);
 
         return Ok(new { id = recommendation.Id, votes = recommendation.Votes });

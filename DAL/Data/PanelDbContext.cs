@@ -76,8 +76,7 @@ public class PanelDbContext : IdentityDbContext
             .HasForeignKey(uv => uv.RecommendationId);
 
         modelBuilder.Entity<UserVote>()
-            .HasIndex(uv => new { uv.UserId, uv.RecommendationId })
-            .IsUnique();
+            .HasOne(iu => iu.Voter);
 
         modelBuilder.Entity<Questionnaire>()
             .HasMany(q => q.Questions)

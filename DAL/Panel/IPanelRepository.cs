@@ -1,5 +1,6 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.DAL;
 
@@ -15,9 +16,9 @@ public interface IPanelRepository
     Recommendation ReadRecommendationById(int recommendationId);
     public void UpdateRecommendation(Recommendation recommendation);
     
-    bool HasUserVotedForRecommendation(string userId, int recommendationId);
-    void CreateVoteToRecommendation(string userId, int recommendationId);
-    void DeleteVoteFromRecommendation(string userId, int recommendationId);
+    bool HasUserVotedForRecommendation(Member member, Recommendation recommendation);
+    void CreateVoteToRecommendation(Member member, Recommendation recommendation);
+    void DeleteVoteFromRecommendation(Member member, Recommendation recommendation);
     
-    IEnumerable<int> ReadVotedRecommendationIdsByUser(string userId);
+    IEnumerable<int> ReadVotedRecommendationsByUser(string userId);
 }

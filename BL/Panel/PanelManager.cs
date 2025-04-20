@@ -1,5 +1,6 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.BL;
 
@@ -58,23 +59,23 @@ public class PanelManager : IPanelManager
     {
         _panelRepository.UpdateRecommendation(recommendation);
     }
-    public bool HasUserVotedForRecommendation(string userId, int recommendationId)
+    public bool HasUserVotedForRecommendation(Member member, Recommendation recommendation)
     {
-        return _panelRepository.HasUserVotedForRecommendation(userId, recommendationId);
+        return _panelRepository.HasUserVotedForRecommendation(member, recommendation);
     }
 
-    public void AddVoteToRecommendation(string userId, int recommendationId)
+    public void AddVoteToRecommendation(Member member, Recommendation recommendation)
     {
-        _panelRepository.CreateVoteToRecommendation(userId, recommendationId);
+        _panelRepository.CreateVoteToRecommendation(member, recommendation);
     }
 
-    public void RemoveVoteFromRecommendation(string userId, int recommendationId)
+    public void RemoveVoteFromRecommendation(Member member, Recommendation recommendation)
     {
-        _panelRepository.DeleteVoteFromRecommendation(userId, recommendationId);
+        _panelRepository.DeleteVoteFromRecommendation(member, recommendation);
     }
     
-    public IEnumerable<int> GetVotedRecommendationIdsByUser(string userId)
+    public IEnumerable<int> GetVotedRecommendationsByUser(string userId)
     {
-        return _panelRepository.ReadVotedRecommendationIdsByUser(userId);
+        return _panelRepository.ReadVotedRecommendationsByUser(userId);
     }
 }
