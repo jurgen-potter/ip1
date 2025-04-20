@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Draw;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
@@ -21,11 +24,13 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IDrawManager _drawManager;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, IDrawManager drawManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _drawManager = drawManager;
         }
 
         /// <summary>
@@ -64,15 +69,15 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "Email is verplicht.")]
+            [EmailAddress(ErrorMessage = "Dit e-mailadres is ongeldig.")]
             public string Email { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Wachtwoord is verplicht.")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -80,8 +85,12 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Onthoud mij?")]
             public bool RememberMe { get; set; }
+            
+            public string Code { get; set; }
+            
+            public string LoginType { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -107,33 +116,54 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            if (ModelState.IsValid)
+            if (Input.LoginType == "Account")
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
+                if (ModelState.IsValid)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    // This doesn't count login failures towards account lockout
+                    // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                    var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("User logged in.");
+                        return LocalRedirect(returnUrl);
+                    }
+                    if (result.RequiresTwoFactor) { return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe }); }
+                    if (result.IsLockedOut)
+                    {
+                        _logger.LogWarning("User account locked out.");
+                        return RedirectToPage("./Lockout");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Ongeldige aanmelding.");
+                        return Page();
+                    }
                 }
-                if (result.RequiresTwoFactor)
+            }
+            else
+            {
+                Invitation invitation = _drawManager.GetInvitationWithCode(Input.Code);
+                if (invitation is not null && invitation.IsRegistered)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
+                    if (invitation.IsDrawn)
+                    {
+                        TempData["Invitation"] = JsonConvert.SerializeObject(invitation);
+                        return RedirectToPage("./RegisterMember", new { ReturnUrl = returnUrl});
+                    }
+                    else
+                    {
+                        return RedirectToPage("./DrawPending");
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
+                    ModelState.AddModelError("Input.Code", "Voer een geregistreerde code in. Als u al een account heeft aangemaakt is uw code niet meer geldig.");
                 }
             }
 
             // If we got this far, something failed, redisplay form
+            TempData["SelectedLoginType"] = Input.LoginType;
             return Page();
         }
     }

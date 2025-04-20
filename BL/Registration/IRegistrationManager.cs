@@ -3,7 +3,7 @@ using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
 using Microsoft.AspNetCore.Identity;
 
-namespace CitizenPanel.BL;
+namespace CitizenPanel.BL.Registration;
 
 public interface IRegistrationManager
 {
@@ -12,9 +12,6 @@ public interface IRegistrationManager
     
     // New methods for draw phase management
     DrawStatus GetDrawStatus(Panel panel);
-    bool StartFinalDraw(Panel panel);
-    DrawResult PerformFinalDraw(Panel panel);
+    void StartFinalDraw(Panel panel);
     bool HasSufficientRegistrations(Panel panel);
-    DrawResult GetDrawResults(Panel panel);
-    
 }

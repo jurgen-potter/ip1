@@ -1,4 +1,5 @@
-﻿using CitizenPanel.BL.Domain.Panel;
+﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Panel;
 using Microsoft.EntityFrameworkCore;
 using CitizenPanel.DAL.Data;
 
@@ -15,13 +16,14 @@ public class PanelRepository : IPanelRepository
 
     public Panel ReadPanelById(int panelId)
     {
-        return _dbContext.Panels.Find(panelId);
+        return _dbContext.Panels
+            .Include(p => p.DrawResult)
+            .ThenInclude(dr => dr.SelectedMembers)
+            .Include(p => p.DrawResult)
+            .ThenInclude(dr => dr.ReserveMembers)
+            .SingleOrDefault(p => p.PanelId == panelId);
     }
-
-    public IEnumerable<Panel> ReadAllPanels()
-    {
-        return _dbContext.Panels.ToList();
-    }
+    
     
     public void CreatePanel(Panel panel)
     {
@@ -32,10 +34,19 @@ public class PanelRepository : IPanelRepository
     public void UpdatePanel(Panel panel)
     {
         _dbContext.Update(panel);
+        _dbContext.SaveChanges();
     }
 
     public void DeletePanel(Panel panel)
     {
         _dbContext.Panels.Remove(panel);
+    }
+    
+    public IEnumerable<RecruitmentBucket> ReadTargetBucketsByPanel(Panel panel)
+    {
+        var panelWithBuckets = _dbContext.Panels
+            .Include(p => p.RecruitmentBuckets)
+            .FirstOrDefault(p => p.PanelId == panel.PanelId);
+        return panelWithBuckets?.RecruitmentBuckets.ToList();
     }
 }

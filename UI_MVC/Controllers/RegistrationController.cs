@@ -1,33 +1,24 @@
 ﻿using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Panel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
+using BL.Registration;
 using Models;
 
-public class RegistrationController : Controller
+public class RegistrationController(IRegistrationManager registrationManager,IEmailSender mailSender, IPanelManager panelManager) : Controller
 {
-    private readonly IRegistrationManager _registrationManager;
-    private readonly IMailSender _mailSender;
-
-    public RegistrationController(IRegistrationManager registrationManager, IMailSender mailSender)
-    {
-        _registrationManager = registrationManager;
-        _mailSender = mailSender;
-    }
-
     [HttpGet]
     public IActionResult Index(int panelId = 1)
     {
-        var panel = new Panel { PanelId = panelId };
+        var panel = panelManager.GetPanelById(panelId);
 
-        var allBuckets = _registrationManager.GetAllBuckets(panel);
-        var drawStatus = _registrationManager.GetDrawStatus(panel);
+        var allBuckets = registrationManager.GetAllBuckets(panel);
 
         ViewBag.PanelId = panelId;
-        ViewBag.DrawStatus = drawStatus;
-        ViewBag.HasSufficientRegistrations = _registrationManager.HasSufficientRegistrations(panel);
+        ViewBag.DrawStatus = panel.DrawStatus;
+        ViewBag.HasSufficientRegistrations = registrationManager.HasSufficientRegistrations(panel);
 
         return View(allBuckets);
     }
@@ -51,14 +42,12 @@ public class RegistrationController : Controller
             return View("EditMail", finalDraw);
         }
         
-        var panel = new Panel { PanelId = finalDraw.PanelId };
+        var panel = panelManager.GetPanelById(finalDraw.PanelId);
 
         // Always proceed with the draw regardless of sufficient registrations
-        _registrationManager.StartFinalDraw(panel);
-    
-        // Always set success message
-        // TempData.Remove("ErrorMessage");
-        // TempData["SuccessMessage"] = "De loting is succesvol afgerond.";
+        registrationManager.StartFinalDraw(panel);
+        
+        
         TempData["SelectedSubject"] = finalDraw.SelectedSubject;
         TempData["SelectedMessage"] = finalDraw.SelectedMessage;
         TempData["ReserveSubject"] = finalDraw.ReserveSubject;
@@ -72,30 +61,35 @@ public class RegistrationController : Controller
     public IActionResult DrawResults(int panelId)
     {
         // Create a panel object that matches the one in the RegistrationManager
-        var panel = new Panel { PanelId = panelId, Name = $"Panel {panelId}" };
+        var panel = panelManager.GetPanelById(panelId);
     
         // Get draw status
-        var drawStatus = _registrationManager.GetDrawStatus(panel);
-    
-        // Get draw results
-        var drawResults = _registrationManager.GetDrawResults(panel);
-        
+        var drawResults = panel.DrawResult;
+
         var selectedSubject = TempData["SelectedSubject"] as string;
         var selectedMessage = TempData["SelectedMessage"] as string;
         var reserveSubject = TempData["ReserveSubject"] as string;
         var reserveMessage = TempData["ReserveMessage"] as string;
+        
+        
+        
         foreach (var selected in drawResults.SelectedMembers)
         {
-            _mailSender.SendMailAsync("donaldduckie313@gmail.com", selectedSubject, selectedMessage);
+            mailSender.SendEmailAsync(selected.Email, selectedSubject, selectedMessage);
         }
         
         foreach (var reserve in drawResults.ReserveMembers)
         {
-            _mailSender.SendMailAsync("donaldduckie313@gmail.com", reserveSubject, reserveMessage);
+            mailSender.SendEmailAsync(reserve.Email, reserveSubject, reserveMessage);
+        }
+
+        foreach (var notSelected in drawResults.NotSelectedMembers)
+        {
+            mailSender.SendEmailAsync(notSelected.Email, "unlucky", "better luck next time");
         }
     
         ViewBag.PanelId = panelId;
-        ViewBag.DrawStatus = drawStatus;
+        ViewBag.DrawStatus = panel.DrawStatus;
     
         return View(drawResults);
     }

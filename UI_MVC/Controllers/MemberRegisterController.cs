@@ -4,18 +4,20 @@ using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
 public class MemberRegisterController : Controller
 {
     private readonly IDrawManager _drawManager;
-    private readonly IMailSender _mailSender;
+    private readonly IEmailSender _emailSender;
     private readonly IMemberManager _memberManager;
 
-    public MemberRegisterController(IDrawManager drawManager, IMailSender mailSender, IMemberManager memberManager)
+    public MemberRegisterController(IDrawManager drawManager, IEmailSender emailSender, IMemberManager memberManager)
     {
-        _mailSender = mailSender;
+        _emailSender = emailSender;
         _drawManager = drawManager;
         _memberManager = memberManager;
     }
@@ -44,7 +46,6 @@ public class MemberRegisterController : Controller
     {
         return View();
     }
-
     
     [HttpGet]
     public IActionResult RegisterMember(MemberDto memberDto)
@@ -60,7 +61,7 @@ public class MemberRegisterController : Controller
             if (invitation.IsRegistered)
                 return RedirectToAction("Registered", "MemberRegister");
             
-            if (invitation.IsUsed)
+            if (invitation.IsDrawn)
                 return RedirectToAction("UsedCode", "MemberRegister");
         }
         
@@ -135,7 +136,7 @@ public class MemberRegisterController : Controller
     public IActionResult RegistrationConfirmed()
     {
         var email = TempData["Email"]?.ToString();
-        _mailSender.SendMailAsync(email, "Bevestiging aanmelding", "Uw gegevens zijn opgeslagen");
+        _emailSender.SendEmailAsync(email, "Bevestiging aanmelding", "Uw gegevens zijn opgeslagen");
         
         return View();
     }

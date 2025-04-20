@@ -17,9 +17,9 @@
             </div>
             <div class="card-body">
                 <p>
-                    Huidige status:
+                    Status:
                     <span class="badge @(drawStatus == DrawStatus.FirstPhaseActive ? "bg-primary" : drawStatus == DrawStatus.Complete ? "bg-success" : "bg-secondary")">
-                        @(drawStatus == DrawStatus.FirstPhaseActive ? "Eerste fase actief" : "idk")
+                        @(drawStatus == DrawStatus.FirstPhaseActive ? "Eerste fase actief" : "Loting afgerond")
                     </span>
                 </p>
                 @if (drawStatus == DrawStatus.Complete)

@@ -14,7 +14,7 @@ public class PanelManager : IPanelManager
         _drawManager = drawManager;
     }
     
-    public Panel GetPanel(int panelId)
+    public Panel GetPanelById(int panelId)
     {
         return _panelRepository.ReadPanelById(panelId);
     }

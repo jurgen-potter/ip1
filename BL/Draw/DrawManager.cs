@@ -212,4 +212,8 @@ public class DrawManager : IDrawManager
 
         return result;
     }
+    public bool RemoveInvitation(int invitationId)
+    {
+        return _drawRepository.DeleteInvitation(invitationId);
+    }
 }

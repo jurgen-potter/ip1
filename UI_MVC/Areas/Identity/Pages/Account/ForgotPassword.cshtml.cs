@@ -44,8 +44,8 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "Email is verplicht.")]
+            [EmailAddress(ErrorMessage = "Dit e-mailadres is ongeldig.")]
             public string Email { get; set; }
         }
 
@@ -54,10 +54,15 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                if (user == null)
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return RedirectToPage("./ForgotPasswordConfirmation");
+                    ModelState.AddModelError(string.Empty, "E-mailadres niet gevonden.");
+                    return Page();
+                }
+                if (!(await _userManager.IsEmailConfirmedAsync(user)))
+                {
+                    ModelState.AddModelError(string.Empty, "E-mailadres nog niet bevestigd.");
+                    return Page();
                 }
 
                 // For more information on how to enable account confirmation and password reset please
@@ -72,8 +77,8 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Wachtwoord opnieuw instellen",
+                    $"Stel je wachtwoord opnieuw in door <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>hier te klikken</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

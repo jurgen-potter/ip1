@@ -26,4 +26,7 @@ public class Panel
     public ICollection<Member> Members { get; set; } = new List<Member>();
     
     public ICollection<ExtraCriteria> ExtraCriteria { get; set; } = new List<ExtraCriteria>();
+    public ICollection<RecruitmentBucket> RecruitmentBuckets { get; set; }
+    public DrawStatus DrawStatus { get; set; }
+    public DrawResult DrawResult { get; set; }
 }
