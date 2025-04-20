@@ -15,6 +15,8 @@ public interface IPanelManager
     
     public Panel GetPanelByIdWithRecommendations(int panelId);
     public Recommendation GetRecommendationById(int recommendationId);
+    public Recommendation GetRecommendationWithVoters(int recommendationId);
+
 
     public void EditRecommendation(Recommendation recommendation);
     

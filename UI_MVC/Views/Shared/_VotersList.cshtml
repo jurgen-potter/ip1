@@ -1,0 +1,24 @@
+﻿@using CitizenPanel.BL.Domain.Panel
+@model IEnumerable<UserVote>
+
+@if (Model.Any())
+{
+    <ul class="list-group list-group-flush">
+        @foreach (var uv in Model)
+        {
+            var member = uv.Voter; 
+            var displayName = 
+                !string.IsNullOrEmpty(member.UserName) 
+                    ? member.UserName 
+                    : member.Email ?? "Onbekende gebruiker";
+
+            <li class="list-group-item">@displayName</li>
+        }
+    </ul>
+}
+else
+{
+    <div class="alert alert-info m-3" role="alert">
+        Er zijn nog geen stemmen uitgebracht voor deze aanbeveling
+    </div>
+}

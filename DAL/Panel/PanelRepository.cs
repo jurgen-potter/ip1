@@ -69,6 +69,14 @@ public class PanelRepository : IPanelRepository
             .Find(recommendationId);
     }
 
+    public Recommendation ReadRecommendationWithVotersById(int recommendationId)
+    {
+        return _dbContext.Recommendations
+            .Include(r => r.UserVotes) 
+            .ThenInclude(uv => uv.Voter)  
+            .SingleOrDefault(r => r.Id == recommendationId);
+    }
+    
     public void UpdateRecommendation(Recommendation recommendation)
     {
         _dbContext.Recommendations.Update(recommendation);

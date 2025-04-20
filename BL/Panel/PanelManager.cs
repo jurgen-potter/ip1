@@ -54,6 +54,11 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadRecommendationById(recommendationId);
     }
+    
+    public Recommendation GetRecommendationWithVoters(int recommendationId)
+    {
+        return _panelRepository.ReadRecommendationWithVotersById(recommendationId);
+    }
 
     public void EditRecommendation(Recommendation recommendation)
     {

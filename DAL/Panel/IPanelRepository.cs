@@ -14,6 +14,7 @@ public interface IPanelRepository
     public void CreateRecommendationOfPanel(Recommendation recommendation, Panel panel);
     Panel ReadPanelByIdWithRecommendations(int panelId);
     Recommendation ReadRecommendationById(int recommendationId);
+    public Recommendation ReadRecommendationWithVotersById(int recommendationId);
     public void UpdateRecommendation(Recommendation recommendation);
     
     bool HasUserVotedForRecommendation(Member member, Recommendation recommendation);

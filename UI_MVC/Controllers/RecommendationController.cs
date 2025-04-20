@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,16 @@ public class RecommendationController(IPanelManager panelManager) : Controller
         
         return View(recommendations);
     }
-    
+
+    [HttpGet]
+    [Authorize(Roles = "Organization")] 
+    public IActionResult GetVoters(int recommendationId)
+    {
+        var recommendation = panelManager.GetRecommendationWithVoters(recommendationId);
+
+        var votes = recommendation?.UserVotes ?? Enumerable.Empty<UserVote>();
+        return PartialView("_VotersList", votes);
+    }
     
     public IActionResult AddRecommendation()
     {
@@ -26,14 +36,14 @@ public class RecommendationController(IPanelManager panelManager) : Controller
     
     [Authorize(Roles = "Organization")]
     [HttpPost]
-    public IActionResult AddRecommendation(string title, string description)
+    public IActionResult AddRecommendation(AddRecommendationViewModel viewModel)
     {
         var panel = panelManager.GetPanelById(1); //gehardcode omdat panels nog niet echt gelinked zijn aan gebruikers.
         if (ModelState.IsValid)
         {
-            panelManager.AddRecommendationOfPanel(title, description, panel);
+            panelManager.AddRecommendationOfPanel(viewModel.Title, viewModel.Description, panel);
             return RedirectToAction(nameof(Index));
         }
-        return View("Index");
+        return View("AddRecommendation");
     }
 }
