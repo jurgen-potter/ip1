@@ -80,8 +80,8 @@ public class DataSeeder
             DrawStatus = DrawStatus.FirstPhaseActive,
             Recommendations = new List<Recommendation>()
             {
-                new Recommendation("Kick Jurgen","jurgen uit de groep gooien omdat hij niet voldoet aan de eisen",0),
-                new Recommendation("Kick Xander","Xander heeft een te groot ego",10)
+                new Recommendation("Meer fietspaden","Gemeente Antwerpen moet meer fietspaden aanleggen",0),
+                new Recommendation("Autovrije binnenstad","Gemeente Antwerpen moet auto's uit de binnenstad verbieden",10)
             }   
         };
         panel1.ExtraCriteria.Add(extraCrit1);

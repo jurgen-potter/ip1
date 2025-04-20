@@ -69,9 +69,6 @@ public class PanelDbContext : IdentityDbContext
         modelBuilder.Entity<Panel>()
             .HasMany(p => p.ExtraCriteria)
             .WithOne(e => e.Panel);
-        
-        modelBuilder.Entity<UserVote>()
-            .HasKey(uv => uv.Id);
 
         modelBuilder.Entity<UserVote>()
             .HasOne(uv => uv.Recommendation)
