@@ -19,7 +19,19 @@ public class PanelController : Controller
     // GET
     public IActionResult Index(int panelId = 1)
     {
-        return View(_panelManager.GetPanel(panelId));
+        Panel panel = _panelManager.GetPanel(panelId);
+
+        PanelViewModel model = new PanelViewModel()
+        {
+            PanelId = panel.PanelId,
+            Name = panel.Name,
+            Description = panel.Description,
+            StartDate = panel.StartDate,
+            EndDate = panel.EndDate,
+            CoverImagePath = panel.CoverImagePath
+        };
+        
+        return View(model);
     }
 
     [Authorize(Roles = "Organization")]
@@ -37,7 +49,7 @@ public class PanelController : Controller
         if(!ModelState.IsValid)
             return View(model);
 
-        ICollection<ExtraCriteria> criteria = TempData["Criteria"] as ICollection<ExtraCriteria>  ?? new List<ExtraCriteria>();;
+        ICollection<ExtraCriteria> criteria = TempData["Criteria"] as ICollection<ExtraCriteria>  ?? new List<ExtraCriteria>();
         
         Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, model.EndDate, criteria);
         

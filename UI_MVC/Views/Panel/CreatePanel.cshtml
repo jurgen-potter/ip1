@@ -5,17 +5,16 @@
 }
 
 <h2>Begin met uw panel te maken</h2>
-<div asp-validation-summary="All" class="text-danger"></div>
 <form asp-controller="Panel" asp-action="CreatePanel" method="post">
     <div>
         <label>Naam van uw panel:</label>
-        <input asp-for="Name" type="text" class="form-control" required />
+        <input asp-for="Name" type="text" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div>
         <label>Beschrijving van uw panel:</label>
-        <textarea rows="5" asp-for="Description" type="number" class="form-control" required>Geef hier uw beschrijving</textarea>
+        <textarea rows="5" asp-for="Description" type="number" class="form-control">Geef hier uw beschrijving</textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 

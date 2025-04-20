@@ -1,7 +1,9 @@
-@model CitizenPanel.BL.Domain.Panel.Panel
+@model PanelViewModel
 
 @{
-    ViewBag.Title = "Panel";
+    ViewBag.Title = Model.Name;
 }
 
 <h2>Welkom bij uw panel: @Model.Name</h2>
+
+<p>@Model.Description</p>
