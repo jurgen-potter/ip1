@@ -28,6 +28,7 @@ public class PanelRepository : IPanelRepository
     public void CreatePanel(Panel panel)
     {
         _dbContext.Panels.Add(panel);
+        _dbContext.SaveChanges();
     }
 
     public void UpdatePanel(Panel panel)

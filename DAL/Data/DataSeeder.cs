@@ -17,6 +17,9 @@ public class DataSeeder
     public void Seed()
     {
         SeedPanels();
+        _panelDbContext.SaveChanges();
+        _panelDbContext.ChangeTracker.Clear();
+
         SeedInvitations();
         SeedQuestionnaires();
 
@@ -64,6 +67,10 @@ public class DataSeeder
         // Create panel objects
         var panel1 = new Panel()
         {
+            Name = "Panel Antwerpen",
+            Description = "Dit is de omschrijving van het panel.",
+            StartDate = new DateOnly(2025, 1, 12),
+            EndDate = new DateOnly(2025, 7, 22)
             PanelId = 1,
             Name = "Panel 1",
             RecruitmentBuckets = new List<RecruitmentBucket>()
@@ -79,14 +86,18 @@ public class DataSeeder
             },
             DrawStatus = DrawStatus.FirstPhaseActive
         };
+        _panelDbContext.Panels.Add(panel1);
         panel1.ExtraCriteria.Add(extraCrit1);
         panel1.ExtraCriteria.Add(extraCrit2);
 
         var panel2 = new Panel()
         {
-            PanelId = 2,
-            Name = "Panel 2",
+            Name = "Panel Brussel",
+            Description = "Dit is ook een omschrijving van een panel.",
+            StartDate = new DateOnly(2025, 3, 1),
+            EndDate = new DateOnly(2025, 8, 14)
         };
+        _panelDbContext.Panels.Add(panel2);
 
         // Create initial list with members for Panel 1 and Panel 2
         var members = new List<Member>

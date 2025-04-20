@@ -1,4 +1,6 @@
-﻿namespace CitizenPanel.BL.Domain.Draw;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CitizenPanel.BL.Domain.Draw;
 
 public class ExtraCriteria
 {

@@ -1,4 +1,5 @@
-﻿using CitizenPanel.BL.Domain.User;
+﻿using System.ComponentModel.DataAnnotations;
+using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.BL.Domain.Draw;
 
