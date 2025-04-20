@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.BL.Domain.User;
@@ -14,6 +14,8 @@ public class PanelDbContext : IdentityDbContext
     private readonly IConfiguration _configuration;
     public DbSet<Member> Members { get; set; }
     public DbSet<Panel> Panels { get; set; }
+    public DbSet<Recommendation> Recommendations { get; set; }
+    public DbSet<UserVote> UserVotes { get; set; } 
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<Criteria> Criteria { get; set; }
     public DbSet<SubCriteria> SubCriteria { get; set; }
@@ -67,13 +69,22 @@ public class PanelDbContext : IdentityDbContext
         modelBuilder.Entity<Panel>()
             .HasMany(p => p.Criteria)
             .WithOne(e => e.Panel);
-        
+
+        modelBuilder.Entity<UserVote>()
+            .HasOne(uv => uv.Recommendation)
+            .WithMany(r => r.UserVotes)
+            .HasForeignKey(uv => uv.RecommendationId);
+
+        modelBuilder.Entity<UserVote>()
+            .HasOne(iu => iu.Voter);
+
         modelBuilder.Entity<Questionnaire>()
             .HasMany(q => q.Questions)
             .WithOne(q => q.Questionnaire);
         modelBuilder.Entity<Question>()
             .HasMany(q => q.Answers)
             .WithOne(a => a.Question);
+
     }
     
     public bool CreateDatabase(bool delete) {

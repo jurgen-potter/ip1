@@ -29,4 +29,5 @@ public class Panel
     public ICollection<RecruitmentBucket> RecruitmentBuckets { get; set; }
     public DrawStatus DrawStatus { get; set; }
     public DrawResult DrawResult { get; set; }
+    public ICollection<Recommendation> Recommendations { get; set; } = new List<Recommendation>();
 }

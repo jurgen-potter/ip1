@@ -33,4 +33,16 @@
       <_ContentIncludedByDefault Remove="Views\QRCode\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <TypeScriptCompile Include="wwwroot\js\recommendation\votersModalLoader.ts" />
+      <TypeScriptCompile Include="wwwroot\js\recommendation\vote.ts" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="main.js">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

@@ -8,7 +8,7 @@ public interface IMemberManager
     public Task<(IdentityResult result, IdentityUser user)> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<int> newMemberSelectedCriteria, int newMemberPanelId);
     
     IEnumerable<Member> GetAllMembers();
-    Member GetMemberById(int memberId);
+    Member GetMemberById(string memberId);
     void ChangeMember(Member member);
     void RemoveMember(Member member);
     

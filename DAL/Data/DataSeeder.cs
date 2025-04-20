@@ -82,7 +82,12 @@ public class DataSeeder
                 new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "41-60", Count = 0, Target = 5 },
                 new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "60+", Count = 0, Target = 5 }
             },
-            DrawStatus = DrawStatus.FirstPhaseActive
+            DrawStatus = DrawStatus.FirstPhaseActive,
+            Recommendations = new List<Recommendation>()
+            {
+                new Recommendation("Meer fietspaden","Gemeente Antwerpen moet meer fietspaden aanleggen",0),
+                new Recommendation("Autovrije binnenstad","Gemeente Antwerpen moet auto's uit de binnenstad verbieden",10)
+            }   
         };
         _panelDbContext.Panels.Add(panel1);
         panel1.Criteria.Add(crit1);

@@ -43,6 +43,18 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Panel" asp-action="CreatePanel">MPanel</a>
                     </li>
+                    @if (User.Identity!.IsAuthenticated && !User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Recommendation" asp-action="Index">Aanbevelingen</a>
+                        </li>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin Dashboard</a>
+                        </li>
+                    }
                 </ul>
                 <partial name="_LoginPartial"/>
             </div>
