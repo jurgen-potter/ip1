@@ -1,4 +1,4 @@
-@model CitizenPanel.BL.Domain.Panel.Panel
+@model CreatePanelViewModel
 
 @{
     ViewBag.Title = "Panel maken";
@@ -6,8 +6,7 @@
 
 <h2>Begin met uw panel te maken</h2>
 <div asp-validation-summary="All" class="text-danger"></div>
-<form asp-controller="Panel" asp-action="MakePanel" method="post">
-    
+<form asp-controller="Panel" asp-action="CreatePanel" method="post">
     <div>
         <label>Naam van uw panel:</label>
         <input asp-for="Name" type="text" class="form-control" required />

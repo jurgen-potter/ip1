@@ -1,5 +1,7 @@
 using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,31 +17,29 @@ public class PanelController : Controller
     }
     
     // GET
-    public IActionResult Index(int? panelId)
+    public IActionResult Index(int panelId = 1)
     {
-        if (panelId == null)
-        {
-            panelId = 1;
-        }
-        return View(_panelManager.GetPanel(panelId?? 1));
+        return View(_panelManager.GetPanel(panelId));
     }
 
-    [Authorize(Roles = "Organization,Admin")]
+    [Authorize(Roles = "Organization")]
     [HttpGet]
-    public IActionResult MakePanel()
+    public IActionResult CreatePanel()
     {
-        return View();
+        CreatePanelViewModel model = new CreatePanelViewModel();
+        return View(model);
     }
     
-    [Authorize(Roles = "Organization,Admin")]
+    [Authorize(Roles = "Organization")]
     [HttpPost]
-    public IActionResult MakePanel(Panel panel)
+    public IActionResult CreatePanel(CreatePanelViewModel model)
     {
         if(!ModelState.IsValid)
-            return View();
+            return View(model);
 
+        ICollection<ExtraCriteria> criteria = TempData["Criteria"] as ICollection<ExtraCriteria>  ?? new List<ExtraCriteria>();;
         
-        Panel newPanel = _panelManager.AddPanel(panel.Name,panel.Description,panel.EndDate);
+        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, model.EndDate, criteria);
         
         return RedirectToAction("Index","Panel",new {panelId=newPanel.PanelId});
     }
