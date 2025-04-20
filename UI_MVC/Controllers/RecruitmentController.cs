@@ -28,7 +28,7 @@ public class RecruitmentController : Controller
             return View("Index", model);
         }
         
-        var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, model.MalePercentage, model.FemalePercentage, model.Age18_25Percentage, model.Age26_40Percentage, model.Age41_60Percentage, model.Age60PlusPercentage, model.ExtraCriteria);
+        var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, model.MalePercentage, model.FemalePercentage, model.Age18_25Percentage, model.Age26_40Percentage, model.Age41_60Percentage, model.Age60PlusPercentage, model.Criteria);
 
         return View("Result", result);
     }
@@ -36,29 +36,29 @@ public class RecruitmentController : Controller
     [HttpPost]
     public IActionResult AddCustomCriteria(RecruitmentCriteriaViewModel model)
     {
-        model.ExtraCriteria.Add(new ExtraCriteria());
+        model.Criteria.Add(new Criteria());
         return View("Index", model);
     }
 
     [HttpPost]
     public IActionResult AddSubCriteria(RecruitmentCriteriaViewModel model, int criteriaIndex)
     {
-        model.ExtraCriteria[criteriaIndex].SubCriteria.Add(new SubCriteria());
+        model.Criteria[criteriaIndex].SubCriteria.Add(new SubCriteria());
         return View("Index", model);
     }
 
     [HttpPost]
     public IActionResult RemoveCustomCriteria(RecruitmentCriteriaViewModel model, int criteriaIndex)
     {
-        model.ExtraCriteria.RemoveAt(criteriaIndex);
+        model.Criteria.RemoveAt(criteriaIndex);
         return View("Index", model);
     }
 
     [HttpPost]
     public IActionResult RemoveSubCriteria(RecruitmentCriteriaViewModel model, int criteriaIndex, int subIndex)
     {
-        model.ExtraCriteria.RemoveAll(c => string.IsNullOrWhiteSpace(c.Name));
-        // model.ExtraCriteria[criteriaIndex].SubCriteria.RemoveAt(subIndex);
+        model.Criteria.RemoveAll(c => string.IsNullOrWhiteSpace(c.Name));
+        // model.Criteria[criteriaIndex].SubCriteria.RemoveAt(subIndex);
         return View("Index", model);
     }
 }

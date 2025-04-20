@@ -7,6 +7,6 @@ public class MemberDto
     public string Code { get; set; }
     public bool IsConfirmed { get; set; }
     public Invitation Invitation { get; set; }
-    public List<ExtraCriteria> CriteriaList { get; set; }
+    public List<Criteria> CriteriaList { get; set; }
 
 }

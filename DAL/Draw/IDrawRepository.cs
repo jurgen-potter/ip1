@@ -10,11 +10,11 @@ public interface IDrawRepository
     public IEnumerable<Invitation> ReadAllInvitations();
     public Invitation UpdateInvitation(Invitation invitation);
     
-    public ExtraCriteria ReadExtraCriteria(int criteriaId);
+    public Criteria ReadCriteria(int criteriaId);
     
-    public IEnumerable<ExtraCriteria> ReadAllExtraCriteria();
+    public IEnumerable<Criteria> ReadAllCriteria();
     
     public SubCriteria ReadSubCriteria(int subCriteriaId);
-    IEnumerable<ExtraCriteria> ReadExtraCriteriaByPanel(int panelId);
+    IEnumerable<Criteria> ReadCriteriaByPanel(int panelId);
     public bool DeleteInvitation(int invitationId);
 }

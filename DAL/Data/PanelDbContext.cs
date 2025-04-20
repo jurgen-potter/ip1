@@ -15,7 +15,7 @@ public class PanelDbContext : IdentityDbContext
     public DbSet<Member> Members { get; set; }
     public DbSet<Panel> Panels { get; set; }
     public DbSet<Organization> Organizations { get; set; }
-    public DbSet<ExtraCriteria> ExtraCriteria { get; set; }
+    public DbSet<Criteria> Criteria { get; set; }
     public DbSet<SubCriteria> SubCriteria { get; set; }
     public DbSet<Invitation> Invitations { get; set; }
     public DbSet<DrawResult> DrawResults { get; set; }
@@ -59,13 +59,13 @@ public class PanelDbContext : IdentityDbContext
             .WithMany()
             .UsingEntity(j => j.ToTable("MemberSelectedCriteria"));
         
-        modelBuilder.Entity<ExtraCriteria>()
+        modelBuilder.Entity<Criteria>()
             .HasMany(e => e.SubCriteria)
             .WithMany()
             .UsingEntity(j => j.ToTable("ExtraSubCriteria"));
 
         modelBuilder.Entity<Panel>()
-            .HasMany(p => p.ExtraCriteria)
+            .HasMany(p => p.Criteria)
             .WithOne(e => e.Panel);
         
         modelBuilder.Entity<Questionnaire>()

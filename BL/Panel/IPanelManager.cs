@@ -1,4 +1,4 @@
-using CitizenPanel.BL.Domain.Draw;
+﻿using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 
 namespace CitizenPanel.BL;
@@ -6,7 +6,7 @@ namespace CitizenPanel.BL;
 public interface IPanelManager
 {
     
-    public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<ExtraCriteria> criteria);
+    public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<Criteria> criteria);
 
     public Panel GetPanelById(int panelId);
     void AddPanel(Panel panel);

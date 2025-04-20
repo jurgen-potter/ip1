@@ -12,7 +12,7 @@ public class RecruitmentCriteriaViewModel : IValidatableObject
     public double Age26_40Percentage { get; set; }
     public double Age41_60Percentage { get; set; }
     public double Age60PlusPercentage { get; set; }
-    public List<ExtraCriteria> ExtraCriteria { get; set; } = new List<ExtraCriteria>();
+    public List<Criteria> Criteria { get; set; } = new List<Criteria>();
     
     
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -23,7 +23,7 @@ public class RecruitmentCriteriaViewModel : IValidatableObject
         if (Age18_25Percentage + Age26_40Percentage + Age41_60Percentage + Age60PlusPercentage != 100)
             yield return new ValidationResult("Het totaal van de leeftijdsgroepen moet precies 100% zijn.");
 
-        foreach (var criteria in ExtraCriteria)
+        foreach (var criteria in Criteria)
         {
             if (criteria.SubCriteria.Sum(s => s.Percentage) != 100)
                 yield return new ValidationResult($"De subcategorieën van '{criteria.Name}' moeten samen 100% zijn.");

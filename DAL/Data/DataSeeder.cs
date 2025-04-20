@@ -52,17 +52,17 @@ public class DataSeeder
         };
         _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4);
 
-        var extraCrit1 = new ExtraCriteria()
+        var crit1 = new Criteria()
         {
             Name = "Vervoer",
             SubCriteria = { subCrit1, subCrit2 },
         };
-        var extraCrit2 = new ExtraCriteria()
+        var crit2 = new Criteria()
         {
             Name = "Opleiding",
             SubCriteria = { subCrit3, subCrit4 },
         };
-        _panelDbContext.ExtraCriteria.AddRange(extraCrit1, extraCrit2);
+        _panelDbContext.Criteria.AddRange(crit1, crit2);
 
         // Create panel objects
         var panel1 = new Panel()
@@ -85,8 +85,8 @@ public class DataSeeder
             DrawStatus = DrawStatus.FirstPhaseActive
         };
         _panelDbContext.Panels.Add(panel1);
-        panel1.ExtraCriteria.Add(extraCrit1);
-        panel1.ExtraCriteria.Add(extraCrit2);
+        panel1.Criteria.Add(crit1);
+        panel1.Criteria.Add(crit2);
 
         var panel2 = new Panel()
         {

@@ -20,7 +20,7 @@ public class PanelManager : IPanelManager
     }
     
 
-    public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<ExtraCriteria> criteria)
+    public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<Criteria> criteria)
     {
         Panel newPanel = new Panel()
         {
@@ -29,7 +29,7 @@ public class PanelManager : IPanelManager
             StartDate = DateOnly.FromDateTime(DateTime.Now),
             EndDate = endDate,
             MemberCount = 0,
-            ExtraCriteria = criteria
+            Criteria = criteria
         };
         _panelRepository.CreatePanel(newPanel);
         //_drawManager.GenerateInvitations(newPanel);

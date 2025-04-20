@@ -65,7 +65,7 @@ public class MemberRegisterController : Controller
                 return RedirectToAction("UsedCode", "MemberRegister");
         }
         
-        List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
+        List<Criteria> extraCriteria = _drawManager.GetCriteriaByPanel(invitation.PanelId).ToList();
 
         var model = new RegisterViewModel()
         {

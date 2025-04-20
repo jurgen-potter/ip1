@@ -11,7 +11,7 @@ public class RecruitmentResult
     public int Age60PlusCount { get; set; }
     public int ReservePotPanelmembers {get; set;}
     public double TotalNeededPanelmembers {get; set;}
-    public List<CriteriaResult> ExtraCriteriaResults { get; set; }
+    public List<CriteriaResult> CriteriaResults { get; set; }
     public List<RecruitmentBucket> Buckets { get; set; } = new List<RecruitmentBucket>();
 
 }

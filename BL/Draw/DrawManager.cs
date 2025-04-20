@@ -96,14 +96,14 @@ public class DrawManager : IDrawManager
     }
     
     
-    public ExtraCriteria GetExtraCriteria(int criteriaId)
+    public Criteria GetCriteria(int criteriaId)
     {
-        return _drawRepository.ReadExtraCriteria(criteriaId);
+        return _drawRepository.ReadCriteria(criteriaId);
     }
     
-    public IEnumerable<ExtraCriteria> GetAllExtraCriteria()
+    public IEnumerable<Criteria> GetAllCriteria()
     {
-        return _drawRepository.ReadAllExtraCriteria();
+        return _drawRepository.ReadAllCriteria();
     }
     
     public SubCriteria GetSubCriteria(int subCriteriaId)
@@ -111,12 +111,12 @@ public class DrawManager : IDrawManager
         return _drawRepository.ReadSubCriteria(subCriteriaId);
     }
     
-    public IEnumerable<ExtraCriteria> GetExtraCriteriaByPanel(int panelId)
+    public IEnumerable<Criteria> GetCriteriaByPanel(int panelId)
     {
-        return _drawRepository.ReadExtraCriteriaByPanel(panelId);
+        return _drawRepository.ReadCriteriaByPanel(panelId);
     }
 
-    public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, double malePercentage, double femalePercentage, double age18_25Percentage, double age26_40Percentage, double age41_60Percentage, double age60PlusPercentage, List<ExtraCriteria> extraCriteria)
+    public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, double malePercentage, double femalePercentage, double age18_25Percentage, double age26_40Percentage, double age41_60Percentage, double age60PlusPercentage, List<Criteria> extraCriteria)
     {
         var reservePerc = 0.08;
         var totalAvailablePotPanelmembers = Math.Round(0.50 * Math.Sqrt(totalAvailablePotentialPanelmembers));
@@ -191,7 +191,7 @@ public class DrawManager : IDrawManager
             Age60PlusCount = age60PlusCount,
             ReservePotPanelmembers = reservePotPanelmembers,
             TotalNeededPanelmembers = totalNeededPanelmembers,
-            ExtraCriteriaResults = new List<CriteriaResult>()
+            CriteriaResults = new List<CriteriaResult>()
         };
 
         
@@ -207,7 +207,7 @@ public class DrawManager : IDrawManager
                     Count = (int)(totalAvailablePotPanelmembers * (sub.Percentage / 100))
                 }).ToList()
             };
-            result.ExtraCriteriaResults.Add(criteriaResult);
+            result.CriteriaResults.Add(criteriaResult);
         }
 
         return result;

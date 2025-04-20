@@ -121,7 +121,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             [Display(Name = "Gemeente")]
             public string Town { get; set; }
             
-            public List<ExtraCriteria> CriteriaList { get; set; }
+            public List<Criteria> CriteriaList { get; set; }
             
             public List<int> SelectedCriteria { get; set; }
             
@@ -139,7 +139,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string ?? throw new InvalidOperationException("No valid invitation was given."));
             Input ??= new InputModel();
             
-            List<ExtraCriteria> extraCriteria = _drawManager.GetExtraCriteriaByPanel(invitation.PanelId).ToList();
+            List<Criteria> extraCriteria = _drawManager.GetCriteriaByPanel(invitation.PanelId).ToList();
             Input.Email = invitation.Email;
             Input.Gender = invitation.Gender;
             Input.Town = invitation.Postcode;

@@ -29,7 +29,7 @@ public class NewMemberViewModel
     
     public string Town { get; set; }
     
-    public List<ExtraCriteria> CriteriaList { get; set; }
+    public List<Criteria> CriteriaList { get; set; }
     
     public List<int> SelectedCriteria { get; set; }
     

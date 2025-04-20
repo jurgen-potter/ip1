@@ -5,7 +5,7 @@ namespace CitizenPanel.UI.MVC.Models;
 
 public class RegisterViewModel : IValidatableObject
 {
-    public List<ExtraCriteria> CriteriaList { get; set; }
+    public List<Criteria> CriteriaList { get; set; }
     public List<int> SelectedCriteria { get; set; }
     public Invitation Invitation { get; set; }
     public bool IsConfirmed { get; set; }

@@ -49,7 +49,7 @@ public class PanelController : Controller
         if(!ModelState.IsValid)
             return View(model);
 
-        ICollection<ExtraCriteria> criteria = TempData["Criteria"] as ICollection<ExtraCriteria>  ?? new List<ExtraCriteria>();
+        ICollection<Criteria> criteria = TempData["Criteria"] as ICollection<Criteria>  ?? new List<Criteria>();
         
         Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, model.EndDate, criteria);
         

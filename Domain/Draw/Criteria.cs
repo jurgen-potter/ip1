@@ -2,7 +2,7 @@
 
 namespace CitizenPanel.BL.Domain.Draw;
 
-public class ExtraCriteria
+public class Criteria
 {
     public int Id { get; set; }
     public string Name { get; set; } // Bijvoorbeeld "Transport"

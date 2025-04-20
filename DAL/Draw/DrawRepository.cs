@@ -35,17 +35,17 @@ public class DrawRepository : IDrawRepository
         return invitation;
     }
     
-    public ExtraCriteria ReadExtraCriteria(int criteriaId)
+    public Criteria ReadCriteria(int criteriaId)
     {
-        return _dbContext.ExtraCriteria
+        return _dbContext.Criteria
             .Where(e => e.Id == criteriaId)
             .Include(e => e.SubCriteria)
             .SingleOrDefault();
     }
     
-    public IEnumerable<ExtraCriteria> ReadAllExtraCriteria()
+    public IEnumerable<Criteria> ReadAllCriteria()
     {
-        return _dbContext.ExtraCriteria
+        return _dbContext.Criteria
             .Include(e => e.SubCriteria)
             .ToList();
     }
@@ -55,9 +55,9 @@ public class DrawRepository : IDrawRepository
         return _dbContext.SubCriteria.Find(subCriteriaId);
     }
 
-    public IEnumerable<ExtraCriteria> ReadExtraCriteriaByPanel(int panelId)
+    public IEnumerable<Criteria> ReadCriteriaByPanel(int panelId)
     {
-        return _dbContext.ExtraCriteria
+        return _dbContext.Criteria
             .Where(e => e.Panel.PanelId == panelId)
             .Include(e => e.SubCriteria)
             .ToList();
