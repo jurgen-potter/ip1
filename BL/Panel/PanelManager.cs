@@ -18,6 +18,7 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadPanelById(panelId);
     }
+    
 
     public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<ExtraCriteria> criteria)
     {
@@ -34,4 +35,25 @@ public class PanelManager : IPanelManager
         //_drawManager.GenerateInvitations(newPanel);
         return newPanel;
     }
+    
+    public void AddPanel(Panel panel)
+    {
+        _panelRepository.CreatePanel(panel);
+    }
+
+    public void EditPanel(Panel panel)
+    {
+        _panelRepository.UpdatePanel(panel);
+    }
+
+    public void RemovePanel(Panel panel)
+    {
+        _panelRepository.DeletePanel(panel);
+    }
+
+    public IEnumerable<RecruitmentBucket> GetTargetBucketsByPanel(Panel panel)
+    {
+        return _panelRepository.ReadTargetBucketsByPanel(panel);
+    }
 }
+

@@ -19,7 +19,7 @@ public class PanelController : Controller
     // GET
     public IActionResult Index(int panelId = 1)
     {
-        Panel panel = _panelManager.GetPanel(panelId);
+        Panel panel = _panelManager.GetPanelById(panelId);
 
         PanelViewModel model = new PanelViewModel()
         {

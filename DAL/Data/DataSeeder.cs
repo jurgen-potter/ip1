@@ -70,9 +70,7 @@ public class DataSeeder
             Name = "Panel Antwerpen",
             Description = "Dit is de omschrijving van het panel.",
             StartDate = new DateOnly(2025, 1, 12),
-            EndDate = new DateOnly(2025, 7, 22)
-            PanelId = 1,
-            Name = "Panel 1",
+            EndDate = new DateOnly(2025, 7, 22),
             RecruitmentBuckets = new List<RecruitmentBucket>()
             {
                 new RecruitmentBucket { Gender = "Mannen", AgeGroup = "18-25", Count = 0, Target = 5 },
