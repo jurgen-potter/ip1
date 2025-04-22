@@ -86,7 +86,7 @@ public class DataSeeder
             Recommendations = new List<Recommendation>()
             {
                 new Recommendation("Meer fietspaden","Gemeente Antwerpen moet meer fietspaden aanleggen",0),
-                new Recommendation("Autovrije binnenstad","Gemeente Antwerpen moet auto's uit de binnenstad verbieden",10)
+                new Recommendation("Autovrije binnenstad","Gemeente Antwerpen moet auto's uit de binnenstad verbieden",0)
             }   
         };
         _panelDbContext.Panels.Add(panel1);
