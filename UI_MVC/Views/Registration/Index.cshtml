@@ -4,7 +4,7 @@
     ViewData["Title"] = "Registratie-overzicht";
     var panelId = ViewBag.PanelId ?? 1;
     var drawStatus = (DrawStatus)ViewBag.DrawStatus;
-    var hasSufficientRegistrations = (bool)ViewBag.HasSufficientRegistrations;
+    var hasSufficientRegistrations = ViewBag.HasSufficientRegistrations;
 }
 
 <h2>Registratie-overzicht voor panel @panelId</h2>
@@ -114,6 +114,6 @@
 <div id="hasSufficientRegistrations" type="hidden" data-value="@hasSufficientRegistrations"></div>
 
 @section Scripts {
-    <script defer src="js/registration/index.js">
+    <script defer src="dist/js/registration/index.js">
 </script>
 }
