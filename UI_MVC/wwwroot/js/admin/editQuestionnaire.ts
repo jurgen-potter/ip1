@@ -1,94 +1,96 @@
-﻿let allCollapsed = false;
-let dragSrcEl = null;
-let sourceListId = "";
-let dragType = "";
+﻿let allCollapsed: boolean = false;
+let dragSrcEl: HTMLElement | null = null;
+let sourceListId: string = "";
+let dragType: "question" | "answer" | "" = "";
 
-window.addEventListener('DOMContentLoaded', (event) => {
-    init();
-})
+window.addEventListener('DOMContentLoaded', () => {
+    editQuestionnaireInit();
+});
 
 // Set up all event handlers
-function init() {
-    const questionItems = document.querySelectorAll('.question-item');
-    questionItems.forEach(question => {
+function editQuestionnaireInit(): void {
+    const questionItems = document.querySelectorAll<HTMLLIElement>('.question-item');
+    questionItems.forEach((question) => {
         addQuestionHandlers(question);
     });
 
-    const addQuestionButton = document.getElementById('add-question-btn');
+    const addQuestionButton = document.getElementById('add-question-btn') as HTMLButtonElement;
     addQuestionButton.addEventListener('click', () => {
         addQuestion();
     });
 
-    const toggleAllBtn = document.getElementById('toggle-all-btn');
+    const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement;
     toggleAllBtn.addEventListener('click', () => {
         toggleExpandAll(toggleAllBtn);
     });
 }
 
 // Add all event handlers for a question and its answers
-function addQuestionHandlers(question) {
-    const expandButton = question.querySelector('.expand-btn');
+function addQuestionHandlers(question: HTMLLIElement): void {
+    const expandButton = question.querySelector('.expand-btn') as HTMLButtonElement;
     expandButton.addEventListener('click', function () {
         toggleArrow(this);
     });
 
-    const removeQuestionButton = question.querySelector(".remove-question-btn");
-    removeQuestionButton.addEventListener("click", function () {
+    const removeQuestionButton = question.querySelector(".remove-question-btn") as HTMLButtonElement;
+    removeQuestionButton.addEventListener("click", () => {
         removeQuestion(question);
-    })
-
-    const addAnswerButton = question.querySelector(".add-answer-btn");
-    addAnswerButton.addEventListener("click", function () {
-        const questionIndex = addAnswerButton.getAttribute('question-index');
-        addAnswer(questionIndex);
     });
 
-    const questionDescription = question.querySelector(".question-description");
+    const addAnswerButton = question.querySelector(".add-answer-btn") as HTMLButtonElement;
+    addAnswerButton.addEventListener("click", () => {
+        const questionIndex = addAnswerButton.getAttribute('question-index');
+        if (questionIndex !== null) {
+            addAnswer(questionIndex);
+        }
+    });
+
+    const questionDescription = question.querySelector(".question-description") as HTMLInputElement;
     questionDescription.addEventListener('input', () => {
         questionDescription.setAttribute('value', questionDescription.value);
-    })
+    });
 
     addQuestionDnDHandlers(question);
 
-    const answerItems = document.querySelectorAll('.answer-item');
+    const answerItems = question.querySelectorAll<HTMLLIElement>('.answer-item');
     answerItems.forEach(answer => {
         addAnswerHandlers(answer);
     });
 }
 
 // Add all event handlers for an answer
-function addAnswerHandlers(answer) {
-    const removeAnswerButton = answer.querySelector(".remove-answer-btn");
-    removeAnswerButton.addEventListener("click", function () {
+function addAnswerHandlers(answer: HTMLLIElement): void {
+    const removeAnswerButton = answer.querySelector(".remove-answer-btn") as HTMLButtonElement;
+    removeAnswerButton.addEventListener("click", () => {
         removeAnswer(answer);
     });
 
-    const answerDescription = answer.querySelector(".answer-description");
+    const answerDescription = answer.querySelector(".answer-description") as HTMLInputElement;
     answerDescription.addEventListener('input', () => {
         answerDescription.setAttribute('value', answerDescription.value);
-    })
+    });
 
-    const criticalCheck = answer.querySelector(".critical-check");
+    const criticalCheck = answer.querySelector(".critical-check") as HTMLInputElement;
     criticalCheck.addEventListener('change', () => {
-        const isCritical = answer.querySelector('.critical-value');
-        isCritical.value = criticalCheck.checked;
-    })
+        const isCritical = answer.querySelector('.critical-value') as HTMLInputElement;
+        isCritical.value = criticalCheck.checked.toString();
+    });
 
     addAnswerDnDHandlers(answer);
 }
 
 // Change arrow direction when question is expanded/collapsed
-function toggleArrow(button) {
-    const arrow = button.querySelector('i');
+function toggleArrow(button: HTMLButtonElement): void {
+    const arrow = button.querySelector('i')!;
     arrow.classList.toggle('bi-chevron-up');
     arrow.classList.toggle('bi-chevron-down');
 }
 
 // Expand/collapse all questions
-function toggleExpandAll(button) {
-    const collapseQuestions = document.querySelectorAll('.question-body');
+function toggleExpandAll(button: HTMLButtonElement): void {
+    const collapseQuestions = document.querySelectorAll<HTMLDivElement>('.question-body');
     collapseQuestions.forEach(c => {
-        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(c);
+        const bsCollapse = (window as any).bootstrap.Collapse.getOrCreateInstance(c);
         if (allCollapsed) {
             bsCollapse.show();
         } else {
@@ -97,13 +99,11 @@ function toggleExpandAll(button) {
     });
 
     allCollapsed = !allCollapsed;
-    button.innerHTML = allCollapsed
-        ? 'Alles uitvouwen'
-        : 'Alles invouwen';
+    button.innerHTML = allCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
 
-    const expandButtons = document.querySelectorAll('.expand-btn');
+    const expandButtons = document.querySelectorAll<HTMLButtonElement>('.expand-btn');
     expandButtons.forEach(expandButton => {
-        const arrow = expandButton.querySelector('i');
+        const arrow = expandButton.querySelector('i')!;
         if (arrow.classList.contains('bi-chevron-up') && allCollapsed) {
             toggleArrow(expandButton);
         } else if (arrow.classList.contains('bi-chevron-down') && !allCollapsed) {
@@ -113,28 +113,27 @@ function toggleExpandAll(button) {
 }
 
 // Create a new question
-function addQuestion() {
-    const questions = document.getElementById(`questions-list`);
+function addQuestion(): void {
+    const questions = document.getElementById(`questions-list`) as HTMLUListElement;
     const index = questions.children.length;
-
     const newQuestion = generateQuestionHtml(index);
     questions.appendChild(newQuestion);
-    addAnswer(index);
+    addAnswer(index.toString());
     addQuestionHandlers(newQuestion);
 }
 
 // Create a new answer
-function addAnswer(questionIndex) {
-    const answers = document.getElementById(`answers-list-${questionIndex}`);
+function addAnswer(questionIndex: string): void {
+    const answers = document.getElementById(`answers-list-${questionIndex}`) as HTMLUListElement;
     const index = answers.children.length;
-
     const newAnswer = generateAnswerHtml(questionIndex, index);
     addAnswerHandlers(newAnswer);
     answers.appendChild(newAnswer);
+    updateQuestionIndices();
 }
 
 // Generate HTML for a new question given the question index
-function generateQuestionHtml(questionIndex) {
+function generateQuestionHtml(questionIndex: number): HTMLLIElement {
     const newQuestion = document.createElement("li");
     newQuestion.classList.add("card", "mb-3", "question-item");
     newQuestion.innerHTML = `
@@ -187,7 +186,7 @@ function generateQuestionHtml(questionIndex) {
 }
 
 // Generate HTML for a new answer given the question and answer index
-function generateAnswerHtml(questionIndex, answerIndex) {
+function generateAnswerHtml(questionIndex: string | number, answerIndex: number): HTMLLIElement {
     const newAnswer = document.createElement("li");
     newAnswer.classList.add("row", "answer-item", "mb-2", "align-items-center", "p-2");
     newAnswer.innerHTML = `
@@ -215,25 +214,25 @@ function generateAnswerHtml(questionIndex, answerIndex) {
 }
 
 // Sets a question to be deleted and ensures it is not visible anymore
-function removeQuestion(question) {
-    const toDeleteInput = question.querySelector('.question-delete');
+function removeQuestion(question: HTMLLIElement): void {
+    const toDeleteInput = question.querySelector('.question-delete') as HTMLInputElement;
     toDeleteInput.value = "true";
     question.classList.add('d-none');
     updateQuestionIndices();
 }
 
 // Sets an answer to be deleted and ensures it is not visible anymore
-function removeAnswer(answer) {
-    const toDeleteInput = answer.querySelector('.answer-delete');
+function removeAnswer(answer: HTMLLIElement): void {
+    const toDeleteInput = answer.querySelector('.answer-delete') as HTMLInputElement;
     toDeleteInput.value = "true";
     answer.classList.add('d-none');
-    const answersList = answer.closest("ul");
+    const answersList = answer.closest("ul")!;
     updateAnswerIndices(answersList);
 }
 
 // Add drag and drop event handlers for a question
-function addQuestionDnDHandlers(question) {
-    const handle = question.querySelector('.card-header .drag-handle');
+function addQuestionDnDHandlers(question: HTMLLIElement): void {
+    const handle = question.querySelector('.card-header .drag-handle') as HTMLDivElement;
     question.draggable = false;
 
     handle.addEventListener('mousedown', (e) => {
@@ -257,15 +256,15 @@ function addQuestionDnDHandlers(question) {
 }
 
 // Add drag and drop event handlers for an answer
-function addAnswerDnDHandlers(answer) {
-    const handle = answer.querySelector('.drag-handle');
+function addAnswerDnDHandlers(answer: HTMLLIElement): void {
+    const handle = answer.querySelector('.drag-handle') as HTMLDivElement;
     answer.draggable = false;
 
-    handle.addEventListener('mousedown', (e) => {
+    handle.addEventListener('mousedown', () => {
         answer.draggable = true;
     });
 
-    handle.addEventListener('mouseup', (e) => {
+    handle.addEventListener('mouseup', () => {
         answer.draggable = false;
     });
 
@@ -293,72 +292,62 @@ function addAnswerDnDHandlers(answer) {
 }
 
 // Set currently dragged element
-function handleDragStart(e) {
+function handleDragStart(this: HTMLElement, e: DragEvent): void {
     dragSrcEl = this;
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', this.outerHTML);
-    sourceListId = this.closest('ul').id;
+    e.dataTransfer!.effectAllowed = 'move';
+    e.dataTransfer!.setData('text/html', this.outerHTML);
+    sourceListId = this.closest('ul')!.id;
     this.classList.add('dragged');
 }
 
 // Set behaviour when dragging another element over this element
-function handleDragOver(e) {
-    if (e.preventDefault) {
-        e.preventDefault();
-    }
+function handleDragOver(this: HTMLElement, e: DragEvent): boolean {
+    if (e.preventDefault) e.preventDefault();
 
-    if (dragType === "answer" && this.classList.contains('answer-item')) {
-        const currentListId = this.closest('ul').id;
+    const isAnswer = dragType === "answer" && this.classList.contains('answer-item');
+    const isQuestion = dragType === "question" && this.classList.contains('question-item');
+
+    if (isAnswer) {
+        const currentListId = this.closest('ul')!.id;
         if (sourceListId === currentListId) {
             this.classList.add('over');
-            e.dataTransfer.dropEffect = 'move';
+            e.dataTransfer!.dropEffect = 'move';
         } else {
-            e.dataTransfer.dropEffect = 'none';
+            e.dataTransfer!.dropEffect = 'none';
         }
-    } else if (dragType === "question" && this.classList.contains('question-item')) {
+    } else if (isQuestion) {
         this.classList.add('over');
-        e.dataTransfer.dropEffect = 'move';
+        e.dataTransfer!.dropEffect = 'move';
     } else {
-        e.dataTransfer.dropEffect = 'none';
+        e.dataTransfer!.dropEffect = 'none';
     }
 
     return false;
 }
 
 // Reset behaviour when dragging another element away from this element
-function handleDragLeave(e) {
+function handleDragLeave(this: HTMLElement, e: DragEvent): void {
     this.classList.remove('over');
 }
 
 // Drop the currently dragged element and set add all data to the correct position in the page
-function handleDrop(e) {
-    if (e.stopPropagation) {
-        e.stopPropagation();
-    }
+function handleDrop(this: HTMLElement, e: DragEvent): boolean {
+    if (e.stopPropagation) e.stopPropagation();
 
     // Check if the drop target is valid
-    if (dragSrcEl !== this && dragType === "answer" && this.classList.contains('answer-item')) {
-        const currentListId = this.closest('ul').id;
-        if (sourceListId !== currentListId) {
-            this.classList.remove('over');
-            return false;
+    if (dragSrcEl !== this) {
+        const dropHTML = e.dataTransfer!.getData('text/html');
+        dragSrcEl!.parentNode!.removeChild(dragSrcEl!);
+        this.insertAdjacentHTML('beforebegin', dropHTML);
+        const droppedElem = this.previousSibling as HTMLLIElement;
+
+        if (dragType === "answer") {
+            addAnswerHandlers(droppedElem);
+            updateAnswerIndices(this.closest("ul")!);
+        } else if (dragType === "question") {
+            addQuestionHandlers(droppedElem);
+            updateQuestionIndices();
         }
-        
-        const dropHTML = e.dataTransfer.getData('text/html');
-        dragSrcEl.parentNode.removeChild(dragSrcEl);
-        this.insertAdjacentHTML('beforebegin', dropHTML);
-        const droppedElem = this.previousSibling;
-
-        addAnswerHandlers(droppedElem);
-        updateAnswerIndices(this.closest("ul"));
-    } else if (dragSrcEl !== this && dragType === "question" && this.classList.contains('question-item')) {
-        const dropHTML = e.dataTransfer.getData('text/html');
-        dragSrcEl.parentNode.removeChild(dragSrcEl);
-        this.insertAdjacentHTML('beforebegin', dropHTML);
-        const droppedElem = this.previousSibling;
-
-        addQuestionHandlers(droppedElem);
-        updateQuestionIndices();
     }
 
     this.classList.remove('over');
@@ -366,77 +355,72 @@ function handleDrop(e) {
 }
 
 // Reset everything related to the drag
-function handleDragEnd(e) {
+function handleDragEnd(this: HTMLElement, e: DragEvent): void {
     this.draggable = false;
     this.classList.remove('dragged');
 
-    if (dragType === "answer") {
-        document.querySelectorAll('.answer-item.over').forEach(el => el.classList.remove('over'));
-    } else if (dragType === "question") {
-        document.querySelectorAll('.question-item.over').forEach(el => el.classList.remove('over'));
-    }
-
-    // Reset drag type
+    const overClass = dragType === "answer" ? '.answer-item.over' : '.question-item.over';
+    document.querySelectorAll<HTMLElement>(overClass).forEach(el => el.classList.remove('over'));
     dragType = "";
 }
 
 // Set all data of the corresponding question of the model behind the page to the correct values after changing the order of the answers
-function updateAnswerIndices(answerList) {
-    const answers = answerList.querySelectorAll('.answer-item');
+function updateAnswerIndices(answerList: HTMLUListElement): void {
+    const answers = answerList.querySelectorAll<HTMLLIElement>('.answer-item');
     const questionIndex = answerList.id.split('-')[2];
-    
+
     answers.forEach((answer, index) => {
-        const id = answer.querySelector('.answer-id');
+        const id = answer.querySelector('.answer-id') as HTMLInputElement;
         id.name = `Questions[${questionIndex}].Answers[${index}].Id`;
 
-        const toDelete = answer.querySelector('.answer-delete');
+        const toDelete = answer.querySelector('.answer-delete') as HTMLInputElement;
         toDelete.name = `Questions[${questionIndex}].Answers[${index}].ToDelete`;
-        
-        const description = answer.querySelector('.answer-description');
+
+        const description = answer.querySelector('.answer-description') as HTMLInputElement;
         description.name = `Questions[${questionIndex}].Answers[${index}].Description`;
 
-        const criticalCheck = answer.querySelector('.critical-check');
-        const isCriticalValue = answer.querySelector('.critical-value').value;
+        const criticalCheck = answer.querySelector('.critical-check') as HTMLInputElement;
+        const isCriticalValue = (answer.querySelector('.critical-value') as HTMLInputElement).value;
         criticalCheck.checked = isCriticalValue === "true";
     });
 }
 
 // Set all data of the model behind the page to the correct values after changing the order of the questions
-function updateQuestionIndices() {
-    const questions = document.querySelectorAll('.question-item');
+function updateQuestionIndices(): void {
+    const questions = document.querySelectorAll<HTMLLIElement>('.question-item');
     let questionNumber = 1;
-    
+
     questions.forEach((question, index) => {
-        const collapseBody = question.querySelector('.question-body');
+        const collapseBody = question.querySelector('.question-body') as HTMLDivElement;
         collapseBody.id = `question-body-${index}`;
-        
-        const expandButton = question.querySelector('.expand-btn');
+
+        const expandButton = question.querySelector('.expand-btn') as HTMLButtonElement;
         expandButton.setAttribute('data-bs-target', `#question-body-${index}`);
         expandButton.setAttribute('aria-controls', `question-body-${index}`);
-        
-        const questionId = question.querySelector('.question-id');
+
+        const questionId = question.querySelector('.question-id') as HTMLInputElement;
         questionId.name = `Questions[${index}].Id`;
 
-        const toDelete = question.querySelector('.question-delete');
+        const toDelete = question.querySelector('.question-delete') as HTMLInputElement;
         toDelete.name = `Questions[${index}].ToDelete`;
-        
-        const questionLabel = question.querySelector('.question-number');
+
+        const questionLabel = question.querySelector('.question-number') as HTMLLabelElement;
         if (toDelete.value.toLowerCase() === "false") {
             questionLabel.textContent = `Vraag ${questionNumber++}`;
         }
 
-        const questionDescription = question.querySelector('.question-description');
+        const questionDescription = question.querySelector('.question-description') as HTMLInputElement;
         questionDescription.name = `Questions[${index}].Description`;
-        
-        const weightInput = question.querySelector('.question-weight');
+
+        const weightInput = question.querySelector('.question-weight') as HTMLInputElement;
         weightInput.name = `Questions[${index}].Weight`;
 
-        const addAnswerBtn = question.querySelector('.add-answer-btn');
+        const addAnswerBtn = question.querySelector('.add-answer-btn') as HTMLButtonElement;
         addAnswerBtn.setAttribute('question-index', `${index}`);
-        
-        const answersList = question.querySelector('ul[id^="answers-list-"]');
+
+        const answersList = question.querySelector('ul[id^="answers-list-"]') as HTMLUListElement;
         answersList.id = `answers-list-${index}`;
-        
+
         updateAnswerIndices(answersList);
     });
 }
