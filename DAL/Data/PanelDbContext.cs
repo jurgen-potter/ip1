@@ -48,11 +48,19 @@ public class PanelDbContext : IdentityDbContext
 
         modelBuilder.Entity<DrawResult>()
             .HasMany(dr => dr.SelectedMembers)
-            .WithOne();
-        
+            .WithOne()
+            .HasForeignKey("SelectedDrawResultId");
+
+        modelBuilder.Entity<DrawResult>()
+            .HasMany(dr => dr.ReserveMembers)
+            .WithOne()
+            .HasForeignKey("ReserveDrawResultId");
+
         modelBuilder.Entity<DrawResult>()
             .HasMany(dr => dr.NotSelectedMembers)
-            .WithOne();
+            .WithOne()
+            .HasForeignKey("NotSelectedDrawResultId");
+        
         
         modelBuilder.Entity<Panel>()
             .OwnsMany(p => p.RecruitmentBuckets);
