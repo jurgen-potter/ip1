@@ -11,50 +11,6 @@
 <h2>Vul uw gegevens in</h2>
 <div asp-validation-summary="All" class="text-danger"></div>
 <form asp-controller="MemberRegister" asp-action="RegisterMember" method="post">
-    
-    @*
-    <div>
-        <label>Voornaam:</label>
-        <input asp-for="FirstName" type="text" class="form-control">
-        <span asp-validation-for="FirstName" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label>Achternaam:</label>
-        <input asp-for="LastName" type="text" class="form-control">
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-    
-    <div>
-        <label>Wachtwoord:</label>
-        <input asp-for="Password" type="password" class="form-control">
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label>Bevestig wachtwoord:</label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control">
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label>Geslacht:</label>
-        <input type="text" class="form-control" value="@Model.Gender.ToDutch()" readonly>
-        <input type="hidden" asp-for="Gender" value="@Model.Gender"/>
-    </div>
-
-    <div>
-        <label>Geboortedatum:</label>
-        <input asp-for="BirthDate" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")">
-        <span asp-validation-for="BirthDate" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label>Gemeente:</label>
-        <input asp-for="Town" type="text" class="form-control" value="@Model.Town" readonly>
-    </div>
-    *@
-
     <div>
         <label>Email:</label>
         <input asp-for="Email" type="email" class="form-control">
@@ -162,7 +118,7 @@
 {
     @if (!Model.IsConfirmed)
     {
-        <script defer src="dist/js/memberRegister/registerMember.js">
+        <script defer src="~/dist/js/memberRegister/registerMember.js">
         </script>
     }
 }

@@ -4,16 +4,14 @@
 
 function loginInit(): void {
     const selectedLogin = document.getElementById("selectedLogin") as HTMLInputElement;
-    let selectedType = selectedLogin?.value ?? "Account";
-
+    let selectedType = selectedLogin.value;
     let selectedBtn = document.getElementById("accountBtn") as HTMLButtonElement;
-
     if (selectedType !== "Account") {
         selectedType = "Code";
         selectedBtn = document.getElementById("codeBtn") as HTMLButtonElement;
     }
 
-    selectedBtn?.classList.add("active");
+    selectedBtn.classList.add("active");
     showCorrectFields(selectedType);
     setEventListener();
 }

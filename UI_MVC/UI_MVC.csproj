@@ -48,8 +48,4 @@
       </Content>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="wwwroot\js\panel\" />
-    </ItemGroup>
-
 </Project>

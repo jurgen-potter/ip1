@@ -11,24 +11,32 @@
         <section>
             <h2>Selecteer een methode om mee in te loggen</h2>
             <div class="btn-group w-100">
-                <button type="button" id="accountBtn" class="btn btn-lg btn-outline-primary login-type-btn" data-type="Account">Aanmelden met account</button>
-                <button type="button" id="codeBtn" class="btn btn-lg btn-outline-primary login-type-btn" data-type="Code">Aanmelden met code</button>
+                <button type="button" id="accountBtn" class="btn btn-lg btn-outline-primary login-type-btn"
+                        data-type="Account">Aanmelden met account
+                </button>
+                <button type="button" id="codeBtn" class="btn btn-lg btn-outline-primary login-type-btn"
+                        data-type="Code">Aanmelden met code
+                </button>
             </div>
-            <input type="hidden" id="selectedLogin" for="Input.LoginType" value="@(TempData["SelectedLoginType"] ?? "Account")"/>
+            <input type="hidden" id="selectedLogin" value="@(TempData["SelectedLoginType"] ?? "Account")"/>
             <hr/>
-            
+
             <div id="accountFields">
                 <form id="login" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                     <div class="form-floating mb-3">
-                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com"/>
+                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true"
+                               placeholder="name@example.com"/>
                         <label asp-for="Input.Email" class="form-label">Email</label>
-                        <span asp-validation-for="Input.Email" class="text-danger @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "d-none" : "")"></span>
+                        <span asp-validation-for="Input.Email"
+                              class="text-danger @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "d-none" : "")"></span>
                     </div>
                     <div class="form-floating mb-3">
-                        <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password"/>
+                        <input asp-for="Input.Password" class="form-control" autocomplete="current-password"
+                               aria-required="true" placeholder="password"/>
                         <label asp-for="Input.Password" class="form-label">Wachtwoord</label>
-                        <span asp-validation-for="Input.Password" class="text-danger @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "d-none" : "")"></span>
+                        <span asp-validation-for="Input.Password"
+                              class="text-danger @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "d-none" : "")"></span>
                     </div>
                     <div class="checkbox mb-3">
                         <label asp-for="Input.RememberMe" class="form-label">
@@ -44,13 +52,15 @@
                             <a id="forgot-password" asp-page="./ForgotPassword">Wachtwoord vergeten?</a>
                         </p>
                         <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registreer als nieuwe organisatie</a>
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registreer als nieuwe
+                                organisatie</a>
                         </p>
                         <p>
-                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Verzend bevestigingsmail opnieuw</a>
+                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Verzend bevestigingsmail
+                                opnieuw</a>
                         </p>
                     </div>
-                    <input type="hidden" asp-for="Input.LoginType" value="Account"/>
+                    <input type="hidden" name="Input.LoginType" value="Account"/>
                 </form>
             </div>
 
@@ -60,9 +70,10 @@
                     <div class="form-floating mb-3">
                         <input asp-for="Input.Code" class="form-control" aria-required="true" placeholder="Code">
                         <label asp-for="Input.Code">Code</label>
-                        <span asp-validation-for="Input.Code" class="text-danger @(TempData["SelectedLoginType"]?.ToString() == "Account" ? "d-none" : "")"></span>
+                        <span asp-validation-for="Input.Code"
+                              class="text-danger @(TempData["SelectedLoginType"]?.ToString() == "Account" ? "d-none" : "")"></span>
                     </div>
-                    <input type="hidden" asp-for="Input.LoginType" value="Code"/>
+                    <input type="hidden" name="Input.LoginType" value="Code"/>
                     <button id="codeSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Aanmelden</button>
                     <div>
                         <p>
@@ -76,7 +87,7 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script defer src="dist/js/account/login.js">
+    <partial name="_ValidationScriptsPartial"/>
+    <script defer src="~/dist/js/account/login.js">
     </script>
 }
