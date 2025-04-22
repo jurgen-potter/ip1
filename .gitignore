@@ -511,3 +511,6 @@ $RECYCLE.BIN/
 ## Appsettings
 #appsettings.json
 #appsettings.*.json
+
+.package-lock.json
+./wwwroot/dist

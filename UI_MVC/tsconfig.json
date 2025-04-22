@@ -4,8 +4,12 @@
     "module": "commonjs",
     "lib": ["es2022", "dom"],  
     "esModuleInterop": true,
+    "outDir": "wwwroot/dist/js",
+    "rootDir": "wwwroot/js",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true
-  }
+  },
+  "include": ["wwwroot/js/**/*.ts"]
 }
+
