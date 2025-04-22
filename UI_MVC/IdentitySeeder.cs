@@ -20,6 +20,8 @@ public class IdentitySeeder
         await _roleManager.CreateAsync(adminRole);
         var organizationRole = new IdentityRole("Organization");
         await _roleManager.CreateAsync(organizationRole);
+        var memberRole = new IdentityRole("Member");
+        await _roleManager.CreateAsync(memberRole);
         
         // user 1
         var user1 = new IdentityUser()
@@ -52,5 +54,6 @@ public class IdentitySeeder
         await _userManager.CreateAsync(user3, "Paulpaul1!");
         var token3 = await _userManager.GenerateEmailConfirmationTokenAsync(user3);
         await _userManager.ConfirmEmailAsync(user3, token3);
+        await _userManager.AddToRoleAsync(user3, "Member");
     }
 }
