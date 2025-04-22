@@ -17,8 +17,10 @@
     "@types/bootstrap": "^5.2.10"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build && tsc -p tsconfig.json",
-    "preview": "vite preview"
+    "dev":      "vite",
+    "build:ts": "tsc -p tsconfig.json",
+    "build:sass": "sass wwwroot/css:wwwroot/dist/css --no-source-map --style=compressed",
+    "build":    "vite build && npm run build:ts && npm run build:sass",
+    "preview":  "vite preview"
   }
 }
