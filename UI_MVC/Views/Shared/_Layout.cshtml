@@ -12,7 +12,7 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">UI_MVC</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BurgerPanels</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -23,31 +23,23 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Recruitment" asp-action="Index">Demografische data invullen</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Registration" asp-action="Index">Aanmeldingen bekijken</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="TryOutInvitationQRCode" asp-action="Index">TestCodes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="MemberRegister" asp-action="Index">PMIndex</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="MemberRegister" asp-action="Index">Code Registreren</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="TryOutInvitationQRCode" asp-action="Index">TOInvitation</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Panel" asp-action="Index">ToPanel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Panel" asp-action="CreatePanel">MPanel</a>
-                    </li>
-                    @if (User.Identity!.IsAuthenticated && !User.IsInRole("Admin"))
+                    @if (User.IsInRole("Organization"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Recommendation" asp-action="Index">Aanbevelingen</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Panel" asp-action="CreatePanel">Panel Maken</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Panel" asp-action="Index">Dashboard</a>
+                        </li>
+                        
                     }
                     @if (User.IsInRole("Admin"))
                     {
