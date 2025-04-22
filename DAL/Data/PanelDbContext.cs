@@ -15,6 +15,7 @@ public class PanelDbContext : IdentityDbContext
     public DbSet<Member> Members { get; set; }
     public DbSet<Panel> Panels { get; set; }
     public DbSet<Recommendation> Recommendations { get; set; }
+
     public DbSet<UserVote> UserVotes { get; set; } 
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<Criteria> Criteria { get; set; }
@@ -69,6 +70,7 @@ public class PanelDbContext : IdentityDbContext
         modelBuilder.Entity<Panel>()
             .HasMany(p => p.Criteria)
             .WithOne(e => e.Panel);
+        
 
         modelBuilder.Entity<UserVote>()
             .HasOne(uv => uv.Recommendation)

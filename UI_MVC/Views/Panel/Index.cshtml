@@ -2,8 +2,85 @@
 
 @{
     ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";  // Pas aan naar de juiste layout
 }
 
-<h2>Welkom bij uw panel: @Model.Name</h2>
+<link rel="stylesheet" href="~/css/panel/dashboard.css" asp-append-version="true" />
 
-<p>@Model.Description</p>
+<div class="container-fluid p-4">
+
+    <!-- Header Sectie: Titel links, Knoppen rechts -->
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+        <div>
+            <h1 class="h3 mb-0">@Model.Name</h1>
+        </div>
+        <div class="d-flex gap-2">
+            @* Voorbeeld van dynamische action buttons *@
+            <a asp-action="ViewRegistrations" asp-route-id="@Model.PanelId" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-eye me-1"></i> Aanmeldingen Bekijken
+            </a>
+            <a asp-action="EnterDemographics" asp-route-id="@Model.PanelId" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-bar-chart-line me-1"></i> Demografie invoeren
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model.PanelId" class="btn btn-primary btn-sm">
+                <i class="bi bi-pencil-square me-1"></i> Edit Panel
+            </a>
+        </div>
+    </div>
+
+    <!-- Hoofd Layout: Tijdlijn links, Content Rechts -->
+    <div class="row g-4">
+
+        <!-- Kolom 1: Tijdlijn -->
+        <div class="col-lg-3 col-md-4">
+            <aside class="timeline-sidebar bg-light p-3 rounded border h-100">
+                <h3 class="h6 fw-bold mb-4 text-uppercase text-muted">Tijdlijn</h3>
+                <div class="timeline-line"></div>
+                @* @foreach (var evt in Model.Timeline) *@
+                @* { *@
+                @*     <div class="timeline-item"> *@
+                @*         <small class="text-muted d-block mb-1">@evt.Date.ToShortDateString()</small> *@
+                @*         <div>@evt.Description</div> *@
+                @*     </div> *@
+                @* } *@
+            </aside>
+        </div>
+
+        <!-- Kolom 2: Hoofdinhoud (Cards) -->
+        <div class="col-lg-9 col-md-8">
+            <main class="main-content d-flex flex-column gap-4">
+
+                <section class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Beschrijving</h5>
+                        <p class="card-text">@Model.Description</p>
+                    </div>
+                </section>
+
+                @* Aanbevelingen Paneel als Card *@
+                <section class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Aanbevelingen</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            @foreach (var rec in Model.Recommendations)
+                            {
+                                <div class="col-md-6">
+                                    <div class="border p-3 rounded bg-light h-100 d-flex flex-column">
+                                        <h6 class="fw-semibold">@rec.Title</h6>
+                                        <p class="small flex-grow-1">@rec.Description</p>
+                                        <a asp-action="ViewVoters" asp-route-id="rec.Id" class="btn btn-sm btn-outline-info">
+                                            Bekijk Stemmers
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+</div>

@@ -19,8 +19,8 @@ public class PanelController : Controller
     // GET
     public IActionResult Index(int panelId = 1)
     {
-        Panel panel = _panelManager.GetPanelById(panelId);
-
+        Panel panel = _panelManager.GetPanelByIdWithRecommendations(panelId);
+        
         PanelViewModel model = new PanelViewModel()
         {
             PanelId = panel.PanelId,
@@ -30,6 +30,14 @@ public class PanelController : Controller
             EndDate = panel.EndDate,
             CoverImagePath = panel.CoverImagePath
         };
+        model.Recommendations = panel.Recommendations
+            .Select(r => new RecommendationViewModel
+            {
+                Id = r.Id,
+                Title = r.Title,
+                Description = r.Description
+            })
+            .ToList();
         
         return View(model);
     }

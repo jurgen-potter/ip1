@@ -1,0 +1,44 @@
+﻿$timeline-line-color: #dee2e6; // Bootstrap's border color
+$timeline-dot-color: #6c757d;  // Bootstrap's secondary color
+$timeline-dot-size: 12px;
+$timeline-line-left-pos: 20px;
+$timeline-item-margin-left: 45px; // Moet groter zijn dan line-left-pos + dot-size/2
+
+.timeline-sidebar {
+  // Geen grid-area meer nodig
+  // Bootstrap classes regelen nu padding, border, bg etc. in HTML
+
+  h3 {
+    margin-bottom: 1.5rem;
+  }
+
+  position: relative; // Nodig voor lijn/dots
+
+  .timeline-line {
+    position: absolute;
+    left: $timeline-line-left-pos;
+    top: 60px; // Pas aan o.b.v. h3 grootte/margin
+    bottom: 1rem; // Padding onderaan
+    width: 2px;
+    background-color: $timeline-line-color;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-left: $timeline-item-margin-left;
+    padding-bottom: 1.5rem; // Ruimte tussen items
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: -($timeline-item-margin-left - $timeline-line-left-pos + calc($timeline-dot-size / 2) - 1px);
+      top: 4px; // Lijn verticaal uit met tekst start
+      width: $timeline-dot-size;
+      height: $timeline-dot-size;
+      background-color: $timeline-dot-color;
+      border-radius: 50%;
+      border: 1px solid $timeline-dot-color;
+      z-index: 1;
+    }
+  }
+}

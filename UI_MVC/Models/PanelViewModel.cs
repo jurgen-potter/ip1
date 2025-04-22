@@ -16,4 +16,14 @@ public class PanelViewModel
     public DateOnly EndDate { get; set; }
     
     public string CoverImagePath { get; set; }
+    
+    public List<RecommendationViewModel> Recommendations { get; set; } = new();
 }
+
+public class RecommendationViewModel
+{
+    public int    Id          { get; set; }
+    public string Title       { get; set; }
+    public string Description { get; set; }
+}
+
