@@ -10,6 +10,7 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["wwwroot/js/**/*.ts"]
+  "include": ["wwwroot/js/**/*.ts"],
+  "exclude": ["node_modules"]
 }
 

@@ -6,7 +6,7 @@ export default defineConfig({
     build: {
         outDir: 'wwwroot/dist',
         rollupOptions: {
-            input: './main.js', 
+            input: './main.js',
         }
     },
     css: {
