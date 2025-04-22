@@ -5,10 +5,9 @@ namespace CitizenPanel.BL.Domain.Draw;
 public class DrawResult
 {
     public int Id { get; set; }
-    public List<Member> SelectedMembers { get; set; }
-    public List<Member> ReserveMembers { get; set; }
-    
-    public List<Member> NotSelectedMembers { get; set; }
+    public ICollection<Member> SelectedMembers { get; set; }
+    public ICollection<Member> ReserveMembers { get; set; }
+    public ICollection<Member> NotSelectedMembers { get; set; }
 
     public DrawResult()
     {

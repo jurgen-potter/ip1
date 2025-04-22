@@ -1,8 +1,15 @@
-document.addEventListener('DOMContentLoaded', function () {
-    var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+document.addEventListener('DOMContentLoaded', () => {
+    const modalElement = document.getElementById('confirmationModal');
+    if (!modalElement) return;
+
+    const confirmationModal = new bootstrap.Modal(modalElement);
+
     confirmationModal.show();
 
-    document.getElementById('confirmParticipation').addEventListener('click', function () {
-        confirmationModal.hide();
-    });
+    const confirmButton = document.getElementById('confirmParticipation');
+    if (confirmButton) {
+        confirmButton.addEventListener('click', () => {
+            confirmationModal.hide();
+        });
+    }
 });

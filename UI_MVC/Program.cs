@@ -49,7 +49,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
     options.SignIn.RequireConfirmedAccount = true;
 });
-
+builder.Services.AddLiveMonitoring();
 var app = builder.Build();
 
 app.MapRazorPages();
