@@ -1,0 +1,12 @@
+﻿@page
+@using CitizenPanel.BL.Domain.Tenancy
+@model CitizenPanel.UI.MVC.Views.TenantTesting.IndexModel
+@inject Tenant Tenant;
+
+@{
+    ViewBag.Title = "title";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome at @Tenant.Name</h1>
+</div>

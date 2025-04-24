@@ -1,5 +1,6 @@
 using AspNetCoreLiveMonitoring.Extensions;
 using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Tenancy;
 using CitizenPanel.BL.QuestionnaireModule;
 using CitizenPanel.BL.Registration;
 using CitizenPanel.DAL;
@@ -9,6 +10,7 @@ using CitizenPanel.DAL.Registration;
 using CitizenPanel.UI.MVC;
 using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
 using CitizenPanel.UI.MVC.Areas.Identity.Services;
+using CitizenPanel.UI.MVC.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +51,17 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
     options.SignIn.RequireConfirmedAccount = true;
 });
+
 builder.Services.AddLiveMonitoring();
+
+builder.Services.Configure<AvailableTenants>(
+    builder.Configuration.GetSection(AvailableTenants.SectionName)
+    );
+
+builder.Services
+    .AddTenantContext()
+    .AddScoped<TenantMiddleware>();
+
 var app = builder.Build();
 
 app.MapRazorPages();
@@ -80,6 +92,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAndMapLiveMonitoring();
+app.UseMiddleware<TenantMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
