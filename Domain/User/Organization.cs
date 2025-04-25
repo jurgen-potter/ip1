@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CitizenPanel.BL.Domain.Tenancy;
+using Microsoft.AspNetCore.Identity;
 
 namespace CitizenPanel.BL.Domain.User;
 
-public class Organization : IdentityUser
+public class Organization : ApplicationUser, ITenanted
 {
-    public PanelRoles Roles { get; set; }
+    public string TenantId { get; set; }
 }

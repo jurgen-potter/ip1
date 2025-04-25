@@ -1,6 +1,7 @@
 using AspNetCoreLiveMonitoring.Extensions;
 using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Tenancy;
+using CitizenPanel.BL.Domain.User;
 using CitizenPanel.BL.QuestionnaireModule;
 using CitizenPanel.BL.Registration;
 using CitizenPanel.DAL;
@@ -10,6 +11,8 @@ using CitizenPanel.DAL.Registration;
 using CitizenPanel.UI.MVC;
 using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
 using CitizenPanel.UI.MVC.Areas.Identity.Services;
+using CitizenPanel.UI.MVC.Areas.Identity.SignInManagers;
+using CitizenPanel.UI.MVC.Areas.Identity.UserStores;
 using CitizenPanel.UI.MVC.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -41,16 +44,16 @@ builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
 // Add Identity
-builder.Services.AddDefaultIdentity<IdentityUser>()
-    .AddRoles<IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedAccount = true;
+    })
+    .AddUserStore<ApplicationUserStore>()
+    .AddSignInManager<MultiTenantSigninManager>()
     .AddEntityFrameworkStores<PanelDbContext>()
     .AddErrorDescriber<DutchIdentityErrorDescriber>();
 
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.User.RequireUniqueEmail = true;
-    options.SignIn.RequireConfirmedAccount = true;
-});
 
 builder.Services.AddLiveMonitoring();
 
