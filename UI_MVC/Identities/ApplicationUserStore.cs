@@ -4,7 +4,7 @@ using CitizenPanel.DAL.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace CitizenPanel.UI.MVC.Areas.Identity.UserStores;
+namespace CitizenPanel.UI.MVC.Identities;
 
 public class ApplicationUserStore(PanelDbContext context, Tenant tenant, IdentityErrorDescriber describer = null)
     : UserStore<ApplicationUser>(context, describer)

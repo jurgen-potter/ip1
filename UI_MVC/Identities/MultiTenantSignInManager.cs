@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace CitizenPanel.UI.MVC.Areas.Identity.SignInManagers;
+namespace CitizenPanel.UI.MVC.Identities;
 
 public class MultiTenantSigninManager(
     UserManager<ApplicationUser> userManager,

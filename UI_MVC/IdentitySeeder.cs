@@ -5,10 +5,10 @@ namespace CitizenPanel.UI.MVC;
 
 public class IdentitySeeder
 {
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     
-    public IdentitySeeder(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+    public IdentitySeeder(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -24,7 +24,7 @@ public class IdentitySeeder
         await _roleManager.CreateAsync(memberRole);
         
         // user 1
-        var user1 = new IdentityUser()
+        var user1 = new ApplicationUser()
         {
             UserName = "admin@example.com",
             Email = "admin@example.com"

@@ -11,8 +11,7 @@ using CitizenPanel.DAL.Registration;
 using CitizenPanel.UI.MVC;
 using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
 using CitizenPanel.UI.MVC.Areas.Identity.Services;
-using CitizenPanel.UI.MVC.Areas.Identity.SignInManagers;
-using CitizenPanel.UI.MVC.Areas.Identity.UserStores;
+using CitizenPanel.UI.MVC.Identities;
 using CitizenPanel.UI.MVC.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -52,7 +51,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddUserStore<ApplicationUserStore>()
     .AddSignInManager<MultiTenantSigninManager>()
     .AddEntityFrameworkStores<PanelDbContext>()
-    .AddErrorDescriber<DutchIdentityErrorDescriber>();
+    .AddErrorDescriber<DutchIdentityErrorDescriber>()
+    .AddDefaultTokenProviders();
 
 
 builder.Services.AddLiveMonitoring();
@@ -73,7 +73,7 @@ using (IServiceScope scope = app.Services.CreateScope()) {
     PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
     if (context.CreateDatabase(true)) {
         
-        var userManager = scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
+        var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
         IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
         await identitySeeder.SeedAsync();

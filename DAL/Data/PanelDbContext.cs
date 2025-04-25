@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CitizenPanel.DAL.Data;
 
-public class PanelDbContext : IdentityDbContext
+public class PanelDbContext : IdentityDbContext<ApplicationUser>
 {
     private readonly IConfiguration _configuration;
     public DbSet<Member> Members { get; set; }

@@ -10,9 +10,9 @@ public class MemberManager : IMemberManager
     private readonly IDrawManager _drawManager;
     private readonly IPanelManager _panelManager;
     private readonly IMemberRepository _memberRepository;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public MemberManager(IDrawManager drawManager, IPanelManager panelManager, IMemberRepository memberRepository, UserManager<IdentityUser> userManager)
+    public MemberManager(IDrawManager drawManager, IPanelManager panelManager, IMemberRepository memberRepository, UserManager<ApplicationUser> userManager)
     {
         _drawManager = drawManager;
         _panelManager = panelManager;
@@ -20,7 +20,7 @@ public class MemberManager : IMemberManager
         _userManager = userManager;
     }
     
-    public async Task<(IdentityResult result, IdentityUser user)> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<int> newMemberSelectedCriteria, int newMemberPanelId)
+    public async Task<(IdentityResult result, ApplicationUser user)> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<int> newMemberSelectedCriteria, int newMemberPanelId)
     {
         List<SubCriteria> selectedCriteria = new List<SubCriteria>();
         
