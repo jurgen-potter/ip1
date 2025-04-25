@@ -10,13 +10,17 @@ public interface IDrawManager
     public Invitation GetInvitationWithCode(string code);
     public IEnumerable<Invitation> GetAllInvitations();
     public Invitation ChangeInvitation(Invitation invitation);
-    
+
     public Criteria GetCriteria(int criteriaId);
     public IEnumerable<Criteria> GetAllCriteria();
     public IEnumerable<Criteria> GetCriteriaByPanel(int panelId);
     public SubCriteria GetSubCriteria(int subCriteriaId);
+    public void EditCriteria(int PanelId, IEnumerable<Criteria> criteria);
 
-    public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, double malePercentage, double femalePercentage, double age18_25Percentage, double age26_40Percentage, double age41_60Percentage, double age60PlusPercentage, List<Criteria> extraCriteria);
-    
+    public RecruitmentResult CalculateRecruitment(
+        int totalAvailablePotentialPanelmembers,
+        IEnumerable<Criteria> criteriaList
+    );
+
     public bool RemoveInvitation(int invitationId);
 }

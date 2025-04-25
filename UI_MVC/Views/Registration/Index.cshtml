@@ -70,21 +70,21 @@
     <tbody>
     @foreach (var bucket in Model)
     {
-        <tr>
-            <td>@bucket.Gender</td>
-            <td>@bucket.AgeGroup</td>
-            <td>@bucket.Count/@bucket.Target</td>
-            <td>
-                @if (bucket.Count >= bucket.Target)
-                {
-                    <span class="badge bg-success">Voldoende</span>
-                }
-                else
-                {
-                    <span class="badge bg-warning text-dark">Onvoldoende</span>
-                }
-            </td>
-        </tr>
+        @* <tr> *@
+        @*     <td>@bucket.Gender</td> *@
+        @*     <td>@bucket.AgeGroup</td> *@
+        @*     <td>@bucket.Count/@bucket.Target</td> *@
+        @*     <td> *@
+        @*         @if (bucket.Count >= bucket.Target) *@
+        @*         { *@
+        @*             <span class="badge bg-success">Voldoende</span> *@
+        @*         } *@
+        @*         else *@
+        @*         { *@
+        @*             <span class="badge bg-warning text-dark">Onvoldoende</span> *@
+        @*         } *@
+        @*     </td> *@
+        @* </tr> *@
     }
     </tbody>
 </table>

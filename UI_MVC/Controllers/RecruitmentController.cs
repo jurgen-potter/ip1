@@ -2,6 +2,8 @@
 using CitizenPanel.BL.Domain.Draw;
 using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
@@ -13,11 +15,44 @@ public class RecruitmentController : Controller
     {
         _drawManager = drawManager;
     }
-    
+
     [HttpGet]
-    public IActionResult Index()
+    public IActionResult Index(int panelId = 1)
     {
-        return View(new RecruitmentCriteriaViewModel());
+        var criteriaList = _drawManager.GetCriteriaByPanel(panelId);
+
+        var model = new RecruitmentCriteriaViewModel
+        {
+            PanelId = panelId,
+            TotalAvailablePotentialPanelmembers = 0,
+            Criteria = new List<CriteriaViewModel>()
+        };
+
+        foreach (var criteria in criteriaList)
+        {
+            var criteriaVm = new CriteriaViewModel
+            {
+                Id = criteria.Id,
+                Name = criteria.Name,
+                SubCriteria = new List<SubCriteriaViewModel>()
+            };
+
+            foreach (var subcriteria in criteria.SubCriteria)
+            {
+                var subCriteriaVm = new SubCriteriaViewModel
+                {
+                    Id = subcriteria.Id,
+                    Name = subcriteria.Name,
+                    Percentage = subcriteria.Percentage
+                };
+                
+                criteriaVm.SubCriteria.Add(subCriteriaVm);
+            }
+
+            model.Criteria.Add(criteriaVm);
+        }
+
+        return View(model);
     }
 
     [HttpPost]
@@ -27,38 +62,37 @@ public class RecruitmentController : Controller
         {
             return View("Index", model);
         }
-        
-        var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, model.MalePercentage, model.FemalePercentage, model.Age18_25Percentage, model.Age26_40Percentage, model.Age41_60Percentage, model.Age60PlusPercentage, model.Criteria);
 
+        var criteria = _drawManager.GetCriteriaByPanel(model.PanelId);
+        
+        var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers,criteria);
+        
+        
         return View("Result", result);
     }
 
     [HttpPost]
-    public IActionResult AddCustomCriteria(RecruitmentCriteriaViewModel model)
+    public IActionResult AddCriteria(RecruitmentCriteriaViewModel model)
     {
-        model.Criteria.Add(new Criteria());
-        return View("Index", model);
+        _drawManager.addCriteria(model.PanelId, model.Criteria);
+        
+        return RedirectToAction("Index", new { panelId });
+    }
+    
+    [HttpPost]
+    public IActionResult RemoveCriteria(int panelId, int criteriaId)
+    {
+        
+        _drawManager.RemoveCriteria(panelId, criteriaId);
+        
+        return RedirectToAction("Index", new { panelId });
     }
 
     [HttpPost]
-    public IActionResult AddSubCriteria(RecruitmentCriteriaViewModel model, int criteriaIndex)
+    public IActionResult RemoveSubCriteria(int panelId, int criteriaId, int subCriteriaId)
     {
-        model.Criteria[criteriaIndex].SubCriteria.Add(new SubCriteria());
-        return View("Index", model);
-    }
-
-    [HttpPost]
-    public IActionResult RemoveCustomCriteria(RecruitmentCriteriaViewModel model, int criteriaIndex)
-    {
-        model.Criteria.RemoveAt(criteriaIndex);
-        return View("Index", model);
-    }
-
-    [HttpPost]
-    public IActionResult RemoveSubCriteria(RecruitmentCriteriaViewModel model, int criteriaIndex, int subIndex)
-    {
-        model.Criteria.RemoveAll(c => string.IsNullOrWhiteSpace(c.Name));
-        // model.Criteria[criteriaIndex].SubCriteria.RemoveAt(subIndex);
-        return View("Index", model);
+        _drawManager.RemoveSubCriteria(panelId, criteriaId ,subCriteriaId);
+        
+        return RedirectToAction("Index", new { panelId });
     }
 }

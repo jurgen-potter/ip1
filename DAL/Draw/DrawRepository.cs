@@ -71,4 +71,56 @@ public class DrawRepository : IDrawRepository
         _dbContext.Invitations.Remove(invitation);
         return _dbContext.SaveChanges() > 0;
     }
+
+    public void UpdateCriteria(int panelId, IEnumerable<Criteria> updatedCriteria)
+    {
+        // 1) haal alle bestaande criteria voor deze panel
+        var existing = _dbContext.Criteria
+            .Include(c => c.SubCriteria)
+            .Where(c => c.Panel.PanelId == panelId)
+            .ToList();
+
+        // 2) verwijder criteria die verdwenen zijn
+        foreach (var toRemove in existing.Where(e => !updatedCriteria.Any(u => u.Id == e.Id)))
+        {
+            _dbContext.Criteria.Remove(toRemove);
+        }
+
+        // 3) verwerk elke criteria uit de aangeleverde lijst
+        foreach (var upd in updatedCriteria)
+        {
+            if (upd.Id == 0)
+            {
+                // nieuw
+                var crit = new Criteria {
+                    Panel = _dbContext.Panels.Find(panelId),
+                    Name = upd.Name
+                };
+                foreach (var sc in upd.SubCriteria)
+                    crit.SubCriteria.Add(new SubCriteria {
+                        Name = sc.Name,
+                        Percentage = sc.Percentage
+                    });
+                _dbContext.Criteria.Add(crit);
+            }
+            else
+            {
+                // bestaand bijwerken
+                var existCrit = existing.Single(e => e.Id == upd.Id);
+                existCrit.Name = upd.Name;
+
+                // subcriteria: eerst alle oude weghalen
+                _dbContext.SubCriteria.RemoveRange(existCrit.SubCriteria);
+                // en vervangen door de nieuwe
+                existCrit.SubCriteria = upd.SubCriteria
+                    .Select(sc => new SubCriteria {
+                        Name = sc.Name,
+                        Percentage = sc.Percentage
+                    }).ToList();
+            }
+        }
+
+        _dbContext.SaveChanges();
+    }
+
 }

@@ -14,7 +14,7 @@ public class DrawManager : IDrawManager
     {
         _drawRepository = drawRepository;
     }
-    
+
     public IEnumerable<Invitation> AddInvitations(List<DummyMember> members)
     {
         QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -28,13 +28,13 @@ public class DrawManager : IDrawManager
             string postCode = dummyMember.Postcode;
             string code = GenerateCode();
 
-            string qrCodePlace = "https://whimp-24.ew.r.appspot.com/MemberRegister/RegisterMember?code=" + code; 
+            string qrCodePlace = "https://whimp-24.ew.r.appspot.com/MemberRegister/RegisterMember?code=" + code;
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
             PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
             byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
             string qrCodeString = Convert.ToBase64String(qrCodeAsPngByteArr);
 
-            
+
             Invitation invitation = new Invitation()
             {
                 Code = code,
@@ -46,7 +46,7 @@ public class DrawManager : IDrawManager
             Invitation newInvitation = _drawRepository.CreateInvitation(invitation);
             invitations.Add(newInvitation);
         }
-        
+
         return invitations;
     }
 
@@ -64,7 +64,7 @@ public class DrawManager : IDrawManager
     {
         return _drawRepository.UpdateInvitation(invitation);
     }
-    
+
     public string GenerateCode()
     {
         Random random = new Random();
@@ -89,129 +89,177 @@ public class DrawManager : IDrawManager
                     newLetDig = (char)('0' + replaceNumber);
                 }
             }
-            code += newLetDig;
 
+            code += newLetDig;
         }
+
         return code;
     }
-    
-    
+
+
     public Criteria GetCriteria(int criteriaId)
     {
         return _drawRepository.ReadCriteria(criteriaId);
     }
-    
+
     public IEnumerable<Criteria> GetAllCriteria()
     {
         return _drawRepository.ReadAllCriteria();
     }
-    
+
     public SubCriteria GetSubCriteria(int subCriteriaId)
     {
         return _drawRepository.ReadSubCriteria(subCriteriaId);
     }
-    
+
     public IEnumerable<Criteria> GetCriteriaByPanel(int panelId)
     {
         return _drawRepository.ReadCriteriaByPanel(panelId);
     }
 
-    public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, double malePercentage, double femalePercentage, double age18_25Percentage, double age26_40Percentage, double age41_60Percentage, double age60PlusPercentage, List<Criteria> extraCriteria)
+    public void EditCriteria(int PanelId, IEnumerable<Criteria> criteria)
     {
-        var reservePerc = 0.08;
-        var totalAvailablePotPanelmembers = Math.Round(0.50 * Math.Sqrt(totalAvailablePotentialPanelmembers));
+        _drawRepository.UpdateCriteria(PanelId, criteria);
+    }
 
 
-        var maleCount = (int)(totalAvailablePotPanelmembers * (malePercentage / 100));
-        var femaleCount = (int)(totalAvailablePotPanelmembers * (femalePercentage / 100));
-        var age18_25Count = (int)(totalAvailablePotPanelmembers * (age18_25Percentage / 100));
-        var age26_40Count = (int)(totalAvailablePotPanelmembers * (age26_40Percentage / 100));
-        var age41_60Count = (int)(totalAvailablePotPanelmembers * (age41_60Percentage / 100));
-        var age60PlusCount = (int)(totalAvailablePotPanelmembers * (age60PlusPercentage / 100));
-        var reservePotPanelmembers = (int)(totalAvailablePotPanelmembers / reservePerc);
-        var totalNeededPanelmembers = (int)(totalAvailablePotPanelmembers);
+    public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, IEnumerable<Criteria> criteriaList)
+    {
+        // 1) Bepaal aantal te trekken panelleden
+        int totalToDraw = (int)Math.Round(0.50 * Math.Sqrt(totalAvailablePotentialPanelmembers));
+    
+        // Reserve pool berekening (ongeveer 8% van bevolking zal reageren)
+        int reservePool = (int)Math.Ceiling(totalToDraw / 0.08);
 
-        var genderCount = maleCount + femaleCount;
-        while (genderCount < totalNeededPanelmembers)
-        {
-            var neededGender = totalNeededPanelmembers - genderCount;
-            if (neededGender % 2 == 0 || neededGender > 1)
-            {
-                maleCount++;
-                femaleCount++;
-                genderCount+=2;
-            }
-            else
-            {
-                maleCount++;
-                genderCount+=2;
-            }
-        }
-        
-        var ageCount = age18_25Count + age26_40Count + age41_60Count + age60PlusCount;
-        while (ageCount < totalNeededPanelmembers)
-        {
-            var neededAge = totalNeededPanelmembers - ageCount;
-            if (neededAge % 4 == 0 || neededAge > 3)
-            {
-                age18_25Count++;
-                age26_40Count++;
-                age41_60Count++;
-                age60PlusCount++;
-                ageCount += 4;
-            }
-            else if (neededAge % 4 == 3)
-            {
-                age18_25Count++;
-                age26_40Count++;
-                age41_60Count++;
-                ageCount+=4;
-            }
-            else if (neededAge % 4 == 2)
-            {
-                age18_25Count++;
-                age26_40Count++;
-                ageCount+=4;
-            }
-            else
-            {
-                age18_25Count++;
-                ageCount+=4;
-            }
-
-        }
-        
+        // 2) Bouw resultaat op — géén hard-coded velden meer
         var result = new RecruitmentResult
         {
-            MaleCount = maleCount,
-            FemaleCount = femaleCount,
-            Age18_25Count = age18_25Count,
-            Age26_40Count = age26_40Count,
-            Age41_60Count = age41_60Count,
-            Age60PlusCount = age60PlusCount,
-            ReservePotPanelmembers = reservePotPanelmembers,
-            TotalNeededPanelmembers = totalNeededPanelmembers,
+            TotalNeededPanelmembers = totalToDraw,
+            ReservePotPanelmembers = reservePool,
             CriteriaResults = new List<CriteriaResult>()
         };
 
-        
-        // Extra criteria (wordt overgenomen zoals eerder)
-        foreach (var extra in extraCriteria)
+        // 3) Loop over álle criteria en subcriteria
+        foreach (var crit in criteriaList)
         {
-            var criteriaResult = new CriteriaResult
+            var critResult = new CriteriaResult
             {
-                Name = extra.Name,
-                SubResults = extra.SubCriteria.Select(sub => new SubCriteriaResult
+                Name = crit.Name,
+                SubResults = new List<SubCriteriaResult>()
+            };
+
+            foreach (var sub in crit.SubCriteria)
+            {
+                critResult.SubResults.Add(new SubCriteriaResult
                 {
                     Name = sub.Name,
-                    Count = (int)(totalAvailablePotPanelmembers * (sub.Percentage / 100))
-                }).ToList()
-            };
-            result.CriteriaResults.Add(criteriaResult);
+                    Count = (int)Math.Round(totalToDraw * (sub.Percentage / 100))
+                });
+            }
+
+            result.CriteriaResults.Add(critResult);
         }
 
         return result;
     }
+
+
+    // public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, double malePercentage, double femalePercentage, double age18_25Percentage, double age26_40Percentage, double age41_60Percentage, double age60PlusPercentage, List<Criteria> extraCriteria)
+    // {
+    //     var reservePerc = 0.08;
+    //     var totalAvailablePotPanelmembers = Math.Round(0.50 * Math.Sqrt(totalAvailablePotentialPanelmembers));
+    //
+    //
+    //     var maleCount = (int)(totalAvailablePotPanelmembers * (malePercentage / 100));
+    //     var femaleCount = (int)(totalAvailablePotPanelmembers * (femalePercentage / 100));
+    //     var age18_25Count = (int)(totalAvailablePotPanelmembers * (age18_25Percentage / 100));
+    //     var age26_40Count = (int)(totalAvailablePotPanelmembers * (age26_40Percentage / 100));
+    //     var age41_60Count = (int)(totalAvailablePotPanelmembers * (age41_60Percentage / 100));
+    //     var age60PlusCount = (int)(totalAvailablePotPanelmembers * (age60PlusPercentage / 100));
+    //     var reservePotPanelmembers = (int)(totalAvailablePotPanelmembers / reservePerc);
+    //     var totalNeededPanelmembers = (int)(totalAvailablePotPanelmembers);
+    //
+    //     var genderCount = maleCount + femaleCount;
+    //     while (genderCount < totalNeededPanelmembers)
+    //     {
+    //         var neededGender = totalNeededPanelmembers - genderCount;
+    //         if (neededGender % 2 == 0 || neededGender > 1)
+    //         {
+    //             maleCount++;
+    //             femaleCount++;
+    //             genderCount+=2;
+    //         }
+    //         else
+    //         {
+    //             maleCount++;
+    //             genderCount+=2;
+    //         }
+    //     }
+    //     
+    //     var ageCount = age18_25Count + age26_40Count + age41_60Count + age60PlusCount;
+    //     while (ageCount < totalNeededPanelmembers)
+    //     {
+    //         var neededAge = totalNeededPanelmembers - ageCount;
+    //         if (neededAge % 4 == 0 || neededAge > 3)
+    //         {
+    //             age18_25Count++;
+    //             age26_40Count++;
+    //             age41_60Count++;
+    //             age60PlusCount++;
+    //             ageCount += 4;
+    //         }
+    //         else if (neededAge % 4 == 3)
+    //         {
+    //             age18_25Count++;
+    //             age26_40Count++;
+    //             age41_60Count++;
+    //             ageCount+=4;
+    //         }
+    //         else if (neededAge % 4 == 2)
+    //         {
+    //             age18_25Count++;
+    //             age26_40Count++;
+    //             ageCount+=4;
+    //         }
+    //         else
+    //         {
+    //             age18_25Count++;
+    //             ageCount+=4;
+    //         }
+    //
+    //     }
+    //     
+    //     var result = new RecruitmentResult
+    //     {
+    //         MaleCount = maleCount,
+    //         FemaleCount = femaleCount,
+    //         Age18_25Count = age18_25Count,
+    //         Age26_40Count = age26_40Count,
+    //         Age41_60Count = age41_60Count,
+    //         Age60PlusCount = age60PlusCount,
+    //         ReservePotPanelmembers = reservePotPanelmembers,
+    //         TotalNeededPanelmembers = totalNeededPanelmembers,
+    //         CriteriaResults = new List<CriteriaResult>()
+    //     };
+    //
+    //     
+    //     // Extra criteria (wordt overgenomen zoals eerder)
+    //     foreach (var extra in extraCriteria)
+    //     {
+    //         var criteriaResult = new CriteriaResult
+    //         {
+    //             Name = extra.Name,
+    //             SubResults = extra.SubCriteria.Select(sub => new SubCriteriaResult
+    //             {
+    //                 Name = sub.Name,
+    //                 Count = (int)(totalAvailablePotPanelmembers * (sub.Percentage / 100))
+    //             }).ToList()
+    //         };
+    //         result.CriteriaResults.Add(criteriaResult);
+    //     }
+    //
+    //     return result;
+    // }
     public bool RemoveInvitation(int invitationId)
     {
         return _drawRepository.DeleteInvitation(invitationId);

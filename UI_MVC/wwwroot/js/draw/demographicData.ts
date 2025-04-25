@@ -1,0 +1,272 @@
+﻿let allCriteriasCollapsed: boolean = false;
+
+window.addEventListener('DOMContentLoaded', () => {
+    editCriteriaInit();
+    initSubcriteriaSums();
+});
+
+// ----------------------
+// Initialization
+// ----------------------
+function editCriteriaInit(): void {
+    // bestaande criteria-items initialiseren
+    document
+        .querySelectorAll<HTMLLIElement>('.criteria-item')
+        .forEach((item) => addCriteriaHandlers(item));
+
+    // "Voeg criteria toe" knop
+    const addBtn = document.getElementById('add-criteria-btn') as HTMLButtonElement | null;
+    addBtn?.addEventListener('click', () => addCriteria());
+
+    // "Alles invouwen" knop
+    const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement | null;
+    toggleAllBtn?.addEventListener('click', () => cToggleExpandAll(toggleAllBtn));
+}
+
+// ----------------------
+// Criteria handlers
+// ----------------------
+function addCriteriaHandlers(criteria: HTMLLIElement): void {
+    // uitklap pijltje
+    const expandBtn = criteria.querySelector<HTMLButtonElement>('.expand-btn');
+    expandBtn?.addEventListener('click', () => cToggleArrow(expandBtn!));
+
+    // verwijder criteria
+    const removeBtn = criteria.querySelector<HTMLButtonElement>('.remove-criteria-btn');
+    removeBtn?.addEventListener('click', () => {
+        removeCriteria(criteria);
+        initSubcriteriaSums();
+    });
+
+    // voeg subcriteria toe
+    const addSubBtn = criteria.querySelector<HTMLButtonElement>('.add-subcriteria-btn');
+    addSubBtn?.addEventListener('click', () => {
+        const idx = addSubBtn.getAttribute('criteria-index');
+        if (idx !== null) {
+            addSubCriteria(idx);
+            initSubcriteriaSums();
+        }
+    });
+}
+
+// ----------------------
+// Subcriteria handlers
+// ----------------------
+function addSubCriteriaHandlers(sub: HTMLLIElement): void {
+    // verwijder subcriteria
+    const removeSub = sub.querySelector<HTMLButtonElement>('.remove-subcriteria-btn');
+    removeSub?.addEventListener('click', () => {
+        removeSubCriteria(sub);
+        initSubcriteriaSums();
+    });
+}
+
+// ----------------------
+// Collapse / Expand
+// ----------------------
+function cToggleArrow(btn: HTMLButtonElement | null): void {
+    if (!btn) return;
+    const icon = btn.querySelector('i');
+    icon?.classList.toggle('bi-chevron-up');
+    icon?.classList.toggle('bi-chevron-down');
+}
+
+function cToggleExpandAll(btn: HTMLButtonElement | null): void {
+    document.querySelectorAll<HTMLDivElement>('.criteria-body').forEach((body) => {
+        const collapse = (window as any).bootstrap.Collapse.getOrCreateInstance(body);
+        allCriteriasCollapsed ? collapse.show() : collapse.hide();
+    });
+
+    allCriteriasCollapsed = !allCriteriasCollapsed;
+    if (btn) btn.innerHTML = allCriteriasCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
+
+    document.querySelectorAll<HTMLButtonElement>('.expand-btn').forEach((b) => {
+        const icon = b.querySelector('i');
+        if (!icon) return;
+        icon.classList.toggle('bi-chevron-up', !allCriteriasCollapsed);
+        icon.classList.toggle('bi-chevron-down', allCriteriasCollapsed);
+    });
+}
+
+// ----------------------
+// Create / Remove items
+// ----------------------
+function addCriteria(): void {
+    const list = document.getElementById('criterias-list') as HTMLUListElement | null;
+    if (!list) return;
+
+    const ci = list.children.length;
+    const newLi = generateCriteriaHtml(ci);
+    list.appendChild(newLi);
+    addCriteriaHandlers(newLi);
+
+    // standaard één lege subcriteria bij nieuwe criteria
+    addSubCriteria(ci.toString());
+    updateCriteriaIndices();
+}
+
+function removeCriteria(criteria: HTMLLIElement): void {
+    criteria.remove();
+    updateCriteriaIndices();
+}
+
+function addSubCriteria(ci: string): void {
+    const subList = document.getElementById(`subcriterias-list-${ci}`) as HTMLUListElement | null;
+    if (!subList) return;
+
+    const sci = subList.children.length;
+    const newSub = generateSubCriteriaHtml(ci, sci);
+    subList.appendChild(newSub);
+    addSubCriteriaHandlers(newSub);
+    updateSubCriteriaIndices(subList);
+}
+
+function removeSubCriteria(sub: HTMLLIElement): void {
+    const parent = sub.closest('ul') as HTMLUListElement | null;
+    sub.remove();
+    if (parent) updateSubCriteriaIndices(parent);
+}
+
+// ----------------------
+// HTML Generators
+// ----------------------
+function generateCriteriaHtml(ci: number): HTMLLIElement {
+    const li = document.createElement('li');
+    li.className = 'card mb-3 criteria-item';
+    li.innerHTML = `
+    <input name="Criterias[${ci}].Id" type="hidden" class="criteria-id" value="0" />
+    <input name="Criterias[${ci}].ToDelete" type="hidden" class="criteria-delete" value="false" />
+    <div class="card-header d-flex align-items-start">
+      <div class="flex-grow-1">
+        <label class="form-label fw-bold criteria-number">Criteria ${ci + 1}</label>
+        <div class="d-flex align-items-center w-100">
+          <input name="Criterias[${ci}].Description"
+                 class="form-control mb-0 criteria-description"
+                 placeholder="Criteria omschrijving" />
+          <button type="button"
+                  class="btn btn-danger btn-sm ms-2 remove-criteria-btn">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+      <button class="btn btn-sm expand-btn ms-2"
+              data-bs-toggle="collapse"
+              data-bs-target="#criteria-body-${ci}">
+        <i class="bi bi-chevron-up"></i>
+      </button>
+    </div>
+    <div class="collapse show criteria-body" id="criteria-body-${ci}">
+      <div class="card-body">
+        <label class="form-label fw-bold">Subcriteria</label>
+        <ul id="subcriterias-list-${ci}"></ul>
+          <div class="d-flex justify-content-between align-items-center mt-2">
+                 <button type="button"
+                class="btn btn-sm btn-secondary add-subcriteria-btn"
+                criteria-index="${ci}">
+          Voeg een subcriteria toe
+        </button>
+        <div class="subcriteria-total mt-2 text-end small">
+          Totaal: <span class="subcriteria-sum">0</span>% 
+          <span class="text-danger subcriteria-warning" style="display:none;">
+            (moet 100%)
+          </span>
+         </div>
+        </div>
+      </div>
+    </div>
+  `;
+    return li;
+}
+
+function generateSubCriteriaHtml(ci: string, sci: number): HTMLLIElement {
+    const li = document.createElement('li');
+    li.className = 'row subcriteria-item mb-2 align-items-center p-2';
+    li.innerHTML = `
+    <input name="Criterias[${ci}].SubCriterias[${sci}].Id"
+           type="hidden" class="subcriteria-id" value="0" />
+    <input name="Criterias[${ci}].SubCriterias[${sci}].ToDelete"
+           type="hidden" class="subcriteria-delete" value="false" />
+    <div class="col">
+      <input name="Criterias[${ci}].SubCriterias[${sci}].Description"
+             class="form-control subcriteria-description"
+             placeholder="Subcriteria omschrijving" />  
+    </div>
+    <div class="col-auto">
+      <div class="input-group">
+        <input name="Criterias[${ci}].SubCriterias[${sci}].Percentage"
+               type="number" min="0" max="100"
+               class="form-control subcriteria-percentage"
+               value="0" aria-label="Percentage" />
+        <span class="input-group-text">%</span>
+      </div>
+    </div>
+    <div class="col-auto">
+      <button type="button"
+              class="btn btn-danger btn-sm remove-subcriteria-btn">
+        Verwijder
+      </button>
+    </div>
+  `;
+    return li;
+}
+
+
+// ----------------------
+// Re-indexing
+// ----------------------
+function updateCriteriaIndices(): void {
+    document.querySelectorAll<HTMLLIElement>('.criteria-item').forEach((el, i) => {
+        el.querySelector<HTMLLabelElement>('.criteria-number')!.textContent = `Criteria ${i + 1}`;
+        el.querySelector<HTMLDivElement>('.criteria-body')!.id = `criteria-body-${i}`;
+        el.querySelector<HTMLButtonElement>('.expand-btn')!
+            .setAttribute('data-bs-target', `#criteria-body-${i}`);
+        el.querySelector<HTMLUListElement>('[id^="subcriterias-list-"]')!
+            .id = `subcriterias-list-${i}`;
+        el.querySelector<HTMLButtonElement>('.add-subcriteria-btn')!
+            .setAttribute('criteria-index', String(i));
+    });
+}
+
+function updateSubCriteriaIndices(list: HTMLUListElement): void {
+    const ci = list.id.split('-').pop()!;
+    list.querySelectorAll<HTMLLIElement>('.subcriteria-item').forEach((el, j) => {
+        el.querySelector<HTMLInputElement>('.subcriteria-id')!
+            .setAttribute('name', `Criterias[${ci}].SubCriterias[${j}].Id`);
+        el.querySelector<HTMLInputElement>('.subcriteria-delete')!
+            .setAttribute('name', `Criterias[${ci}].SubCriterias[${j}].ToDelete`);
+        el.querySelector<HTMLInputElement>('.subcriteria-description')!
+            .setAttribute('name', `Criterias[${ci}].SubCriterias[${j}].Description`);
+        el.querySelector<HTMLInputElement>('.subcriteria-percentage')!
+            .setAttribute('name', `Criterias[${ci}].SubCriterias[${j}].Percentage`);
+    });
+}
+
+// ----------------------
+// Live total check
+// ----------------------
+function initSubcriteriaSums(): void {
+    document.querySelectorAll<HTMLLIElement>('.criteria-item').forEach(criteria => {
+        const subList = criteria.querySelector<HTMLUListElement>('[id^="subcriterias-list-"]');
+        if (!subList) return;
+
+        const sumDisplay = criteria.querySelector<HTMLSpanElement>('.subcriteria-sum')!;
+        const warning = criteria.querySelector<HTMLElement>('.subcriteria-warning')!;
+
+        const updateSum = () => {
+            const inputs = Array.from(subList.querySelectorAll<HTMLInputElement>('.subcriteria-percentage'));
+            const total = inputs.reduce((acc, i) => acc + Number(i.value), 0);
+            sumDisplay.textContent = String(total);
+            warning.style.display = (total === 100) ? 'none' : 'inline';
+        };
+
+        // delegatie: luister op de parent-lijst
+        subList.addEventListener('input', (ev) => {
+            const tgt = ev.target as HTMLInputElement;
+            if (tgt.classList.contains('subcriteria-percentage')) {
+                updateSum();
+            }
+        });
+
+        updateSum();
+    });
+}

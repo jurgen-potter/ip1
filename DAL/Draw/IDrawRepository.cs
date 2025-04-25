@@ -16,5 +16,6 @@ public interface IDrawRepository
     
     public SubCriteria ReadSubCriteria(int subCriteriaId);
     IEnumerable<Criteria> ReadCriteriaByPanel(int panelId);
+    public void UpdateCriteria(int PanelId, IEnumerable<Criteria> criteria);
     public bool DeleteInvitation(int invitationId);
 }

@@ -32,7 +32,7 @@ builder.Services.AddScoped<IDrawManager, DrawManager>();
 builder.Services.AddScoped<IPanelManager, PanelManager>();
 builder.Services.AddScoped<IQuestionnaireModuleManager, QuestionnaireModuleManager>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
-builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
+// builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IMemberManager, MemberManager>();
 builder.Services.AddLiveMonitoring();

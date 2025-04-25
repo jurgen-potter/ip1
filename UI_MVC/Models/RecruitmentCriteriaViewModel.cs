@@ -3,30 +3,27 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CitizenPanel.UI.MVC.Models;
 
-public class RecruitmentCriteriaViewModel : IValidatableObject
+public class RecruitmentCriteriaViewModel
 {
+    public int PanelId { get; set; }
+
     public int TotalAvailablePotentialPanelmembers { get; set; }
-    public double MalePercentage { get; set; }
-    public double FemalePercentage { get; set; }
-    public double Age18_25Percentage { get; set; }
-    public double Age26_40Percentage { get; set; }
-    public double Age41_60Percentage { get; set; }
-    public double Age60PlusPercentage { get; set; }
-    public List<Criteria> Criteria { get; set; } = new List<Criteria>();
-    
-    
-    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-    {
-        if (MalePercentage + FemalePercentage != 100)
-            yield return new ValidationResult("Het totaal van man en vrouw moet precies 100% zijn.");
 
-        if (Age18_25Percentage + Age26_40Percentage + Age41_60Percentage + Age60PlusPercentage != 100)
-            yield return new ValidationResult("Het totaal van de leeftijdsgroepen moet precies 100% zijn.");
-
-        foreach (var criteria in Criteria)
-        {
-            if (criteria.SubCriteria.Sum(s => s.Percentage) != 100)
-                yield return new ValidationResult($"De subcategorieën van '{criteria.Name}' moeten samen 100% zijn.");
-        }
-    }
+    // Alle criteria (bijv. “Gender”, “Age”, “Transport”, …)
+    public List<CriteriaViewModel> Criteria { get; set; } = new();
 }
+
+public class CriteriaViewModel
+{
+    public int Id { get; set; }
+    public string Name { get; set; } // bv. “Gender”, “Age”, “Transport”
+    public List<SubCriteriaViewModel> SubCriteria { get; set; } = new();
+}
+
+public class SubCriteriaViewModel
+{
+    public int Id { get; set; }
+    public string Name { get; set; } // bv. “Male”, “Female” of “18-25”, “Bus”, etc.
+    public double Percentage { get; set; }
+}
+
