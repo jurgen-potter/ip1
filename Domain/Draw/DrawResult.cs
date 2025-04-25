@@ -1,18 +1,16 @@
-﻿using CitizenPanel.BL.Domain.User;
+﻿using CitizenPanel.BL.Domain.Tenancy;
+using CitizenPanel.BL.Domain.User;
+using System.ComponentModel.DataAnnotations;
 
 namespace CitizenPanel.BL.Domain.Draw;
 
-public class DrawResult
+public class DrawResult : ITenanted
 {
     public int Id { get; set; }
-    public ICollection<Member> SelectedMembers { get; set; }
-    public ICollection<Member> ReserveMembers { get; set; }
-    public ICollection<Member> NotSelectedMembers { get; set; }
-
-    public DrawResult()
-    {
-        SelectedMembers = new List<Member>();
-        ReserveMembers = new List<Member>();
-        NotSelectedMembers = new List<Member>();
-    }
+    public ICollection<Member> SelectedMembers { get; set; } = new List<Member>();
+    public ICollection<Member> ReserveMembers { get; set; } = new List<Member>();
+    public ICollection<Member> NotSelectedMembers { get; set; } = new List<Member>();
+    
+    [Required]
+    public string TenantId { get; set; }
 }

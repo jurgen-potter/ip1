@@ -31,7 +31,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="MemberRegister" asp-action="Index">Code Registreren</a>
                     </li>
-                    @if (User.IsInRole("Organization"))
+                    @if (User.IsInRole("Organization") || User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Panel" asp-action="CreatePanel">Panel Maken</a>

@@ -42,7 +42,7 @@ public class PanelController : Controller
         return View(model);
     }
 
-    [Authorize(Roles = "Organization")]
+    [Authorize(Roles = "Organization, Admin")]
     [HttpGet]
     public IActionResult CreatePanel()
     {
@@ -50,7 +50,7 @@ public class PanelController : Controller
         return View(model);
     }
     
-    [Authorize(Roles = "Organization")]
+    [Authorize(Roles = "Organization, Admin")]
     [HttpPost]
     public IActionResult CreatePanel(CreatePanelViewModel model)
     {

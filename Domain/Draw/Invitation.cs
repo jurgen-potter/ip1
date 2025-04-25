@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CitizenPanel.BL.Domain.Tenancy;
+using System.ComponentModel.DataAnnotations;
 using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.BL.Domain.Draw;
 
-public class Invitation
+public class Invitation : ITenanted
 {
     public int Id { get; set; }
     public string Code { get; set; }
@@ -16,5 +17,7 @@ public class Invitation
     public bool IsDrawn { get; set; }
     public List<int> SelectedCriteria { get; set; }
     public string Email { get; set; }
+    [Required]
+    public string TenantId { get; set; }
     
 }
