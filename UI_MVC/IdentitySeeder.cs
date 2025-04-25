@@ -41,6 +41,10 @@ public class IdentitySeeder
             Email = "antwerpen@example.com"
         };
         await _userManager.CreateAsync(user2, "Antwerpen1!");
+        
+        user2.TenantId = "antwerpen";
+        await _userManager.UpdateAsync(user2);
+        
         var token2 = await _userManager.GenerateEmailConfirmationTokenAsync(user2);
         await _userManager.ConfirmEmailAsync(user2, token2);
         await _userManager.AddToRoleAsync(user2, "Organization");
@@ -52,6 +56,10 @@ public class IdentitySeeder
             Email = "paul@example.com"
         };
         await _userManager.CreateAsync(user3, "Paulpaul1!");
+        
+        user3.TenantId = "antwerpen";
+        await _userManager.UpdateAsync(user2);
+        
         var token3 = await _userManager.GenerateEmailConfirmationTokenAsync(user3);
         await _userManager.ConfirmEmailAsync(user3, token3);
         await _userManager.AddToRoleAsync(user3, "Member");

@@ -43,8 +43,13 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
     {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.Entity<Member>().ToTable("Members");
-        modelBuilder.Entity<Organization>().ToTable("Organizations");
+        modelBuilder.Entity<Member>()
+            .ToTable("Members")
+            .HasBaseType<ApplicationUser>();
+
+        modelBuilder.Entity<Organization>()
+            .ToTable("Organizations")
+            .HasBaseType<ApplicationUser>();
 
         modelBuilder.Entity<DrawResult>()
             .HasMany(dr => dr.SelectedMembers)
