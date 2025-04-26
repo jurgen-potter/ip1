@@ -20,8 +20,10 @@ public class PanelRepository : IPanelRepository
         return _dbContext.Panels
             .Include(p => p.DrawResult)
             .ThenInclude(dr => dr.SelectedMembers)
+            .ThenInclude(m => m.MemberProfile)
             .Include(p => p.DrawResult)
             .ThenInclude(dr => dr.ReserveMembers)
+            .ThenInclude(m => m.MemberProfile)
             .SingleOrDefault(p => p.PanelId == panelId);
     }
 
@@ -74,7 +76,8 @@ public class PanelRepository : IPanelRepository
     {
         return _dbContext.Recommendations
             .Include(r => r.UserVotes) 
-            .ThenInclude(uv => uv.Voter)  
+            .ThenInclude(uv => uv.Voter)
+            .ThenInclude(v => v.MemberProfile)
             .SingleOrDefault(r => r.Id == recommendationId);
     }
     
