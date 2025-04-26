@@ -114,6 +114,8 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateOrganization();
+                user.UserType = UserType.Organization;
+                user.OrganizationProfile = new OrganizationProfile();
 
                 await _userManager.AddToRoleAsync(user, "Organization");
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -161,16 +163,16 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private Organization CreateOrganization()
+        private ApplicationUser CreateOrganization()
         {
             try
             {
-                return Activator.CreateInstance<Organization>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(Organization)}'. " +
-                    $"Ensure that '{nameof(Organization)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }

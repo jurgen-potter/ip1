@@ -123,420 +123,782 @@ public class DataSeeder
         _panelDbContext.Panels.Add(panel2);
 
         // Create initial list with members for Panel 1 and Panel 2
-        var members = new List<Member>
+        var members = new List<ApplicationUser>
         {
+            new ApplicationUser
+            {
+                Email = "jan@zonderid.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 22,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
             // Panel 1 members
-            new Member
+            new ApplicationUser
             {
-                Email = "jan@zonderid.com", Gender = Gender.Male,
-                Age = 22, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                Email = "els@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 35,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
-                Email = "els@example.com", Gender = Gender.Female,
-                Age = 35, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                Email = "bart@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 50,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
-            {
-                Email = "bart@example.com", Gender = Gender.Male,
-                Age = 50, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
-            },
-            new Member
+            new ApplicationUser
             {
                 Email = "sophie@example.com",
-                Gender = Gender.Female, Age = 28, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 28,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
-                Email = "tom@example.com", Gender = Gender.Male,
-                Age = 45, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                Email = "tom@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 45,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
 
             // Panel 2 members
-            new Member
+            new ApplicationUser
             {
-                Email = "lisa@example.com", Gender = Gender.Female,
-                Age = 33, Town = "Antwerpen", Panel = panel2,
-                TenantId = "antwerpen"
+                Email = "lisa@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 33,
+                    Town = "Antwerpen",
+                    Panel = panel2,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
-                Email = "mark@example.com", Gender = Gender.Male,
-                Age = 67, Town = "Antwerpen", Panel = panel2,
-                TenantId = "antwerpen"
+                Email = "mark@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 67,
+                    Town = "Antwerpen",
+                    Panel = panel2,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
-                Email = "lotte@example.com", Gender = Gender.Female,
-                Age = 72, Town = "Antwerpen", Panel = panel2,
-                TenantId = "antwerpen"
+                Email = "lotte@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 72,
+                    Town = "Antwerpen",
+                    Panel = panel2,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
                 Email = "pieter@example.com",
-                Gender = Gender.Male, Age = 19, Town = "Antwerpen", Panel = panel2,
-                TenantId = "antwerpen"
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 19,
+                    Town = "Antwerpen",
+                    Panel = panel2,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
-                Email = "emma@example.com", Gender = Gender.Female,
-                Age = 21, Town = "Antwerpen", Panel = panel2,
-                TenantId = "antwerpen"
-            }
-        };
+                Email = "emma@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 21,
+                    Town = "Antwerpen",
+                    Panel = panel2,
+                    TenantId = "antwerpen"
+                }
+            },
 
-        // Add additional members for Panel 1
-        members.AddRange(new[]
-        {
-            new Member
+            // Additional members for Panel 1
+            new ApplicationUser
             {
-                Email = "jan@example.com", Gender = Gender.Male,
-                Age = 22, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                Email = "jan@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 22,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
-                Email = "peter@example.com", Gender = Gender.Male,
-                Age = 19, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                Email = "peter@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 19,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
-                Email = "david@example.com", Gender = Gender.Male,
-                Age = 24, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                Email = "david@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 24,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
                 Email = "johan@example.com",
-                Gender = Gender.Male, Age = 21, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 21,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
-                Email = "koen@example.com", Gender = Gender.Male,
-                Age = 25, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                Email = "koen@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 25,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
-                Email = "simon@example.com", Gender = Gender.Male,
-                Age = 18, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                Email = "simon@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 18,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-        });
 
-        // Additional groups for Panel 1 (Men 26-40, 41-60, 60+; Women 18-25, 26-40, 41-60, 60+)
-        // Men 26-40
-        members.AddRange(new[]
-        {
-            new Member
+            // Men 26-40
+            new ApplicationUser
             {
                 Email = "thomas@example.com",
-                Gender = Gender.Male, Age = 35, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 35,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
                 Email = "maarten@example.com",
-                Gender = Gender.Male, Age = 28, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 28,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
                 Email = "jeroen@example.com",
-                Gender = Gender.Male, Age = 37, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 37,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
                 Email = "pieter@example.com",
-                Gender = Gender.Male, Age = 30, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 30,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
                 Email = "wouter@example.com",
-                Gender = Gender.Male, Age = 33, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 33,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-            new Member
+            new ApplicationUser
             {
                 Email = "michel@example.com",
-                Gender = Gender.Male, Age = 39, Town = "Antwerpen", Panel = panel1,
-                TenantId = "antwerpen"
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 39,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
             },
-        });
-        // Men 41-60
-        members
-            .AddRange(new[]
-            {
-                new Member
-                {
-                    Email = "frank@example.com",
-                    Gender = Gender.Male,
-                    Age = 45, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "marc@example.com",
-                    Gender = Gender.Male,
-                    Age = 58, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "patrick@example.com",
-                    Gender = Gender.Male, Age = 52, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "dirk@example.com",
-                    Gender = Gender.Male,
-                    Age = 49, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "hans@example.com",
-                    Gender = Gender.Male,
-                    Age = 44, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "erik@example.com",
-                    Gender = Gender.Male,
-                    Age = 55, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-            });
 
-        // Men 60+
-        members
-            .AddRange(new[]
+            // Men 41-60
+            new ApplicationUser
             {
-                new Member
+                Email = "frank@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    Email = "jozef@example.com",
                     Gender = Gender.Male,
-                    Age = 68, Town = "Antwerpen", Panel = panel1,
+                    Age = 45,
+                    Town = "Antwerpen",
+                    Panel = panel1,
                     TenantId = "antwerpen"
-                },
-                new Member
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "marc@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    Email = "willem@example.com",
-                    Gender = Gender.Male, Age = 71, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "gerard@example.com",
-                    Gender = Gender.Male, Age = 65, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "robert@example.com",
-                    Gender = Gender.Male, Age = 77, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "hugo@example.com",
                     Gender = Gender.Male,
-                    Age = 69, Town = "Antwerpen", Panel = panel1,
+                    Age = 58,
+                    Town = "Antwerpen",
+                    Panel = panel1,
                     TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "albert@example.com",
-                    Gender = Gender.Male, Age = 73, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-            });
-
-        // Women 18-25
-        members
-            .AddRange(new[]
+                }
+            },
+            new ApplicationUser
             {
-                new Member
+                Email = "patrick@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    Email = "anna@example.com",
-                    Gender = Gender.Female,
-                    Age = 22, Town = "Antwerpen", Panel = panel1,
+                    Gender = Gender.Male,
+                    Age = 52,
+                    Town = "Antwerpen",
+                    Panel = panel1,
                     TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "lisa@example.com",
-                    Gender = Gender.Female,
-                    Age = 19, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "emma@example.com",
-                    Gender = Gender.Female,
-                    Age = 24, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "sara@example.com",
-                    Gender = Gender.Female,
-                    Age = 21, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "laura@example.com",
-                    Gender = Gender.Female, Age = 25, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "nina@example.com",
-                    Gender = Gender.Female,
-                    Age = 18, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-            });
-
-        // Women 26-40
-        members
-            .AddRange(new[]
+                }
+            },
+            new ApplicationUser
             {
-                new Member
+                Email = "dirk@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    Email = "eva@example.com", Gender = Gender.Female,
-                    Age = 35, Town = "Antwerpen", Panel = panel1,
+                    Gender = Gender.Male,
+                    Age = 49,
+                    Town = "Antwerpen",
+                    Panel = panel1,
                     TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "sophie@example.com",
-                    Gender = Gender.Female, Age = 28, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "julie@example.com",
-                    Gender = Gender.Female, Age = 37, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "els@example.com", Gender = Gender.Female,
-                    Age = 30, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "lieve@example.com",
-                    Gender = Gender.Female, Age = 33, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "anja@example.com",
-                    Gender = Gender.Female,
-                    Age = 39, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-            });
-
-        // Women 41-60
-        members
-            .AddRange(new[]
+                }
+            },
+            new ApplicationUser
             {
-                new Member
+                Email = "hans@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    Email = "maria@example.com",
-                    Gender = Gender.Female, Age = 45, Town = "Antwerpen", Panel = panel1,
+                    Gender = Gender.Male,
+                    Age = 44,
+                    Town = "Antwerpen",
+                    Panel = panel1,
                     TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "ann@example.com", Gender = Gender.Female,
-                    Age = 58, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    Email = "ingrid@example.com",
-                    Gender = Gender.Female, Age = 52, Town = "Antwerpen", Panel = panel1,
-                    TenantId = "antwerpen"
-                },
-                new Member
-                {
-                    TenantId = "antwerpen",
-                    Email = "martine@example.com",
-                    Gender = Gender.Female, Age = 49, Town = "Antwerpen", Panel = panel1
-                },
-                new Member
-                {
-                    TenantId = "antwerpen",
-                    Email = "hilde@example.com",
-                    Gender = Gender.Female, Age = 44, Town = "Antwerpen", Panel = panel1
-                },
-                new Member
-                {
-                    TenantId = "antwerpen",
-                    Email = "sonja@example.com",
-                    Gender = Gender.Female, Age = 55, Town = "Antwerpen", Panel = panel1
-                },
-            });
-
-        // Women 60+
-        members
-            .AddRange(new[]
+                }
+            },
+            new ApplicationUser
             {
-                new Member
+                Email = "erik@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    TenantId = "antwerpen",
-                    Email = "helena@example.com",
-                    Gender = Gender.Female, Age = 68, Town = "Antwerpen", Panel = panel1
-                },
-                new Member
+                    Gender = Gender.Male,
+                    Age = 55,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            
+            // Men 60+
+            new ApplicationUser
+            {
+                Email = "jozef@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    TenantId = "antwerpen",
-                    Email = "godelieve@example.com",
-                    Gender = Gender.Female, Age = 71, Town = "Antwerpen", Panel = panel1
-                },
-                new Member
+                    Gender = Gender.Male,
+                    Age = 68,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "willem@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    TenantId = "antwerpen",
-                    Email = "rosa@example.com",
+                    Gender = Gender.Male,
+                    Age = 71,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "gerard@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 65,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "robert@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 77,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "hugo@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 69,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "albert@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Male,
+                    Age = 73,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+
+            // Women 18-25
+            new ApplicationUser
+            {
+                Email = "anna@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
                     Gender = Gender.Female,
-                    Age = 65, Town = "Antwerpen", Panel = panel1
-                },
-                new Member
+                    Age = 22,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "lisa@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    TenantId = "antwerpen",
-                    Email = "margareta@example.com",
-                    Gender = Gender.Female, Age = 77, Town = "Antwerpen", Panel = panel1
-                },
-                new Member
+                    Gender = Gender.Female,
+                    Age = 19,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "emma@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    TenantId = "antwerpen",
-                    Email = "mariette@example.com",
-                    Gender = Gender.Female, Age = 69, Town = "Antwerpen", Panel = panel1
-                },
-                new Member
+                    Gender = Gender.Female,
+                    Age = 24,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "sara@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    TenantId = "antwerpen",
-                    Email = "alice@example.com",
-                    Gender = Gender.Female, Age = 73, Town = "Antwerpen", Panel = panel1
-                },
-            });
+                    Gender = Gender.Female,
+                    Age = 21,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "laura@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 25,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "nina@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 18,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+
+            // Women 26-40
+            new ApplicationUser
+            {
+                Email = "eva@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 35,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "sophie@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 28,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "julie@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 37,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "els@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 30,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "lieve@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 33,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "anja@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 39,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+
+            // Women 41-60
+            new ApplicationUser
+            {
+                Email = "maria@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 45,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "ann@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 58,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "ingrid@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 52,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "martine@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 49,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "hilde@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 44,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "sonja@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 55,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+
+            // Women 60+
+            new ApplicationUser
+            {
+                Email = "helena@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 68,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "godelieve@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 71,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "rosa@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 65,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "margareta@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 77,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "mariette@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 69,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "alice@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    Gender = Gender.Female,
+                    Age = 73,
+                    Town = "Antwerpen",
+                    Panel = panel1,
+                    TenantId = "antwerpen"
+                }
+            }
+        };
 
         _panelDbContext.AddRange(members);
     }

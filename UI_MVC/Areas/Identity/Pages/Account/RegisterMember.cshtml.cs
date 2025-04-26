@@ -156,11 +156,15 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateMember();
-                user.FirstName = Input.FirstName;
-                user.LastName = Input.LastName;
-                user.Gender = Input.Gender;
-                user.BirthDate = Input.BirthDate;
-                user.Town = Input.Town;
+                user.UserType = UserType.Member;
+                user.MemberProfile = new MemberProfile()
+                {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    Gender = Input.Gender,
+                    BirthDate = Input.BirthDate,
+                    Town = Input.Town
+                };
                 
                 List<SubCriteria> selectedCriteria = new List<SubCriteria>();
                 if (Input.SelectedCriteria != null && Input.SelectedCriteria.Count != 0)
@@ -168,7 +172,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     selectedCriteria.AddRange(Input.SelectedCriteria.Select(subCriteriaId => 
                         _drawManager.GetSubCriteria(subCriteriaId)).Where(subCriteria => subCriteria != null));
                 }
-                user.SelectedCriteria = selectedCriteria;
+                user.MemberProfile.SelectedCriteria = selectedCriteria;
 
                 await _userManager.AddToRoleAsync(user, "Member");
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -217,16 +221,16 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private Member CreateMember()
+        private ApplicationUser CreateMember()
         {
             try
             {
-                return Activator.CreateInstance<Member>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(Member)}'. " +
-                    $"Ensure that '{nameof(Member)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/RegisterMember.cshtml");
             }
         }

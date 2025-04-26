@@ -84,13 +84,13 @@ public class PanelRepository : IPanelRepository
         _dbContext.SaveChanges();
     }
 
-    public bool HasUserVotedForRecommendation(Member member, Recommendation recommendation)
+    public bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation)
     {
         return _dbContext.UserVotes
             .Any(uv => uv.Voter == member && uv.Recommendation == recommendation);
     }
 
-    public void CreateVoteToRecommendation(Member member, Recommendation recommendation)
+    public void CreateVoteToRecommendation(ApplicationUser member, Recommendation recommendation)
     {
         // Controleer eerst of de aanbeveling bestaat
         if (recommendation == null)
@@ -120,7 +120,7 @@ public class PanelRepository : IPanelRepository
         _dbContext.SaveChanges();
     }
 
-    public void DeleteVoteFromRecommendation(Member member, Recommendation recommendation)
+    public void DeleteVoteFromRecommendation(ApplicationUser member, Recommendation recommendation)
     {
         // Controleer eerst of de aanbeveling bestaat
         if (recommendation == null)

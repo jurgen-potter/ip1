@@ -31,7 +31,6 @@ builder.Services.AddScoped<IDrawRepository, DrawRepository>();
 builder.Services.AddScoped<IPanelRepository, PanelRepository>();
 builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();
 builder.Services.AddScoped<IQuestionnaireModuleRepository, QuestionnaireModuleRepository>();
-builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddScoped<IDrawManager, DrawManager>();
 builder.Services.AddScoped<IPanelManager, PanelManager>();
 builder.Services.AddScoped<IQuestionnaireModuleManager, QuestionnaireModuleManager>();

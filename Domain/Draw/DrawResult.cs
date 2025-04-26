@@ -7,9 +7,9 @@ namespace CitizenPanel.BL.Domain.Draw;
 public class DrawResult : ITenanted
 {
     public int Id { get; set; }
-    public ICollection<Member> SelectedMembers { get; set; } = new List<Member>();
-    public ICollection<Member> ReserveMembers { get; set; } = new List<Member>();
-    public ICollection<Member> NotSelectedMembers { get; set; } = new List<Member>();
+    public ICollection<ApplicationUser> SelectedMembers { get; set; } = new List<ApplicationUser>();
+    public ICollection<ApplicationUser> ReserveMembers { get; set; } = new List<ApplicationUser>();
+    public ICollection<ApplicationUser> NotSelectedMembers { get; set; } = new List<ApplicationUser>();
     
     [Required]
     public string TenantId { get; set; }

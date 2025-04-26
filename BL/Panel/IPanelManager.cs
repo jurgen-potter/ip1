@@ -22,9 +22,9 @@ public interface IPanelManager
 
     public void EditRecommendation(Recommendation recommendation);
     
-    bool HasUserVotedForRecommendation(Member member, Recommendation recommendation);
-    void AddVoteToRecommendation(Member member, Recommendation recommendation);
-    void RemoveVoteFromRecommendation(Member member, Recommendation recommendation);
+    bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation);
+    void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation);
+    void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation);
     IEnumerable<int> GetVotedRecommendationsByUser(string userId);
 
 }

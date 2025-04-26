@@ -36,17 +36,20 @@ public class MemberManager : IMemberManager
             }
         }
         
-        Member member = new Member()
+        ApplicationUser member = new ApplicationUser()
         {
-            FirstName = newMemberFirstName,
-            LastName = newMemberLastName,
             Email = newMemberEmail,
             UserName = newMemberEmail,
-            Gender = newMemberGender,
-            BirthDate = newMemberBirthDate,
-            Town = newMemberTown,
-            SelectedCriteria = selectedCriteria,
-            Panel = _panelManager.GetPanelById(newMemberPanelId)
+            MemberProfile = new MemberProfile()
+            {
+                FirstName = newMemberFirstName,
+                LastName = newMemberLastName,
+                Gender = newMemberGender,
+                BirthDate = newMemberBirthDate,
+                Town = newMemberTown,
+                SelectedCriteria = selectedCriteria,
+                Panel = _panelManager.GetPanelById(newMemberPanelId)
+            }
         };
         
         var result = await _userManager.CreateAsync(member, newMemberPassword);
@@ -54,32 +57,32 @@ public class MemberManager : IMemberManager
         return result.Succeeded ? (result, member) : (result, null);
     }
 
-    public IEnumerable<Member> GetAllMembers()
+    public IEnumerable<ApplicationUser> GetAllMembers()
     {
         return _memberRepository.ReadAllMembers();
     }
 
-    public Member GetMemberById(string memberId)
+    public ApplicationUser GetMemberById(string memberId)
     {
-        return _memberRepository.ReadMemberById(memberId);
+        return _memberRepository.ReadUserById(memberId);
     }
 
-    public void ChangeMember(Member member)
+    public void ChangeMember(ApplicationUser member)
     {
         _memberRepository.UpdateMember(member);
     }
 
-    public void RemoveMember(Member member)
+    public void RemoveMember(ApplicationUser member)
     {
         _memberRepository.DeleteMember(member);
     }
 
-    public IEnumerable<Member> GetMembersByPanelId(int panelId)
+    public IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId)
     {
         return _memberRepository.ReadMembersByPanelId(panelId);
     }
 
-    public IEnumerable<Member> GetMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge)
+    public IEnumerable<ApplicationUser> GetMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge)
     {
         return _memberRepository.ReadMembersByPanelIdGenderAndAgeRange(panelId, gender, minAge, maxAge);
     }

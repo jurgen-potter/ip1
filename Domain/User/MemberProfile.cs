@@ -1,12 +1,13 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Tenancy;
-using Microsoft.AspNetCore.Identity;
 
 namespace CitizenPanel.BL.Domain.User;
 
-public class Member : ApplicationUser, ITenanted
+public class MemberProfile : ITenanted
 {
-    public int MemberId { get; set; }
+    public int Id { get; set; }
+    public string ApplicationUserId { get; set; }
+    public ApplicationUser ApplicationUser { get; set; }
     public string TenantId { get; set; }
     public string FirstName { get; set; } 
     public string LastName { get; set; }

@@ -115,6 +115,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+                user.UserType = UserType.Admin;
 
                 await _userManager.AddToRoleAsync(user, "Admin");
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

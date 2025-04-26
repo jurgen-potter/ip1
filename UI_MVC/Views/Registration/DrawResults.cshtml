@@ -51,12 +51,12 @@ var drawStatus = (DrawStatus)ViewBag.DrawStatus;
             {
             <tr>
                 <td>@member.Email</td>
-                <td>@(member.Gender == CitizenPanel.BL.Domain.User.Gender.Male ? "Man" : "Vrouw")</td>
-                <td>@member.Age</td>
+                <td>@(member.MemberProfile.Gender == CitizenPanel.BL.Domain.User.Gender.Male ? "Man" : "Vrouw")</td>
+                <td>@member.MemberProfile.Age</td>
                 <td>
                     @{
                     string category = "";
-                    if (member.Gender == CitizenPanel.BL.Domain.User.Gender.Male)
+                    if (member.MemberProfile.Gender == CitizenPanel.BL.Domain.User.Gender.Male)
                     {
                     category = "Mannen, ";
                     }
@@ -65,11 +65,11 @@ var drawStatus = (DrawStatus)ViewBag.DrawStatus;
                     category = "Vrouwen, ";
                     }
 
-                    if (member.Age >= 18 && member.Age <= 25)
+                    if (member.MemberProfile.Age >= 18 && member.MemberProfile.Age <= 25)
                     category += "18-25";
-                    else if (member.Age >= 26 && member.Age <= 40)
+                    else if (member.MemberProfile.Age >= 26 && member.MemberProfile.Age <= 40)
                     category += "26-40";
-                    else if (member.Age >= 41 && member.Age <= 60)
+                    else if (member.MemberProfile.Age >= 41 && member.MemberProfile.Age <= 60)
                     category += "41-60";
                     else
                     category += "60+";
@@ -100,12 +100,12 @@ var drawStatus = (DrawStatus)ViewBag.DrawStatus;
             {
             <tr>
                 <td>@member.Email</td>
-                <td>@(member.Gender == CitizenPanel.BL.Domain.User.Gender.Male ? "Man" : "Vrouw")</td>
-                <td>@member.Age</td>
+                <td>@(member.MemberProfile.Gender == CitizenPanel.BL.Domain.User.Gender.Male ? "Man" : "Vrouw")</td>
+                <td>@member.MemberProfile.Age</td>
                 <td>
                     @{
                     string category = "";
-                    if (member.Gender == CitizenPanel.BL.Domain.User.Gender.Male)
+                    if (member.MemberProfile.Gender == CitizenPanel.BL.Domain.User.Gender.Male)
                     {
                     category = "Mannen, ";
                     }
@@ -114,11 +114,11 @@ var drawStatus = (DrawStatus)ViewBag.DrawStatus;
                     category = "Vrouwen, ";
                     }
 
-                    if (member.Age >= 18 && member.Age <= 25)
+                    if (member.MemberProfile.Age >= 18 && member.MemberProfile.Age <= 25)
                     category += "18-25";
-                    else if (member.Age >= 26 && member.Age <= 40)
+                    else if (member.MemberProfile.Age >= 26 && member.MemberProfile.Age <= 40)
                     category += "26-40";
-                    else if (member.Age >= 41 && member.Age <= 60)
+                    else if (member.MemberProfile.Age >= 41 && member.MemberProfile.Age <= 60)
                     category += "41-60";
                     else
                     category += "60+";

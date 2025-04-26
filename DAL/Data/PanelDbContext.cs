@@ -19,13 +19,10 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
 {
     private readonly IConfiguration _configuration;
     private TenantContext _tenantContext;
-    
-    public DbSet<Member> Members { get; set; }
     public DbSet<Panel> Panels { get; set; }
     public DbSet<Recommendation> Recommendations { get; set; }
 
     public DbSet<UserVote> UserVotes { get; set; } 
-    public DbSet<Organization> Organizations { get; set; }
     public DbSet<Criteria> Criteria { get; set; }
     public DbSet<SubCriteria> SubCriteria { get; set; }
     public DbSet<Invitation> Invitations { get; set; }
@@ -33,7 +30,10 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Questionnaire> Questionnaires { get; set; }
     public DbSet<Question> Questions { get; set; }
     public DbSet<Answer> Answers { get; set; }
-        
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    public DbSet<MemberProfile> MemberProfiles { get; set; }
+    public DbSet<OrganizationProfile> OrganizationProfiles { get; set; }
+    
     public PanelDbContext(DbContextOptions<PanelDbContext> options, IConfiguration configuration, TenantContext tenantContext) : base(options)
     {
         _configuration = configuration;
@@ -71,14 +71,16 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PanelDbContext).Assembly);
         
         base.OnModelCreating(modelBuilder);
-        
-        modelBuilder.Entity<Member>()
-            .ToTable("Members")
-            .HasBaseType<ApplicationUser>();
 
-        modelBuilder.Entity<Organization>()
-            .ToTable("Organizations")
-            .HasBaseType<ApplicationUser>();
+        modelBuilder.Entity<ApplicationUser>()
+            .HasOne(u => u.MemberProfile)
+            .WithOne(m => m.ApplicationUser)
+            .HasForeignKey<MemberProfile>(m => m.ApplicationUserId);
+    
+        modelBuilder.Entity<ApplicationUser>()
+            .HasOne(u => u.OrganizationProfile)
+            .WithOne(o => o.ApplicationUser)
+            .HasForeignKey<OrganizationProfile>(o => o.ApplicationUserId);
 
         modelBuilder.Entity<DrawResult>()
             .HasMany(dr => dr.SelectedMembers)
@@ -100,10 +102,10 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
             .OwnsMany(p => p.RecruitmentBuckets);
         modelBuilder.Entity<Panel>()
             .HasMany(m => m.Members);
-        modelBuilder.Entity<Member>()
+        modelBuilder.Entity<MemberProfile>()
             .HasOne(m => m.Panel); //momenteel gewoon 1 ik weet dat het meerdere kan bevatten
         
-        modelBuilder.Entity<Member>()
+        modelBuilder.Entity<MemberProfile>()
             .HasMany(m => m.SelectedCriteria)
             .WithMany()
             .UsingEntity(j => j.ToTable("MemberSelectedCriteria"));
