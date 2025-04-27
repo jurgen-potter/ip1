@@ -34,6 +34,8 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<MemberProfile> MemberProfiles { get; set; }
     public DbSet<OrganizationProfile> OrganizationProfiles { get; set; }
     
+    public string TenantId => _tenantContext.GetCurrentTenantId();
+    
     public PanelDbContext(DbContextOptions<PanelDbContext> options, IConfiguration configuration, TenantContext tenantContext) : base(options)
     {
         _configuration = configuration;
@@ -144,8 +146,6 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
 
         return Database.EnsureCreated();
     }
-    
-    public string TenantId => _tenantContext.Tenant.Id;
 }
 
 public static class QueryFilterExtensions

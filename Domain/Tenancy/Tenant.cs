@@ -18,6 +18,7 @@ public class AvailableTenants
 public class TenantContext
 {
     public Tenant Tenant { get; set; } = new();
+    public string GetCurrentTenantId() => Tenant?.Id ?? string.Empty;
 }
 
 public static class TenantExtensions

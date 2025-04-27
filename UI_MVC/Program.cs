@@ -49,6 +49,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     })
     .AddUserStore<ApplicationUserStore>()
     .AddSignInManager<MultiTenantSigninManager>()
+    .AddUserManager<ApplicationUserManager>()
     .AddEntityFrameworkStores<PanelDbContext>()
     .AddErrorDescriber<DutchIdentityErrorDescriber>()
     .AddDefaultTokenProviders();
@@ -94,10 +95,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAndMapLiveMonitoring();
-app.UseMiddleware<TenantMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<TenantMiddleware>();
 
 app.MapControllerRoute(
     name: "default",
