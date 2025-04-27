@@ -1,9 +1,6 @@
-﻿using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Tenancy;
+﻿using CitizenPanel.BL.Domain.Tenancy;
 using CitizenPanel.BL.Domain.User;
-using CitizenPanel.UI.MVC.Identities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using System.Security.Claims;
 
 namespace CitizenPanel.UI.MVC.Middleware;
@@ -11,9 +8,9 @@ namespace CitizenPanel.UI.MVC.Middleware;
 public class TenantMiddleware : IMiddleware
 {
     private readonly TenantContext _tenantContext;
-    private readonly ApplicationUserManager _userManager;
+    private readonly TenantUserManager _userManager;
 
-    public TenantMiddleware(TenantContext tenantContext, ApplicationUserManager userManager)
+    public TenantMiddleware(TenantContext tenantContext, TenantUserManager userManager)
     {
         _tenantContext = tenantContext;
         _userManager = userManager;

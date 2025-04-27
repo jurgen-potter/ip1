@@ -3,6 +3,7 @@
 #nullable disable
 
 using CitizenPanel.BL.Domain.User;
+using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,14 +27,14 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
     public class RegisterAdminModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly TenantUserManager _userManager;
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterAdminModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterAdminModel(
-            UserManager<ApplicationUser> userManager,
+            TenantUserManager userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterAdminModel> logger,
@@ -120,7 +121,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 await _userManager.AddToRoleAsync(user, "Admin");
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var result = await _userManager.CreateWithTenantAsync(user, Input.Password);
                 var roleResult = await _userManager.AddToRoleAsync(user, "Admin");
 
                 if (result.Succeeded && roleResult.Succeeded)

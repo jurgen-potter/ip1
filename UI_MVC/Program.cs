@@ -10,8 +10,8 @@ using CitizenPanel.DAL.QuestionnaireModule;
 using CitizenPanel.DAL.Registration;
 using CitizenPanel.UI.MVC;
 using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
+using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Areas.Identity.Services;
-using CitizenPanel.UI.MVC.Identities;
 using CitizenPanel.UI.MVC.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -38,6 +38,7 @@ builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IMemberManager, MemberManager>();
+builder.Services.AddScoped<UserManager<ApplicationUser>, TenantUserManager>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
@@ -47,9 +48,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         options.User.RequireUniqueEmail = true;
         options.SignIn.RequireConfirmedAccount = true;
     })
-    .AddUserStore<ApplicationUserStore>()
-    .AddSignInManager<MultiTenantSigninManager>()
-    .AddUserManager<ApplicationUserManager>()
+    .AddUserManager<TenantUserManager>()
     .AddEntityFrameworkStores<PanelDbContext>()
     .AddErrorDescriber<DutchIdentityErrorDescriber>()
     .AddDefaultTokenProviders();

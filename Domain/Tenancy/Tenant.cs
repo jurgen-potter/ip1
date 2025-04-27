@@ -6,7 +6,6 @@ namespace CitizenPanel.BL.Domain.Tenancy;
 public class Tenant
 {
     public string Id { get; set; }
-    public string Name { get; set; }
 }
 
 public class AvailableTenants

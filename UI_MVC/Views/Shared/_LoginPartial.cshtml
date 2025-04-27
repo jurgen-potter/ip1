@@ -1,9 +1,8 @@
 @using CitizenPanel.BL.Domain.User
-@using CitizenPanel.UI.MVC.Identities
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
-@inject MultiTenantSigninManager SignInManager
+@inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 <ul class="navbar-nav">

@@ -19,7 +19,11 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadPanelById(panelId);
     }
-    
+    public Panel GetPanelByIdWithoutTenant(int panelId)
+    {
+        return _panelRepository.ReadPanelByIdWithoutTenant(panelId);
+    }
+
     public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<Criteria> criteria)
     {
         Panel newPanel = new Panel()

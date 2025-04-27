@@ -19,20 +19,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using CitizenPanel.BL.Domain.User;
+using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly TenantUserManager _userManager;
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<ApplicationUser> userManager,
+            TenantUserManager userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
@@ -115,12 +116,17 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             {
                 var user = CreateOrganization();
                 user.UserType = UserType.Organization;
-                user.OrganizationProfile = new OrganizationProfile();
+                
+                string newTenantId = Guid.NewGuid().ToString();
+                user.OrganizationProfile = new OrganizationProfile()
+                {
+                    TenantId = newTenantId
+                };
 
                 await _userManager.AddToRoleAsync(user, "Organization");
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var result = await _userManager.CreateWithTenantAsync(user, Input.Password, generateNewTenantId: true);
 
                 if (result.Succeeded)
                 {

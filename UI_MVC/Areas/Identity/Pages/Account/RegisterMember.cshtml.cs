@@ -22,26 +22,29 @@ using Newtonsoft.Json;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL;
+using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
     public class RegisterMemberModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly TenantUserManager _userManager;
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterMemberModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IDrawManager _drawManager;
+        private readonly IPanelManager _panelManager;
 
         public RegisterMemberModel(
-            UserManager<ApplicationUser> userManager,
+            TenantUserManager userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterMemberModel> logger,
             IEmailSender emailSender,
-            IDrawManager drawManager)
+            IDrawManager drawManager,
+            IPanelManager panelManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -50,6 +53,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _drawManager = drawManager;
+            _panelManager = panelManager;
         }
 
         /// <summary>
@@ -157,13 +161,15 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             {
                 var user = CreateMember();
                 user.UserType = UserType.Member;
+                var panel = _panelManager.GetPanelByIdWithoutTenant(Input.PanelId);
                 user.MemberProfile = new MemberProfile()
                 {
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
                     Gender = Input.Gender,
                     BirthDate = Input.BirthDate,
-                    Town = Input.Town
+                    Town = Input.Town,
+                    Panel = panel
                 };
                 
                 List<SubCriteria> selectedCriteria = new List<SubCriteria>();
@@ -177,7 +183,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 await _userManager.AddToRoleAsync(user, "Member");
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var result = await _userManager.CreateWithTenantAsync(user, Input.Password, givenTenantId: panel.TenantId);
 
                 if (result.Succeeded)
                 {

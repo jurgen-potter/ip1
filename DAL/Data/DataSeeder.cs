@@ -908,7 +908,7 @@ public class DataSeeder
         //invitations
         var invitation1 = new Invitation()
         {
-            TenantId = "antwerpen",
+            //TenantId = "antwerpen",
             Age = 30,
             Code = "blLy-Tvxl-1TXG-nYg3-CBtD",
             Gender = Gender.Female,
@@ -920,7 +920,7 @@ public class DataSeeder
 
         var invitation2 = new Invitation()
         {
-            TenantId = "antwerpen",
+            //TenantId = "antwerpen",
             Age = 20,
             Code = "tDK6-KFhD-ipIi-tQjz-m6cZ",
             Gender = Gender.Male,
@@ -932,7 +932,7 @@ public class DataSeeder
 
         var invitation3 = new Invitation()
         {
-            TenantId = "antwerpen",
+            //TenantId = "antwerpen",
             Age = 40,
             Code = "Iga7-FHyw-yVfo-8wvN-Bxa8",
             Gender = Gender.Male,
@@ -944,7 +944,7 @@ public class DataSeeder
 
         var invitation4 = new Invitation()
         {
-            TenantId = "antwerpen",
+            //TenantId = "antwerpen",
             Age = 40,
             Code = "FIcV-zyXs-reXO-I6dh-rMCB",
             Gender = Gender.Female,
@@ -956,7 +956,7 @@ public class DataSeeder
 
         var invitation5 = new Invitation()
         {
-            TenantId = "antwerpen",
+            //TenantId = "antwerpen",
             Age = 25,
             Code = "HEMf-Xu0L-1ETh-urZJ-26s9",
             Gender = Gender.Male,

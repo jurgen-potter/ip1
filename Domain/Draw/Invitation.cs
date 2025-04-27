@@ -4,7 +4,7 @@ using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.BL.Domain.Draw;
 
-public class Invitation : ITenanted
+public class Invitation
 {
     public int Id { get; set; }
     public string Code { get; set; }
@@ -17,7 +17,5 @@ public class Invitation : ITenanted
     public bool IsDrawn { get; set; }
     public List<int> SelectedCriteria { get; set; }
     public string Email { get; set; }
-    [Required]
-    public string TenantId { get; set; }
     
 }
