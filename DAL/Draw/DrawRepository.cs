@@ -74,19 +74,19 @@ public class DrawRepository : IDrawRepository
 
     public void UpdateCriteria(int panelId, IEnumerable<Criteria> updatedCriteria)
     {
-        // 1) haal alle bestaande criteria voor deze panel
+        // haal alle bestaande criteria voor deze panel
         var existing = _dbContext.Criteria
             .Include(c => c.SubCriteria)
             .Where(c => c.Panel.PanelId == panelId)
             .ToList();
 
-        // 2) verwijder criteria die verdwenen zijn
-        foreach (var toRemove in existing.Where(e => !updatedCriteria.Any(u => u.Id == e.Id)))
+        // verwijder criteria die verdwenen zijn
+        foreach (var toRemove in existing.Where(e => updatedCriteria.All(u => u.Id != e.Id)))
         {
             _dbContext.Criteria.Remove(toRemove);
         }
 
-        // 3) verwerk elke criteria uit de aangeleverde lijst
+        // verwerk elke criteria uit de aangeleverde lijst
         foreach (var upd in updatedCriteria)
         {
             if (upd.Id == 0)

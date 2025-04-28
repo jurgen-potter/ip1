@@ -117,19 +117,19 @@ public class DrawManager : IDrawManager
         return _drawRepository.ReadCriteriaByPanel(panelId);
     }
 
-    public void EditCriteria(int PanelId, IEnumerable<Criteria> criteria)
+    public void EditCriteria(int panelId, IEnumerable<Criteria> criteria)
     {
-        _drawRepository.UpdateCriteria(PanelId, criteria);
+        _drawRepository.UpdateCriteria(panelId, criteria);
     }
 
 
     public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, IEnumerable<Criteria> criteriaList)
     {
-        // 1) Bepaal totale aantallen
+        // Bepaal totale aantallen
         int totalToDraw = (int)Math.Round(0.50 * Math.Sqrt(totalAvailablePotentialPanelmembers));
         int reservePool = (int)Math.Ceiling(totalToDraw / 0.08);
 
-        // 2) Initialiseer result
+        // Initialiseer result
         var result = new RecruitmentResult
         {
             TotalNeededPanelmembers = totalToDraw,
@@ -138,7 +138,7 @@ public class DrawManager : IDrawManager
             Buckets = new List<RecruitmentBucket>()
         };
 
-        // 3) Vullen van CriteriaResults (per criterium apart)
+        // Vullen van CriteriaResults 
         foreach (var crit in criteriaList)
         {
             var critResult = new CriteriaResult
@@ -159,7 +159,7 @@ public class DrawManager : IDrawManager
             result.CriteriaResults.Add(critResult);
         }
 
-        // 4) Voor de Buckets: bereid een lijst voor met per criterium de naam en subitems
+        // Voor de Buckets: bereid een lijst voor met per criteria de naam en subitems
         var criteriaInfo = criteriaList
             .Select(c => new
             {
@@ -170,12 +170,12 @@ public class DrawManager : IDrawManager
             })
             .ToList();
 
-        // 5) Recursieve helper om alle combinaties te maken
+        // methode voor alle buckets te maken
         void BuildBuckets(int depth, List<string> chosenCriteria, List<string> chosenSubs, double accumulatedPct)
         {
             if (depth == criteriaInfo.Count)
             {
-                // Ieder voltooide combinatie → nieuwe bucket
+                // Iedere voltooide combinatie is nieuwe bucket
                 int count = (int)Math.Round(totalToDraw * accumulatedPct);
                 result.Buckets.Add(new RecruitmentBucket
                 {
@@ -186,7 +186,7 @@ public class DrawManager : IDrawManager
                 return;
             }
 
-            // Loop door alle subcriteria van dit criterium
+            // Loop door alle subcriteria van dit criteria
             var thisCrit = criteriaInfo[depth];
             foreach (var sub in thisCrit.Subs)
             {
@@ -205,7 +205,7 @@ public class DrawManager : IDrawManager
             }
         }
 
-        // 6) Start recursie met lege lijsten en 100% (1.0)
+        // Start recursie met lege lijsten en 100% (1.0)
         BuildBuckets(0, new List<string>(), new List<string>(), 1.0);
 
         return result;
