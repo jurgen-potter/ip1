@@ -31,15 +31,18 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="MemberRegister" asp-action="Index">Code Registreren</a>
                     </li>
-                    @if (User.IsInRole("Organization"))
+                    @if (User.IsInRole("Organization") || User.IsInRole("Admin"))
                     {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Registration" asp-action="Index">Aanmeldingen bekijken</a>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Panel" asp-action="CreatePanel">Panel Maken</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Panel" asp-action="Index">Dashboard</a>
                         </li>
-                        
                     }
                     @if (User.IsInRole("Admin"))
                     {
@@ -47,6 +50,9 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin Dashboard</a>
                         </li>
                     }
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="TenantTesting" asp-action="Index">Tenancy test</a>
+                    </li>
                 </ul>
                 <partial name="_LoginPartial"/>
             </div>

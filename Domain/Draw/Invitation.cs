@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CitizenPanel.BL.Domain.Tenancy;
+using System.ComponentModel.DataAnnotations;
 using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.BL.Domain.Draw;

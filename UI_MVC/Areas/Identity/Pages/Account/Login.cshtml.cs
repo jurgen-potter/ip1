@@ -16,17 +16,18 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.User;
 using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly IDrawManager _drawManager;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, IDrawManager drawManager)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, IDrawManager drawManager)
         {
             _signInManager = signInManager;
             _logger = logger;

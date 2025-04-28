@@ -22,26 +22,29 @@ using Newtonsoft.Json;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL;
+using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
     public class RegisterMemberModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly TenantUserManager _userManager;
+        private readonly IUserStore<ApplicationUser> _userStore;
+        private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterMemberModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IDrawManager _drawManager;
+        private readonly IPanelManager _panelManager;
 
         public RegisterMemberModel(
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
-            SignInManager<IdentityUser> signInManager,
+            TenantUserManager userManager,
+            IUserStore<ApplicationUser> userStore,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterMemberModel> logger,
             IEmailSender emailSender,
-            IDrawManager drawManager)
+            IDrawManager drawManager,
+            IPanelManager panelManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -50,6 +53,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _drawManager = drawManager;
+            _panelManager = panelManager;
         }
 
         /// <summary>
@@ -156,11 +160,17 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateMember();
-                user.FirstName = Input.FirstName;
-                user.LastName = Input.LastName;
-                user.Gender = Input.Gender;
-                user.BirthDate = Input.BirthDate;
-                user.Town = Input.Town;
+                user.UserType = UserType.Member;
+                var panel = _panelManager.GetPanelByIdWithoutTenant(Input.PanelId);
+                user.MemberProfile = new MemberProfile()
+                {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    Gender = Input.Gender,
+                    BirthDate = Input.BirthDate,
+                    Town = Input.Town,
+                    Panel = panel
+                };
                 
                 List<SubCriteria> selectedCriteria = new List<SubCriteria>();
                 if (Input.SelectedCriteria != null && Input.SelectedCriteria.Count != 0)
@@ -168,12 +178,12 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     selectedCriteria.AddRange(Input.SelectedCriteria.Select(subCriteriaId => 
                         _drawManager.GetSubCriteria(subCriteriaId)).Where(subCriteria => subCriteria != null));
                 }
-                user.SelectedCriteria = selectedCriteria;
+                user.MemberProfile.SelectedCriteria = selectedCriteria;
 
                 await _userManager.AddToRoleAsync(user, "Member");
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var result = await _userManager.CreateWithTenantAsync(user, Input.Password, givenTenantId: panel.TenantId);
 
                 if (result.Succeeded)
                 {
@@ -217,27 +227,27 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private Member CreateMember()
+        private ApplicationUser CreateMember()
         {
             try
             {
-                return Activator.CreateInstance<Member>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(Member)}'. " +
-                    $"Ensure that '{nameof(Member)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/RegisterMember.cshtml");
             }
         }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
+        private IUserEmailStore<ApplicationUser> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<IdentityUser>)_userStore;
+            return (IUserEmailStore<ApplicationUser>)_userStore;
         }
     }
 }

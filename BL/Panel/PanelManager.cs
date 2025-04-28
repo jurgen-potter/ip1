@@ -19,7 +19,11 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadPanelById(panelId);
     }
-    
+    public Panel GetPanelByIdWithoutTenant(int panelId)
+    {
+        return _panelRepository.ReadPanelByIdWithoutTenant(panelId);
+    }
+
     public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<Criteria> criteria)
     {
         Panel newPanel = new Panel()
@@ -76,17 +80,17 @@ public class PanelManager : IPanelManager
     {
         _panelRepository.UpdateRecommendation(recommendation);
     }
-    public bool HasUserVotedForRecommendation(Member member, Recommendation recommendation)
+    public bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation)
     {
         return _panelRepository.HasUserVotedForRecommendation(member, recommendation);
     }
 
-    public void AddVoteToRecommendation(Member member, Recommendation recommendation)
+    public void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation)
     {
         _panelRepository.CreateVoteToRecommendation(member, recommendation);
     }
 
-    public void RemoveVoteFromRecommendation(Member member, Recommendation recommendation)
+    public void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation)
     {
         _panelRepository.DeleteVoteFromRecommendation(member, recommendation);
     }

@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Tenancy;
 using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.BL.Domain.Panel;
 
-public class Panel
+public class Panel : ITenanted
 {
     public int PanelId { get; set; }
     
@@ -23,12 +24,14 @@ public class Panel
     
     public ICollection<Invitation> Invitations { get; set; } = new List<Invitation>();
     
-    public ICollection<Member> Members { get; set; } = new List<Member>();
+    public ICollection<ApplicationUser> Members { get; set; } = new List<ApplicationUser>();
     
     public ICollection<Criteria> Criteria { get; set; } = new List<Criteria>();
     public ICollection<RecruitmentBucket> RecruitmentBuckets { get; set; }
     public DrawStatus DrawStatus { get; set; }
     public DrawResult DrawResult { get; set; }
     public ICollection<Recommendation> Recommendations { get; set; } = new List<Recommendation>();
+    [Required]
+    public string TenantId { get; set; }
     
 }
