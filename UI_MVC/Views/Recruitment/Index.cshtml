@@ -101,7 +101,7 @@ ViewBag.Title = "Bereken panel";
 
     <div class="d-flex gap-2">
         <button type="submit" class="btn btn-primary">Bereken</button>
-        <button type="submit" formaction="@Url.Action("Save", "Recruitment")" class="btn btn-success">Opslaan</button>
+        <button type="submit" asp-action="Save" asp-controller="Recruitment" class="btn btn-success">Opslaan</button>
     </div>
 </form>
 
