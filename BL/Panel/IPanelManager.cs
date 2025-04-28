@@ -7,7 +7,7 @@ namespace CitizenPanel.BL;
 public interface IPanelManager
 {
     
-    public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<Criteria> criteria);
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria);
 
     public Panel GetPanelById(int panelId);
     void EditPanel(Panel panel);

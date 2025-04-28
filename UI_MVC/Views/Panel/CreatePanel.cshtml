@@ -17,13 +17,7 @@
         <textarea rows="5" asp-for="Description" type="number" class="form-control">Geef hier uw beschrijving</textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
-
-    <div>
-        <label>Einddatum:</label>
-        <input asp-for="EndDate" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")">
-        <span asp-validation-for="EndDate" class="text-danger"></span>
-    </div>
-
+    
     <div>
         <button type="submit" class="btn btn-primary">Maak uw panel</button>
     </div>

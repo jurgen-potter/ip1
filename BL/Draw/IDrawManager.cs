@@ -11,6 +11,8 @@ public interface IDrawManager
     public IEnumerable<Invitation> GetAllInvitations();
     public Invitation ChangeInvitation(Invitation invitation);
     
+    public Criteria AddCriteria(string name, List<SubCriteria> subCriteria);
+    public SubCriteria AddSubCriteria(string name, double percentage);
     public Criteria GetCriteria(int criteriaId);
     public IEnumerable<Criteria> GetAllCriteria();
     public IEnumerable<Criteria> GetCriteriaByPanel(int panelId);

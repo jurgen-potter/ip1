@@ -10,10 +10,12 @@ namespace CitizenPanel.UI.MVC.Controllers;
 public class PanelController : Controller
 {
     private readonly IPanelManager _panelManager;
+    private readonly IDrawManager _drawManager;
 
-    public PanelController(IPanelManager panelManager)
+    public PanelController(IPanelManager panelManager, IDrawManager drawManager)
     {
         _panelManager = panelManager;
+        _drawManager = drawManager;
     }
     
     // GET
@@ -23,30 +25,36 @@ public class PanelController : Controller
         
         PanelViewModel model = new PanelViewModel()
         {
-            PanelId = panel.PanelId,
+            PanelId = panel.Id,
             Name = panel.Name,
             Description = panel.Description,
             StartDate = panel.StartDate,
             EndDate = panel.EndDate,
             CoverImagePath = panel.CoverImagePath
         };
-        model.Recommendations = panel.Recommendations
-            .Select(r => new RecommendationViewModel
+
+        foreach (Recommendation recommendation in panel.Recommendations)
+        {
+            RecommendationViewModel recommendationModel = new RecommendationViewModel
             {
-                Id = r.Id,
-                Title = r.Title,
-                Description = r.Description
-            })
-            .ToList();
-        
+                Id = recommendation.Id,
+                Title = recommendation.Title,
+                Description = recommendation.Description
+            };
+            model.Recommendations.Add(recommendationModel);
+        }
+
         return View(model);
     }
 
     [Authorize(Roles = "Organization")]
-    [HttpGet]
-    public IActionResult CreatePanel()
+    [HttpPost]
+    public IActionResult CreatePanel(ResultsViewModel resultsViewModel)
     {
-        CreatePanelViewModel model = new CreatePanelViewModel();
+        CreatePanelViewModel model = new CreatePanelViewModel()
+        {
+            Results = resultsViewModel
+        };
         return View(model);
     }
     
@@ -57,11 +65,26 @@ public class PanelController : Controller
         if(!ModelState.IsValid)
             return View(model);
 
-        ICollection<Criteria> criteria = TempData["Criteria"] as ICollection<Criteria>  ?? new List<Criteria>();
+        List<SubCriteria> subCriteria = new List<SubCriteria>();
+        List<Criteria> criteria = new List<Criteria>();
         
-        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, model.EndDate, criteria);
+        foreach (CriteriaResult criteriaResult in model.Results.CriteriaResults)
+        {
+            foreach (SubCriteriaResult subResult in criteriaResult.SubResults)
+            {
+                subCriteria.Add(_drawManager.AddSubCriteria(subResult.Name, subResult.Percentage));
+            }
+            criteria.Add(_drawManager.AddCriteria(criteriaResult.Name, subCriteria));
+            subCriteria = new List<SubCriteria>();
+        }
         
-        return RedirectToAction("Index","Panel",new {panelId=newPanel.PanelId});
+        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria);
+        foreach (Criteria criterion in criteria)
+        {
+            criterion.Panel = newPanel;
+        }
+        
+        return RedirectToAction("Index","Panel",new {panelId=newPanel.Id});
     }
-
+    
 }

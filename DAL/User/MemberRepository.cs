@@ -35,7 +35,7 @@ public class MemberRepository : IMemberRepository
     public IEnumerable<Member> ReadMembersByPanelId(int panelId)
     {
         return _dbContext.Members
-            .Where(m => m.Panel.PanelId == panelId)
+            .Where(m => m.Panel.Id == panelId)
             .ToList();
     }
 
@@ -43,7 +43,7 @@ public class MemberRepository : IMemberRepository
         int maxAge)
     {
         return _dbContext.Members
-            .Where(m => m.Panel.PanelId == panelId &&
+            .Where(m => m.Panel.Id == panelId &&
                         m.Gender == gender &&
                         m.Age >= minAge &&
                         m.Age <= maxAge)
@@ -53,7 +53,7 @@ public class MemberRepository : IMemberRepository
     public int ReadMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge)
     {
         return _dbContext.Members
-            .Count(m => m.Panel.PanelId == panelId &&
+            .Count(m => m.Panel.Id == panelId &&
                         m.Gender == gender &&
                         m.Age >= minAge &&
                         m.Age <= maxAge);

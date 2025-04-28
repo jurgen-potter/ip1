@@ -6,7 +6,7 @@ namespace CitizenPanel.BL.Domain.Panel;
 
 public class Panel
 {
-    public int PanelId { get; set; }
+    public int Id { get; set; }
     
     [Required]
     public string Name { get; set; }

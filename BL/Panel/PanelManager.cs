@@ -20,14 +20,12 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadPanelById(panelId);
     }
     
-    public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<Criteria> criteria)
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria)
     {
         Panel newPanel = new Panel()
         {
             Name = name,
             Description = description,
-            StartDate = DateOnly.FromDateTime(DateTime.Now),
-            EndDate = endDate,
             MemberCount = 0,
             Criteria = criteria
         };

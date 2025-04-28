@@ -22,14 +22,14 @@ public class PanelRepository : IPanelRepository
             .ThenInclude(dr => dr.SelectedMembers)
             .Include(p => p.DrawResult)
             .ThenInclude(dr => dr.ReserveMembers)
-            .SingleOrDefault(p => p.PanelId == panelId);
+            .SingleOrDefault(p => p.Id == panelId);
     }
 
     public Panel ReadPanelByIdWithRecommendations(int panelId)
     {
         return _dbContext.Panels
             .Include(r => r.Recommendations)
-            .SingleOrDefault(p => p.PanelId == panelId);
+            .SingleOrDefault(p => p.Id == panelId);
     }
 
 
@@ -54,7 +54,7 @@ public class PanelRepository : IPanelRepository
     {
         var panelWithBuckets = _dbContext.Panels
             .Include(p => p.RecruitmentBuckets)
-            .FirstOrDefault(p => p.PanelId == panel.PanelId);
+            .FirstOrDefault(p => p.Id == panel.Id);
         return panelWithBuckets?.RecruitmentBuckets.ToList();
     }
 

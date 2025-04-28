@@ -5,5 +5,5 @@ public class DummyMember
     public int PanelId { get; set; }
     public Gender Gender { get; set; }
     public int Age { get; set; }
-    public string Postcode { get; set; }
+    public string Town { get; set; }
 }

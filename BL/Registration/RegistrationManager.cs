@@ -28,7 +28,7 @@ public class RegistrationManager(IMemberManager memberManager, IPanelManager pan
             {
                 // Use repository to get count instead of fetching all members
                 var count = memberManager.GetMemberCountByPanelIdGenderAndAgeRange(
-                    panel.PanelId, genderGroup, ageGroup.Min, ageGroup.Max);
+                    panel.Id, genderGroup, ageGroup.Min, ageGroup.Max);
                 
                 buckets.Add(new RecruitmentBucket
                 {
@@ -90,7 +90,7 @@ public class RegistrationManager(IMemberManager memberManager, IPanelManager pan
             var ageRange = ageRanges[bucket.AgeGroup];
 
             var bucketMembers = memberManager.GetMembersByPanelIdGenderAndAgeRange(
-                panel.PanelId,
+                panel.Id,
                 genderEnum,
                 ageRange.Min,
                 ageRange.Max
