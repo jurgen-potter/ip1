@@ -125,21 +125,20 @@ public class DrawManager : IDrawManager
 
     public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, IEnumerable<Criteria> criteriaList)
     {
-        // 1) Bepaal aantal te trekken panelleden
+        // 1) Bepaal totale aantallen
         int totalToDraw = (int)Math.Round(0.50 * Math.Sqrt(totalAvailablePotentialPanelmembers));
-    
-        // Reserve pool berekening (ongeveer 8% van bevolking zal reageren)
         int reservePool = (int)Math.Ceiling(totalToDraw / 0.08);
 
-        // 2) Bouw resultaat op — géén hard-coded velden meer
+        // 2) Initialiseer result
         var result = new RecruitmentResult
         {
             TotalNeededPanelmembers = totalToDraw,
             ReservePotPanelmembers = reservePool,
-            CriteriaResults = new List<CriteriaResult>()
+            CriteriaResults = new List<CriteriaResult>(),
+            Buckets = new List<RecruitmentBucket>()
         };
 
-        // 3) Loop over álle criteria en subcriteria
+        // 3) Vullen van CriteriaResults (per criterium apart)
         foreach (var crit in criteriaList)
         {
             var critResult = new CriteriaResult
@@ -153,12 +152,61 @@ public class DrawManager : IDrawManager
                 critResult.SubResults.Add(new SubCriteriaResult
                 {
                     Name = sub.Name,
-                    Count = (int)Math.Round(totalToDraw * (sub.Percentage / 100))
+                    Count = (int)Math.Round(totalToDraw * (sub.Percentage / 100.0))
                 });
             }
 
             result.CriteriaResults.Add(critResult);
         }
+
+        // 4) Voor de Buckets: bereid een lijst voor met per criterium de naam en subitems
+        var criteriaInfo = criteriaList
+            .Select(c => new
+            {
+                CriterionName = c.Name,
+                Subs = c.SubCriteria
+                    .Select(s => new { s.Name, s.Percentage })
+                    .ToList()
+            })
+            .ToList();
+
+        // 5) Recursieve helper om alle combinaties te maken
+        void BuildBuckets(int depth, List<string> chosenCriteria, List<string> chosenSubs, double accumulatedPct)
+        {
+            if (depth == criteriaInfo.Count)
+            {
+                // Ieder voltooide combinatie → nieuwe bucket
+                int count = (int)Math.Round(totalToDraw * accumulatedPct);
+                result.Buckets.Add(new RecruitmentBucket
+                {
+                    CriteriaNames = new List<string>(chosenCriteria),
+                    SubCriteriaNames = new List<string>(chosenSubs),
+                    Count = count
+                });
+                return;
+            }
+
+            // Loop door alle subcriteria van dit criterium
+            var thisCrit = criteriaInfo[depth];
+            foreach (var sub in thisCrit.Subs)
+            {
+                chosenCriteria.Add(thisCrit.CriterionName);
+                chosenSubs.Add(sub.Name);
+
+                // percentage meerekenen
+                BuildBuckets(depth + 1,
+                    chosenCriteria,
+                    chosenSubs,
+                    accumulatedPct * (sub.Percentage / 100.0));
+
+                // terugdraaien voor de volgende iteratie
+                chosenCriteria.RemoveAt(chosenCriteria.Count - 1);
+                chosenSubs.RemoveAt(chosenSubs.Count - 1);
+            }
+        }
+
+        // 6) Start recursie met lege lijsten en 100% (1.0)
+        BuildBuckets(0, new List<string>(), new List<string>(), 1.0);
 
         return result;
     }

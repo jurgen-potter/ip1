@@ -62,37 +62,41 @@ public class RecruitmentController : Controller
         {
             return View("Index", model);
         }
+        
+        var criteria = new List<Criteria>();
 
-        var criteria = _drawManager.GetCriteriaByPanel(model.PanelId);
+        for (int i = 0; i < model.Criteria.Count; i++)
+        {
+            var cvm = model.Criteria[i];
+            var cr = new Criteria
+            {
+                Id = cvm.Id,
+                Name = cvm.Name,
+                SubCriteria = new List<SubCriteria>()
+            };
+
+            for (int j = 0; j < cvm.SubCriteria.Count; j++)
+            {
+                var svm = cvm.SubCriteria[j];
+                var subCr = new SubCriteria
+                {
+                    Id = svm.Id,
+                    Name = svm.Name,
+                    Percentage = svm.Percentage
+                };
+                cr.SubCriteria.Add(subCr);
+            }
+
+            criteria.Add(cr);
+        }    
         
         var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers,criteria);
         
         
         return View("Result", result);
     }
+    //lars lars lars toch, bij de knop opslaan doe je gwn een edit, en geef je alle criteria mee met hun subcriteria. deze lijst met criteria geef je ook mee aan de berekening, anders roep je de databank zo veel op
 
-    [HttpPost]
-    public IActionResult AddCriteria(RecruitmentCriteriaViewModel model)
-    {
-        _drawManager.addCriteria(model.PanelId, model.Criteria);
-        
-        return RedirectToAction("Index", new { panelId });
-    }
-    
-    [HttpPost]
-    public IActionResult RemoveCriteria(int panelId, int criteriaId)
-    {
-        
-        _drawManager.RemoveCriteria(panelId, criteriaId);
-        
-        return RedirectToAction("Index", new { panelId });
-    }
 
-    [HttpPost]
-    public IActionResult RemoveSubCriteria(int panelId, int criteriaId, int subCriteriaId)
-    {
-        _drawManager.RemoveSubCriteria(panelId, criteriaId ,subCriteriaId);
-        
-        return RedirectToAction("Index", new { panelId });
-    }
+   
 }

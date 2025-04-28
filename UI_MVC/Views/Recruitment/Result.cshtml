@@ -20,18 +20,17 @@
         </div>
     </div>
 
-    @foreach (var category in Model.CriteriaResults)
+    @foreach(var bucket in Model.Buckets)
     {
-        <div class="card mb-3">
-            <div class="card-header bg-light fw-bold">
-                @category.Name
+        <div class="card m-2 p-2">
+            <div class="card-body">
+                <h5 class="card-title">
+                    @bucket.Description  @* bijv. “Mannen (Gender) × Fietsers (Transport)” *@
+                </h5>
+                <p class="card-text">
+                    Nodig: <strong>@bucket.Count</strong>
+                </p>
             </div>
-            <ul class="list-group list-group-flush">
-                @foreach (var sub in category.SubResults)
-                {
-                    <li class="list-group-item">@sub.Name: <strong>@sub.Count</strong></li>
-                }
-            </ul>
         </div>
     }
 

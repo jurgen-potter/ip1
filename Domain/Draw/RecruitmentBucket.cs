@@ -7,5 +7,6 @@ public class RecruitmentBucket
     public int Count { get; set; }
     
     public string Description =>
-        $"{SubCriteriaNames[0]} ({CriteriaNames[0]}) × {SubCriteriaNames[1]} ({CriteriaNames[1]})";
+        string.Join(" × ", SubCriteriaNames
+            .Select((sub, idx) => $"{sub} ({CriteriaNames[idx]})"));
 }

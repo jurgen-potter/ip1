@@ -1,4 +1,4 @@
-﻿let allCriteriasCollapsed: boolean = false;
+﻿let allCriteriaCollapsed: boolean = false;
 
 window.addEventListener('DOMContentLoaded', () => {
     editCriteriaInit();
@@ -74,17 +74,17 @@ function cToggleArrow(btn: HTMLButtonElement | null): void {
 function cToggleExpandAll(btn: HTMLButtonElement | null): void {
     document.querySelectorAll<HTMLDivElement>('.criteria-body').forEach((body) => {
         const collapse = (window as any).bootstrap.Collapse.getOrCreateInstance(body);
-        allCriteriasCollapsed ? collapse.show() : collapse.hide();
+        allCriteriaCollapsed ? collapse.show() : collapse.hide();
     });
 
-    allCriteriasCollapsed = !allCriteriasCollapsed;
-    if (btn) btn.innerHTML = allCriteriasCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
+    allCriteriaCollapsed = !allCriteriaCollapsed;
+    if (btn) btn.innerHTML = allCriteriaCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
 
     document.querySelectorAll<HTMLButtonElement>('.expand-btn').forEach((b) => {
         const icon = b.querySelector('i');
         if (!icon) return;
-        icon.classList.toggle('bi-chevron-up', !allCriteriasCollapsed);
-        icon.classList.toggle('bi-chevron-down', allCriteriasCollapsed);
+        icon.classList.toggle('bi-chevron-up', !allCriteriaCollapsed);
+        icon.classList.toggle('bi-chevron-down', allCriteriaCollapsed);
     });
 }
 
@@ -126,21 +126,17 @@ function removeSubCriteria(sub: HTMLLIElement): void {
     sub.remove();
     if (parent) updateSubCriteriaIndices(parent);
 }
-
-// ----------------------
 // HTML Generators
-// ----------------------
 function generateCriteriaHtml(ci: number): HTMLLIElement {
     const li = document.createElement('li');
     li.className = 'card mb-3 criteria-item';
     li.innerHTML = `
-    <input name="Criterias[${ci}].Id" type="hidden" class="criteria-id" value="0" />
-    <input name="Criterias[${ci}].ToDelete" type="hidden" class="criteria-delete" value="false" />
+    <input name="Criteria[${ci}].Id" type="hidden" class="criteria-id" value="0" />
     <div class="card-header d-flex align-items-start">
       <div class="flex-grow-1">
         <label class="form-label fw-bold criteria-number">Criteria ${ci + 1}</label>
         <div class="d-flex align-items-center w-100">
-          <input name="Criterias[${ci}].Description"
+          <input name="Criteria[${ci}].Name"
                  class="form-control mb-0 criteria-description"
                  placeholder="Criteria omschrijving" />
           <button type="button"
@@ -158,19 +154,19 @@ function generateCriteriaHtml(ci: number): HTMLLIElement {
     <div class="collapse show criteria-body" id="criteria-body-${ci}">
       <div class="card-body">
         <label class="form-label fw-bold">Subcriteria</label>
-        <ul id="subcriterias-list-${ci}"></ul>
-          <div class="d-flex justify-content-between align-items-center mt-2">
-                 <button type="button"
-                class="btn btn-sm btn-secondary add-subcriteria-btn"
-                criteria-index="${ci}">
-          Voeg een subcriteria toe
-        </button>
-        <div class="subcriteria-total mt-2 text-end small">
-          Totaal: <span class="subcriteria-sum">0</span>% 
-          <span class="text-danger subcriteria-warning" style="display:none;">
-            (moet 100%)
-          </span>
-         </div>
+        <ul id="subcriterias-list-${ci}" class="list-unstyled"></ul>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button type="button"
+                  class="btn btn-sm btn-secondary add-subcriteria-btn"
+                  criteria-index="${ci}">
+            Voeg een subcriteria toe
+          </button>
+          <div class="subcriteria-total mt-2 text-end small">
+            Totaal: <span class="subcriteria-sum">0</span>%
+            <span class="text-danger subcriteria-warning" style="display:none;">
+              (moet 100%)
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -182,21 +178,19 @@ function generateSubCriteriaHtml(ci: string, sci: number): HTMLLIElement {
     const li = document.createElement('li');
     li.className = 'row subcriteria-item mb-2 align-items-center p-2';
     li.innerHTML = `
-    <input name="Criterias[${ci}].SubCriterias[${sci}].Id"
+    <input name="Criteria[${ci}].SubCriteria[${sci}].Id"
            type="hidden" class="subcriteria-id" value="0" />
-    <input name="Criterias[${ci}].SubCriterias[${sci}].ToDelete"
-           type="hidden" class="subcriteria-delete" value="false" />
     <div class="col">
-      <input name="Criterias[${ci}].SubCriterias[${sci}].Description"
+      <input name="Criteria[${ci}].SubCriteria[${sci}].Name"
              class="form-control subcriteria-description"
              placeholder="Subcriteria omschrijving" />  
     </div>
     <div class="col-auto">
       <div class="input-group">
-        <input name="Criterias[${ci}].SubCriterias[${sci}].Percentage"
+        <input name="Criteria[${ci}].SubCriteria[${sci}].Percentage"
                type="number" min="0" max="100"
                class="form-control subcriteria-percentage"
-               value="0" aria-label="Percentage" />
+               value="0" />
         <span class="input-group-text">%</span>
       </div>
     </div>
@@ -210,35 +204,37 @@ function generateSubCriteriaHtml(ci: string, sci: number): HTMLLIElement {
     return li;
 }
 
-
-// ----------------------
 // Re-indexing
-// ----------------------
 function updateCriteriaIndices(): void {
-    document.querySelectorAll<HTMLLIElement>('.criteria-item').forEach((el, i) => {
-        el.querySelector<HTMLLabelElement>('.criteria-number')!.textContent = `Criteria ${i + 1}`;
-        el.querySelector<HTMLDivElement>('.criteria-body')!.id = `criteria-body-${i}`;
-        el.querySelector<HTMLButtonElement>('.expand-btn')!
-            .setAttribute('data-bs-target', `#criteria-body-${i}`);
-        el.querySelector<HTMLUListElement>('[id^="subcriterias-list-"]')!
-            .id = `subcriterias-list-${i}`;
-        el.querySelector<HTMLButtonElement>('.add-subcriteria-btn')!
-            .setAttribute('criteria-index', String(i));
-    });
+    document.querySelectorAll<HTMLLIElement>('.criteria-item')
+        .forEach((el, i) => {
+            el.querySelector<HTMLLabelElement>('.criteria-number')!.textContent = `Criteria ${i + 1}`;
+            el.querySelector<HTMLDivElement>('.criteria-body')!.id = `criteria-body-${i}`;
+            el.querySelector<HTMLButtonElement>('.expand-btn')!
+                .setAttribute('data-bs-target', `#criteria-body-${i}`);
+            el.querySelector<HTMLUListElement>('[id^="subcriterias-list-"]')!
+                .id = `subcriterias-list-${i}`;
+            el.querySelector<HTMLButtonElement>('.add-subcriteria-btn')!
+                .setAttribute('criteria-index', String(i));
+
+            (el.querySelector('.criteria-id') as HTMLInputElement).name =
+                `Criteria[${i}].Id`;
+            (el.querySelector('.criteria-description') as HTMLInputElement).name =
+                `Criteria[${i}].Name`;
+        });
 }
 
 function updateSubCriteriaIndices(list: HTMLUListElement): void {
     const ci = list.id.split('-').pop()!;
-    list.querySelectorAll<HTMLLIElement>('.subcriteria-item').forEach((el, j) => {
-        el.querySelector<HTMLInputElement>('.subcriteria-id')!
-            .setAttribute('name', `Criterias[${ci}].SubCriterias[${j}].Id`);
-        el.querySelector<HTMLInputElement>('.subcriteria-delete')!
-            .setAttribute('name', `Criterias[${ci}].SubCriterias[${j}].ToDelete`);
-        el.querySelector<HTMLInputElement>('.subcriteria-description')!
-            .setAttribute('name', `Criterias[${ci}].SubCriterias[${j}].Description`);
-        el.querySelector<HTMLInputElement>('.subcriteria-percentage')!
-            .setAttribute('name', `Criterias[${ci}].SubCriterias[${j}].Percentage`);
-    });
+    list.querySelectorAll<HTMLLIElement>('.subcriteria-item')
+        .forEach((el, j) => {
+            (el.querySelector('.subcriteria-id') as HTMLInputElement).name =
+                `Criteria[${ci}].SubCriteria[${j}].Id`;
+            (el.querySelector('.subcriteria-description') as HTMLInputElement).name =
+                `Criteria[${ci}].SubCriteria[${j}].Name`;
+            (el.querySelector('.subcriteria-percentage') as HTMLInputElement).name =
+                `Criteria[${ci}].SubCriteria[${j}].Percentage`;
+        });
 }
 
 // ----------------------
