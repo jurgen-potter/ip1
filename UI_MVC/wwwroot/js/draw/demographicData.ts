@@ -9,10 +9,17 @@ window.addEventListener('DOMContentLoaded', () => {
 // Initialization
 // ----------------------
 function editCriteriaInit(): void {
-    // bestaande criteria-items initialiseren
+    // 1) Bestaande criteria-items initialiseren
     document
         .querySelectorAll<HTMLLIElement>('.criteria-item')
-        .forEach((item) => addCriteriaHandlers(item));
+        .forEach((item) => {
+            addCriteriaHandlers(item);
+
+            // bind de remove-handler op alle seed-subcriteria
+            item
+                .querySelectorAll<HTMLLIElement>('.subcriteria-item')
+                .forEach((sub) => addSubCriteriaHandlers(sub));
+        });
 
     // "Voeg criteria toe" knop
     const addBtn = document.getElementById('add-criteria-btn') as HTMLButtonElement | null;

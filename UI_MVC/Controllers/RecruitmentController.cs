@@ -108,10 +108,7 @@ public class RecruitmentController : Controller
     [HttpPost]
     public IActionResult Save(RecruitmentCriteriaViewModel model)
     {
-        if (!ModelState.IsValid)
-        {
-            return View("Index", model);
-        }
+        ModelState.Clear(); //voor validatiefouten te omzeilen, je mag opslaan!
 
         var domainCriteria = new List<Criteria>();
 

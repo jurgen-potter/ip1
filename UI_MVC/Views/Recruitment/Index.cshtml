@@ -100,11 +100,25 @@ ViewBag.Title = "Bereken panel";
     <button type="button" id="add-criteria-btn" class="btn btn-secondary mb-3">Voeg criteria toe</button>
 
     <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary">Bereken</button>
-        <button type="submit" asp-action="Save" asp-controller="Recruitment" class="btn btn-success">Opslaan</button>
+        <button
+            type="submit"
+            formaction="@Url.Action("Calculate")"
+            class="btn btn-primary">
+            Bereken
+        </button>
+
+        <button
+            type="submit"
+            formaction="@Url.Action("Save")"
+            formnovalidate
+            class="btn btn-success">
+            Opslaan
+        </button>
     </div>
 </form>
 
 @section Scripts {
-<script defer src="~/dist/js/draw/demographicData.js"></script>
+    <script defer src="~/dist/js/draw/demographicData.js"></script>
+<partial name="_ValidationScriptsPartial" />
+
 }
