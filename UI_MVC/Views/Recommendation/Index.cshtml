@@ -32,10 +32,17 @@
                     }
                     @if (!User.IsInRole("Organization"))
                     {
-                        <form class="vote-form mt-auto"> 
-                            <input type="hidden" name="id" value="@recommendation.Id"/>
-                            <button type="submit" class="btn btn-primary">Stem</button>
-                        </form>
+                        <div id="vote-form">
+                            <form class="mt-auto">
+                                <input type="hidden" name="id" value="@recommendation.Id"/>
+                                <button type="submit" id="vote-for" class="btn btn-success">Stem voor</button>
+                            </form>
+
+                            <form class="mt-auto">
+                                <input type="hidden" name="id" value="@recommendation.Id"/>
+                                <button type="submit" id="vote-against" class="btn btn-danger">Stem tegen</button>
+                            </form>
+                        </div>
                     }
                 </div>
             </div>
