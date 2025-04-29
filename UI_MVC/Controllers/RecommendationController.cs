@@ -44,6 +44,6 @@ public class RecommendationController(IPanelManager panelManager) : Controller
             panelManager.AddRecommendationOfPanel(viewModel.Title, viewModel.Description, panel);
             return RedirectToAction(nameof(Index));
         }
-        return View("AddRecommendation");
+        return View();
     }
 }

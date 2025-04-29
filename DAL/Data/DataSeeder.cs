@@ -913,7 +913,7 @@ public class DataSeeder
             Code = "blLy-Tvxl-1TXG-nYg3-CBtD",
             Gender = Gender.Female,
             PanelId = 1,
-            Postcode = "2140",
+            Town = "2140",
             QRCodeString =
                 ""
         };
@@ -925,7 +925,7 @@ public class DataSeeder
             Code = "tDK6-KFhD-ipIi-tQjz-m6cZ",
             Gender = Gender.Male,
             PanelId = 1,
-            Postcode = "2100",
+            Town = "2100",
             QRCodeString =
                 ""
         };
@@ -937,7 +937,7 @@ public class DataSeeder
             Code = "Iga7-FHyw-yVfo-8wvN-Bxa8",
             Gender = Gender.Male,
             PanelId = 1,
-            Postcode = "2110",
+            Town = "2110",
             QRCodeString =
                 ""
         };
@@ -949,7 +949,7 @@ public class DataSeeder
             Code = "FIcV-zyXs-reXO-I6dh-rMCB",
             Gender = Gender.Female,
             PanelId = 2,
-            Postcode = "2105",
+            Town = "2105",
             QRCodeString =
                 ""
         };
@@ -961,7 +961,7 @@ public class DataSeeder
             Code = "HEMf-Xu0L-1ETh-urZJ-26s9",
             Gender = Gender.Male,
             PanelId = 1,
-            Postcode = "Antwerpen",
+            Town = "Antwerpen",
             QRCodeString =
                 "",
             Email = "drawn@example.com",

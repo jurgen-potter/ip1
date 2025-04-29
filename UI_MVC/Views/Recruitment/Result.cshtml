@@ -34,8 +34,40 @@
         }
     </ul>
 }
+
+
+<form asp-controller="Panel" asp-action="CreatePanel" method="get">
+    @if (Model.CriteriaResults.Count > 0)
+    {
+        @for (int i = 0; i < Model.CriteriaResults.Count; i++)
+        {
+            <input type="hidden" asp-for="CriteriaResults[i].Name"/>
+
+            @for (int j = 0; j < Model.CriteriaResults[i].SubResults.Count; j++)
+            {
+                <input type="hidden" asp-for="CriteriaResults[i].SubResults[j].Name"/>
+                <input type="hidden" asp-for="CriteriaResults[i].SubResults[j].Count"/>
+                <input type="hidden" asp-for="CriteriaResults[i].SubResults[j].Percentage"/>
+            }
+        }
+    }
+    
+    <input type="hidden" asp-for="@Model.Age18_25Count"/>
+    <input type="hidden" asp-for="@Model.Age26_40Count"/>
+    <input type="hidden" asp-for="@Model.Age41_60Count"/>
+    <input type="hidden" asp-for="@Model.Age60PlusCount"/>
+    <input type="hidden" asp-for="@Model.MaleCount"/>
+    <input type="hidden" asp-for="@Model.FemaleCount"/>
+    <input type="hidden" asp-for="@Model.TotalNeededPanelmembers"/>
+    <input type="hidden" asp-for="@Model.ReservePotPanelmembers"/>
+
+    <button type="submit" class="btn btn-primary">Maak uw panel</button>
+</form>
+
+@*
 <div>
-    <a href="@Url.Action("MakePanel","Panel")" class="btn btn-primary">Maak uw panel</a>
+    <a href="@Url.Action("CreatePanel","Panel")" class="btn btn-primary">Maak uw panel</a>
 </div>
+*@
 
 <a href="@Url.Action("Index", "Recruitment")" class="btn btn-secondary">Nieuwe Berekening</a>

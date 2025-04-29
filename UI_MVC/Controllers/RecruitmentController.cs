@@ -27,9 +27,9 @@ public class RecruitmentController : Controller
         {
             return View("Index", model);
         }
-        
-        var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, model.MalePercentage, model.FemalePercentage, model.Age18_25Percentage, model.Age26_40Percentage, model.Age41_60Percentage, model.Age60PlusPercentage, model.Criteria);
 
+        var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, model.MalePercentage, model.FemalePercentage, model.Age18_25Percentage, model.Age26_40Percentage, model.Age41_60Percentage, model.Age60PlusPercentage, model.Criteria);
+        
         return View("Result", result);
     }
 

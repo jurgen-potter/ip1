@@ -23,9 +23,51 @@ public class DrawManager : IDrawManager
         {
             int age = dummyMember.Age;
             Gender gender = dummyMember.Gender;
-            int genderNumber = (int)gender;
             int panelId = dummyMember.PanelId;
-            string postCode = dummyMember.Postcode;
+            string town = dummyMember.Town;
+            string code = GenerateCode();
+
+            string qrCodePlace = "https://whimp-24.ew.r.appspot.com/MemberRegister/RegisterMember?code=" + code; 
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
+            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+            byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
+            string qrCodeString = Convert.ToBase64String(qrCodeAsPngByteArr);
+
+            
+            Invitation invitation = new Invitation()
+            {
+                Code = code,
+                Age = age,
+                Gender = gender,
+                PanelId = panelId,
+                QRCodeString = qrCodeString,
+            };
+            Invitation newInvitation = _drawRepository.CreateInvitation(invitation);
+            invitations.Add(newInvitation);
+        }
+        
+        return invitations;
+    }
+
+    public IEnumerable<Invitation> AddInvitations(Panel panel, List<DummyMember> members)
+    {
+        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        List<Invitation> invitations = new List<Invitation>();
+
+        foreach (Criteria criteria in panel.Criteria)
+        {
+            foreach (SubCriteria subCriteria in criteria.SubCriteria)
+            {
+                
+            }
+        }
+        
+        foreach (DummyMember dummyMember in members)
+        {
+            int age = dummyMember.Age;
+            Gender gender = dummyMember.Gender;
+            int panelId = dummyMember.PanelId;
+            string town = dummyMember.Town;
             string code = GenerateCode();
 
             string qrCodePlace = "https://whimp-24.ew.r.appspot.com/MemberRegister/RegisterMember?code=" + code; 
@@ -64,6 +106,26 @@ public class DrawManager : IDrawManager
     {
         return _drawRepository.UpdateInvitation(invitation);
     }
+
+    public Criteria AddCriteria(string name, List<SubCriteria> subCriteria)
+    {
+        Criteria criteria = new Criteria()
+        {
+            Name = name,
+            SubCriteria = subCriteria
+        };
+        return _drawRepository.CreateCriteria(criteria);
+    }
+
+    public SubCriteria AddSubCriteria(string name, double percentage)
+    {
+        SubCriteria subCriteria = new SubCriteria()
+        {
+            Name = name,
+            Percentage = percentage
+        };
+        return _drawRepository.CreateSubCriteria(subCriteria);
+    }
     
     public string GenerateCode()
     {
@@ -94,7 +156,6 @@ public class DrawManager : IDrawManager
         }
         return code;
     }
-    
     
     public Criteria GetCriteria(int criteriaId)
     {
@@ -204,7 +265,8 @@ public class DrawManager : IDrawManager
                 SubResults = extra.SubCriteria.Select(sub => new SubCriteriaResult
                 {
                     Name = sub.Name,
-                    Count = (int)(totalAvailablePotPanelmembers * (sub.Percentage / 100))
+                    Count = (int)(totalAvailablePotPanelmembers * (sub.Percentage / 100)),
+                    Percentage = sub.Percentage
                 }).ToList()
             };
             result.CriteriaResults.Add(criteriaResult);

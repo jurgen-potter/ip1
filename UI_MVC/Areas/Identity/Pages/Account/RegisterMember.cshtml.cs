@@ -146,7 +146,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             List<Criteria> extraCriteria = _drawManager.GetCriteriaByPanel(invitation.PanelId).ToList();
             Input.Email = invitation.Email;
             Input.Gender = invitation.Gender;
-            Input.Town = invitation.Postcode;
+            Input.Town = invitation.Town;
             Input.CriteriaList = extraCriteria;
             Input.SelectedCriteria = invitation.SelectedCriteria;
             Input.PanelId = invitation.PanelId;

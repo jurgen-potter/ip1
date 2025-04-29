@@ -30,8 +30,6 @@ public class PanelManager : IPanelManager
         {
             Name = name,
             Description = description,
-            StartDate = DateOnly.FromDateTime(DateTime.Now),
-            EndDate = endDate,
             MemberCount = 0,
             Criteria = criteria
         };
