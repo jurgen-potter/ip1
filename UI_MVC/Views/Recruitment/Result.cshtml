@@ -34,18 +34,24 @@
         }
     </ul>
 }
-<form asp-controller="Panel" asp-action="CreatePanel" method="post">
-    @for (int i = 0; i < Model.CriteriaResults.Count; i++)
-    {
-        <input type="hidden" asp-for="CriteriaResults[i].Name"/>
 
-        @for (int j = 0; j < Model.CriteriaResults[i].SubResults.Count; j++)
+
+<form asp-controller="Panel" asp-action="CreatePanel" method="get">
+    @if (Model.CriteriaResults.Count > 0)
+    {
+        @for (int i = 0; i < Model.CriteriaResults.Count; i++)
         {
-            <input type="hidden" asp-for="CriteriaResults[i].SubResults[j].Name"/>
-            <input type="hidden" asp-for="CriteriaResults[i].SubResults[j].Count"/>
-            <input type="hidden" asp-for="CriteriaResults[i].SubResults[j].Percentage"/>
+            <input type="hidden" asp-for="CriteriaResults[i].Name"/>
+
+            @for (int j = 0; j < Model.CriteriaResults[i].SubResults.Count; j++)
+            {
+                <input type="hidden" asp-for="CriteriaResults[i].SubResults[j].Name"/>
+                <input type="hidden" asp-for="CriteriaResults[i].SubResults[j].Count"/>
+                <input type="hidden" asp-for="CriteriaResults[i].SubResults[j].Percentage"/>
+            }
         }
     }
+    
     <input type="hidden" asp-for="@Model.Age18_25Count"/>
     <input type="hidden" asp-for="@Model.Age26_40Count"/>
     <input type="hidden" asp-for="@Model.Age41_60Count"/>

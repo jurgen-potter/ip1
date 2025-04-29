@@ -14,5 +14,4 @@ public class ResultsViewModel
     public double TotalNeededPanelmembers {get; set;}
 
     public IList<CriteriaResult> CriteriaResults { get; set; }
-
 }

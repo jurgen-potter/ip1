@@ -48,7 +48,7 @@ public class PanelController : Controller
     }
 
     [Authorize(Roles = "Organization")]
-    [HttpPost]
+    [HttpGet]
     public IActionResult CreatePanel(ResultsViewModel resultsViewModel)
     {
         CreatePanelViewModel model = new CreatePanelViewModel()
@@ -65,26 +65,31 @@ public class PanelController : Controller
         if(!ModelState.IsValid)
             return View(model);
 
-        List<SubCriteria> subCriteria = new List<SubCriteria>();
         List<Criteria> criteria = new List<Criteria>();
-        
-        foreach (CriteriaResult criteriaResult in model.Results.CriteriaResults)
+
+        if (model.Results.CriteriaResults != null)
         {
-            foreach (SubCriteriaResult subResult in criteriaResult.SubResults)
+            foreach (CriteriaResult criteriaResult in model.Results.CriteriaResults)
             {
-                subCriteria.Add(_drawManager.AddSubCriteria(subResult.Name, subResult.Percentage));
+                List<SubCriteria> subCriteria = new List<SubCriteria>();
+                foreach (SubCriteriaResult subResult in criteriaResult.SubResults)
+                {
+                    subCriteria.Add(_drawManager.AddSubCriteria(subResult.Name, subResult.Percentage));
+                }
+                criteria.Add(_drawManager.AddCriteria(criteriaResult.Name, subCriteria));
             }
-            criteria.Add(_drawManager.AddCriteria(criteriaResult.Name, subCriteria));
-            subCriteria = new List<SubCriteria>();
         }
         
         Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria);
-        foreach (Criteria criterion in criteria)
+
+        if (criteria.Count != 0)
         {
-            criterion.Panel = newPanel;
+            foreach (Criteria criterion in criteria)
+            {
+                criterion.Panel = newPanel;
+            }
         }
         
         return RedirectToAction("Index","Panel",new {panelId=newPanel.Id});
     }
-    
 }
