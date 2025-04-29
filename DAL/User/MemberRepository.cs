@@ -1,5 +1,7 @@
-﻿using CitizenPanel.BL.Domain.User;
+﻿using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.User;
 using CitizenPanel.DAL.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CitizenPanel.DAL;
 
@@ -32,6 +34,16 @@ public class MemberRepository : IMemberRepository
     public void DeleteMember(ApplicationUser member)
     {
         _dbContext.ApplicationUsers.Remove(member);
+    }
+
+    public IEnumerable<Panel> ReadPanelsByUserId(string userId)
+    {
+        return _dbContext.ApplicationUsers
+            .Where(u => u.Id == userId)
+            .Include(u => u.MemberProfile)
+            .ThenInclude(m => m.Panels)
+            .SelectMany(u => u.MemberProfile.Panels)
+            .ToList();
     }
 
     /*public IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId)

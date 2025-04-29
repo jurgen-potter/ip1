@@ -166,4 +166,10 @@ public class PanelRepository : IPanelRepository
             .Select(uv => uv.RecommendationId)
             .ToList();
     }
+
+    public void UpdateCriteria(Criteria criteria)
+    {
+        _dbContext.Update(criteria);
+        _dbContext.SaveChanges();
+    }
 }

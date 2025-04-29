@@ -2,6 +2,7 @@ using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
+using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,9 +14,9 @@ public class PanelController : Controller
 {
     private readonly IPanelManager _panelManager;
     private readonly IDrawManager _drawManager;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ApplicationUserManager _userManager;
 
-    public PanelController(IPanelManager panelManager, IDrawManager drawManager, UserManager<ApplicationUser> userManager)
+    public PanelController(IPanelManager panelManager, IDrawManager drawManager, ApplicationUserManager userManager)
     {
         _panelManager = panelManager;
         _drawManager = drawManager;
@@ -64,7 +65,7 @@ public class PanelController : Controller
     
     [Authorize(Roles = "Organization, Admin")]
     [HttpPost]
-    public IActionResult CreatePanel(CreatePanelViewModel model)
+    public async Task<IActionResult> CreatePanel(CreatePanelViewModel model)
     {
         if(!ModelState.IsValid)
             return View(model);
@@ -84,13 +85,17 @@ public class PanelController : Controller
             }
         }
         
-        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria);
+        var organization = await _userManager.GetUserWithProfilesAndPanelsAsync(User);
+        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria, organization.OrganizationProfile);
+        organization.OrganizationProfile.Panels.Add(newPanel);
+        await _userManager.UpdateAsync(organization);
 
         if (criteria.Count != 0)
         {
             foreach (Criteria criterion in criteria)
             {
                 criterion.Panel = newPanel;
+                _panelManager.EditCriteria(criterion);
             }
         }
         
@@ -98,18 +103,28 @@ public class PanelController : Controller
     }
     
     [Authorize]
-    public async Task<IActionResult> MyPanel()
+    public async Task<IActionResult> UserPanel()
     {
-        var user = await _userManager.GetUserAsync(User);
-        var panels = await _panelResolver.GetPanelsForUserAsync(userId);
+        var user = await _userManager.GetUserWithProfilesAndPanelsAsync(User);
 
-        if (panels.Count == 0)
-            return View("NoPanels");
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
+        var panels = user.UserType == UserType.Member ? user.MemberProfile.Panels : user.OrganizationProfile.Panels;
 
         if (panels.Count == 1)
+        {
             return RedirectToAction("Index", new { id = panels.First().Id });
-
-        // Multiple panels — show selection UI
-        return View("ChoosePanel", panels);
+        }
+        else if (panels.Count != 0)
+        {
+            throw new NotImplementedException(); // Keuze scherm
+        }
+        else // Count == 0
+        {
+            throw new NotImplementedException(); // Home
+        }
     }
 }

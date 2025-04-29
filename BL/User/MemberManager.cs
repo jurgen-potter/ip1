@@ -49,7 +49,7 @@ public class MemberManager : IMemberManager
                 BirthDate = newMemberBirthDate,
                 Town = newMemberTown,
                 SelectedCriteria = selectedCriteria,
-                Panel = new List<Panel> { _panelManager.GetPanelById(newMemberPanelId) }
+                Panels = new List<Panel> { _panelManager.GetPanelById(newMemberPanelId) }
             }
         };
         
@@ -76,6 +76,11 @@ public class MemberManager : IMemberManager
     public void RemoveMember(ApplicationUser member)
     {
         _memberRepository.DeleteMember(member);
+    }
+
+    public IEnumerable<Panel> GetPanelsByUserId(string userId)
+    {
+        return _memberRepository.ReadPanelsByUserId(userId);
     }
 
     /*public IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId)

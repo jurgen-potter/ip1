@@ -24,17 +24,17 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadPanelByIdWithoutTenant(panelId);
     }
 
-    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria)
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization)
     {
         Panel newPanel = new Panel()
         {
             Name = name,
             Description = description,
             MemberCount = 0,
-            Criteria = criteria
+            Criteria = criteria,
+            Organization = organization
         };
         _panelRepository.CreatePanel(newPanel);
-        //_drawManager.GenerateInvitations(newPanel);
         return newPanel;
     }
 
@@ -96,5 +96,10 @@ public class PanelManager : IPanelManager
     public IEnumerable<int> GetVotedRecommendationsByUser(string userId)
     {
         return _panelRepository.ReadVotedRecommendationsByUser(userId);
+    }
+
+    public void EditCriteria(Criteria criteria)
+    {
+        _panelRepository.UpdateCriteria(criteria);
     }
 }

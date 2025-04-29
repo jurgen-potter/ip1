@@ -4,15 +4,16 @@ using CitizenPanel.DAL.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Managers;
 
-public class TenantUserManager : UserManager<ApplicationUser>
+public class ApplicationUserManager : UserManager<ApplicationUser>
 {
     private readonly PanelDbContext _context;
     private readonly TenantContext _tenantContext;
 
-    public TenantUserManager(
+    public ApplicationUserManager(
         IUserStore<ApplicationUser> store,
         IOptions<IdentityOptions> optionsAccessor,
         IPasswordHasher<ApplicationUser> passwordHasher,
@@ -44,14 +45,36 @@ public class TenantUserManager : UserManager<ApplicationUser>
 
         return await CreateAsync(user, password);
     }
-
-    public async Task<ApplicationUser> GetUserWithProfilesAsync(string userId)
+    
+    private IQueryable<ApplicationUser> GetUserWithProfilesBase()
     {
-        var user = await _context.Users
+        return _context.Users
             .Include(u => u.MemberProfile)
             .Include(u => u.OrganizationProfile)
-            .IgnoreQueryFilters()
+            .IgnoreQueryFilters();
+    }
+
+    public async Task<ApplicationUser> GetUserWithProfilesByIdAsync(string userId)
+    {
+        var user = await GetUserWithProfilesBase()
             .SingleOrDefaultAsync(u => u.Id == userId);
+        return user;
+    }
+    
+    public async Task<ApplicationUser> GetUserWithProfilesAndPanelsAsync(ClaimsPrincipal userPrincipal)
+    {
+        var userId = GetUserId(userPrincipal);
+        var user = await GetUserWithProfilesBase()
+            .Include(u => u.MemberProfile.Panels)
+            .Include(u => u.OrganizationProfile.Panels)
+            .SingleOrDefaultAsync(u => u.Id == userId);
+        return user;
+    }
+    
+    public async Task<ApplicationUser> GetUserWithProfilesAsync(ClaimsPrincipal userPrincipal)
+    {
+        var userId = GetUserId(userPrincipal);
+        var user = await GetUserWithProfilesByIdAsync(userId);
         return user;
     }
 }
