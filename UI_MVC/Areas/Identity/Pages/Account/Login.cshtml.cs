@@ -127,7 +127,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User logged in.");
-                        return LocalRedirect(returnUrl);
+                        return RedirectToAction("UserPanel", "Panel");
                     }
                     if (result.RequiresTwoFactor) { return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe }); }
                     if (result.IsLockedOut)

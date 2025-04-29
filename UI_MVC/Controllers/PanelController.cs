@@ -92,4 +92,20 @@ public class PanelController : Controller
         
         return RedirectToAction("Index","Panel",new {panelId=newPanel.Id});
     }
+    
+    /*[Authorize]
+    public async Task<IActionResult> MyPanel()
+    {
+        var userId = _userService.GetCurrentUserId(User);
+        var panels = await _panelResolver.GetPanelsForUserAsync(userId);
+
+        if (panels.Count == 0)
+            return View("NoPanels");
+
+        if (panels.Count == 1)
+            return RedirectToAction("Index", new { id = panels.First().Id });
+
+        // Multiple panels — show selection UI
+        return View("ChoosePanel", panels);
+    }*/
 }
