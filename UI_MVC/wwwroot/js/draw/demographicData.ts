@@ -152,6 +152,8 @@ function generateCriteriaHtml(ci: number): HTMLLIElement {
       </div>
       <button class="btn btn-sm expand-btn ms-2"
               data-bs-toggle="collapse"
+              aria-expanded="true"
+              aria-controls="criteria-body-@i"
               data-bs-target="#criteria-body-${ci}">
         <i class="bi bi-chevron-up"></i>
       </button>
