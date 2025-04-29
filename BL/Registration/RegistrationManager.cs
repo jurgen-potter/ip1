@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.Draw;
+﻿/*using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.DAL;
@@ -134,4 +134,4 @@ public class RegistrationManager(IMemberManager memberManager, IPanelManager pan
         // Check if any bucket has fewer registrations than the target
         return !buckets.Any(b => b.Count < b.Target);
     }
-}
+}*/

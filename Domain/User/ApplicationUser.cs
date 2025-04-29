@@ -23,7 +23,7 @@ public class MemberProfile : ITenanted
     public int Age { get; set; }
     public DateOnly BirthDate { get; set; }
     public string Town { get; set; }
-    public Panel.Panel Panel { get; set; }
+    public ICollection<Panel.Panel> Panel { get; set; } = new List<Panel.Panel>();
     public List<SubCriteria> SelectedCriteria { get; set; } = new List<SubCriteria>();
 }
 

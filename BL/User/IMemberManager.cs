@@ -12,11 +12,11 @@ public interface IMemberManager
     void ChangeMember(ApplicationUser member);
     void RemoveMember(ApplicationUser member);
     
-    // Specialized queries for the RegistrationManager
+    /*// Specialized queries for the RegistrationManager
     IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId);
     IEnumerable<ApplicationUser> GetMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);
     
     // Additional methods to support the RegistrationManager functionality
-    int GetMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);
+    int GetMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);*/
 
 }

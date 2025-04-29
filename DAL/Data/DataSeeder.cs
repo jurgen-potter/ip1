@@ -134,7 +134,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 22,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panel = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -148,7 +148,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 35,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panel = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -161,7 +161,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 50,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panel = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -174,7 +174,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 28,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panel = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -187,7 +187,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 45,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panel = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -202,7 +202,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 33,
                     Town = "Antwerpen",
-                    Panel = panel2,
+                    Panel = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },

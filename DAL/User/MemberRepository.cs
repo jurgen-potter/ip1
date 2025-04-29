@@ -34,7 +34,7 @@ public class MemberRepository : IMemberRepository
         _dbContext.ApplicationUsers.Remove(member);
     }
 
-    public IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId)
+    /*public IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId)
     {
         return _dbContext.ApplicationUsers
             .Where(u => u.MemberProfile.Panel.Id == panelId)
@@ -59,6 +59,5 @@ public class MemberRepository : IMemberRepository
                         m.MemberProfile.Gender == gender &&
                         m.MemberProfile.Age >= minAge &&
                         m.MemberProfile.Age <= maxAge);
-    }
-
+    }*/
 }

@@ -1,8 +1,10 @@
 using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.User;
 using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers;
@@ -11,11 +13,13 @@ public class PanelController : Controller
 {
     private readonly IPanelManager _panelManager;
     private readonly IDrawManager _drawManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public PanelController(IPanelManager panelManager, IDrawManager drawManager)
+    public PanelController(IPanelManager panelManager, IDrawManager drawManager, UserManager<ApplicationUser> userManager)
     {
         _panelManager = panelManager;
         _drawManager = drawManager;
+        _userManager = userManager;
     }
     
     // GET
@@ -93,10 +97,10 @@ public class PanelController : Controller
         return RedirectToAction("Index","Panel",new {panelId=newPanel.Id});
     }
     
-    /*[Authorize]
+    [Authorize]
     public async Task<IActionResult> MyPanel()
     {
-        var userId = _userService.GetCurrentUserId(User);
+        var user = await _userManager.GetUserAsync(User);
         var panels = await _panelResolver.GetPanelsForUserAsync(userId);
 
         if (panels.Count == 0)
@@ -107,5 +111,5 @@ public class PanelController : Controller
 
         // Multiple panels — show selection UI
         return View("ChoosePanel", panels);
-    }*/
+    }
 }

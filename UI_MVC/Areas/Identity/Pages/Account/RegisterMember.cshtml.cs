@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
@@ -169,7 +170,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     Gender = Input.Gender,
                     BirthDate = Input.BirthDate,
                     Town = Input.Town,
-                    Panel = panel
+                    Panel = new List<Panel> { panel }
                 };
                 
                 List<SubCriteria> selectedCriteria = new List<SubCriteria>();
