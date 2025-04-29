@@ -24,7 +24,7 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadPanelByIdWithoutTenant(panelId);
     }
 
-    public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<Criteria> criteria)
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria)
     {
         Panel newPanel = new Panel()
         {
