@@ -26,74 +26,144 @@ ViewBag.Title = "Bereken panel";
     <ul id="criterias-list" class="list-unstyled">
         @for (int i = 0; i < Model.Criteria.Count; i++)
         {
-        <li class="card mb-3 criteria-item">
-            <input asp-for="Criteria[i].Id" type="hidden" />
-            <div class="card-header d-flex align-items-start">
-                <div class="flex-grow-1">
-                    <label class="form-label fw-bold">Criteria @(i + 1)</label>
-                    <div class="d-flex align-items-center w-100">
-                        <input asp-for="Criteria[i].Name"
-                               class="form-control mb-0 criteria-description"
-                               placeholder="Criteria omschrijving" />
-                        <button type="button" class="btn btn-danger btn-sm ms-2 remove-criteria-btn">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <button class="btn btn-sm expand-btn ms-2"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#criteria-body-@i"
-                        type="button">
-                    <i class="bi bi-chevron-up"></i>
-                </button>
-            </div>
+            if (i ==0 || i == 1)
+            {
+                <li class="card mb-3 criteria-item">
+                    <input asp-for="Criteria[i].Id" type="hidden"/>
+                    <div class="card-header d-flex align-items-start">
+                        <div class="flex-grow-1 w-100">
+                            <label class="form-label fw-bold">Criteria</label>
 
-            <div class="collapse show criteria-body" id="criteria-body-@i">
-                <div class="card-body">
-                    <label class="form-label fw-bold">Subcriteria</label>
-                    <ul id="subcriterias-list-@i" class="list-unstyled">
-                        @for (int j = 0; j < Model.Criteria[i].SubCriteria.Count; j++)
-                        {
-                        <li class="row subcriteria-item mb-2 align-items-center p-2">
-                            <input asp-for="Criteria[i].SubCriteria[j].Id" type="hidden" />
-                            <div class="col">
-                                <input asp-for="Criteria[i].SubCriteria[j].Name"
-                                       class="form-control subcriteria-description"
-                                       placeholder="Subcriteria omschrijving" />
-                            </div>
-                            <div class="col-auto">
-                                <div class="input-group">
-                                    <input asp-for="Criteria[i].SubCriteria[j].Percentage"
-                                           class="form-control subcriteria-percentage"
-                                           type="number" min="0" max="100" />
-                                    <span class="input-group-text">%</span>
+                            <div class="d-flex align-items-start gap-2">
+                                <div class="flex-grow-1">
+                                    <input asp-for="Criteria[i].Name"
+                                           class="form-control criteria-description" readonly/>
                                 </div>
                             </div>
-                            <div class="col-auto">
-                                <button type="button" class="btn btn-danger btn-sm remove-subcriteria-btn">
-                                    Verwijder
-                                </button>
-                            </div>
-                        </li>
-                        }
-                    </ul>
-
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <button type="button"
-                                class="btn btn-sm btn-secondary add-subcriteria-btn"
-                                criteria-index="@i">
-                            Voeg een subcriteria toe
+                        </div>
+                        <button class="btn btn-sm expand-btn ms-2"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#criteria-body-@i"
+                                type="button">
+                            <i class="bi bi-chevron-up"></i>
                         </button>
-                        <div class="subcriteria-total mt-2 text-end small">
-                            Totaal: <span class="subcriteria-sum">0</span>%
-                            <span class="text-danger subcriteria-warning" style="display:none;">
-                                    (moet 100%)
-                                </span>
+                    </div>
+
+                    <div class="collapse show criteria-body" id="criteria-body-@i">
+                        <div class="card-body">
+                            <label class="form-label fw-bold">Subcriteria</label>
+                            <ul id="subcriterias-list-@i" class="list-unstyled">
+                                @for (int j = 0; j < Model.Criteria[i].SubCriteria.Count; j++)
+                                {
+                                    <li class="row subcriteria-item mb-2 align-items-center p-2">
+                                        <input asp-for="Criteria[i].SubCriteria[j].Id" type="hidden"/>
+                                        <div class="col">
+                                            <input asp-for="Criteria[i].SubCriteria[j].Name"
+                                                   class="form-control subcriteria-description" readonly/>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="input-group">
+                                                <input asp-for="Criteria[i].SubCriteria[j].Percentage"
+                                                       class="form-control subcriteria-percentage"
+                                                       type="number" min="0" max="100"/>
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+
+                            @* <div class="d-flex justify-content-between align-items-center mt-2"> *@
+                                <div class="subcriteria-total mt-2 text-end small">
+                                    Totaal: <span class="subcriteria-sum">0</span>%
+                                    <span class="text-danger subcriteria-warning" style="display:none;">
+                                        (moet 100%)
+                                    </span>
+                                </div>
+                            @* </div> *@
                         </div>
                     </div>
-                </div>
-            </div>
-        </li>
+                </li>
+            }
+            else
+            {
+
+
+                <li class="card mb-3 criteria-item">
+                    <input asp-for="Criteria[i].Id" type="hidden"/>
+                    <div class="card-header d-flex align-items-start">
+                        <div class="flex-grow-1 w-100">
+                            <label class="form-label fw-bold">Criteria</label>
+
+                            <div class="d-flex align-items-start gap-2">
+                                <div class="flex-grow-1">
+                                    <input asp-for="Criteria[i].Name"
+                                           class="form-control criteria-description"
+                                           placeholder="Criteria omschrijving"/>
+                                    <span asp-validation-for="@Model.Criteria[@i].Name" class="text-danger small"></span>
+                                </div>
+
+                                <button type="button" class="btn btn-danger btn-sm remove-criteria-btn mt-1">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm expand-btn ms-2"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#criteria-body-@i"
+                                type="button">
+                            <i class="bi bi-chevron-up"></i>
+                        </button>
+                    </div>
+
+                    <div class="collapse show criteria-body" id="criteria-body-@i">
+                        <div class="card-body">
+                            <label class="form-label fw-bold">Subcriteria</label>
+                            <ul id="subcriterias-list-@i" class="list-unstyled">
+                                @for (int j = 0; j < Model.Criteria[i].SubCriteria.Count; j++)
+                                {
+                                    <li class="row subcriteria-item mb-2 align-items-center p-2">
+                                        <input asp-for="Criteria[i].SubCriteria[j].Id" name="Criteria[@i].SubCriteria.Index"
+                                               type="hidden" value="@j"/>
+                                        <div class="col">
+                                            <input asp-for="Criteria[i].SubCriteria[j].Name"
+                                                   class="form-control subcriteria-description"
+                                                   placeholder="Subcriteria omschrijving"/>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="input-group">
+                                                <input asp-for="Criteria[i].SubCriteria[j].Percentage"
+                                                       class="form-control subcriteria-percentage"
+                                                       type="number" min="0" max="100"/>
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="button" class="btn btn-danger btn-sm remove-subcriteria-btn">
+                                                Verwijder
+                                            </button>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <button type="button"
+                                        class="btn btn-sm btn-secondary add-subcriteria-btn"
+                                        criteria-index="@i">
+                                    Voeg een subcriteria toe
+                                </button>
+                                <div class="subcriteria-total mt-2 text-end small">
+                                    Totaal: <span class="subcriteria-sum">0</span>%
+                                    <span class="text-danger subcriteria-warning" style="display:none;">
+                                        (moet 100%)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            }
         }
     </ul>
 
@@ -119,6 +189,4 @@ ViewBag.Title = "Bereken panel";
 
 @section Scripts {
     <script defer src="~/dist/js/draw/demographicData.js"></script>
-<partial name="_ValidationScriptsPartial" />
-
 }

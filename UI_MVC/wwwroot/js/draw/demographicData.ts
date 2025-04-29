@@ -109,12 +109,10 @@ function addCriteria(): void {
 
     // standaard één lege subcriteria bij nieuwe criteria
     addSubCriteria(ci.toString());
-    updateCriteriaIndices();
 }
 
 function removeCriteria(criteria: HTMLLIElement): void {
     criteria.remove();
-    updateCriteriaIndices();
 }
 
 function addSubCriteria(ci: string): void {
@@ -125,13 +123,11 @@ function addSubCriteria(ci: string): void {
     const newSub = generateSubCriteriaHtml(ci, sci);
     subList.appendChild(newSub);
     addSubCriteriaHandlers(newSub);
-    updateSubCriteriaIndices(subList);
 }
 
 function removeSubCriteria(sub: HTMLLIElement): void {
     const parent = sub.closest('ul') as HTMLUListElement | null;
     sub.remove();
-    if (parent) updateSubCriteriaIndices(parent);
 }
 // HTML Generators
 function generateCriteriaHtml(ci: number): HTMLLIElement {
@@ -141,7 +137,7 @@ function generateCriteriaHtml(ci: number): HTMLLIElement {
     <input name="Criteria[${ci}].Id" type="hidden" class="criteria-id" value="0" />
     <div class="card-header d-flex align-items-start">
       <div class="flex-grow-1">
-        <label class="form-label fw-bold criteria-number">Criteria ${ci + 1}</label>
+        <label class="form-label fw-bold criteria-number">Criteria</label>
         <div class="d-flex align-items-center w-100">
           <input name="Criteria[${ci}].Name"
                  class="form-control mb-0 criteria-description"
@@ -185,8 +181,8 @@ function generateSubCriteriaHtml(ci: string, sci: number): HTMLLIElement {
     const li = document.createElement('li');
     li.className = 'row subcriteria-item mb-2 align-items-center p-2';
     li.innerHTML = `
-    <input name="Criteria[${ci}].SubCriteria[${sci}].Id"
-           type="hidden" class="subcriteria-id" value="0" />
+    <input name="Criteria[${ci}].SubCriteria.Index" value="${sci}"
+           type="hidden" class="subcriteria-id"" />
     <div class="col">
       <input name="Criteria[${ci}].SubCriteria[${sci}].Name"
              class="form-control subcriteria-description"
@@ -209,39 +205,6 @@ function generateSubCriteriaHtml(ci: string, sci: number): HTMLLIElement {
     </div>
   `;
     return li;
-}
-
-// Re-indexing
-function updateCriteriaIndices(): void {
-    document.querySelectorAll<HTMLLIElement>('.criteria-item')
-        .forEach((el, i) => {
-            el.querySelector<HTMLLabelElement>('.criteria-number')!.textContent = `Criteria ${i + 1}`;
-            el.querySelector<HTMLDivElement>('.criteria-body')!.id = `criteria-body-${i}`;
-            el.querySelector<HTMLButtonElement>('.expand-btn')!
-                .setAttribute('data-bs-target', `#criteria-body-${i}`);
-            el.querySelector<HTMLUListElement>('[id^="subcriterias-list-"]')!
-                .id = `subcriterias-list-${i}`;
-            el.querySelector<HTMLButtonElement>('.add-subcriteria-btn')!
-                .setAttribute('criteria-index', String(i));
-
-            (el.querySelector('.criteria-id') as HTMLInputElement).name =
-                `Criteria[${i}].Id`;
-            (el.querySelector('.criteria-description') as HTMLInputElement).name =
-                `Criteria[${i}].Name`;
-        });
-}
-
-function updateSubCriteriaIndices(list: HTMLUListElement): void {
-    const ci = list.id.split('-').pop()!;
-    list.querySelectorAll<HTMLLIElement>('.subcriteria-item')
-        .forEach((el, j) => {
-            (el.querySelector('.subcriteria-id') as HTMLInputElement).name =
-                `Criteria[${ci}].SubCriteria[${j}].Id`;
-            (el.querySelector('.subcriteria-description') as HTMLInputElement).name =
-                `Criteria[${ci}].SubCriteria[${j}].Name`;
-            (el.querySelector('.subcriteria-percentage') as HTMLInputElement).name =
-                `Criteria[${ci}].SubCriteria[${j}].Percentage`;
-        });
 }
 
 // ----------------------
