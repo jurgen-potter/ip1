@@ -118,7 +118,6 @@
 {
     @if (!Model.IsConfirmed)
     {
-        <script defer src="~/dist/js/memberRegister/registerMember.js">
-        </script>
+        <script defer src="@Url.Content("~/dist/js/memberRegister/registerMember.js")"></script>
     }
 }
