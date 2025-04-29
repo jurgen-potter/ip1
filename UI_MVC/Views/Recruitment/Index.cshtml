@@ -2,11 +2,11 @@
 @model RecruitmentCriteriaViewModel
 
 @section Styles {
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 }
 
 @{
-ViewBag.Title = "Bereken panel";
+    ViewBag.Title = "Bereken panel";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -17,16 +17,17 @@ ViewBag.Title = "Bereken panel";
 </div>
 
 <form asp-action="Calculate" method="post">
-    <input asp-for="PanelId" type="hidden" />
+    <input asp-for="PanelId" type="hidden"/>
     <div class="mb-3">
         <label class="form-label">Aantal inwoners gemeente</label>
-        <input asp-for="TotalAvailablePotentialPanelmembers" type="number" class="form-control" required />
+        <input asp-for="TotalAvailablePotentialPanelmembers" type="number" class="form-control" required/>
+        <span asp-validation-for="@Model.TotalAvailablePotentialPanelmembers" class="text-danger small"></span>
     </div>
 
     <ul id="criterias-list" class="list-unstyled">
         @for (int i = 0; i < Model.Criteria.Count; i++)
         {
-            if (i ==0 || i == 1)
+            if (i == 0 || i == 1)
             {
                 <li class="card mb-3 criteria-item">
                     <input asp-for="Criteria[i].Id" type="hidden"/>
@@ -74,12 +75,12 @@ ViewBag.Title = "Bereken panel";
                             </ul>
 
                             @* <div class="d-flex justify-content-between align-items-center mt-2"> *@
-                                <div class="subcriteria-total mt-2 text-end small">
-                                    Totaal: <span class="subcriteria-sum">0</span>%
-                                    <span class="text-danger subcriteria-warning" style="display:none;">
+                            <div class="subcriteria-total mt-2 text-end small">
+                                Totaal: <span class="subcriteria-sum">0</span>%
+                                <span class="text-danger subcriteria-warning" style="display:none;">
                                         (moet 100%)
                                     </span>
-                                </div>
+                            </div>
                             @* </div> *@
                         </div>
                     </div>
@@ -87,8 +88,6 @@ ViewBag.Title = "Bereken panel";
             }
             else
             {
-
-
                 <li class="card mb-3 criteria-item">
                     <input asp-for="Criteria[i].Id" type="hidden"/>
                     <div class="card-header d-flex align-items-start">
@@ -100,7 +99,8 @@ ViewBag.Title = "Bereken panel";
                                     <input asp-for="Criteria[i].Name"
                                            class="form-control criteria-description"
                                            placeholder="Criteria omschrijving"/>
-                                    <span asp-validation-for="@Model.Criteria[@i].Name" class="text-danger small"></span>
+                                    <span asp-validation-for="@Model.Criteria[@i].Name"
+                                          class="text-danger small"></span>
                                 </div>
 
                                 <button type="button" class="btn btn-danger btn-sm remove-criteria-btn mt-1">
@@ -122,13 +122,16 @@ ViewBag.Title = "Bereken panel";
                             <ul id="subcriterias-list-@i" class="list-unstyled">
                                 @for (int j = 0; j < Model.Criteria[i].SubCriteria.Count; j++)
                                 {
-                                    <li class="row subcriteria-item mb-2 align-items-center p-2">
-                                        <input asp-for="Criteria[i].SubCriteria[j].Id" name="Criteria[@i].SubCriteria.Index"
+                                    <li class="row subcriteria-item mb-2 align-items-start p-2">
+                                        <input asp-for="Criteria[i].SubCriteria[j].Id"
+                                               name="Criteria[@i].SubCriteria.Index"
                                                type="hidden" value="@j"/>
                                         <div class="col">
                                             <input asp-for="Criteria[i].SubCriteria[j].Name"
                                                    class="form-control subcriteria-description"
                                                    placeholder="Subcriteria omschrijving"/>
+                                            <span asp-validation-for="@Model.Criteria[@i].SubCriteria[@j].Name"
+                                                  class="text-danger small"></span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="input-group">
@@ -173,8 +176,10 @@ ViewBag.Title = "Bereken panel";
         <button
             type="submit"
             formaction="@Url.Action("Calculate")"
-            class="btn btn-primary">
-            Bereken
+            class="btn btn-primary"
+            id="calculate-btn"
+            disabled>
+            Berekenen
         </button>
 
         <button

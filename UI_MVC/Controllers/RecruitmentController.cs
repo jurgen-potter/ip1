@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
@@ -21,6 +22,12 @@ public class RecruitmentController : Controller
     [HttpGet]
     public IActionResult Index(int panelId = 1)
     {
+        if (TempData["CriteriaFormData"] is string json)
+        {
+            var tModel = JsonConvert.DeserializeObject<RecruitmentCriteriaViewModel>(json);
+            return View(tModel); 
+        }
+        
         var criteriaList = _drawManager.GetCriteriaByPanel(panelId);
 
         var model = new RecruitmentCriteriaViewModel
@@ -53,6 +60,8 @@ public class RecruitmentController : Controller
 
             model.Criteria.Add(criteriaVm);
         }
+        
+       
 
         return View(model);
     }
@@ -97,17 +106,37 @@ public class RecruitmentController : Controller
         return View("Result", result);
     }
 
-    [AllowAnonymous]
     [HttpGet]
-    public IActionResult Save() //staat hier voor een 405 te vermijden, idk hoe ik dit moet oplossen tbh
+    public IActionResult IndexWithTempData()
     {
-        return RedirectToAction(nameof(Index), new { panelId =  1 });
+        if (TempData["CriteriaFormData"] is string json)
+        {
+            var model = JsonConvert.DeserializeObject<RecruitmentCriteriaViewModel>(json);
+            return View("Index", model);
+        }
+        // Fallback als TempData leeg is
+        return RedirectToAction(nameof(Index), new { panelId = 1 }); // Of een andere logische PanelId
     }
+    
+
     
     [Authorize(Roles = "Organization")]
     [HttpPost]
     public IActionResult Save(RecruitmentCriteriaViewModel model)
     {
+        
+        if (User.Identity == null || !User.Identity.IsAuthenticated)
+        {
+            TempData["CriteriaFormData"] = JsonConvert.SerializeObject(model);
+
+  
+            var properties = new Microsoft.AspNetCore.Authentication.AuthenticationProperties
+            {
+                RedirectUri = Url.Action(nameof(IndexWithTempData))
+            };
+            return Challenge(properties);
+        }
+        
         ModelState.Clear(); //voor validatiefouten te omzeilen, je mag opslaan!
 
         var domainCriteria = new List<Criteria>();

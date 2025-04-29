@@ -123,11 +123,13 @@ function addSubCriteria(ci: string): void {
     const newSub = generateSubCriteriaHtml(ci, sci);
     subList.appendChild(newSub);
     addSubCriteriaHandlers(newSub);
+    initSubcriteriaSums();
 }
 
 function removeSubCriteria(sub: HTMLLIElement): void {
     const parent = sub.closest('ul') as HTMLUListElement | null;
     sub.remove();
+    validateAll();
 }
 // HTML Generators
 function generateCriteriaHtml(ci: number): HTMLLIElement {
@@ -223,6 +225,7 @@ function initSubcriteriaSums(): void {
             const total = inputs.reduce((acc, i) => acc + Number(i.value), 0);
             sumDisplay.textContent = String(total);
             warning.style.display = (total === 100) ? 'none' : 'inline';
+            validateAll();  
         };
 
         // delegatie: luister op de parent-lijst
@@ -235,4 +238,17 @@ function initSubcriteriaSums(): void {
 
         updateSum();
     });
+
+    validateAll();
+
+    
+}
+
+function validateAll() {
+    const calculateBtn = document.getElementById('calculate-btn') as HTMLButtonElement;
+    // check per criteria-item of sum = 100
+    const allValid = Array.from(document.querySelectorAll<HTMLLIElement>('.criteria-item'))
+        .every(item => Number(item.querySelector<HTMLSpanElement>('.subcriteria-sum')!.textContent) === 100);
+
+    calculateBtn.disabled = !allValid;
 }

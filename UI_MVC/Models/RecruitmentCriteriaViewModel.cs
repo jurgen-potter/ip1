@@ -1,5 +1,4 @@
-﻿using CitizenPanel.BL.Domain.Draw;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CitizenPanel.UI.MVC.Models;
 
@@ -7,7 +6,7 @@ public class RecruitmentCriteriaViewModel
 {
     public int PanelId { get; set; }
     
-    [Range(10, int.MaxValue, ErrorMessage = "Geef het aantal mensen die mee kunnen doen op.")]
+    [Range(100, int.MaxValue, ErrorMessage = "Er moeten meer dan 100 mensen mee kunnen doen.")]
     public int TotalAvailablePotentialPanelmembers { get; set; }
     
     [Required(ErrorMessage = "Er moet minstens één criterium zijn.")]
@@ -18,10 +17,10 @@ public class CriteriaViewModel
 {
     public int Id { get; set; }
     
-    [Required(ErrorMessage = "Geef een naam op voor het criterium.")]
+    [Required(ErrorMessage = "Geef een naam op voor het criteria.")]
     public string Name { get; set; } // bv. “Gender”, “Age”, “Transport”
     
-    [Required(ErrorMessage = "Voeg minstens één subcriterium toe.")]
+    [Required(ErrorMessage = "Voeg minstens één subcriteria toe.")]
     public List<SubCriteriaViewModel> SubCriteria { get; set; } = new();
 }
 
@@ -29,7 +28,7 @@ public class SubCriteriaViewModel
 {
     public int Id { get; set; }
     
-    [Required(ErrorMessage = "Geef een naam op voor het subcriterium.")]
+    [Required(ErrorMessage = "Geef een naam op voor het subcriteria.")]
     public string Name { get; set; } // bv. “Male”, “Female” of “18-25”, “Bus”, etc.
     
     [Range(0, 100, ErrorMessage = "Percentage moet tussen 0 en 100 zijn.")]
