@@ -208,6 +208,26 @@ public class DrawManager : IDrawManager
         // Start recursie met lege lijsten en 100% (1.0)
         BuildBuckets(0, new List<string>(), new List<string>(), 1.0);
 
+        int totalCount = 0;
+        foreach (RecruitmentBucket bucket in result.Buckets)
+        {
+            totalCount += bucket.Count;
+        }
+        while (totalCount < result.TotalNeededPanelmembers)
+        {
+            var lowest = result.Buckets.Min(bucket => bucket.Count);
+            var bucket = result.Buckets.First(bucket => bucket.Count == lowest);
+            bucket.Count++;
+            totalCount++;
+        }
+
+        while (totalCount > result.TotalNeededPanelmembers)
+        {
+            var highest = result.Buckets.Max(bucket => bucket.Count);
+            var bucket = result.Buckets.First(bucket => bucket.Count == highest);
+            bucket.Count--;
+            totalCount--;
+        }
         return result;
     }
 
