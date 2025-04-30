@@ -1,5 +1,6 @@
 ﻿let allCriteriaCollapsed: boolean = false;
-
+const MAX_CRITERIA = 10;
+const MAX_SUBCRITERIA = 10;
 window.addEventListener('DOMContentLoaded', () => {
     editCriteriaInit();
     initSubcriteriaSums();
@@ -9,26 +10,26 @@ window.addEventListener('DOMContentLoaded', () => {
 // Initialization
 // ----------------------
 function editCriteriaInit(): void {
-    // 1) Bestaande criteria-items initialiseren
+    // Bestaande criteria initialiseren
     document
         .querySelectorAll<HTMLLIElement>('.criteria-item')
         .forEach((item) => {
             addCriteriaHandlers(item);
-
-            // bind de remove-handler op alle seed-subcriteria
             item
                 .querySelectorAll<HTMLLIElement>('.subcriteria-item')
                 .forEach((sub) => addSubCriteriaHandlers(sub));
         });
 
-    // "Voeg criteria toe" knop
     const addBtn = document.getElementById('add-criteria-btn') as HTMLButtonElement | null;
     addBtn?.addEventListener('click', () => addCriteria());
 
-    // "Alles invouwen" knop
     const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement | null;
     toggleAllBtn?.addEventListener('click', () => cToggleExpandAll(toggleAllBtn));
+
+    updateCriteriaLimitUI(); // <- nieuw: direct checken bij init
 }
+
+
 
 // ----------------------
 // Criteria handlers
@@ -103,16 +104,23 @@ function addCriteria(): void {
     if (!list) return;
 
     const ci = list.children.length;
+    if (ci >= MAX_CRITERIA) {
+        updateCriteriaLimitUI();
+        return;
+    }
+
     const newLi = generateCriteriaHtml(ci);
     list.appendChild(newLi);
     addCriteriaHandlers(newLi);
-
-    // standaard één lege subcriteria bij nieuwe criteria
     addSubCriteria(ci.toString());
+
+    updateCriteriaLimitUI();
 }
+
 
 function removeCriteria(criteria: HTMLLIElement): void {
     criteria.remove();
+    updateCriteriaLimitUI();
 }
 
 function addSubCriteria(ci: string): void {
@@ -120,17 +128,30 @@ function addSubCriteria(ci: string): void {
     if (!subList) return;
 
     const sci = subList.children.length;
+    if (sci >= MAX_SUBCRITERIA) {
+        updateSubCriteriaButton(ci);
+        return;
+    }
+
     const newSub = generateSubCriteriaHtml(ci, sci);
     subList.appendChild(newSub);
     addSubCriteriaHandlers(newSub);
     initSubcriteriaSums();
+
+    updateSubCriteriaButton(ci);
 }
 
 function removeSubCriteria(sub: HTMLLIElement): void {
     const parent = sub.closest('ul') as HTMLUListElement | null;
     sub.remove();
     validateAll();
+
+    if (parent?.id.startsWith('subcriterias-list-')) {
+        const ci = parent.id.replace('subcriterias-list-', '');
+        updateSubCriteriaButton(ci);
+    }
 }
+
 // HTML Generators
 function generateCriteriaHtml(ci: number): HTMLLIElement {
     const li = document.createElement('li');
@@ -244,6 +265,25 @@ function initSubcriteriaSums(): void {
     validateAll();
 
     
+}
+
+function updateCriteriaLimitUI(): void {
+    const list = document.getElementById('criterias-list') as HTMLUListElement | null;
+    const addBtn = document.getElementById('add-criteria-btn') as HTMLButtonElement | null;
+
+    const count = list?.querySelectorAll('.criteria-item').length ?? 0;
+    const limitReached = count >= MAX_CRITERIA;
+
+    if (addBtn) addBtn.disabled = limitReached;
+}
+
+function updateSubCriteriaButton(ci: string): void {
+    const subList = document.getElementById(`subcriterias-list-${ci}`) as HTMLUListElement | null;
+    const addBtn = document.querySelector<HTMLButtonElement>(`.add-subcriteria-btn[criteria-index="${ci}"]`);
+    if (!subList || !addBtn) return;
+
+    const count = subList.children.length;
+    addBtn.disabled = count >= MAX_SUBCRITERIA;
 }
 
 function validateAll() {
