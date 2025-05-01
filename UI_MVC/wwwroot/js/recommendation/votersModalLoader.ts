@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const recommendationId = triggerButton.dataset.recommendationId;
                 const recommendationTitle = triggerButton.dataset.recommendationTitle || 'Stemmers Details';
 
-                modalTitleElement.textContent = `Stemmers voor: ${recommendationTitle}`;
+                modalTitleElement.textContent = `Stemming voor aanbeveling: ${recommendationTitle}`;
                 
                 const url = `/Recommendation/GetVoters?recommendationId=${recommendationId}`;
                 try {

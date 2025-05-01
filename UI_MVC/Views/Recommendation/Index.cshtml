@@ -5,6 +5,11 @@
 
 @{
     ViewData["Title"] = "Recommendations";
+    List<int> lijst = new List<int>();
+    foreach (var recommendation in Model)
+    {
+        lijst.Add(recommendation.UserVotes.Count(uv => uv.Recommended));
+    }
 }
 
 <h1>Aanbevelingen</h1>
@@ -22,14 +27,14 @@
                     {
                         <div class="mt-auto">
                             <p class="mb-1">Alle stemmen: <span id="vote-count-@recommendation.Id">@recommendation.Votes</span></p>
-                            <ol>
+                            <ul>
                                 <li>
                                     <p class="mb-1" style="color: limegreen">Voor deze aanbeveling: <span id="vote-count-@recommendation.Id">@recommendation.UserVotes.Count(uv => uv.Recommended)</span></p>
                                 </li>
                                 <li>
                                     <p class="mb-1" style="color: red">Tegen deze aanbeveling: <span id="vote-count-@recommendation.Id">@recommendation.UserVotes.Count(uv => !uv.Recommended)</span></p>
                                 </li>
-                            </ol>
+                            </ul>
                             <button type="button" class="btn btn-sm btn-outline-info btn-show-voters"
                                     data-bs-toggle="modal"
                                     data-bs-target="#votersModal"

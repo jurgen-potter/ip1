@@ -102,7 +102,8 @@ public class PanelManager : IPanelManager
             Voter = member,
             Recommendation = recommendation,
             VotedAt = DateTime.UtcNow,
-            Recommended = recommended
+            Recommended = recommended,
+            TenantId = member.MemberProfile.TenantId
         };
         
         _panelRepository.CreateVoteToRecommendation(userVote);
