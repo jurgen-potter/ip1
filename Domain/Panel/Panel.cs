@@ -24,7 +24,9 @@ public class Panel : ITenanted
     
     public ICollection<Invitation> Invitations { get; set; } = new List<Invitation>();
     
-    public ICollection<ApplicationUser> Members { get; set; } = new List<ApplicationUser>();
+    public ICollection<MemberProfile> Members { get; set; } = new List<MemberProfile>();
+    
+    public OrganizationProfile Organization { get; set; }
     
     public ICollection<Criteria> Criteria { get; set; } = new List<Criteria>();
     public ICollection<RecruitmentBucket> RecruitmentBuckets { get; set; }

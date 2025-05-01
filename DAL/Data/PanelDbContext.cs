@@ -103,9 +103,9 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<Panel>()
             .OwnsMany(p => p.RecruitmentBuckets);
         modelBuilder.Entity<Panel>()
-            .HasMany(m => m.Members);
-        modelBuilder.Entity<MemberProfile>()
-            .HasOne(m => m.Panel); //momenteel gewoon 1 ik weet dat het meerdere kan bevatten
+            .HasMany(m => m.Members)
+            .WithMany(m => m.Panels)
+            .UsingEntity(p => p.ToTable("PanelMembers"));
         
         modelBuilder.Entity<MemberProfile>()
             .HasMany(m => m.SelectedCriteria)

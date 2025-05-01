@@ -23,4 +23,5 @@ public interface IPanelRepository
     void DeleteVoteFromRecommendation(ApplicationUser member, Recommendation recommendation);
     
     IEnumerable<int> ReadVotedRecommendationsByUser(string userId);
+    void UpdateCriteria(Criteria criteria);
 }

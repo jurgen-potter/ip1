@@ -27,14 +27,14 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
     public class RegisterAdminModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly TenantUserManager _userManager;
+        private readonly ApplicationUserManager _userManager;
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterAdminModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterAdminModel(
-            TenantUserManager userManager,
+            ApplicationUserManager userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterAdminModel> logger,
