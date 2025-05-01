@@ -388,4 +388,25 @@ private static List<RecruitmentBucket> BuildBuckets(
     {
         return _drawRepository.DeleteInvitation(invitationId);
     }
+    public IEnumerable<Criteria> GetInitialCriteria()
+    {
+        var criteriaList = new List<Criteria>()
+        {
+            AddCriteria("Geslacht",
+            [
+                AddSubCriteria("Man", 0),
+                AddSubCriteria("Vrouw", 0)
+            ]),
+            AddCriteria("Leeftijd",
+            [
+                AddSubCriteria("18-25", 0),
+                AddSubCriteria("26-35", 0),
+                AddSubCriteria("36-50", 0),
+                AddSubCriteria("51-60", 0),
+                AddSubCriteria("60+", 0),
+            ])
+        };
+        
+        return criteriaList;
+    }
 }

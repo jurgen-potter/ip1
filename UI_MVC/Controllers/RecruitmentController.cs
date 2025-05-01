@@ -28,7 +28,7 @@ public class RecruitmentController : Controller
             return View(tModel); 
         }
         
-        var criteriaList = _drawManager.GetCriteriaByPanel(panelId);
+        var criteriaList = _drawManager.GetInitialCriteria();
 
         var model = new RecruitmentCriteriaViewModel
         {
