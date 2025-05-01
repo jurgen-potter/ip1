@@ -7,6 +7,7 @@ using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
@@ -103,13 +104,18 @@ public class PanelController : Controller
     }
     
     [Authorize]
-    public async Task<IActionResult> UserPanel()
+    public async Task<IActionResult> UserPanel(string returnUrl)
     {
         var user = await _userManager.GetUserWithProfilesAndPanelsAsync(User);
 
         if (user is null)
         {
             return Unauthorized();
+        }
+
+        if (user.UserType == UserType.Admin)
+        {
+            return LocalRedirect(returnUrl);
         }
 
         var panels = user.UserType == UserType.Member ? user.MemberProfile.Panels : user.OrganizationProfile.Panels;
@@ -120,11 +126,38 @@ public class PanelController : Controller
         }
         else if (panels.Count != 0)
         {
-            throw new NotImplementedException(); // Keuze scherm
+            return RedirectToAction("PanelSelect");
         }
         else // Count == 0
         {
-            throw new NotImplementedException(); // Home
+            return RedirectToAction("Index", "Home");
         }
+    }
+
+    [Authorize]
+    public async Task<IActionResult> PanelSelect()
+    {
+        if (TempData["Panels"] is string serializedPanels)
+        {
+            var panels = JsonSerializer.Deserialize<List<PanelData>>(serializedPanels);
+        
+            if (panels != null)
+            {
+                var viewModel = new PanelSelectViewModel
+                {
+                    Panels = panels.Select(p => new PanelViewModel
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Description = p.Description
+                    }).ToList()
+                };
+
+                return View(viewModel);
+            }
+        }
+    
+        // Fallback if TempData doesn't have the data (should rarely happen)
+        return RedirectToAction("UserPanel", new { returnUrl = "/" });
     }
 }
