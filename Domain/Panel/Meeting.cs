@@ -1,6 +1,12 @@
-﻿namespace CitizenPanel.BL.Domain.Panel;
+﻿using CitizenPanel.BL.Domain.Tenancy;
 
-public class Meeting
+namespace CitizenPanel.BL.Domain.Panel;
+
+public class Meeting : ITenanted
 {
-    public DateTime Date { get; set; }
+    public int id { get; set; }
+    //public string Title
+    public DateOnly Date { get; set; }
+    public ICollection<Recommendation> Recommendations { get; set; }
+    public string TenantId { get; set; }
 }

@@ -30,8 +30,30 @@ public class PanelController : Controller
             Description = panel.Description,
             StartDate = panel.StartDate,
             EndDate = panel.EndDate,
-            CoverImagePath = panel.CoverImagePath
+            CoverImagePath = panel.CoverImagePath,
         };
+
+        foreach (Meeting meeting in panel.Meetings)
+        {
+            MeetingViewModel meetingViewModel = new MeetingViewModel
+            {
+                Date = meeting.Date,
+            };
+            
+            if (meeting.Recommendations != null)
+            {
+                foreach (Recommendation rec in meeting.Recommendations)
+                {
+                    meetingViewModel.Recommendations.Add(new RecommendationViewModel
+                    {
+                        Id = rec.Id,
+                        Title = rec.Title,
+                        Description = rec.Description
+                    });
+                }
+            }
+            model.Meetings.Add(meetingViewModel);
+        }
 
         foreach (Recommendation recommendation in panel.Recommendations)
         {

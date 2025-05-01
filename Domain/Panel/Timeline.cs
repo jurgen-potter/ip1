@@ -1,6 +1,6 @@
-﻿namespace CitizenPanel.BL.Domain.Panel;
+﻿
+namespace CitizenPanel.BL.Domain.Panel;
 
 public class Timeline
 {
-
 }

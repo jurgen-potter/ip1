@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.QuestionnaireModule;
@@ -16,6 +17,7 @@ public class DataSeeder
 
     public void Seed()
     {
+        SeedPanel0();
         SeedPanels();
         _panelDbContext.SaveChanges();
         _panelDbContext.ChangeTracker.Clear();
@@ -25,6 +27,71 @@ public class DataSeeder
 
         _panelDbContext.SaveChanges();
         _panelDbContext.ChangeTracker.Clear();
+    }
+
+    private void SeedPanel0()
+    {
+        var subCrit1 = new SubCriteria()
+        {
+            Name = "Man",
+            Percentage = 40,
+        };
+        var subCrit2 = new SubCriteria()
+        {
+            Name = "Vrouw",
+            Percentage = 60,
+        };
+        var subCrit3 = new SubCriteria()
+        {
+            Name = "18-25",
+            Percentage = 20,
+        };
+        var subCrit4 = new SubCriteria()
+        {
+            Name = "26-35",
+            Percentage = 50,
+        };
+        var subCrit5 = new SubCriteria()
+        {
+            Name = "36-50",
+            Percentage = 10,
+        };
+        var subCrit6 = new SubCriteria()
+        {
+            Name = "51-60",
+            Percentage = 10,
+        };
+        var subCrit7 = new SubCriteria()
+        {
+            Name = "60+",
+            Percentage = 10,
+        };
+        _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4);
+
+        var crit1 = new Criteria()
+        {
+            Name = "Geslacht",
+            SubCriteria = { subCrit1, subCrit2 },
+        };
+        var crit2 = new Criteria()
+        {
+            Name = "Leeftijd",
+            SubCriteria = { subCrit3, subCrit4, subCrit5, subCrit6, subCrit7 },
+        };
+        _panelDbContext.Criteria.AddRange(crit1, crit2);
+
+        var panel0 = new Panel()
+        {
+            Id = 999999999,
+            Name = "Basis Panel",
+            Description = "Basis Panel",
+            StartDate = new DateOnly(2025, 1, 12),
+            EndDate = new DateOnly(2025, 7, 22)
+        };
+
+        _panelDbContext.Panels.Add(panel0);
+        panel0.Criteria.Add(crit1);
+        panel0.Criteria.Add(crit2);
     }
 
     private void SeedPanels()
@@ -83,10 +150,11 @@ public class DataSeeder
         var crit2 = new Criteria()
         {
             Name = "Leeftijd",
-            SubCriteria = { subCrit3, subCrit4 , subCrit5 , subCrit6 , subCrit7},
+            SubCriteria = { subCrit3, subCrit4, subCrit5, subCrit6, subCrit7 },
             TenantId = "antwerpen"
         };
         _panelDbContext.Criteria.AddRange(crit1, crit2);
+
 
         // Create panel objects
         var panel1 = new Panel()
@@ -124,7 +192,55 @@ public class DataSeeder
                     TenantId = "antwerpen"
                 }
             },
-            TenantId = "antwerpen"
+            TenantId = "antwerpen",
+            Meetings = new List<Meeting>()
+            {
+                new Meeting()
+                {
+                    Date = new DateOnly(2025, 5, 1),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Minder Fietspaden",
+                            Description = "Gemeente Antwerpen moet minder fietspaden aanleggen",
+                            Votes = 0,
+                            TenantId = "antwerpen"
+                        }
+                    },
+                    TenantId = "antwerpen"
+                },
+                new Meeting()
+                {
+                    Date = new DateOnly(2025, 4, 12),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Minder Jurgen",
+                            Description = "Minder Jurgen moet minder jurgen aanleggen",
+                            Votes = 0,
+                            TenantId = "antwerpen"
+                        }
+                    },
+                    TenantId = "antwerpen"
+                },
+                new Meeting()
+                {
+                    Date = new DateOnly(2025, 6, 12),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Minder Xander",
+                            Description = "Minder Xander moet minder jurgen aanleggen",
+                            Votes = 0,
+                            TenantId = "antwerpen"
+                        },
+                    },
+                    TenantId = "antwerpen"
+                }
+            }
         };
         _panelDbContext.Panels.Add(panel1);
         panel1.Criteria.Add(crit1);
@@ -516,7 +632,7 @@ public class DataSeeder
                     TenantId = "antwerpen"
                 }
             },
-            
+
             // Men 60+
             new ApplicationUser
             {
@@ -1002,7 +1118,8 @@ public class DataSeeder
         };
         var question1 = new Question
         {
-            Description = "Beschik je als organisator nog over minstens 6 maanden voordat de input van de participatie klaar moet zijn voor de politieke besluitvorming?",
+            Description =
+                "Beschik je als organisator nog over minstens 6 maanden voordat de input van de participatie klaar moet zijn voor de politieke besluitvorming?",
             Weight = 5,
             Position = 1
         };
@@ -1018,7 +1135,8 @@ public class DataSeeder
         };
         var question2 = new Question
         {
-            Description = "Is de gemeente bereid om de realisatie van de voorstellen van het burgerpanel ernstig te overwegen en minstens publiek te motiveren waarom dat niet is gebeurd?",
+            Description =
+                "Is de gemeente bereid om de realisatie van de voorstellen van het burgerpanel ernstig te overwegen en minstens publiek te motiveren waarom dat niet is gebeurd?",
             Weight = 3,
             Position = 2
         };

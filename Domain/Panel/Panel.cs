@@ -19,6 +19,7 @@ public class Panel : ITenanted
     public DateOnly EndDate { get; set; }
     
     public string CoverImagePath { get; set; }
+    public ICollection<Meeting> Meetings { get; set; }
     
     public int MemberCount { get; set; }
     
