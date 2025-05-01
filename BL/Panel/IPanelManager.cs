@@ -24,7 +24,7 @@ public interface IPanelManager
     public void EditRecommendation(Recommendation recommendation);
     
     bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation);
-    void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation);
+    void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation, bool recommended);
     void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation);
     IEnumerable<int> GetVotedRecommendationsByUser(string userId);
     void EditCriteria(Criteria criteria);

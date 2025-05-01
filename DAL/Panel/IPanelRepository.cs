@@ -19,7 +19,7 @@ public interface IPanelRepository
     public void UpdateRecommendation(Recommendation recommendation);
     
     bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation);
-    void CreateVoteToRecommendation(ApplicationUser member, Recommendation recommendation);
+    void CreateVoteToRecommendation(UserVote userVote);
     void DeleteVoteFromRecommendation(ApplicationUser member, Recommendation recommendation);
     
     IEnumerable<int> ReadVotedRecommendationsByUser(string userId);

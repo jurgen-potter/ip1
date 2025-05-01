@@ -108,23 +108,6 @@ public class DataSeeder
                 // new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "60+", Count = 0, Target = 5 }
             },
             DrawStatus = DrawStatus.FirstPhaseActive,
-            Recommendations = new List<Recommendation>()
-            {
-                new Recommendation()
-                {
-                    Title = "Meer fietspaden",
-                    Description = "Gemeente Antwerpen moet meer fietspaden aanleggen",
-                    Votes = 0,
-                    TenantId = "antwerpen"
-                },
-                new Recommendation()
-                {
-                    Title = "Autovrije binnenstad",
-                    Description = "Gemeente Antwerpen moet auto's uit de binnenstad verbieden",
-                    Votes = 0,
-                    TenantId = "antwerpen"
-                }
-            },
             TenantId = "antwerpen"
         };
         _panelDbContext.Panels.Add(panel1);
@@ -948,7 +931,106 @@ public class DataSeeder
                 }
             }
         };
+        
+        var panel1Recs = new List<Recommendation>()
+        {
+            new Recommendation()
+            {
+                Title = "Meer fietspaden",
+                Description = "Gemeente Antwerpen moet meer fietspaden aanleggen",
+                Votes = 5,
+                TenantId = "antwerpen",
+                UserVotes = new List<UserVote>()
+                {
+                    new UserVote()
+                    {
+                        Voter = members[0],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
 
+                    new UserVote()
+                    {
+                        Voter = members[1],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[2],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[3],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+
+                    new UserVote()
+                    {
+                        Voter = members[4],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    }
+                }
+            },
+            new Recommendation()
+            {
+                Title = "Autovrije binnenstad",
+                Description = "Gemeente Antwerpen moet auto's uit de binnenstad verbieden",
+                Votes = 4,
+                TenantId = "antwerpen",
+                UserVotes = new List<UserVote>()
+                {
+                    new UserVote()
+                    {
+                        Voter = members[0],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+
+                    new UserVote()
+                    {
+                        Voter = members[1],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[2],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[3],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    }
+                }
+            }
+        };
+        
+        panel1.Recommendations = panel1Recs;
+        
+        
+        
+        _panelDbContext.AddRange(panel1Recs);
         _panelDbContext.AddRange(members);
     }
 
