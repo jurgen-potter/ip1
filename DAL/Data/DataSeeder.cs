@@ -32,41 +32,51 @@ public class DataSeeder
         //criteria
         var subCrit1 = new SubCriteria()
         {
-            Name = "Fiets",
-            Percentage = 10,
-            TenantId = "antwerpen"
+            Name = "Man",
+            Percentage = 40
         };
         var subCrit2 = new SubCriteria()
         {
-            Name = "Auto",
-            Percentage = 90,
-            TenantId = "antwerpen"
+            Name = "Vrouw",
+            Percentage = 60
         };
         var subCrit3 = new SubCriteria()
         {
-            Name = "Hoog opgeleid",
-            Percentage = 10,
-            TenantId = "antwerpen"
+            Name = "18-25",
+            Percentage = 20
         };
         var subCrit4 = new SubCriteria()
         {
-            Name = "Laag opgeleid",
-            Percentage = 90,
-            TenantId = "antwerpen"
+            Name = "26-35",
+            Percentage = 50
+        };
+        var subCrit5 = new SubCriteria()
+        {
+            Name = "36-50",
+            Percentage = 10
+        };
+        var subCrit6 = new SubCriteria()
+        {
+            Name = "51-60",
+            Percentage = 10
+        };
+        var subCrit7 = new SubCriteria()
+        {
+            Name = "60+",
+            Percentage = 10
         };
         _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4);
 
         var crit1 = new Criteria()
         {
-            Name = "Vervoer",
+            Name = "Geslacht",
             SubCriteria = { subCrit1, subCrit2 },
             TenantId = "antwerpen"
         };
         var crit2 = new Criteria()
         {
-            Name = "Opleiding",
-            SubCriteria = { subCrit3, subCrit4 },
-            TenantId = "antwerpen"
+            Name = "Leeftijd",
+            SubCriteria = { subCrit3, subCrit4 , subCrit5 , subCrit6 , subCrit7},
         };
         _panelDbContext.Criteria.AddRange(crit1, crit2);
 
@@ -79,14 +89,14 @@ public class DataSeeder
             EndDate = new DateOnly(2025, 7, 22),
             RecruitmentBuckets = new List<RecruitmentBucket>()
             {
-                new RecruitmentBucket { Gender = "Mannen", AgeGroup = "18-25", Count = 0, Target = 5 },
-                new RecruitmentBucket { Gender = "Mannen", AgeGroup = "26-40", Count = 0, Target = 5 },
-                new RecruitmentBucket { Gender = "Mannen", AgeGroup = "41-60", Count = 0, Target = 5 },
-                new RecruitmentBucket { Gender = "Mannen", AgeGroup = "60+", Count = 0, Target = 5 },
-                new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "18-25", Count = 0, Target = 5 },
-                new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "26-40", Count = 0, Target = 5 },
-                new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "41-60", Count = 0, Target = 5 },
-                new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "60+", Count = 0, Target = 5 }
+                // new RecruitmentBucket { Gender = "Mannen", AgeGroup = "18-25", Count = 0, Target = 5 },
+                // new RecruitmentBucket { Gender = "Mannen", AgeGroup = "26-40", Count = 0, Target = 5 },
+                // new RecruitmentBucket { Gender = "Mannen", AgeGroup = "41-60", Count = 0, Target = 5 },
+                // new RecruitmentBucket { Gender = "Mannen", AgeGroup = "60+", Count = 0, Target = 5 },
+                // new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "18-25", Count = 0, Target = 5 },
+                // new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "26-40", Count = 0, Target = 5 },
+                // new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "41-60", Count = 0, Target = 5 },
+                // new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "60+", Count = 0, Target = 5 }
             },
             DrawStatus = DrawStatus.FirstPhaseActive,
             Recommendations = new List<Recommendation>()
