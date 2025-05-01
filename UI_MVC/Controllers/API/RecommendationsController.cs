@@ -57,7 +57,7 @@ public class RecommendationsController(IPanelManager panelManager, IMemberManage
     }
 
     [HttpPost("remove-vote")]
-    public IActionResult RemoveVote([FromBody] int id)
+    public IActionResult RemoveVote([FromBody] VoteDto voteDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var member = memberManager.GetMemberById(userId);
@@ -66,7 +66,7 @@ public class RecommendationsController(IPanelManager panelManager, IMemberManage
             return Unauthorized();
         }
 
-        var recommendation = panelManager.GetRecommendationById(id);
+        var recommendation = panelManager.GetRecommendationById(voteDto.Id);
         if (recommendation == null)
         {
             return NotFound();
@@ -79,7 +79,7 @@ public class RecommendationsController(IPanelManager panelManager, IMemberManage
         }
 
         panelManager.RemoveVoteFromRecommendation(member, recommendation);
-        recommendation = panelManager.GetRecommendationById(id);
+        recommendation = panelManager.GetRecommendationById(voteDto.Id);
 
         return Ok(new { id = recommendation.Id, votes = recommendation.Votes });
     }

@@ -109,6 +109,8 @@ public class PanelManager : IPanelManager
         
         // Verhoog de stemteller in de aanbeveling
         recommendation.Votes++;
+        _panelRepository.UpdateRecommendation(recommendation);
+        
     }
 
     public void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation)

@@ -16,6 +16,7 @@
             btns[0].textContent = 'Stem voor'
             btns[1].hidden = false;
             btns[1].textContent = 'Stem tegen'
+            // Als je deze tekst aanpast moet je bij let userVote de volgende lijn ook aanpassen(lijn 68: op het moment van schrijven)
         }
         else {
             btns[0].classList.remove('btn-success');
@@ -64,7 +65,7 @@
                 try {
                     // Stuur het stemverzoek naar de server
                     let userVote = {id: +id, recommended: true}
-                    if (form2.textContent === 'stem tegen') {
+                    if (form2.textContent === 'Stem tegen') {
                         userVote.recommended = false;
                     }
                     const res = await fetch(url, {

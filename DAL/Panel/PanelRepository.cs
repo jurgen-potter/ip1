@@ -37,6 +37,7 @@ public class PanelRepository : IPanelRepository
     {
         return _dbContext.Panels
             .Include(r => r.Recommendations)
+            .ThenInclude(r => r.UserVotes)
             .SingleOrDefault(p => p.Id == panelId);
     }
 
@@ -74,8 +75,8 @@ public class PanelRepository : IPanelRepository
 
     public Recommendation ReadRecommendationById(int recommendationId)
     {
-        return _dbContext.Recommendations
-            .Find(recommendationId);
+        var recommendations = _dbContext.Recommendations.Include(r => r.UserVotes);
+        return recommendations.SingleOrDefault(r => r.Id == recommendationId);
     }
 
     public Recommendation ReadRecommendationWithVotersById(int recommendationId)
