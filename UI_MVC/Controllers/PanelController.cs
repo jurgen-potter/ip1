@@ -4,10 +4,11 @@ using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Models;
+using CitizenPanel.UI.MVC.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
@@ -25,9 +26,9 @@ public class PanelController : Controller
     }
     
     // GET
-    public IActionResult Index(int panelId = 1)
+    public IActionResult Index(int id)
     {
-        Panel panel = _panelManager.GetPanelByIdWithRecommendations(panelId);
+        Panel panel = _panelManager.GetPanelByIdWithRecommendations(id);
         
         PanelViewModel model = new PanelViewModel()
         {
@@ -126,6 +127,17 @@ public class PanelController : Controller
         }
         else if (panels.Count != 0)
         {
+            var panelsData = new List<PanelDto>();
+            foreach (var panel in panels)
+            {
+                panelsData.Add(new PanelDto()
+                {
+                    Id = panel.Id,
+                    Name = panel.Name
+                });
+            }
+            TempData["Panels"] = JsonSerializer.Serialize(panelsData);
+            
             return RedirectToAction("PanelSelect");
         }
         else // Count == 0
@@ -135,29 +147,27 @@ public class PanelController : Controller
     }
 
     [Authorize]
-    public async Task<IActionResult> PanelSelect()
+    public IActionResult PanelSelect()
     {
         if (TempData["Panels"] is string serializedPanels)
         {
-            var panels = JsonSerializer.Deserialize<List<PanelData>>(serializedPanels);
-        
+            var panels = JsonSerializer.Deserialize<List<PanelDto>>(serializedPanels);
+
             if (panels != null)
             {
                 var viewModel = new PanelSelectViewModel
                 {
-                    Panels = panels.Select(p => new PanelViewModel
+                    Panels = panels.Select(p => new PanelSelectOptionViewModel
                     {
                         Id = p.Id,
-                        Name = p.Name,
-                        Description = p.Description
+                        Name = p.Name
                     }).ToList()
                 };
 
                 return View(viewModel);
             }
         }
-    
-        // Fallback if TempData doesn't have the data (should rarely happen)
+        
         return RedirectToAction("UserPanel", new { returnUrl = "/" });
     }
 }

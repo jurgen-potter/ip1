@@ -123,6 +123,16 @@ public class DataSeeder
         };
         _panelDbContext.Panels.Add(panel2);
         
+        var panel3 = new Panel()
+        {
+            Name = "Panel Antwerpen 2",
+            Description = "Dit is ook nog een omschrijving van een panel",
+            StartDate = new DateOnly(2025, 3, 11),
+            EndDate = new DateOnly(2025, 7, 17),
+            TenantId = "antwerpen"
+        };
+        _panelDbContext.Panels.Add(panel3);
+        
         var antwerpen = _panelDbContext.ApplicationUsers
             .Include(u => u.OrganizationProfile)
             .SingleOrDefault(u => u.UserName == "antwerpen@example.com");
@@ -131,10 +141,13 @@ public class DataSeeder
             .SingleOrDefault(u => u.UserName == "paul@example.com");
         panel1.Organization = antwerpen?.OrganizationProfile;
         panel1.Members.Add(paul?.MemberProfile);
+        panel3.Organization = antwerpen?.OrganizationProfile;
+        //panel3.Members.Add(paul?.MemberProfile);
         antwerpen?.OrganizationProfile.Panels.Add(panel1);
+        antwerpen?.OrganizationProfile.Panels.Add(panel3);
         paul?.MemberProfile.Panels.Add(panel1);
+        //paul?.MemberProfile.Panels.Add(panel3);
         
-
         // Create initial list with members for Panel 1 and Panel 2
         var members = new List<ApplicationUser>
         {
