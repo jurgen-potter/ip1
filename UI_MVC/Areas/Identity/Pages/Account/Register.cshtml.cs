@@ -19,22 +19,23 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using CitizenPanel.BL.Domain.User;
+using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly TenantUserManager _userManager;
+        private readonly IUserStore<ApplicationUser> _userStore;
+        private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
-            SignInManager<IdentityUser> signInManager,
+            TenantUserManager userManager,
+            IUserStore<ApplicationUser> userStore,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -114,10 +115,18 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateOrganization();
+                user.UserType = UserType.Organization;
+                
+                string newTenantId = Guid.NewGuid().ToString();
+                user.OrganizationProfile = new OrganizationProfile()
+                {
+                    TenantId = newTenantId
+                };
 
+                await _userManager.AddToRoleAsync(user, "Organization");
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var result = await _userManager.CreateWithTenantAsync(user, Input.Password, generateNewTenantId: true);
 
                 if (result.Succeeded)
                 {
@@ -160,27 +169,27 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private Organization CreateOrganization()
+        private ApplicationUser CreateOrganization()
         {
             try
             {
-                return Activator.CreateInstance<Organization>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(Organization)}'. " +
-                    $"Ensure that '{nameof(Organization)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
+        private IUserEmailStore<ApplicationUser> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<IdentityUser>)_userStore;
+            return (IUserEmailStore<ApplicationUser>)_userStore;
         }
     }
 }

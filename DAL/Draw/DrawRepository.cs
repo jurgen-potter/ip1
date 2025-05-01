@@ -34,7 +34,21 @@ public class DrawRepository : IDrawRepository
         _dbContext.SaveChanges();
         return invitation;
     }
-    
+
+    public SubCriteria CreateSubCriteria(SubCriteria subCriteria)
+    {
+        _dbContext.SubCriteria.Add(subCriteria);
+        _dbContext.SaveChanges();
+        return subCriteria;
+    }
+
+    public Criteria CreateCriteria(Criteria criteria)
+    {
+        _dbContext.Criteria.Add(criteria);
+        _dbContext.SaveChanges();
+        return criteria;
+    }
+
     public Criteria ReadCriteria(int criteriaId)
     {
         return _dbContext.Criteria
@@ -58,7 +72,7 @@ public class DrawRepository : IDrawRepository
     public IEnumerable<Criteria> ReadCriteriaByPanel(int panelId)
     {
         return _dbContext.Criteria
-            .Where(e => e.Panel.PanelId == panelId)
+            .Where(e => e.Panel.Id == panelId)
             .Include(e => e.SubCriteria)
             .ToList();
     }

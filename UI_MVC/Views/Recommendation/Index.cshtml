@@ -68,12 +68,10 @@
 
 
 @section Scripts {
-    <script defer src="~/dist/js/recommendation/vote.js">
-</script>
+    <script defer src="@Url.Content("~/dist/js/recommendation/vote.js")"></script>
+    
     @if (User.IsInRole("Organization"))
     {
-        <script defer src="~/dist/js/recommendation/votersModalLoader.js">
-    
-</script>
+        <script defer src="@Url.Content("~/dist/js/recommendation/votersModalLoader.js")"></script>
     }
 }

@@ -12,51 +12,53 @@ public class MemberRepository : IMemberRepository
         _dbContext = dbContext;
     }
 
-    public IEnumerable<Member> ReadAllMembers()
+    public IEnumerable<ApplicationUser> ReadAllMembers()
     {
-        return _dbContext.Members.ToList();
+        return _dbContext.ApplicationUsers
+            .Where(u => u.UserType == UserType.Member)
+            .ToList();
     }
 
-    public Member ReadMemberById(string memberId)
+    public ApplicationUser ReadUserById(string userId)
     {
-        return _dbContext.Members.Find(memberId);
+        return _dbContext.ApplicationUsers.Find(userId);
     }
     
-    public void UpdateMember(Member member)
+    public void UpdateMember(ApplicationUser member)
     {
         _dbContext.Update(member);
     }
 
-    public void DeleteMember(Member member)
+    public void DeleteMember(ApplicationUser member)
     {
-        _dbContext.Members.Remove(member);
+        _dbContext.ApplicationUsers.Remove(member);
     }
 
-    public IEnumerable<Member> ReadMembersByPanelId(int panelId)
+    public IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId)
     {
-        return _dbContext.Members
-            .Where(m => m.Panel.PanelId == panelId)
+        return _dbContext.ApplicationUsers
+            .Where(u => u.MemberProfile.Panel.Id == panelId)
             .ToList();
     }
 
-    public IEnumerable<Member> ReadMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge,
+    public IEnumerable<ApplicationUser> ReadMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge,
         int maxAge)
     {
-        return _dbContext.Members
-            .Where(m => m.Panel.PanelId == panelId &&
-                        m.Gender == gender &&
-                        m.Age >= minAge &&
-                        m.Age <= maxAge)
+        return _dbContext.ApplicationUsers
+            .Where(m => m.MemberProfile.Panel.Id == panelId &&
+                        m.MemberProfile.Gender == gender &&
+                        m.MemberProfile.Age >= minAge &&
+                        m.MemberProfile.Age <= maxAge)
             .ToList();
     }
 
     public int ReadMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge)
     {
-        return _dbContext.Members
-            .Count(m => m.Panel.PanelId == panelId &&
-                        m.Gender == gender &&
-                        m.Age >= minAge &&
-                        m.Age <= maxAge);
+        return _dbContext.ApplicationUsers
+            .Count(m => m.MemberProfile.Panel.Id == panelId &&
+                        m.MemberProfile.Gender == gender &&
+                        m.MemberProfile.Age >= minAge &&
+                        m.MemberProfile.Age <= maxAge);
     }
 
 }

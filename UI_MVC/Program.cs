@@ -1,5 +1,7 @@
 using AspNetCoreLiveMonitoring.Extensions;
 using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Tenancy;
+using CitizenPanel.BL.Domain.User;
 using CitizenPanel.BL.QuestionnaireModule;
 using CitizenPanel.BL.Registration;
 using CitizenPanel.DAL;
@@ -8,7 +10,9 @@ using CitizenPanel.DAL.QuestionnaireModule;
 using CitizenPanel.DAL.Registration;
 using CitizenPanel.UI.MVC;
 using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
+using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Areas.Identity.Services;
+using CitizenPanel.UI.MVC.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +31,6 @@ builder.Services.AddScoped<IDrawRepository, DrawRepository>();
 builder.Services.AddScoped<IPanelRepository, PanelRepository>();
 builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();
 builder.Services.AddScoped<IQuestionnaireModuleRepository, QuestionnaireModuleRepository>();
-builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 builder.Services.AddScoped<IDrawManager, DrawManager>();
 builder.Services.AddScoped<IPanelManager, PanelManager>();
 builder.Services.AddScoped<IQuestionnaireModuleManager, QuestionnaireModuleManager>();
@@ -35,21 +38,32 @@ builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 // builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IMemberManager, MemberManager>();
+builder.Services.AddScoped<UserManager<ApplicationUser>, TenantUserManager>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
 // Add Identity
-builder.Services.AddDefaultIdentity<IdentityUser>()
-    .AddRoles<IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedAccount = true;
+    })
+    .AddUserManager<TenantUserManager>()
     .AddEntityFrameworkStores<PanelDbContext>()
-    .AddErrorDescriber<DutchIdentityErrorDescriber>();
+    .AddErrorDescriber<DutchIdentityErrorDescriber>()
+    .AddDefaultTokenProviders();
 
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.User.RequireUniqueEmail = true;
-    options.SignIn.RequireConfirmedAccount = true;
-});
+
 builder.Services.AddLiveMonitoring();
+
+builder.Services.Configure<AvailableTenants>(
+    builder.Configuration.GetSection(AvailableTenants.SectionName)
+    );
+
+builder.Services
+    .AddTenantContext()
+    .AddScoped<TenantMiddleware>();
+
 var app = builder.Build();
 
 app.MapRazorPages();
@@ -58,7 +72,7 @@ using (IServiceScope scope = app.Services.CreateScope()) {
     PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
     if (context.CreateDatabase(true)) {
         
-        var userManager = scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
+        var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
         IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
         await identitySeeder.SeedAsync();
@@ -83,6 +97,8 @@ app.UseAndMapLiveMonitoring();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<TenantMiddleware>();
 
 app.MapControllerRoute(
     name: "default",

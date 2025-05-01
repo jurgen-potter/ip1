@@ -7,9 +7,10 @@ namespace CitizenPanel.BL;
 public interface IPanelManager
 {
     
-    public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<Criteria> criteria);
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria);
 
     public Panel GetPanelById(int panelId);
+    public Panel GetPanelByIdWithoutTenant(int panelId);
     void EditPanel(Panel panel);
     void RemovePanel(Panel panel);
     public IEnumerable<RecruitmentBucket> GetTargetBucketsByPanel(Panel panel);
@@ -22,9 +23,9 @@ public interface IPanelManager
 
     public void EditRecommendation(Recommendation recommendation);
     
-    bool HasUserVotedForRecommendation(Member member, Recommendation recommendation);
-    void AddVoteToRecommendation(Member member, Recommendation recommendation);
-    void RemoveVoteFromRecommendation(Member member, Recommendation recommendation);
+    bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation);
+    void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation);
+    void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation);
     IEnumerable<int> GetVotedRecommendationsByUser(string userId);
 
 }

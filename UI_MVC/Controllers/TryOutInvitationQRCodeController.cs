@@ -25,7 +25,7 @@ public class TryOutInvitationQRCodeController : Controller
             Age = 30,
             Gender = Gender.Female,
             PanelId = 1,
-            Postcode = "2140"
+            Town = "2140"
         };
             
         DummyMember dummy2 = new DummyMember()
@@ -33,7 +33,7 @@ public class TryOutInvitationQRCodeController : Controller
             Age = 20,
             Gender = Gender.Male,
             PanelId = 1,
-            Postcode = "2100"
+            Town = "2100"
         };
         
         DummyMember dummy3 = new DummyMember()
@@ -41,7 +41,7 @@ public class TryOutInvitationQRCodeController : Controller
             Age = 40,
             Gender = Gender.Male,
             PanelId = 1,
-            Postcode = "2110"
+            Town = "2110"
         };
         
         DummyMember dummy4 = new DummyMember()
@@ -49,7 +49,7 @@ public class TryOutInvitationQRCodeController : Controller
             Age = 40,
             Gender = Gender.Female,
             PanelId = 2,
-            Postcode = "2105"
+            Town = "2105"
         };
         
         DummyMember dummy5 = new DummyMember()
@@ -57,7 +57,7 @@ public class TryOutInvitationQRCodeController : Controller
             Age = 25,
             Gender = Gender.Male,
             PanelId = 1,
-            Postcode = "2140"
+            Town = "2140"
         };
 
         members.Add(dummy1);

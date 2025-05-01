@@ -10,6 +10,8 @@ public interface IDrawRepository
     public IEnumerable<Invitation> ReadAllInvitations();
     public Invitation UpdateInvitation(Invitation invitation);
     
+    public SubCriteria CreateSubCriteria(SubCriteria subCriteria);
+    public Criteria CreateCriteria(Criteria criteria);
     public Criteria ReadCriteria(int criteriaId);
     
     public IEnumerable<Criteria> ReadAllCriteria();

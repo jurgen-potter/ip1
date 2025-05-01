@@ -63,7 +63,7 @@
     <input type="hidden" asp-for="Invitation.PanelId" value="@Model.Invitation.PanelId"/>
     <input type="hidden" asp-for="Invitation.Gender" value="@Model.Invitation.Gender"/>
     <input type="hidden" asp-for="Invitation.Age" value="@Model.Invitation.Age"/>
-    <input type="hidden" asp-for="Invitation.Postcode" value="@Model.Invitation.Postcode"/>
+    <input type="hidden" asp-for="Invitation.Town" value="@Model.Invitation.Town"/>
     <input type="hidden" asp-for="Invitation.IsDrawn" value="@Model.Invitation.IsDrawn"/>
 
     <button type="submit" class="btn btn-primary">Aanmelden</button>
@@ -91,7 +91,7 @@
                     <input type="hidden" asp-for="Invitation.PanelId" value="@Model.Invitation.PanelId"/>
                     <input type="hidden" asp-for="Invitation.Gender" value="@Model.Invitation.Gender"/>
                     <input type="hidden" asp-for="Invitation.Age" value="@Model.Invitation.Age"/>
-                    <input type="hidden" asp-for="Invitation.Postcode" value="@Model.Invitation.Postcode"/>
+                    <input type="hidden" asp-for="Invitation.Town" value="@Model.Invitation.Town"/>
                     <input type="hidden" asp-for="Invitation.IsDrawn" value="@Model.Invitation.IsDrawn"/>
 
                     @for (int i = 0; i < Model.CriteriaList.Count; i++)
@@ -118,7 +118,6 @@
 {
     @if (!Model.IsConfirmed)
     {
-        <script defer src="~/dist/js/memberRegister/registerMember.js">
-        </script>
+        <script defer src="@Url.Content("~/dist/js/memberRegister/registerMember.js")"></script>
     }
 }
