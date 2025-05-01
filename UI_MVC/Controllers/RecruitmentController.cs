@@ -103,7 +103,6 @@ public class RecruitmentController : Controller
 
         var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, criteria);
 
-        var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, model.MalePercentage, model.FemalePercentage, model.Age18_25Percentage, model.Age26_40Percentage, model.Age41_60Percentage, model.Age60PlusPercentage, model.Criteria);
         
         return View("Result", result);
     }

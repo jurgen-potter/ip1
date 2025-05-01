@@ -91,7 +91,7 @@ public class DrawRepository : IDrawRepository
         // haal alle bestaande criteria voor deze panel
         var existing = _dbContext.Criteria
             .Include(c => c.SubCriteria)
-            .Where(c => c.Panel.PanelId == panelId)
+            .Where(c => c.Panel.Id == panelId)
             .ToList();
 
         // verwijder criteria die verdwenen zijn

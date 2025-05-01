@@ -159,6 +159,27 @@ public class DrawManager : IDrawManager
         return _drawRepository.ReadCriteriaByPanel(panelId);
     }
 
+    
+    public Criteria AddCriteria(string name, List<SubCriteria> subCriteria)
+    {
+        Criteria criteria = new Criteria()
+        {
+            Name = name,
+            SubCriteria = subCriteria
+        };
+        return _drawRepository.CreateCriteria(criteria);
+    }
+
+    public SubCriteria AddSubCriteria(string name, double percentage)
+    {
+        SubCriteria subCriteria = new SubCriteria()
+        {
+            Name = name,
+            Percentage = percentage
+        };
+        return _drawRepository.CreateSubCriteria(subCriteria);
+    }
+    
     public void EditCriteria(int panelId, IEnumerable<Criteria> criteria)
     {
         _drawRepository.UpdateCriteria(panelId, criteria);

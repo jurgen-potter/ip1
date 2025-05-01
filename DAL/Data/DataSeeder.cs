@@ -33,37 +33,44 @@ public class DataSeeder
         var subCrit1 = new SubCriteria()
         {
             Name = "Man",
-            Percentage = 40
+            Percentage = 40,
+            TenantId = "antwerpen"
         };
         var subCrit2 = new SubCriteria()
         {
             Name = "Vrouw",
-            Percentage = 60
+            Percentage = 60,
+            TenantId = "antwerpen"
         };
         var subCrit3 = new SubCriteria()
         {
             Name = "18-25",
-            Percentage = 20
+            Percentage = 20,
+            TenantId = "antwerpen"
         };
         var subCrit4 = new SubCriteria()
         {
             Name = "26-35",
-            Percentage = 50
+            Percentage = 50,
+            TenantId = "antwerpen"
         };
         var subCrit5 = new SubCriteria()
         {
             Name = "36-50",
-            Percentage = 10
+            Percentage = 10,
+            TenantId = "antwerpen"
         };
         var subCrit6 = new SubCriteria()
         {
             Name = "51-60",
-            Percentage = 10
+            Percentage = 10,
+            TenantId = "antwerpen"
         };
         var subCrit7 = new SubCriteria()
         {
             Name = "60+",
-            Percentage = 10
+            Percentage = 10,
+            TenantId = "antwerpen"
         };
         _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4);
 
@@ -77,6 +84,7 @@ public class DataSeeder
         {
             Name = "Leeftijd",
             SubCriteria = { subCrit3, subCrit4 , subCrit5 , subCrit6 , subCrit7},
+            TenantId = "antwerpen"
         };
         _panelDbContext.Criteria.AddRange(crit1, crit2);
 
