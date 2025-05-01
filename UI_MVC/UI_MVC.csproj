@@ -36,6 +36,7 @@
     <ItemGroup>
       <TypeScriptCompile Include="wwwroot\js\account\login.ts" />
       <TypeScriptCompile Include="wwwroot\js\admin\editQuestionnaire.ts" />
+      <TypeScriptCompile Include="wwwroot\js\draw\DemographicData.ts" />
       <TypeScriptCompile Include="wwwroot\js\recommendation\votersModalLoader.ts" />
       <TypeScriptCompile Include="wwwroot\js\recommendation\vote.ts" />
       <TypeScriptCompile Include="wwwroot\js\registration\index.ts" />
@@ -47,5 +48,10 @@
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
     </ItemGroup>
+
+    <Target Name="FrontendBuild" AfterTargets="Publish">
+        <Exec Command="npm install" WorkingDirectory="$(ProjectDir)" />
+        <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)" />
+    </Target>
 
 </Project>

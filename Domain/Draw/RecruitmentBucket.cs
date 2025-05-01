@@ -2,8 +2,11 @@
 
 public class RecruitmentBucket
 {
-    public string Gender { get; set; }
-    public string AgeGroup { get; set; }
+    public List<string> CriteriaNames { get; set; } = new List<string>();
+    public List<string> SubCriteriaNames { get; set; } = new List<string>();
     public int Count { get; set; }
-    public int Target { get; set;}
-}       
+    
+    public string Description =>
+        string.Join(" × ", SubCriteriaNames
+            .Select((sub, idx) => $"{sub} ({CriteriaNames[idx]})"));
+}
