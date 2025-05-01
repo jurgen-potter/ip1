@@ -36,16 +36,6 @@ public class MemberRepository : IMemberRepository
         _dbContext.ApplicationUsers.Remove(member);
     }
 
-    public IEnumerable<Panel> ReadPanelsByUserId(string userId)
-    {
-        return _dbContext.ApplicationUsers
-            .Where(u => u.Id == userId)
-            .Include(u => u.MemberProfile)
-            .ThenInclude(m => m.Panels)
-            .SelectMany(u => u.MemberProfile.Panels)
-            .ToList();
-    }
-
     /*public IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId)
     {
         return _dbContext.ApplicationUsers

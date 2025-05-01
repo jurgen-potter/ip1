@@ -119,7 +119,7 @@ public class DataSeeder
             Description = "Dit is ook een omschrijving van een panel.",
             StartDate = new DateOnly(2025, 3, 1),
             EndDate = new DateOnly(2025, 8, 14),
-            TenantId = "antwerpen"
+            TenantId = "brussel"
         };
         _panelDbContext.Panels.Add(panel2);
         
@@ -136,15 +136,20 @@ public class DataSeeder
         var antwerpen = _panelDbContext.ApplicationUsers
             .Include(u => u.OrganizationProfile)
             .SingleOrDefault(u => u.UserName == "antwerpen@example.com");
+        var brussel = _panelDbContext.ApplicationUsers
+            .Include(u => u.OrganizationProfile)
+            .SingleOrDefault(u => u.UserName == "brussel@example.com");
         var paul = _panelDbContext.ApplicationUsers
             .Include(u => u.MemberProfile)
             .SingleOrDefault(u => u.UserName == "paul@example.com");
         panel1.Organization = antwerpen?.OrganizationProfile;
         panel1.Members.Add(paul?.MemberProfile);
+        panel2.Organization = brussel?.OrganizationProfile;
         panel3.Organization = antwerpen?.OrganizationProfile;
         //panel3.Members.Add(paul?.MemberProfile);
         antwerpen?.OrganizationProfile.Panels.Add(panel1);
         antwerpen?.OrganizationProfile.Panels.Add(panel3);
+        brussel?.OrganizationProfile.Panels.Add(panel2);
         paul?.MemberProfile.Panels.Add(panel1);
         //paul?.MemberProfile.Panels.Add(panel3);
         

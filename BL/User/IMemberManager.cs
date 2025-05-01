@@ -12,7 +12,6 @@ public interface IMemberManager
     ApplicationUser GetMemberById(string memberId);
     void ChangeMember(ApplicationUser member);
     void RemoveMember(ApplicationUser member);
-    IEnumerable<Panel> GetPanelsByUserId(string userId);
     
     /*// Specialized queries for the RegistrationManager
     IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId);

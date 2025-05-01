@@ -9,7 +9,6 @@ public interface IMemberRepository
     ApplicationUser ReadUserById(string memberId);
     void UpdateMember(ApplicationUser member);
     void DeleteMember(ApplicationUser member);
-    IEnumerable<Panel> ReadPanelsByUserId(string userId);
 
     /*// Specialized queries for the RegistrationManager
     IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId);
