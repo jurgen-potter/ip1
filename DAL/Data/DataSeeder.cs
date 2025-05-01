@@ -1028,9 +1028,6 @@ public class DataSeeder
         
         panel1.Recommendations = panel1Recs;
         
-        
-        
-        _panelDbContext.AddRange(panel1Recs);
         _panelDbContext.AddRange(members);
     }
 
