@@ -1,6 +1,6 @@
 ﻿let allCriteriaCollapsed: boolean = false;
-const MAX_CRITERIA = 10;
-const MAX_SUBCRITERIA = 10;
+const MAX_CRITERIA = 5;
+const MAX_SUBCRITERIA = 5;
 window.addEventListener('DOMContentLoaded', () => {
     editCriteriaInit();
     initSubcriteriaSums();
