@@ -5,7 +5,7 @@ ViewBag.Title = Model.Name;
 Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" href="dist/css/panel/dashboard.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/dist/css/panel/dashboard.css" asp-append-version="true" />
 
 <div class="container-fluid p-4">
 
@@ -33,16 +33,10 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                 @* Meeting items sorted by date *@
                 @foreach (var meeting in Model.Meetings.OrderBy(m => m.Date))
                 {
-                <div class="timeline-item">
-                    <small class="text-muted d-block mb-1">@meeting.Date.ToString("dd MMM yyyy")</small>
-                    <div>
-                        @foreach (var rec in meeting.Recommendations)
-                        {
-                        <div class="mb-2">
-                            <strong>@rec.Title</strong><br />
-                            <span class="small">@rec.Description</span>
-                        </div>
-                        }
+                <div class="timeline-item" data-meeting-id="meeting-@meeting.Date.ToString("yyyyMMdd")">
+                    <div class="timeline-box">
+                        <div class="date">@meeting.Date.ToString("dd MMM yyyy")</div>
+                        <h4 class="title">@(meeting.Recommendations.FirstOrDefault()?.Title ?? "Meeting")</h4>
                     </div>
                 </div>
                 }
@@ -86,3 +80,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
         </div>
     </div>
 </div>
+
+@section Scripts {
+<script src="~/dist/js/panel/timeline.js" asp-append-version="true"></script>
+}

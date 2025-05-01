@@ -19,9 +19,9 @@ public class PanelController : Controller
     }
     
     // GET
-    public IActionResult Index(int panelId = 1)
+    public IActionResult Index(int id = 1)
     {
-        Panel panel = _panelManager.GetPanelByIdWithRecommendations(panelId);
+        Panel panel = _panelManager.GetPanelByIdWithRecommendations(id);
         
         PanelViewModel model = new PanelViewModel()
         {

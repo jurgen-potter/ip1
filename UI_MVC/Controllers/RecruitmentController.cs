@@ -26,12 +26,8 @@ public class RecruitmentController : Controller
         if (panelId == 0)
         {
         }
-        // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //
-        // var user = await _userManager.GetUserWithProfilesAndPanelsAsync(User);
-        
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        // var panels = user.UserType == UserType.Member ? user.MemberProfile.Panels : user.OrganizationProfile.Panels;
         // var pleaseexist =_memberManager.GetPanelIdByMemberId(userId);
         
         var criteriaList = _drawManager.GetCriteriaByPanel(panelId);
