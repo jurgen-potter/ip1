@@ -19,29 +19,29 @@
     </div>
     
     <div>
-        @if (Model.Results.CriteriaResults != null)
+        @if (Model.Result.CriteriaResults != null)
         {
-            @for (int i = 0; i < Model.Results.CriteriaResults.Count; i++)
+            @for (int i = 0; i < Model.Result.CriteriaResults.Count; i++)
             {
-                <input type="hidden" asp-for="Results.CriteriaResults[i].Name"/>
+                <input type="hidden" asp-for="Result.CriteriaResults[i].Name"/>
 
-                @for (int j = 0; j < Model.Results.CriteriaResults[i].SubResults.Count; j++)
+                @for (int j = 0; j < Model.Result.CriteriaResults[i].SubResults.Count; j++)
                 {
-                    <input type="hidden" asp-for="Results.CriteriaResults[i].SubResults[j].Name"/>
-                    <input type="hidden" asp-for="Results.CriteriaResults[i].SubResults[j].Count"/>
-                    <input type="hidden" asp-for="Results.CriteriaResults[i].SubResults[j].Percentage"/>
+                    <input type="hidden" asp-for="Result.CriteriaResults[i].SubResults[j].Name"/>
+                    <input type="hidden" asp-for="Result.CriteriaResults[i].SubResults[j].Count"/>
+                    <input type="hidden" asp-for="Result.CriteriaResults[i].SubResults[j].Percentage"/>
                 }
             }
         }
 
-        <input type="hidden" asp-for="@Model.Results.Age18_25Count"/>
-        <input type="hidden" asp-for="@Model.Results.Age26_40Count"/>
-        <input type="hidden" asp-for="@Model.Results.Age41_60Count"/>
-        <input type="hidden" asp-for="@Model.Results.Age60PlusCount"/>
-        <input type="hidden" asp-for="@Model.Results.MaleCount"/>
-        <input type="hidden" asp-for="@Model.Results.FemaleCount"/>
-        <input type="hidden" asp-for="@Model.Results.TotalNeededPanelmembers"/>
-        <input type="hidden" asp-for="@Model.Results.ReservePotPanelmembers"/>
+        <input type="hidden" asp-for="@Model.Result.Age18_25Count"/>
+        <input type="hidden" asp-for="@Model.Result.Age26_40Count"/>
+        <input type="hidden" asp-for="@Model.Result.Age41_60Count"/>
+        <input type="hidden" asp-for="@Model.Result.Age60PlusCount"/>
+        <input type="hidden" asp-for="@Model.Result.MaleCount"/>
+        <input type="hidden" asp-for="@Model.Result.FemaleCount"/>
+        <input type="hidden" asp-for="@Model.Result.TotalNeededPanelmembers"/>
+        <input type="hidden" asp-for="@Model.Result.ReservePotPanelmembers"/>
 
     </div>
     

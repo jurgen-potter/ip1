@@ -1,4 +1,4 @@
-﻿@model CitizenPanel.BL.Domain.Draw.RecruitmentResult
+﻿@model ResultViewModel
 
 @{
     ViewBag.Title = "Berekening Panel";
@@ -25,7 +25,8 @@
         <div class="card m-2 p-2">
             <div class="card-body">
                 <h5 class="card-title">
-                    @bucket.Description  @* bijv. “Mannen (Gender) × Fietsers (Transport)” *@
+                    @(string.Join(" × ", bucket.SubCriteriaNames
+                    .Select((sub, idx) => $"{sub} ({bucket.CriteriaNames[idx]})")))  @* bijv. “Mannen (Gender) × Fietsers (Transport)” *@
                 </h5>
                 <p class="card-text">
                     Nodig: <strong>@bucket.Count</strong>

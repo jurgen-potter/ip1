@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CitizenPanel.UI.MVC.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace CitizenPanel.UI.MVC.Models;
 
@@ -10,6 +11,7 @@ public class RecruitmentCriteriaViewModel
     public int TotalAvailablePotentialPanelmembers { get; set; }
     
     [Required(ErrorMessage = "Er moet minstens één criterium zijn.")]
+    [UniqueCriteria]
     public List<CriteriaViewModel> Criteria { get; set; } = new();
 }
 

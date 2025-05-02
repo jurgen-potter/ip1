@@ -25,7 +25,7 @@ public class RecruitmentController : Controller
         if (TempData["CriteriaFormData"] is string json)
         {
             var tModel = JsonConvert.DeserializeObject<RecruitmentCriteriaViewModel>(json);
-            return View(tModel); 
+            return View(tModel);
         }
         
         var criteriaList = _drawManager.GetInitialCriteria();
@@ -61,8 +61,6 @@ public class RecruitmentController : Controller
             model.Criteria.Add(criteriaVm);
         }
         
-       
-
         return View(model);
     }
 
@@ -103,8 +101,23 @@ public class RecruitmentController : Controller
 
         var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, criteria);
 
+        var resultModel = new ResultViewModel()
+        {
+            ReservePotPanelmembers = result.ReservePotPanelmembers,
+            TotalNeededPanelmembers = result.TotalNeededPanelmembers
+        };
+
+        foreach (var bucket in result.Buckets)
+        {
+            resultModel.Buckets.Add(new BucketViewModel()
+            {
+                Count = bucket.Count,
+                CriteriaNames = bucket.CriteriaNames,
+                SubCriteriaNames = bucket.SubCriteriaNames
+            });
+        }
         
-        return View("Result", result);
+        return View("Result", resultModel);
     }
     
     [Authorize(Roles = "Organization")]

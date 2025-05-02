@@ -137,8 +137,7 @@ public class DrawManager : IDrawManager
 
         return code;
     }
-
-
+    
     public Criteria GetCriteria(int criteriaId)
     {
         return _drawRepository.ReadCriteria(criteriaId);
@@ -158,7 +157,6 @@ public class DrawManager : IDrawManager
     {
         return _drawRepository.ReadCriteriaByPanel(panelId);
     }
-
     
     public Criteria AddCriteria(string name, List<SubCriteria> subCriteria)
     {
@@ -184,227 +182,133 @@ public class DrawManager : IDrawManager
     {
         _drawRepository.UpdateCriteria(panelId, criteria);
     }
-
-
+    
     public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, IEnumerable<Criteria> criteriaList)
-{
-    // Bepaal totale aantallen
-    int totalToDraw = (int)Math.Round(0.50 * Math.Sqrt(totalAvailablePotentialPanelmembers));
-    int reservePool = (int)Math.Ceiling(totalToDraw / 0.08);
-
-    // Initialiseer result
-    var result = new RecruitmentResult
     {
-        TotalNeededPanelmembers = totalToDraw,
-        ReservePotPanelmembers = reservePool,
-        CriteriaResults = new List<CriteriaResult>(),
-        Buckets = new List<RecruitmentBucket>()
-    };
-
-    // Vullen van CriteriaResults 
-    foreach (var crit in criteriaList)
-    {
-        var critResult = new CriteriaResult
+        int totalToDraw = (int)Math.Round(0.50 * Math.Sqrt(totalAvailablePotentialPanelmembers));
+        int reservePool = (int)Math.Ceiling(totalToDraw / 0.08);
+        
+        var buckets = BuildBuckets(criteriaList.ToList(), totalToDraw);
+        
+        int totalCount = buckets.Sum(b => b.Count);
+        while (totalCount < totalToDraw)
         {
-            Name = crit.Name,
-            SubResults = new List<SubCriteriaResult>()
+            var bucket = buckets.OrderBy(b => b.Count).First();
+            bucket.Count++;
+            totalCount++;
+        }
+        while (totalCount > totalToDraw)
+        {
+            var bucket = buckets.OrderByDescending(b => b.Count).First();
+            bucket.Count--;
+            totalCount--;
+        }
+        
+        return new RecruitmentResult
+        {
+            TotalNeededPanelmembers = totalToDraw,
+            ReservePotPanelmembers = reservePool,
+            Buckets = buckets
         };
+    }
 
-        foreach (var sub in crit.SubCriteria)
+    private static List<RecruitmentBucket> BuildBuckets(List<Criteria> criteriaList, int totalToDraw)
+    {
+        var buckets = new List<RecruitmentBucket>();
+
+        void Recurse(int depth, List<string> chosenCriteria, List<string> chosenSubs, double accumulatedPct)
         {
-            critResult.SubResults.Add(new SubCriteriaResult
+            if (depth == criteriaList.Count)
             {
-                Name = sub.Name,
-                Count = (int)Math.Round(totalToDraw * (sub.Percentage / 100.0))
-            });
-        }
+                int count = (int)Math.Round(totalToDraw * accumulatedPct);
+                buckets.Add(new RecruitmentBucket
+                {
+                    CriteriaNames = new List<string>(chosenCriteria),
+                    SubCriteriaNames = new List<string>(chosenSubs),
+                    Count = count
+                });
+                return;
+            }
 
-        result.CriteriaResults.Add(critResult);
-    }
-
-    // Buckets genereren via helper methode op basis van originele criteriaList
-    result.Buckets = BuildBuckets(criteriaList.ToList(), totalToDraw);
-
-    // Correcties om tot precies TotalNeededPanelmembers te komen
-    int totalCount = result.Buckets.Sum(b => b.Count);
-    while (totalCount < result.TotalNeededPanelmembers)
-    {
-        var bucket = result.Buckets.OrderBy(b => b.Count).First();
-        bucket.Count++;
-        totalCount++;
-    }
-    while (totalCount > result.TotalNeededPanelmembers)
-    {
-        var bucket = result.Buckets.OrderByDescending(b => b.Count).First();
-        bucket.Count--;
-        totalCount--;
-    }
-
-    return result;
-}
-
-private static List<RecruitmentBucket> BuildBuckets(
-    List<Criteria> criteriaList,
-    int totalToDraw)
-{
-    var buckets = new List<RecruitmentBucket>();
-
-    void Recurse(int depth, List<string> chosenCriteria, List<string> chosenSubs, double accumulatedPct)
-    {
-        if (depth == criteriaList.Count)
-        {
-            int count = (int)Math.Round(totalToDraw * accumulatedPct);
-            buckets.Add(new RecruitmentBucket
+            var current = criteriaList[depth];
+            foreach (var sub in current.SubCriteria)
             {
-                CriteriaNames = new List<string>(chosenCriteria),
-                SubCriteriaNames = new List<string>(chosenSubs),
-                Count = count
-            });
-            return;
+                chosenCriteria.Add(current.Name);
+                chosenSubs.Add(sub.Name);
+
+                Recurse(
+                    depth + 1,
+                    chosenCriteria,
+                    chosenSubs,
+                    accumulatedPct * (sub.Percentage / 100.0));
+
+                chosenCriteria.RemoveAt(chosenCriteria.Count - 1);
+                chosenSubs.RemoveAt(chosenSubs.Count - 1); 
+            }
         }
 
-        var current = criteriaList[depth];
-        foreach (var sub in current.SubCriteria)
-        {
-            chosenCriteria.Add(current.Name);
-            chosenSubs.Add(sub.Name);
-
-            Recurse(
-                depth + 1,
-                chosenCriteria,
-                chosenSubs,
-                accumulatedPct * (sub.Percentage / 100.0));
-
-            chosenCriteria.RemoveAt(chosenCriteria.Count - 1);
-            chosenSubs.RemoveAt(chosenSubs.Count - 1);
-        }
+        Recurse(0, new List<string>(), new List<string>(), 1.0);
+        return buckets;
     }
-
-    // Start recursie met lege lijsten en 100% (1.0)
-    Recurse(0, new List<string>(), new List<string>(), 1.0);
-
-    return buckets;
-}
-
-
-
-    // public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, double malePercentage, double femalePercentage, double age18_25Percentage, double age26_40Percentage, double age41_60Percentage, double age60PlusPercentage, List<Criteria> extraCriteria)
-    // {
-    //     var reservePerc = 0.08;
-    //     var totalAvailablePotPanelmembers = Math.Round(0.50 * Math.Sqrt(totalAvailablePotentialPanelmembers));
-    //
-    //
-    //     var maleCount = (int)(totalAvailablePotPanelmembers * (malePercentage / 100));
-    //     var femaleCount = (int)(totalAvailablePotPanelmembers * (femalePercentage / 100));
-    //     var age18_25Count = (int)(totalAvailablePotPanelmembers * (age18_25Percentage / 100));
-    //     var age26_40Count = (int)(totalAvailablePotPanelmembers * (age26_40Percentage / 100));
-    //     var age41_60Count = (int)(totalAvailablePotPanelmembers * (age41_60Percentage / 100));
-    //     var age60PlusCount = (int)(totalAvailablePotPanelmembers * (age60PlusPercentage / 100));
-    //     var reservePotPanelmembers = (int)(totalAvailablePotPanelmembers / reservePerc);
-    //     var totalNeededPanelmembers = (int)(totalAvailablePotPanelmembers);
-    //
-    //     var genderCount = maleCount + femaleCount;
-    //     while (genderCount < totalNeededPanelmembers)
-    //     {
-    //         var neededGender = totalNeededPanelmembers - genderCount;
-    //         if (neededGender % 2 == 0 || neededGender > 1)
-    //         {
-    //             maleCount++;
-    //             femaleCount++;
-    //             genderCount+=2;
-    //         }
-    //         else
-    //         {
-    //             maleCount++;
-    //             genderCount+=2;
-    //         }
-    //     }
-    //     
-    //     var ageCount = age18_25Count + age26_40Count + age41_60Count + age60PlusCount;
-    //     while (ageCount < totalNeededPanelmembers)
-    //     {
-    //         var neededAge = totalNeededPanelmembers - ageCount;
-    //         if (neededAge % 4 == 0 || neededAge > 3)
-    //         {
-    //             age18_25Count++;
-    //             age26_40Count++;
-    //             age41_60Count++;
-    //             age60PlusCount++;
-    //             ageCount += 4;
-    //         }
-    //         else if (neededAge % 4 == 3)
-    //         {
-    //             age18_25Count++;
-    //             age26_40Count++;
-    //             age41_60Count++;
-    //             ageCount+=4;
-    //         }
-    //         else if (neededAge % 4 == 2)
-    //         {
-    //             age18_25Count++;
-    //             age26_40Count++;
-    //             ageCount+=4;
-    //         }
-    //         else
-    //         {
-    //             age18_25Count++;
-    //             ageCount+=4;
-    //         }
-    //
-    //     }
-    //     
-    //     var result = new RecruitmentResult
-    //     {
-    //         MaleCount = maleCount,
-    //         FemaleCount = femaleCount,
-    //         Age18_25Count = age18_25Count,
-    //         Age26_40Count = age26_40Count,
-    //         Age41_60Count = age41_60Count,
-    //         Age60PlusCount = age60PlusCount,
-    //         ReservePotPanelmembers = reservePotPanelmembers,
-    //         TotalNeededPanelmembers = totalNeededPanelmembers,
-    //         CriteriaResults = new List<CriteriaResult>()
-    //     };
-    //
-    //     
-    //     // Extra criteria (wordt overgenomen zoals eerder)
-    //     foreach (var extra in extraCriteria)
-    //     {
-    //         var criteriaResult = new CriteriaResult
-    //         {
-    //             Name = extra.Name,
-    //             SubResults = extra.SubCriteria.Select(sub => new SubCriteriaResult
-    //             {
-    //                 Name = sub.Name,
-    //                 Count = (int)(totalAvailablePotPanelmembers * (sub.Percentage / 100))
-    //             }).ToList()
-    //         };
-    //         result.CriteriaResults.Add(criteriaResult);
-    //     }
-    //
-    //     return result;
-    // }
+    
     public bool RemoveInvitation(int invitationId)
     {
         return _drawRepository.DeleteInvitation(invitationId);
     }
+    
     public IEnumerable<Criteria> GetInitialCriteria()
     {
         var criteriaList = new List<Criteria>()
         {
-            AddCriteria("Geslacht",
-            [
-                AddSubCriteria("Man", 0),
-                AddSubCriteria("Vrouw", 0)
-            ]),
-            AddCriteria("Leeftijd",
-            [
-                AddSubCriteria("18-25", 0),
-                AddSubCriteria("26-35", 0),
-                AddSubCriteria("36-50", 0),
-                AddSubCriteria("51-60", 0),
-                AddSubCriteria("60+", 0),
-            ])
+            new Criteria()
+            {
+                Name = "Geslacht",
+                SubCriteria = new List<SubCriteria>()
+                {
+                    new SubCriteria()
+                    {
+                        Name = "Man",
+                        Percentage = 0
+                    },
+                    new SubCriteria()
+                    {
+                        Name = "Vrouw",
+                        Percentage = 0
+                    }
+                }
+            },
+            new Criteria()
+            {
+                Name = "Leeftijd",
+                SubCriteria = new List<SubCriteria>()
+                {
+                    new SubCriteria()
+                    {
+                        Name = "18-25",
+                        Percentage = 0
+                    },
+                    new SubCriteria()
+                    {
+                        Name = "26-35",
+                        Percentage = 0
+                    },
+                    new SubCriteria()
+                    {
+                        Name = "36-50",
+                        Percentage = 0
+                    },
+                    new SubCriteria()
+                    {
+                        Name = "51-60",
+                        Percentage = 0
+                    },
+                    new SubCriteria()
+                    {
+                        Name = "60+",
+                        Percentage = 0
+                    }
+                }
+            }
         };
         
         return criteriaList;

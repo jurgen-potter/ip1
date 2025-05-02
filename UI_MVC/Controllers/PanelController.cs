@@ -56,11 +56,11 @@ public class PanelController : Controller
 
     [Authorize(Roles = "Organization, Admin")]
     [HttpGet]
-    public IActionResult CreatePanel(ResultsViewModel resultsViewModel)
+    public IActionResult CreatePanel(ResultViewModel resultViewModel)
     {
         CreatePanelViewModel model = new CreatePanelViewModel()
         {
-            Results = resultsViewModel
+            Result = resultViewModel
         };
         return View(model);
     }
@@ -74,9 +74,9 @@ public class PanelController : Controller
 
         List<Criteria> criteria = new List<Criteria>();
 
-        if (model.Results.CriteriaResults != null)
+        if (model.Result.CriteriaResults != null)
         {
-            foreach (CriteriaResult criteriaResult in model.Results.CriteriaResults)
+            foreach (CriteriaResult criteriaResult in model.Result.CriteriaResults)
             {
                 List<SubCriteria> subCriteria = new List<SubCriteria>();
                 foreach (SubCriteriaResult subResult in criteriaResult.SubResults)
