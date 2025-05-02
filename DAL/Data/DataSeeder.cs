@@ -17,7 +17,6 @@ public class DataSeeder
 
     public void Seed()
     {
-        SeedPanel0();
         SeedPanels();
         _panelDbContext.SaveChanges();
         _panelDbContext.ChangeTracker.Clear();
@@ -27,71 +26,6 @@ public class DataSeeder
 
         _panelDbContext.SaveChanges();
         _panelDbContext.ChangeTracker.Clear();
-    }
-
-    private void SeedPanel0()
-    {
-        var subCrit1 = new SubCriteria()
-        {
-            Name = "Man",
-            Percentage = 40,
-        };
-        var subCrit2 = new SubCriteria()
-        {
-            Name = "Vrouw",
-            Percentage = 60,
-        };
-        var subCrit3 = new SubCriteria()
-        {
-            Name = "18-25",
-            Percentage = 20,
-        };
-        var subCrit4 = new SubCriteria()
-        {
-            Name = "26-35",
-            Percentage = 50,
-        };
-        var subCrit5 = new SubCriteria()
-        {
-            Name = "36-50",
-            Percentage = 10,
-        };
-        var subCrit6 = new SubCriteria()
-        {
-            Name = "51-60",
-            Percentage = 10,
-        };
-        var subCrit7 = new SubCriteria()
-        {
-            Name = "60+",
-            Percentage = 10,
-        };
-        _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4);
-
-        var crit1 = new Criteria()
-        {
-            Name = "Geslacht",
-            SubCriteria = { subCrit1, subCrit2 },
-        };
-        var crit2 = new Criteria()
-        {
-            Name = "Leeftijd",
-            SubCriteria = { subCrit3, subCrit4, subCrit5, subCrit6, subCrit7 },
-        };
-        _panelDbContext.Criteria.AddRange(crit1, crit2);
-
-        var panel0 = new Panel()
-        {
-            Id = 999999999,
-            Name = "Basis Panel",
-            Description = "Basis Panel",
-            StartDate = new DateOnly(2025, 1, 12),
-            EndDate = new DateOnly(2025, 7, 22)
-        };
-
-        _panelDbContext.Panels.Add(panel0);
-        panel0.Criteria.Add(crit1);
-        panel0.Criteria.Add(crit2);
     }
 
     private void SeedPanels()
@@ -197,14 +131,14 @@ public class DataSeeder
             {
                 new Meeting()
                 {
-                    Title = "Aanmaken aanbevelingen",
+                    Title = "Tweede bijeenkomst",
                     Date = new DateOnly(2025, 5, 1),
                     Recommendations = new List<Recommendation>()
                     {
                         new Recommendation()
                         {
-                            Title = "Minder Fietspaden",
-                            Description = "Gemeente Antwerpen moet minder fietspaden aanleggen",
+                            Title = "Betere wegen",
+                            Description = "We willen betere wegen aanleggen in de gemeente antwerpen",
                             Votes = 0,
                             TenantId = "antwerpen"
                         }
@@ -213,14 +147,14 @@ public class DataSeeder
                 },
                 new Meeting()
                 {
-                    Title = "Start burgerpanel",
+                    Title = "Eerste bijeenkomst",
                     Date = new DateOnly(2025, 4, 12),
                     Recommendations = new List<Recommendation>()
                     {
                         new Recommendation()
                         {
-                            Title = "Minder Jurgen",
-                            Description = "Minder Jurgen moet minder jurgen aanleggen",
+                            Title = "Meer bomen",
+                            Description = "We willen graag meer bomen planten in de stad",
                             Votes = 0,
                             TenantId = "antwerpen"
                         }
@@ -229,14 +163,14 @@ public class DataSeeder
                 },
                 new Meeting()
                 {
-                    Title = "Laatste Stemronde",
+                    Title = "Derde bijeenkomst",
                     Date = new DateOnly(2025, 6, 12),
                     Recommendations = new List<Recommendation>()
                     {
                         new Recommendation()
                         {
-                            Title = "Minder Xander",
-                            Description = "Minder Xander moet minder jurgen aanleggen",
+                            Title = "Minder afval",
+                            Description = "Minder afval op de straat door meer vuilnisbakken te plaatsen",
                             Votes = 0,
                             TenantId = "antwerpen"
                         },
