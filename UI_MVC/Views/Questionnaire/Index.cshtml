@@ -4,7 +4,7 @@
     ViewBag.Title = "Verkenningsmodule";
 }
 
-<div class="containter my-4">
+<div class="container my-4">
     <h2 class="mb-4">Is een panel voor u?</h2>
 
     <form asp-action="Result" method="post">
@@ -18,13 +18,17 @@
                     @foreach (var answer in question.Answers.OrderBy(a => a.Position))
                     {
                         <div class="form-check mb-2">
-                            <input class="form-check-input"
-                                   type="radio"
-                                   name="Answers[@question.Id]"
-                                   value="@answer.Id"
-                                   id="q@question.Id_a@answer.Id"
-                                   required/>
-                            <label class="form-check-label" for="q@question.Id_a@answer.Id">
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="Answers[@question.Id]"
+                                value="@answer.Id"
+                                id="@($"q{question.Id}_a{answer.Id}")"
+                                required />
+
+                            <label
+                                class="form-check-label"
+                                for="@($"q{question.Id}_a{answer.Id}")">
                                 @answer.Description
                             </label>
                         </div>
