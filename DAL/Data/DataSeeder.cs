@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.QuestionnaireModule;
@@ -84,10 +85,11 @@ public class DataSeeder
         var crit2 = new Criteria()
         {
             Name = "Leeftijd",
-            SubCriteria = { subCrit3, subCrit4 , subCrit5 , subCrit6 , subCrit7},
+            SubCriteria = { subCrit3, subCrit4, subCrit5, subCrit6, subCrit7 },
             TenantId = "antwerpen"
         };
         _panelDbContext.Criteria.AddRange(crit1, crit2);
+
 
         // Create panel objects
         var panel1 = new Panel()
@@ -108,7 +110,75 @@ public class DataSeeder
                 // new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "60+", Count = 0, Target = 5 }
             },
             DrawStatus = DrawStatus.FirstPhaseActive,
-            TenantId = "antwerpen"
+            Recommendations = new List<Recommendation>()
+            {
+                new Recommendation()
+                {
+                    Title = "Meer fietspaden",
+                    Description = "Gemeente Antwerpen moet meer fietspaden aanleggen",
+                    Votes = 0,
+                    TenantId = "antwerpen"
+                },
+                new Recommendation()
+                {
+                    Title = "Autovrije binnenstad",
+                    Description = "Gemeente Antwerpen moet auto's uit de binnenstad verbieden",
+                    Votes = 0,
+                    TenantId = "antwerpen"
+                }
+            },
+            TenantId = "antwerpen",
+            Meetings = new List<Meeting>()
+            {
+                new Meeting()
+                {
+                    Title = "Tweede bijeenkomst",
+                    Date = new DateOnly(2025, 5, 1),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Betere wegen",
+                            Description = "We willen betere wegen aanleggen in de gemeente antwerpen",
+                            Votes = 0,
+                            TenantId = "antwerpen"
+                        }
+                    },
+                    TenantId = "antwerpen"
+                },
+                new Meeting()
+                {
+                    Title = "Eerste bijeenkomst",
+                    Date = new DateOnly(2025, 4, 12),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Meer bomen",
+                            Description = "We willen graag meer bomen planten in de stad",
+                            Votes = 0,
+                            TenantId = "antwerpen"
+                        }
+                    },
+                    TenantId = "antwerpen"
+                },
+                new Meeting()
+                {
+                    Title = "Derde bijeenkomst",
+                    Date = new DateOnly(2025, 6, 12),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Minder afval",
+                            Description = "Minder afval op de straat door meer vuilnisbakken te plaatsen",
+                            Votes = 0,
+                            TenantId = "antwerpen"
+                        },
+                    },
+                    TenantId = "antwerpen"
+                }
+            }
         };
         _panelDbContext.Panels.Add(panel1);
         panel1.Criteria.Add(crit1);
@@ -530,7 +600,7 @@ public class DataSeeder
                     TenantId = "antwerpen"
                 }
             },
-            
+
             // Men 60+
             new ApplicationUser
             {
@@ -1112,7 +1182,8 @@ public class DataSeeder
         };
         var question1 = new Question
         {
-            Description = "Beschik je als organisator nog over minstens 6 maanden voordat de input van de participatie klaar moet zijn voor de politieke besluitvorming?",
+            Description =
+                "Beschik je als organisator nog over minstens 6 maanden voordat de input van de participatie klaar moet zijn voor de politieke besluitvorming?",
             Weight = 5,
             Position = 1
         };
@@ -1128,7 +1199,8 @@ public class DataSeeder
         };
         var question2 = new Question
         {
-            Description = "Is de gemeente bereid om de realisatie van de voorstellen van het burgerpanel ernstig te overwegen en minstens publiek te motiveren waarom dat niet is gebeurd?",
+            Description =
+                "Is de gemeente bereid om de realisatie van de voorstellen van het burgerpanel ernstig te overwegen en minstens publiek te motiveren waarom dat niet is gebeurd?",
             Weight = 3,
             Position = 2
         };

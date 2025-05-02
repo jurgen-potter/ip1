@@ -1,5 +1,6 @@
 using AspNetCoreLiveMonitoring.Extensions;
 using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.Tenancy;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.BL.QuestionnaireModule;
@@ -36,6 +37,8 @@ builder.Services.AddScoped<IPanelManager, PanelManager>();
 builder.Services.AddScoped<IQuestionnaireModuleManager, QuestionnaireModuleManager>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 // builder.Services.AddScoped<IRegistrationManager, RegistrationManager>();
+builder.Services.AddScoped<IMeetingManager, MeetingManager>();
+builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IMemberManager, MemberManager>();
 builder.Services.AddScoped<UserManager<ApplicationUser>, ApplicationUserManager>();

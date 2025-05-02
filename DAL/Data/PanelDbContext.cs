@@ -21,6 +21,7 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
     private TenantContext _tenantContext;
     public DbSet<Panel> Panels { get; set; }
     public DbSet<Recommendation> Recommendations { get; set; }
+    public DbSet<Meeting> Meetings { get; set; } 
 
     public DbSet<UserVote> UserVotes { get; set; } 
     public DbSet<Criteria> Criteria { get; set; }

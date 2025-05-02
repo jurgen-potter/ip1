@@ -37,7 +37,7 @@ public class PanelRepository : IPanelRepository
     {
         return _dbContext.Panels
             .Include(r => r.Recommendations)
-            .ThenInclude(r => r.UserVotes)
+            .Include(r => r.Meetings)
             .SingleOrDefault(p => p.Id == panelId);
     }
 
