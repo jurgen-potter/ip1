@@ -51,19 +51,19 @@ namespace CitizenPanel.UI.MVC.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Organization")]
-        public IActionResult Create(CreateMeetingModel model)
+        public IActionResult Create(CreateMeetingViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(new { success = false, errors = ModelState });
             }
             
-            if (model.Date < DateOnly.FromDateTime(DateTime.Now))
+            if (viewModel.Date < DateOnly.FromDateTime(DateTime.Now))
             {
                 return BadRequest(new { success = false, errors = "Meeting date cannot be in the past" });
             }
             
-            var meeting = _meetingManager.AddMeeting(model.Title, model.Date,model.PanelId);
+            var meeting = _meetingManager.AddMeeting(viewModel.Title, viewModel.Date,viewModel.PanelId);
 
             return Json(new
             {

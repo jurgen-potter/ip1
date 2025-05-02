@@ -2,7 +2,7 @@
 
 namespace CitizenPanel.UI.MVC.Models;
 
-public class CreateMeetingModel : IValidatableObject
+public class CreateMeetingViewModel : IValidatableObject
 {
     
     public int PanelId { get; set; }
