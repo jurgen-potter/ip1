@@ -2,15 +2,15 @@
 
 @using System.Globalization
 @{
-CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
-CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
+    CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
+    CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
 }
 @{
-ViewBag.Title = Model.Name;
-Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" href="~/dist/css/panel/dashboard.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/dist/css/panel/dashboard.css" asp-append-version="true"/>
 
 <div class="container-fluid p-4" data-panel-id="@Model.PanelId">
 
@@ -36,18 +36,17 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                         <i class="bi bi-plus-lg"></i> Nieuw
                     </button>
                 </div>
-                <div class="timeline-line"></div>
-                
-                @foreach (var meeting in Model.Meetings.OrderBy(m => m.Date))
-                {
-                    <div class="timeline-item" data-meeting-id="@meeting.Id">
-                        <div class="timeline-box">
-                            <div class="date">@meeting.Date.ToString("dd MMM")</div>
-                            <h4 class="title">@(meeting.Title ?? "Meeting")</h4>
+                <div class="timeline-line">
+                    @foreach (var meeting in Model.Meetings.OrderBy(m => m.Date))
+                    {
+                        <div class="timeline-item" data-meeting-id="@meeting.Id" data-date="@meeting.Date.ToString("o")">
+                            <div class="timeline-box">
+                                <div class="date">@meeting.Date.ToString("dd MMM")</div>
+                                <h4 class="title">@(meeting.Title ?? "Meeting")</h4>
+                            </div>
                         </div>
-                    </div>
-                }
-
+                    }
+                </div>
             </aside>
         </div>
 
@@ -94,7 +93,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="createMeetingForm">
+                    <form id="createMeetingForm" novalidate>
                         <div class="mb-3">
                             <label for="meetingTitle" class="form-label">Titel</label>
                             <input type="text" class="form-control" id="meetingTitle" name="Title" required>
@@ -117,8 +116,6 @@ Layout = "~/Views/Shared/_Layout.cshtml";
 </div>
 
 
-
 @section Scripts {
     <script src="~/dist/js/dashboard/timeline.js" asp-append-version="true"></script>
 }
-
