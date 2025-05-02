@@ -75,8 +75,8 @@ public class PanelRepository : IPanelRepository
 
     public Recommendation ReadRecommendationById(int recommendationId)
     {
-        return _dbContext.Recommendations
-            .Find(recommendationId);
+        var recommendations = _dbContext.Recommendations.Include(r => r.UserVotes);
+        return recommendations.SingleOrDefault(r => r.Id == recommendationId);
     }
 
     public Recommendation ReadRecommendationWithVotersById(int recommendationId)
@@ -100,33 +100,10 @@ public class PanelRepository : IPanelRepository
             .Any(uv => uv.Voter == member && uv.Recommendation == recommendation);
     }
 
-    public void CreateVoteToRecommendation(ApplicationUser member, Recommendation recommendation)
+    public void CreateVoteToRecommendation(UserVote userVote)
     {
-        // Controleer eerst of de aanbeveling bestaat
-        if (recommendation == null)
-        {
-            throw new ArgumentException($"Aanbeveling met bestaat niet.");
-        }
-
-        // Controleer of gebruiker al heeft gestemd
-        if (HasUserVotedForRecommendation(member, recommendation))
-        {
-            throw new InvalidOperationException("Gebruiker heeft al gestemd op deze aanbeveling.");
-        }
-        // Creëer een nieuwe stem
-        var userVote = new UserVote
-        {
-            Voter = member,
-            Recommendation = recommendation,
-            VotedAt = DateTime.UtcNow
-        };
-
         // Voeg de stem toe aan de database
         _dbContext.UserVotes.Add(userVote);
-
-        // Verhoog de stemteller in de aanbeveling
-        recommendation.Votes++;
-
         _dbContext.SaveChanges();
     }
 
@@ -164,7 +141,13 @@ public class PanelRepository : IPanelRepository
     {
         return _dbContext.UserVotes
             .Where(uv => uv.Voter.Id == userId)
-            .Select(uv => uv.RecommendationId)
+            .Select(uv => uv.Recommendation.Id)
             .ToList();
+    }
+
+    public void UpdateCriteria(Criteria criteria)
+    {
+        _dbContext.Update(criteria);
+        _dbContext.SaveChanges();
     }
 }

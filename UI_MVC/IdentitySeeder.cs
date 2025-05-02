@@ -71,5 +71,24 @@ public class IdentitySeeder
         var token3 = await _userManager.GenerateEmailConfirmationTokenAsync(user3);
         await _userManager.ConfirmEmailAsync(user3, token3);
         await _userManager.AddToRoleAsync(user3, "Member");
+        
+        // user 4
+        var user4 = new ApplicationUser()
+        {
+            UserName = "brussel@example.com",
+            Email = "brussel@example.com"
+        };
+        await _userManager.CreateAsync(user4, "Brussel1!");
+        
+        user4.OrganizationProfile = new OrganizationProfile()
+        {
+            TenantId = "brussel"
+        };
+        user4.UserType = UserType.Organization;
+        await _userManager.UpdateAsync(user4);
+        
+        var token4 = await _userManager.GenerateEmailConfirmationTokenAsync(user4);
+        await _userManager.ConfirmEmailAsync(user4, token4);
+        await _userManager.AddToRoleAsync(user4, "Organization");
     }
 }

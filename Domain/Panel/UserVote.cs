@@ -9,7 +9,7 @@ public class UserVote : ITenanted
 {
     public int Id { get; set; }
     public ApplicationUser Voter { get; set; }
-    public int RecommendationId { get; set; }
+    public bool Recommended { get; set; }
     public Recommendation Recommendation { get; set; }
     public DateTime VotedAt { get; set; }
     [Required]

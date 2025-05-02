@@ -1,4 +1,5 @@
 using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.DAL;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +49,7 @@ public class MemberManager : IMemberManager
                 BirthDate = newMemberBirthDate,
                 Town = newMemberTown,
                 SelectedCriteria = selectedCriteria,
-                Panel = _panelManager.GetPanelById(newMemberPanelId)
+                Panels = new List<Panel> { _panelManager.GetPanelById(newMemberPanelId) }
             }
         };
         
@@ -77,7 +78,7 @@ public class MemberManager : IMemberManager
         _memberRepository.DeleteMember(member);
     }
 
-    public IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId)
+    /*public IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId)
     {
         return _memberRepository.ReadMembersByPanelId(panelId);
     }
@@ -90,6 +91,6 @@ public class MemberManager : IMemberManager
     public int GetMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge)
     {
         return _memberRepository.ReadMemberCountByPanelIdGenderAndAgeRange(panelId, gender, minAge, maxAge);
-    }
+    }*/
     
 }

@@ -8,9 +8,9 @@ namespace CitizenPanel.UI.MVC.Middleware;
 public class TenantMiddleware : IMiddleware
 {
     private readonly TenantContext _tenantContext;
-    private readonly TenantUserManager _userManager;
+    private readonly ApplicationUserManager _userManager;
 
-    public TenantMiddleware(TenantContext tenantContext, TenantUserManager userManager)
+    public TenantMiddleware(TenantContext tenantContext, ApplicationUserManager userManager)
     {
         _tenantContext = tenantContext;
         _userManager = userManager;
@@ -23,7 +23,7 @@ public class TenantMiddleware : IMiddleware
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!string.IsNullOrEmpty(userId))
             {
-                var user = await _userManager.GetUserWithProfilesAsync(userId);
+                var user = await _userManager.GetUserWithProfilesByIdAsync(userId);
                 
                 string tenantId = null;
                 

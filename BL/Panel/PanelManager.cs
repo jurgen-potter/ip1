@@ -24,17 +24,17 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadPanelByIdWithoutTenant(panelId);
     }
 
-    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria)
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization)
     {
         Panel newPanel = new Panel()
         {
             Name = name,
             Description = description,
             MemberCount = 0,
-            Criteria = criteria
+            Criteria = criteria,
+            Organization = organization
         };
         _panelRepository.CreatePanel(newPanel);
-        //_drawManager.GenerateInvitations(newPanel);
         return newPanel;
     }
 
@@ -83,9 +83,35 @@ public class PanelManager : IPanelManager
         return _panelRepository.HasUserVotedForRecommendation(member, recommendation);
     }
 
-    public void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation)
+    public void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation, bool recommended)
     {
-        _panelRepository.CreateVoteToRecommendation(member, recommendation);
+        // Controleer eerst of de aanbeveling bestaat
+        if (recommendation == null)
+        {
+            throw new ArgumentException($"Aanbeveling met bestaat niet.");
+        }
+
+        // Controleer of gebruiker al heeft gestemd
+        if (HasUserVotedForRecommendation(member, recommendation))
+        {
+            throw new InvalidOperationException("Gebruiker heeft al gestemd op deze aanbeveling.");
+        }
+        // Creëer een nieuwe stem
+        var userVote = new UserVote
+        {
+            Voter = member,
+            Recommendation = recommendation,
+            VotedAt = DateTime.UtcNow,
+            Recommended = recommended,
+            TenantId = member.MemberProfile.TenantId
+        };
+        
+        _panelRepository.CreateVoteToRecommendation(userVote);
+        
+        // Verhoog de stemteller in de aanbeveling
+        recommendation.Votes++;
+        _panelRepository.UpdateRecommendation(recommendation);
+        
     }
 
     public void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation)
@@ -96,5 +122,10 @@ public class PanelManager : IPanelManager
     public IEnumerable<int> GetVotedRecommendationsByUser(string userId)
     {
         return _panelRepository.ReadVotedRecommendationsByUser(userId);
+    }
+
+    public void EditCriteria(Criteria criteria)
+    {
+        _panelRepository.UpdateCriteria(criteria);
     }
 }

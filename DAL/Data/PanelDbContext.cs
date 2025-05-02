@@ -104,9 +104,9 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<Panel>()
             .OwnsMany(p => p.RecruitmentBuckets);
         modelBuilder.Entity<Panel>()
-            .HasMany(m => m.Members);
-        modelBuilder.Entity<MemberProfile>()
-            .HasOne(m => m.Panel); //momenteel gewoon 1 ik weet dat het meerdere kan bevatten
+            .HasMany(m => m.Members)
+            .WithMany(m => m.Panels)
+            .UsingEntity(p => p.ToTable("PanelMembers"));
         
         modelBuilder.Entity<MemberProfile>()
             .HasMany(m => m.SelectedCriteria)
@@ -122,12 +122,11 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
             .HasMany(p => p.Criteria)
             .WithOne(e => e.Panel);
         
-
-        modelBuilder.Entity<UserVote>()
-            .HasOne(uv => uv.Recommendation)
-            .WithMany(r => r.UserVotes)
-            .HasForeignKey(uv => uv.RecommendationId);
-
+            modelBuilder.Entity<Recommendation>()
+                .HasMany<UserVote>(r => r.UserVotes)
+                .WithOne(uv => uv.Recommendation)
+                .HasForeignKey("RecommendationId");
+            
         modelBuilder.Entity<UserVote>()
             .HasOne(iu => iu.Voter);
 

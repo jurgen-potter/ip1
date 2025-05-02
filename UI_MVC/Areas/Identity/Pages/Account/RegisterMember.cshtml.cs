@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
@@ -29,7 +30,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
     public class RegisterMemberModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly TenantUserManager _userManager;
+        private readonly ApplicationUserManager _userManager;
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterMemberModel> _logger;
@@ -38,7 +39,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         private readonly IPanelManager _panelManager;
 
         public RegisterMemberModel(
-            TenantUserManager userManager,
+            ApplicationUserManager userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterMemberModel> logger,
@@ -169,7 +170,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     Gender = Input.Gender,
                     BirthDate = Input.BirthDate,
                     Town = Input.Town,
-                    Panel = panel
+                    Panels = new List<Panel> { panel }
                 };
                 
                 List<SubCriteria> selectedCriteria = new List<SubCriteria>();

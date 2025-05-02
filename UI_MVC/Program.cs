@@ -41,7 +41,7 @@ builder.Services.AddScoped<IMeetingManager, MeetingManager>();
 builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IMemberManager, MemberManager>();
-builder.Services.AddScoped<UserManager<ApplicationUser>, TenantUserManager>();
+builder.Services.AddScoped<UserManager<ApplicationUser>, ApplicationUserManager>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
@@ -51,7 +51,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         options.User.RequireUniqueEmail = true;
         options.SignIn.RequireConfirmedAccount = true;
     })
-    .AddUserManager<TenantUserManager>()
+    .AddUserManager<ApplicationUserManager>()
     .AddEntityFrameworkStores<PanelDbContext>()
     .AddErrorDescriber<DutchIdentityErrorDescriber>()
     .AddDefaultTokenProviders();

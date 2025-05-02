@@ -3,6 +3,7 @@ using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.BL.Domain.User;
+using Microsoft.EntityFrameworkCore;
 
 namespace CitizenPanel.DAL.Data;
 
@@ -189,10 +190,40 @@ public class DataSeeder
             Description = "Dit is ook een omschrijving van een panel.",
             StartDate = new DateOnly(2025, 3, 1),
             EndDate = new DateOnly(2025, 8, 14),
-            TenantId = "antwerpen"
+            TenantId = "brussel"
         };
         _panelDbContext.Panels.Add(panel2);
-
+        
+        var panel3 = new Panel()
+        {
+            Name = "Panel Antwerpen 2",
+            Description = "Dit is ook nog een omschrijving van een panel",
+            StartDate = new DateOnly(2025, 3, 11),
+            EndDate = new DateOnly(2025, 7, 17),
+            TenantId = "antwerpen"
+        };
+        _panelDbContext.Panels.Add(panel3);
+        
+        var antwerpen = _panelDbContext.ApplicationUsers
+            .Include(u => u.OrganizationProfile)
+            .SingleOrDefault(u => u.UserName == "antwerpen@example.com");
+        var brussel = _panelDbContext.ApplicationUsers
+            .Include(u => u.OrganizationProfile)
+            .SingleOrDefault(u => u.UserName == "brussel@example.com");
+        var paul = _panelDbContext.ApplicationUsers
+            .Include(u => u.MemberProfile)
+            .SingleOrDefault(u => u.UserName == "paul@example.com");
+        panel1.Organization = antwerpen?.OrganizationProfile;
+        panel1.Members.Add(paul?.MemberProfile);
+        panel2.Organization = brussel?.OrganizationProfile;
+        panel3.Organization = antwerpen?.OrganizationProfile;
+        //panel3.Members.Add(paul?.MemberProfile);
+        antwerpen?.OrganizationProfile.Panels.Add(panel1);
+        antwerpen?.OrganizationProfile.Panels.Add(panel3);
+        brussel?.OrganizationProfile.Panels.Add(panel2);
+        paul?.MemberProfile.Panels.Add(panel1);
+        //paul?.MemberProfile.Panels.Add(panel3);
+        
         // Create initial list with members for Panel 1 and Panel 2
         var members = new List<ApplicationUser>
         {
@@ -205,7 +236,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 22,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -219,7 +250,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 35,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -232,7 +263,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 50,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -245,7 +276,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 28,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -258,7 +289,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 45,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -273,7 +304,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 33,
                     Town = "Antwerpen",
-                    Panel = panel2,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -286,7 +317,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 67,
                     Town = "Antwerpen",
-                    Panel = panel2,
+                    Panels = new List<Panel> { panel2},
                     TenantId = "antwerpen"
                 }
             },
@@ -299,7 +330,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 72,
                     Town = "Antwerpen",
-                    Panel = panel2,
+                    Panels = new List<Panel> { panel2 },
                     TenantId = "antwerpen"
                 }
             },
@@ -312,7 +343,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 19,
                     Town = "Antwerpen",
-                    Panel = panel2,
+                    Panels = new List<Panel> { panel2 },
                     TenantId = "antwerpen"
                 }
             },
@@ -325,7 +356,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 21,
                     Town = "Antwerpen",
-                    Panel = panel2,
+                    Panels = new List<Panel> { panel2 },
                     TenantId = "antwerpen"
                 }
             },
@@ -340,7 +371,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 22,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -353,7 +384,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 19,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -366,7 +397,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 24,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -379,7 +410,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 21,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -392,7 +423,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 25,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -405,7 +436,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 18,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -420,7 +451,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 35,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -433,7 +464,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 28,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -446,7 +477,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 37,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -459,7 +490,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 30,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -472,7 +503,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 33,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -485,7 +516,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 39,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -500,7 +531,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 45,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -513,7 +544,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 58,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -526,7 +557,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 52,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -539,7 +570,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 49,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -552,7 +583,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 44,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -565,7 +596,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 55,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -580,7 +611,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 68,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -593,7 +624,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 71,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -606,7 +637,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 65,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -619,7 +650,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 77,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -632,7 +663,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 69,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -645,7 +676,7 @@ public class DataSeeder
                     Gender = Gender.Male,
                     Age = 73,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -660,7 +691,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 22,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -673,7 +704,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 19,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -686,7 +717,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 24,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -699,7 +730,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 21,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -712,7 +743,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 25,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -725,7 +756,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 18,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -740,7 +771,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 35,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -753,7 +784,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 28,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -766,7 +797,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 37,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -779,7 +810,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 30,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -792,7 +823,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 33,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -805,7 +836,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 39,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -820,7 +851,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 45,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -833,7 +864,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 58,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -846,7 +877,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 52,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -859,7 +890,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 49,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -872,7 +903,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 44,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -885,7 +916,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 55,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -900,7 +931,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 68,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -913,7 +944,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 71,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -926,7 +957,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 65,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -939,7 +970,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 77,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -952,7 +983,7 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 69,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             },
@@ -965,12 +996,108 @@ public class DataSeeder
                     Gender = Gender.Female,
                     Age = 73,
                     Town = "Antwerpen",
-                    Panel = panel1,
+                    Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen"
                 }
             }
         };
+        
+        var panel1Recs = new List<Recommendation>()
+        {
+            new Recommendation()
+            {
+                Title = "Meer fietspaden",
+                Description = "Gemeente Antwerpen moet meer fietspaden aanleggen",
+                Votes = 5,
+                TenantId = "antwerpen",
+                UserVotes = new List<UserVote>()
+                {
+                    new UserVote()
+                    {
+                        Voter = members[0],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
 
+                    new UserVote()
+                    {
+                        Voter = members[1],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[2],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[3],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+
+                    new UserVote()
+                    {
+                        Voter = members[4],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    }
+                }
+            },
+            new Recommendation()
+            {
+                Title = "Autovrije binnenstad",
+                Description = "Gemeente Antwerpen moet auto's uit de binnenstad verbieden",
+                Votes = 4,
+                TenantId = "antwerpen",
+                UserVotes = new List<UserVote>()
+                {
+                    new UserVote()
+                    {
+                        Voter = members[0],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+
+                    new UserVote()
+                    {
+                        Voter = members[1],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[2],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[3],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    }
+                }
+            }
+        };
+        
+        panel1.Recommendations = panel1Recs;
+        
         _panelDbContext.AddRange(members);
     }
 

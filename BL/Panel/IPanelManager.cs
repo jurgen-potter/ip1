@@ -7,7 +7,7 @@ namespace CitizenPanel.BL;
 public interface IPanelManager
 {
     
-    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria);
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization);
 
     public Panel GetPanelById(int panelId);
     public Panel GetPanelByIdWithoutTenant(int panelId);
@@ -24,8 +24,8 @@ public interface IPanelManager
     public void EditRecommendation(Recommendation recommendation);
     
     bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation);
-    void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation);
+    void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation, bool recommended);
     void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation);
     IEnumerable<int> GetVotedRecommendationsByUser(string userId);
-
+    void EditCriteria(Criteria criteria);
 }
