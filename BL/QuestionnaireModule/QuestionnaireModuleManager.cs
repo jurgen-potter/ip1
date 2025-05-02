@@ -21,4 +21,9 @@ public class QuestionnaireModuleManager : IQuestionnaireModuleManager
     {
         return _repository.UpdateQuestionnaire(questionnaire);
     }
+
+    public Answer GetAnswer(int answerId)
+    {
+        return _repository.ReadAnswer(answerId);
+    }
 }

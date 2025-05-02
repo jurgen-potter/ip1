@@ -100,7 +100,7 @@ public class AdminController : Controller
         questionnaire.Title = model.Title;
         
         var updatedQuestions = new List<Question>();
-        int questionPosition = 0;
+        int questionPosition = 1;
 
         foreach (var questionModel in model.Questions)
         {

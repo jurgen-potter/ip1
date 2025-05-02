@@ -1004,13 +1004,13 @@ public class DataSeeder
         
         var panel1Recs = new List<Recommendation>()
         {
-            new Recommendation()
+            new Recommendation
             {
                 Title = "Meer fietspaden",
                 Description = "Gemeente Antwerpen moet meer fietspaden aanleggen",
                 Votes = 5,
                 TenantId = "antwerpen",
-                UserVotes = new List<UserVote>()
+                UserVotes = new List<UserVote>
                 {
                     new UserVote()
                     {
@@ -1053,13 +1053,13 @@ public class DataSeeder
                     }
                 }
             },
-            new Recommendation()
+            new Recommendation
             {
                 Title = "Autovrije binnenstad",
                 Description = "Gemeente Antwerpen moet auto's uit de binnenstad verbieden",
                 Votes = 4,
                 TenantId = "antwerpen",
-                UserVotes = new List<UserVote>()
+                UserVotes = new List<UserVote>
                 {
                     new UserVote()
                     {
@@ -1104,7 +1104,7 @@ public class DataSeeder
     private void SeedInvitations()
     {
         //invitations
-        var invitation1 = new Invitation()
+        var invitation1 = new Invitation
         {
             //TenantId = "antwerpen",
             Age = 30,
@@ -1116,7 +1116,7 @@ public class DataSeeder
                 ""
         };
 
-        var invitation2 = new Invitation()
+        var invitation2 = new Invitation
         {
             //TenantId = "antwerpen",
             Age = 20,
@@ -1128,7 +1128,7 @@ public class DataSeeder
                 ""
         };
 
-        var invitation3 = new Invitation()
+        var invitation3 = new Invitation
         {
             //TenantId = "antwerpen",
             Age = 40,
@@ -1140,7 +1140,7 @@ public class DataSeeder
                 ""
         };
 
-        var invitation4 = new Invitation()
+        var invitation4 = new Invitation
         {
             //TenantId = "antwerpen",
             Age = 40,
@@ -1152,7 +1152,7 @@ public class DataSeeder
                 ""
         };
 
-        var invitation5 = new Invitation()
+        var invitation5 = new Invitation
         {
             //TenantId = "antwerpen",
             Age = 25,
@@ -1167,11 +1167,7 @@ public class DataSeeder
             IsDrawn = true,
             SelectedCriteria = new List<int>([1, 4]),
         };
-        _panelDbContext.Invitations.Add(invitation1);
-        _panelDbContext.Invitations.Add(invitation2);
-        _panelDbContext.Invitations.Add(invitation3);
-        _panelDbContext.Invitations.Add(invitation4);
-        _panelDbContext.Invitations.Add(invitation5);
+        _panelDbContext.Invitations.AddRange(invitation1, invitation2, invitation3, invitation4, invitation5);
     }
 
     private void SeedQuestionnaires()
@@ -1190,12 +1186,16 @@ public class DataSeeder
         var answer1 = new Answer
         {
             Description = "Ja",
-            Position = 1
+            Position = 1,
+            Advice = "U heeft genoeg tijd dus een panel kan een goed idee zijn.",
+            IsCritical = false
         };
         var answer2 = new Answer
         {
             Description = "Nee",
-            Position = 2
+            Position = 2,
+            Advice = "U heeft niet genoeg tijd dus een panel is geen goed idee voor u.",
+            IsCritical = true
         };
         var question2 = new Question
         {
@@ -1207,13 +1207,45 @@ public class DataSeeder
         var answer3 = new Answer
         {
             Description = "Ja",
-            Position = 1
+            Position = 1,
+            Advice = "Als u bereid bent om de voorstellen ernstig te nemen is een panel een goed idee voor u.",
+            IsCritical = false
         };
         var answer4 = new Answer
         {
             Description = "Nee",
-            Position = 2
+            Position = 2,
+            Advice = "Als u niet bereid bent om de voorstellen ernstig te nemen is een panel geen goed idee voor u.",
+            IsCritical = true
         };
+        var question3 = new Question
+        {
+            Description = "Wat is de bedoeling van het participatieproces bij dit vraagstuk?",
+            Weight = 5,
+            Position = 3
+        };
+        var answer5 = new Answer
+        {
+            Description = "We willen de mening horen van al wie vrijwillig wil deelnemen aan het debat. Iedereen moet kunnen deelnemen.",
+            Position = 1,
+            Advice = "Een panel wordt zorgvuldig bijeengesteld zodat iedereen gerepresenteerd wordt, als iedereen kan meedoen is dit panel geen goed idee voor u.",
+            IsCritical = true
+        };
+        var answer6 = new Answer
+        {
+            Description = "We willen de mening horen van doelgroepen die vaak afwezig blijven bij participatie.",
+            Position = 2,
+            Advice = "Een panel wordt zorgvuldig bijeengesteld zodat iedereen gerepresenteerd wordt, een panel is dus een goed idee voor u.",
+            IsCritical = false
+        };
+        var answer7 = new Answer
+        {
+            Description = "We willen de mening van een representatief staal participanten horen.",
+            Position = 5,
+            Advice = "Een panel wordt zorgvuldig bijeengesteld zodat iedereen gerepresenteerd wordt, een panel is dus een goed idee voor u.",
+            IsCritical = false
+        };
+
         answer1.Question = question1;
         answer2.Question = question1;
         question1.Answers.Add(answer1);
@@ -1228,8 +1260,17 @@ public class DataSeeder
         question2.Questionnaire = questionnaire;
         questionnaire.Questions.Add(question2);
 
+        answer5.Question = question3;
+        answer6.Question = question3;
+        answer7.Question = question3;
+        question3.Answers.Add(answer5);
+        question3.Answers.Add(answer6);
+        question3.Answers.Add(answer7);
+        question3.Questionnaire = questionnaire;
+        questionnaire.Questions.Add(question3);
+        
         _panelDbContext.Questionnaires.Add(questionnaire);
-        _panelDbContext.Questions.AddRange(question1, question2);
-        _panelDbContext.Answers.AddRange(answer1, answer2, answer3, answer4);
+        _panelDbContext.Questions.AddRange(question1, question2, question3);
+        _panelDbContext.Answers.AddRange(answer1, answer2, answer3, answer4, answer5, answer6, answer7);
     }
 }
