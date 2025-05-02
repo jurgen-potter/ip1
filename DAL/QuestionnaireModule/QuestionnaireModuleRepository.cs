@@ -26,4 +26,9 @@ public class QuestionnaireModuleRepository : IQuestionnaireModuleRepository
         _dbContext.Questionnaires.Update(questionnaire);
         return _dbContext.SaveChanges() > 0;
     }
+
+    public Answer ReadAnswer(int answerId)
+    {
+        return _dbContext.Answers.Find(answerId);
+    }
 }

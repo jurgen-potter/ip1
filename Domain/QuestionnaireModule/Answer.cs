@@ -10,6 +10,10 @@ public class Answer
     [MaxLength(1000)]
     public string Description  { get; set; }
     
+    [Required]
+    [MaxLength(1000)]
+    public string Advice { get; set; }
+    
     public bool IsCritical{ get; set; }
     
     public int Position { get; set; }

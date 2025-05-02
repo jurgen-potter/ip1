@@ -5,11 +5,6 @@
 
 @{
     ViewData["Title"] = "Recommendations";
-    List<int> lijst = new List<int>();
-    foreach (var recommendation in Model)
-    {
-        lijst.Add(recommendation.UserVotes.Count(uv => uv.Recommended));
-    }
 }
 
 <h1>Aanbevelingen</h1>

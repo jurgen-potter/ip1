@@ -4,7 +4,9 @@ namespace CitizenPanel.BL.QuestionnaireModule;
 
 public interface IQuestionnaireModuleManager
 {
-    Questionnaire GetQuestionnaire(int questionnaireId);
+    public Questionnaire GetQuestionnaire(int questionnaireId);
     
-    bool EditQuestionnaire(Questionnaire questionnaire);
+    public bool EditQuestionnaire(Questionnaire questionnaire);
+    
+    public Answer GetAnswer(int answerId);
 }

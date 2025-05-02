@@ -1,0 +1,40 @@
+@model CitizenPanel.BL.Domain.QuestionnaireModule.Questionnaire
+
+@{
+    ViewBag.Title = "Verkenningsmodule";
+}
+
+<div class="containter my-4">
+    <h2 class="mb-4">Is een panel voor u?</h2>
+
+    <form asp-action="Result" method="post">
+        <input type="hidden" name="questionnaireId" value="@Model.Id"/>
+        @foreach (var question in Model.Questions)
+        {
+            <div class="card mb-4">
+                <div class="card-header"><strong>Vraag @question.Position</strong></div>
+                <div class="card-body">
+                    <p class="mb-3">@question.Description</p>
+                    @foreach (var answer in question.Answers.OrderBy(a => a.Position))
+                    {
+                        <div class="form-check mb-2">
+                            <input class="form-check-input"
+                                   type="radio"
+                                   name="Answers[@question.Id]"
+                                   value="@answer.Id"
+                                   id="q@question.Id_a@answer.Id"
+                                   required/>
+                            <label class="form-check-label" for="q@question.Id_a@answer.Id">
+                                @answer.Description
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="d-flex justify-content-start mt-4 gap-2">
+            <button type="submit" class="btn btn-success mt-3">Verzenden</button>
+        </div>
+    </form>
+</div>
