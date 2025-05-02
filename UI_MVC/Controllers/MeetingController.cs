@@ -1,6 +1,7 @@
 ﻿using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.UI.MVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 
@@ -49,6 +50,7 @@ namespace CitizenPanel.UI.MVC.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Organization")]
         public IActionResult Create(CreateMeetingModel model)
         {
             if (!ModelState.IsValid)

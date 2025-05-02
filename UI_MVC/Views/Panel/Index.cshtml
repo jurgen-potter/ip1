@@ -32,9 +32,12 @@
             <aside class="timeline-sidebar bg-light p-3 rounded border h-100">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 class="h6 fw-bold text-uppercase text-muted">Tijdlijn</h3>
-                    <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createMeetingModal">
-                        <i class="bi bi-plus-lg"></i> Nieuw
-                    </button>
+                    @if (User.IsInRole("Organization"))
+                    {
+                        <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createMeetingModal">
+                            <i class="bi bi-plus-lg"></i> Nieuw
+                        </button>
+                    }
                 </div>
                 <div class="timeline-line">
                     @foreach (var meeting in Model.Meetings.OrderBy(m => m.Date))
