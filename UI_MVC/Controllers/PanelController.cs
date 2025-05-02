@@ -37,6 +37,8 @@ public class PanelController : Controller
         {
             MeetingViewModel meetingViewModel = new MeetingViewModel
             {
+                Id = meeting.Id,
+                Title = meeting.Title,
                 Date = meeting.Date,
             };
             

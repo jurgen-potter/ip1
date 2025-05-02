@@ -3,68 +3,48 @@ using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CitizenPanel.UI.MVC.Controllers;
-
-public class MeetingController : Controller
+namespace CitizenPanel.UI.MVC.Controllers
 {
-    private readonly IPanelManager _panelManager;
-
-    public MeetingController(IPanelManager panelManager)
+    public class MeetingController : Controller
     {
-        _panelManager = panelManager;
-    }
-    
-    // GET: Meeting/Detail/{dateString}
-    public IActionResult Detail(string id, int panelId = 1)
-    {
-        if (string.IsNullOrEmpty(id) || id.Length != 8)
-        {
-            return RedirectToAction("Index", "Panel", new { panelId });
-        }
+        private readonly IMeetingManager _meetingManager;
+        private readonly IPanelManager _panelManager;
 
-        // Parse the date from the id (yyyyMMdd format)
-        if (!int.TryParse(id.Substring(0, 4), out int year) ||
-            !int.TryParse(id.Substring(4, 2), out int month) ||
-            !int.TryParse(id.Substring(6, 2), out int day))
+        public MeetingController(IMeetingManager meetingManager, IPanelManager panelManager)
         {
-            return RedirectToAction("Index", "Panel", new { panelId });
+            _meetingManager = meetingManager;
+            _panelManager = panelManager;
         }
-
-        DateOnly meetingDate;
-        try
-        {
-            meetingDate = new DateOnly(year, month, day);
-        }
-        catch (Exception)
-        {
-            return RedirectToAction("Index", "Panel", new { panelId });
-        }
-
-        // Get panel with meetings
-        Panel panel = _panelManager.GetPanelByIdWithRecommendations(panelId);
         
-        // Find the specific meeting
-        Meeting? meeting = panel.Meetings.FirstOrDefault(m => m.Date == meetingDate);
-        
-        if (meeting == null)
+        [HttpGet]
+        public IActionResult Details(int id, int panelId)
         {
-            return RedirectToAction("Index", "Panel", new { panelId });
-        }
+            var meeting = _meetingManager.GetMeetingByIdWithRecommendations(id);
 
-        // Create view model
-        MeetingDetailViewModel model = new MeetingDetailViewModel
-        {
-            PanelId = panel.Id,
-            PanelName = panel.Name,
-            MeetingDate = meeting.Date,
-            Recommendations = meeting.Recommendations.Select(r => new RecommendationViewModel
+            var panel = _panelManager.GetPanelById(panelId);
+
+            var model = new MeetingDetailViewModel
             {
-                Id = r.Id,
-                Title = r.Title,
-                Description = r.Description
-            }).ToList()
-        };
+                PanelId = panelId,
+                PanelName = panel.Name,
+                MeetingDate = meeting.Date,
+                Recommendations = new List<RecommendationViewModel>()
+            };
 
-        return View(model);
+            if (meeting.Recommendations != null)
+            {
+                foreach (var rec in meeting.Recommendations)
+                {
+                    model.Recommendations.Add(new RecommendationViewModel
+                    {
+                        Id = rec.Id,
+                        Title = rec.Title,
+                        Description = rec.Description
+                    });
+                }
+            }
+
+            return View(model);
+        }
     }
 }

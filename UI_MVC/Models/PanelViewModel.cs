@@ -31,6 +31,8 @@ public class RecommendationViewModel
 
 public class MeetingViewModel
 {
+    public int Id { get; set; }
+    public string Title { get; set; }
     public DateOnly Date { get; set; }
     public List<RecommendationViewModel> Recommendations { get; set; } = new();
     

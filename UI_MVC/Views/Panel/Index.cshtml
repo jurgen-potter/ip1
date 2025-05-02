@@ -1,5 +1,10 @@
 @model PanelViewModel
 
+@using System.Globalization
+@{
+CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
+CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
+}
 @{
 ViewBag.Title = Model.Name;
 Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,9 +12,8 @@ Layout = "~/Views/Shared/_Layout.cshtml";
 
 <link rel="stylesheet" href="~/dist/css/panel/dashboard.css" asp-append-version="true" />
 
-<div class="container-fluid p-4">
+<div class="container-fluid p-4" data-panel-id="@Model.PanelId">
 
-    <!-- Header Sectie -->
     <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
         <h1 class="h3 mb-0">@Model.Name</h1>
         <div class="d-flex gap-2">
@@ -24,27 +28,24 @@ Layout = "~/Views/Shared/_Layout.cshtml";
 
     <div class="row g-4">
 
-        <!-- Tijdlijn Kolom -->
         <div class="col-lg-3 col-md-4">
             <aside class="timeline-sidebar bg-light p-3 rounded border h-100">
                 <h3 class="h6 fw-bold mb-4 text-uppercase text-muted">Tijdlijn</h3>
                 <div class="timeline-line"></div>
-
-                @* Meeting items sorted by date *@
+                
                 @foreach (var meeting in Model.Meetings.OrderBy(m => m.Date))
                 {
-                <div class="timeline-item" data-meeting-id="meeting-@meeting.Date.ToString("yyyyMMdd")">
-                    <div class="timeline-box">
-                        <div class="date">@meeting.Date.ToString("dd MMM yyyy")</div>
-                        <h4 class="title">@(meeting.Recommendations.FirstOrDefault()?.Title ?? "Meeting")</h4>
+                    <div class="timeline-item" data-meeting-id="@meeting.Id">
+                        <div class="timeline-box">
+                            <div class="date">@meeting.Date.ToString("dd MMM")</div>
+                            <h4 class="title">@(meeting.Title ?? "Meeting")</h4>
+                        </div>
                     </div>
-                </div>
                 }
 
             </aside>
         </div>
 
-        <!-- Hoofdinhoud Kolom -->
         <div class="col-lg-9 col-md-8">
             <main class="main-content d-flex flex-column gap-4">
 
@@ -82,5 +83,5 @@ Layout = "~/Views/Shared/_Layout.cshtml";
 </div>
 
 @section Scripts {
-<script src="~/dist/js/panel/timeline.js" asp-append-version="true"></script>
+<script src="~/dist/js/dashboard/timeline.js" asp-append-version="true"></script>
 }

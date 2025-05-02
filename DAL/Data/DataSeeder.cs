@@ -197,6 +197,7 @@ public class DataSeeder
             {
                 new Meeting()
                 {
+                    Title = "Aanmaken aanbevelingen",
                     Date = new DateOnly(2025, 5, 1),
                     Recommendations = new List<Recommendation>()
                     {
@@ -212,6 +213,7 @@ public class DataSeeder
                 },
                 new Meeting()
                 {
+                    Title = "Start burgerpanel",
                     Date = new DateOnly(2025, 4, 12),
                     Recommendations = new List<Recommendation>()
                     {
@@ -227,6 +229,7 @@ public class DataSeeder
                 },
                 new Meeting()
                 {
+                    Title = "Laatste Stemronde",
                     Date = new DateOnly(2025, 6, 12),
                     Recommendations = new List<Recommendation>()
                     {
