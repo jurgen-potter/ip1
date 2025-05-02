@@ -16,4 +16,17 @@ public class MeetingManager : IMeetingManager
        return _repository.ReadMeetingByIdWithRecommendations(id);
     }
 
+    public Meeting AddMeeting(string title, DateOnly date, int panelId)
+    {
+        var meeting = new Meeting()
+        {
+            PanelId = panelId,
+            Title = title,
+            Date = date
+        };
+       _repository.CreateMeeting(meeting);
+       return meeting;
+    }
+
+
 }
