@@ -7,6 +7,7 @@ public class ResultViewModel
     public int ReservePotPanelmembers {get; set;}
     public int TotalNeededPanelmembers {get; set;}
     public List<BucketViewModel> Buckets { get; set; } = new List<BucketViewModel>();
+    public List<CriteriaViewModel> Criteria { get; set; } = new();
 }
 
 public class BucketViewModel

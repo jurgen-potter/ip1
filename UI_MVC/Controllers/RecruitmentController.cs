@@ -104,7 +104,8 @@ public class RecruitmentController : Controller
         var resultModel = new ResultViewModel()
         {
             ReservePotPanelmembers = result.ReservePotPanelmembers,
-            TotalNeededPanelmembers = result.TotalNeededPanelmembers
+            TotalNeededPanelmembers = result.TotalNeededPanelmembers,
+            Criteria = model.Criteria
         };
 
         foreach (var bucket in result.Buckets)

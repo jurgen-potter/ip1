@@ -35,8 +35,36 @@
         </div>
     }
 
-    <div class="d-flex justify-content-start mt-4 gap-2">
-        <a href="@Url.Action("CreatePanel", "Panel", Model)" class="btn btn-success">Maak uw panel</a>
-        <a href="@Url.Action("Index", "Recruitment")" class="btn btn-outline-secondary">Nieuwe berekening</a>
-    </div>
+    <form asp-controller="Panel" asp-action="CreatePanelFromResult" method="post">
+        @if (Model.Criteria != null)
+        {
+            @for (int i = 0; i < Model.Criteria.Count; i++)
+            {
+                <input type="hidden" name="Criteria[@i].Name" value="@Model.Criteria[i].Name"/>
+
+                @for (int j = 0; j < Model.Criteria[i].SubCriteria.Count; j++)
+                {
+                    <input type="hidden" name="Criteria[@i].SubCriteria[@j].Name" value="@Model.Criteria[i].SubCriteria[j].Name"/>
+                    <input type="hidden" name="Criteria[@i].SubCriteria[@j].Percentage" value="@Model.Criteria[i].SubCriteria[j].Percentage"/>
+                }
+            }
+        }
+        <input type="hidden" name="TotalNeededPanelmembers" value="@Model.TotalNeededPanelmembers"/>
+        <input type="hidden" name="ReservePotPanelmembers" value="@Model.ReservePotPanelmembers"/>
+
+        @foreach(var bucket in Model.Buckets)
+        {
+            @for (int i = 0; i < bucket.CriteriaNames.Count; i++)
+            {
+                <input type="hidden" name="Buckets[@(Model.Buckets.IndexOf(bucket))].CriteriaNames[@i]" value="@bucket.CriteriaNames[i]"/>
+                <input type="hidden" name="Buckets[@(Model.Buckets.IndexOf(bucket))].SubCriteriaNames[@i]" value="@bucket.SubCriteriaNames[i]"/>
+            }
+            <input type="hidden" name="Buckets[@(Model.Buckets.IndexOf(bucket))].Count" value="@bucket.Count"/>
+        }
+
+        <div class="d-flex justify-content-start mt-4 gap-2">
+            <button type="submit" class="btn btn-success">Maak uw panel</button>
+            <a href="@Url.Action("Index", "Recruitment")" class="btn btn-outline-secondary">Nieuwe berekening</a>
+        </div>
+    </form>
 </div>

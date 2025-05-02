@@ -55,14 +55,14 @@ public class PanelController : Controller
     }
 
     [Authorize(Roles = "Organization, Admin")]
-    [HttpGet]
-    public IActionResult CreatePanel(ResultViewModel resultViewModel)
+    [HttpPost]
+    public IActionResult CreatePanelFromResult(ResultViewModel resultViewModel)
     {
         CreatePanelViewModel model = new CreatePanelViewModel()
         {
             Result = resultViewModel
         };
-        return View(model);
+        return View("CreatePanel", model);
     }
     
     [Authorize(Roles = "Organization, Admin")]
@@ -74,16 +74,19 @@ public class PanelController : Controller
 
         List<Criteria> criteria = new List<Criteria>();
 
-        if (model.Result.CriteriaResults != null)
+        if (model.Result.Criteria != null)
         {
-            foreach (CriteriaResult criteriaResult in model.Result.CriteriaResults)
+            foreach (var crit in model.Result.Criteria)
             {
                 List<SubCriteria> subCriteria = new List<SubCriteria>();
-                foreach (SubCriteriaResult subResult in criteriaResult.SubResults)
+                foreach (var sub in crit.SubCriteria)
                 {
-                    subCriteria.Add(_drawManager.AddSubCriteria(subResult.Name, subResult.Percentage));
+                    if (sub.Percentage > 0)
+                    {
+                        subCriteria.Add(_drawManager.AddSubCriteria(sub.Name, sub.Percentage));
+                    }
                 }
-                criteria.Add(_drawManager.AddCriteria(criteriaResult.Name, subCriteria));
+                criteria.Add(_drawManager.AddCriteria(crit.Name, subCriteria));
             }
         }
         
@@ -91,17 +94,8 @@ public class PanelController : Controller
         Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria, organization.OrganizationProfile);
         organization.OrganizationProfile.Panels.Add(newPanel);
         await _userManager.UpdateAsync(organization);
-
-        if (criteria.Count != 0)
-        {
-            foreach (Criteria criterion in criteria)
-            {
-                criterion.Panel = newPanel;
-                _panelManager.EditCriteria(criterion);
-            }
-        }
         
-        return RedirectToAction("Index","Panel",new {panelId=newPanel.Id});
+        return RedirectToAction("Index","Panel",new { id = newPanel.Id });
     }
     
     [Authorize]

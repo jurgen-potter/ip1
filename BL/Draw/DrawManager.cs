@@ -221,12 +221,15 @@ public class DrawManager : IDrawManager
             if (depth == criteriaList.Count)
             {
                 int count = (int)Math.Round(totalToDraw * accumulatedPct);
-                buckets.Add(new RecruitmentBucket
+                if (count > 0)
                 {
-                    CriteriaNames = new List<string>(chosenCriteria),
-                    SubCriteriaNames = new List<string>(chosenSubs),
-                    Count = count
-                });
+                    buckets.Add(new RecruitmentBucket
+                    {
+                        CriteriaNames = new List<string>(chosenCriteria),
+                        SubCriteriaNames = new List<string>(chosenSubs),
+                        Count = count
+                    });
+                }
                 return;
             }
 
