@@ -14,12 +14,14 @@ public class MemberRegisterController : Controller
     private readonly IDrawManager _drawManager;
     private readonly IEmailSender _emailSender;
     private readonly IMemberManager _memberManager;
+    private readonly IPanelManager _panelManager;
 
-    public MemberRegisterController(IDrawManager drawManager, IEmailSender emailSender, IMemberManager memberManager)
+    public MemberRegisterController(IDrawManager drawManager, IEmailSender emailSender, IMemberManager memberManager, IPanelManager panelManager)
     {
         _emailSender = emailSender;
         _drawManager = drawManager;
         _memberManager = memberManager;
+        _panelManager = panelManager;
     }
     
     // GET
@@ -65,7 +67,7 @@ public class MemberRegisterController : Controller
                 return RedirectToAction("UsedCode", "MemberRegister");
         }
         
-        List<Criteria> extraCriteria = _drawManager.GetCriteriaByPanel(invitation.PanelId).ToList();
+        List<Criteria> extraCriteria = _panelManager.GetExtraCriteriaByPanelId(invitation.PanelId).ToList();
 
         var model = new RegisterViewModel()
         {
@@ -73,19 +75,7 @@ public class MemberRegisterController : Controller
             SelectedCriteria = new List<int>(new int[extraCriteria.Count]),
             CriteriaList = extraCriteria,
             IsConfirmed = memberDto.IsConfirmed
-            
         };
-        /*
-        var model = new NewMemberViewModel
-        {
-            Gender = invitation.Gender,
-            Town = invitation.Postcode,
-            CriteriaList = extraCriteria,
-            SelectedCriteria = new List<int>(new int[extraCriteria.Count]),
-            PanelId = 1,
-            Invitation = invitation,
-            IsConfirmed = memberDto.IsConfirmed
-        };*/
         
         return View(model);
     }
@@ -112,17 +102,6 @@ public class MemberRegisterController : Controller
         if (!ModelState.IsValid) {
             return View(newMember);
         }
-        
-        /*
-        var (result, member) = await _memberManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria, newMember.PanelId);
-        if (!result.Succeeded)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("Password", error.Description);
-            }
-            return View(newMember);
-        }*/
         
         newMember.Invitation.SelectedCriteria = newMember.SelectedCriteria;
         newMember.Invitation.IsRegistered = true;

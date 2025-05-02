@@ -102,4 +102,9 @@ public class PanelManager : IPanelManager
     {
         _panelRepository.UpdateCriteria(criteria);
     }
+    
+    public IEnumerable<Criteria> GetExtraCriteriaByPanelId(int panelId)
+    {
+        return _panelRepository.ReadExtraCriteriaByPanelId(panelId);
+    }
 }

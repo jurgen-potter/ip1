@@ -73,7 +73,32 @@ public class DataSeeder
             Percentage = 10,
             TenantId = "antwerpen"
         };
-        _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4);
+        var subCrit8 = new SubCriteria()
+        {
+            Name = "Fiets",
+            Percentage = 10,
+            TenantId = "antwerpen"
+        };
+        var subCrit9 = new SubCriteria()
+        {
+            Name = "Auto",
+            Percentage = 90,
+            TenantId = "antwerpen"
+        };
+        var subCrit10 = new SubCriteria()
+        {
+            Name = "Hoog opgeleid",
+            Percentage = 10,
+            TenantId = "antwerpen"
+        };
+        var subCrit11 = new SubCriteria()
+        {
+            Name = "Laag opgeleid",
+            Percentage = 90,
+            TenantId = "antwerpen"
+        };
+
+        _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4, subCrit5, subCrit6, subCrit7, subCrit8, subCrit9, subCrit10, subCrit11);
 
         var crit1 = new Criteria()
         {
@@ -87,7 +112,19 @@ public class DataSeeder
             SubCriteria = { subCrit3, subCrit4 , subCrit5 , subCrit6 , subCrit7},
             TenantId = "antwerpen"
         };
-        _panelDbContext.Criteria.AddRange(crit1, crit2);
+        var crit3 = new Criteria()
+        {
+            Name = "Vervoer",
+            SubCriteria = { subCrit8, subCrit9 },
+            TenantId = "antwerpen"
+        };
+        var crit4 = new Criteria()
+        {
+            Name = "Opleiding",
+            SubCriteria = { subCrit10, subCrit11 },
+            TenantId = "antwerpen"
+        };
+        _panelDbContext.Criteria.AddRange(crit1, crit2, crit3, crit4);
 
         // Create panel objects
         var panel1 = new Panel()
@@ -96,17 +133,6 @@ public class DataSeeder
             Description = "Dit is de omschrijving van het panel.",
             StartDate = new DateOnly(2025, 1, 12),
             EndDate = new DateOnly(2025, 7, 22),
-            RecruitmentBuckets = new List<RecruitmentBucket>()
-            {
-                // new RecruitmentBucket { Gender = "Mannen", AgeGroup = "18-25", Count = 0, Target = 5 },
-                // new RecruitmentBucket { Gender = "Mannen", AgeGroup = "26-40", Count = 0, Target = 5 },
-                // new RecruitmentBucket { Gender = "Mannen", AgeGroup = "41-60", Count = 0, Target = 5 },
-                // new RecruitmentBucket { Gender = "Mannen", AgeGroup = "60+", Count = 0, Target = 5 },
-                // new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "18-25", Count = 0, Target = 5 },
-                // new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "26-40", Count = 0, Target = 5 },
-                // new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "41-60", Count = 0, Target = 5 },
-                // new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "60+", Count = 0, Target = 5 }
-            },
             DrawStatus = DrawStatus.FirstPhaseActive,
             Recommendations = new List<Recommendation>()
             {
@@ -130,6 +156,8 @@ public class DataSeeder
         _panelDbContext.Panels.Add(panel1);
         panel1.Criteria.Add(crit1);
         panel1.Criteria.Add(crit2);
+        panel1.Criteria.Add(crit3);
+        panel1.Criteria.Add(crit4);
 
         var panel2 = new Panel()
         {
@@ -964,7 +992,8 @@ public class DataSeeder
             PanelId = 1,
             Town = "2140",
             QRCodeString =
-                ""
+                "",
+            TenantId = "antwerpen"
         };
 
         var invitation2 = new Invitation()
@@ -976,7 +1005,8 @@ public class DataSeeder
             PanelId = 1,
             Town = "2100",
             QRCodeString =
-                ""
+                "",
+            TenantId = "antwerpen"
         };
 
         var invitation3 = new Invitation()
@@ -988,7 +1018,8 @@ public class DataSeeder
             PanelId = 1,
             Town = "2110",
             QRCodeString =
-                ""
+                "",
+            TenantId = "antwerpen"
         };
 
         var invitation4 = new Invitation()
@@ -1000,7 +1031,8 @@ public class DataSeeder
             PanelId = 2,
             Town = "2105",
             QRCodeString =
-                ""
+                "",
+            TenantId = "antwerpen"
         };
 
         var invitation5 = new Invitation()
@@ -1017,6 +1049,7 @@ public class DataSeeder
             IsRegistered = true,
             IsDrawn = true,
             SelectedCriteria = new List<int>([1, 4]),
+            TenantId = "antwerpen"
         };
         _panelDbContext.Invitations.Add(invitation1);
         _panelDbContext.Invitations.Add(invitation2);

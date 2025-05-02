@@ -76,6 +76,7 @@ public class DrawRepository : IDrawRepository
             .Include(e => e.SubCriteria)
             .ToList();
     }
+    
     public bool DeleteInvitation(int invitationId)
     {
         var invitation = _dbContext.Invitations.Find(invitationId);

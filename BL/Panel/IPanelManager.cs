@@ -28,4 +28,5 @@ public interface IPanelManager
     void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation);
     IEnumerable<int> GetVotedRecommendationsByUser(string userId);
     void EditCriteria(Criteria criteria);
+    public IEnumerable<Criteria> GetExtraCriteriaByPanelId(int panelId);
 }

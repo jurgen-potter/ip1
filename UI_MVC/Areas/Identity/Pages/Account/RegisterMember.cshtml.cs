@@ -144,7 +144,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string ?? throw new InvalidOperationException("No valid invitation was given."));
             Input ??= new InputModel();
             
-            List<Criteria> extraCriteria = _drawManager.GetCriteriaByPanel(invitation.PanelId).ToList();
+            List<Criteria> extraCriteria = _panelManager.GetExtraCriteriaByPanelId(invitation.PanelId).ToList();
             Input.Email = invitation.Email;
             Input.Gender = invitation.Gender;
             Input.Town = invitation.Town;

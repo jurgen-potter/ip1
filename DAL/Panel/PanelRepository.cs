@@ -172,4 +172,19 @@ public class PanelRepository : IPanelRepository
         _dbContext.Update(criteria);
         _dbContext.SaveChanges();
     }
+    
+    public IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId)
+    {
+        var panel = _dbContext.Panels
+            .Include(p => p.Criteria)
+            .ThenInclude(c => c.SubCriteria)
+            .FirstOrDefault(p => p.Id == panelId);
+
+        if (panel == null)
+            return [];
+
+        return panel.Criteria
+            .Where(c => c.Name != "Geslacht" && c.Name != "Leeftijd")
+            .ToList();
+    }
 }
