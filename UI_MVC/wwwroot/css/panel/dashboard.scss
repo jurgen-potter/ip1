@@ -1,92 +1,99 @@
-﻿$timeline-line-color: #dee2e6;
-$timeline-dot-color: #6c757d;
-$timeline-active-color: #0d6efd;
-$border-color: #dee2e6;
-$box-shadow-color: rgba(13, 110, 253, 0.2);
+﻿/* Improved Timeline styling with reliable connecting line */
 
-.timeline {
-  &-sidebar {
-    position: relative;
+.timeline-sidebar {
+  position: relative;
+  padding: 10px;
+}
+
+/* Line container - leave this empty in HTML, styling only */
+.timeline-line {
+  position: relative;
+  padding-left: 30px; /* Space for the dots and line */
+}
+
+/* The continuous vertical line */
+.timeline-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 5px; /* Center line with dots */
+  width: 2px;
+  background-color: #dee2e6;
+  z-index: 1;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.timeline-item:hover {
+  transform: translateX(5px);
+  cursor: pointer;
+}
+
+/* Individual dots on the timeline */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -25px; /* Position the dot on the line */
+  top: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #6c757d;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px #ced4da;
+  z-index: 2; /* Higher z-index to appear above the line */
+}
+
+.timeline-item:hover::before {
+  background-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+}
+
+.timeline-box {
+  background-color: white;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 12px 15px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+.timeline-item:hover .timeline-box {
+  border-color: #0d6efd;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.timeline-box .date {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.timeline-box .title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Animation for new meeting */
+.timeline-item-new {
+  animation: fadeInRight 0.5s ease forwards;
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
   }
-
-  &-line {
-    position: absolute;
-    left: 24px;
-    top: 60px;
-    bottom: 30px;
-    width: 2px;
-    background-color: $timeline-line-color;
-  }
-
-  &-item {
-    position: relative;
-    padding-left: 40px;
-    margin-bottom: 20px;
-    cursor: pointer;
-
-    &::before {
-      content: "";
-      position: absolute;
-      left: 20px;
-      top: 10px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: $timeline-dot-color;
-      transform: translateX(-50%);
-      z-index: 1;
-      transition: all 0.2s ease;
-    }
-
-    &:hover {
-      &::before {
-        background-color: $timeline-active-color;
-      }
-
-      .timeline-box {
-        border-color: $timeline-active-color;
-      }
-    }
-
-    &.active {
-      &::before {
-        background-color: $timeline-active-color;
-        width: 14px;
-        height: 14px;
-      }
-
-      .timeline-box {
-        border-color: $timeline-active-color;
-        box-shadow: 0 0.125rem 0.25rem $box-shadow-color;
-      }
-    }
-  }
-
-  &-box {
-    padding: 10px 15px;
-    border: 1px solid $border-color;
-    border-radius: 5px;
-    background-color: #fff;
-    transition: all 0.2s ease;
-
-    .date {
-      font-size: 0.85rem;
-      color: $timeline-dot-color;
-      font-weight: 500;
-    }
-
-    .title {
-      font-size: 1rem;
-      font-weight: 500;
-      margin-bottom: 0;
-    }
-  }
-
-  &-content {
-    display: none;
-
-    &.active {
-      display: block;
-    }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

@@ -18,4 +18,11 @@ public class MeetingRepository : IMeetingRepository
         return _dbContext.Meetings.Include(r => r.Recommendations)
             .FirstOrDefault(m => m.Id == id);
     }
+
+    public void CreateMeeting(Meeting meeting)
+    {
+        _dbContext.Meetings.Add(meeting);
+        _dbContext.SaveChanges();
+    }
+
 }

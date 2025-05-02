@@ -1,6 +1,8 @@
 ﻿using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.UI.MVC.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers
@@ -15,7 +17,7 @@ namespace CitizenPanel.UI.MVC.Controllers
             _meetingManager = meetingManager;
             _panelManager = panelManager;
         }
-        
+
         [HttpGet]
         public IActionResult Details(int id, int panelId)
         {
@@ -46,5 +48,33 @@ namespace CitizenPanel.UI.MVC.Controllers
 
             return View(model);
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Organization")]
+        public IActionResult Create(CreateMeetingViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { success = false, errors = ModelState });
+            }
+            
+            if (viewModel.Date < DateOnly.FromDateTime(DateTime.Now))
+            {
+                return BadRequest(new { success = false, errors = "Meeting date cannot be in the past" });
+            }
+            
+            var meeting = _meetingManager.AddMeeting(viewModel.Title, viewModel.Date,viewModel.PanelId);
+
+            return Json(new
+            {
+                success = true,
+                meeting = new
+                {
+                    id = meeting.Id,
+                    title = meeting.Title,
+                    date = meeting.Date.ToString("yyyy-MM-dd")
+                }
+            });
+            }
+        }
     }
-}
