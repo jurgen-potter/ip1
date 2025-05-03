@@ -1,13 +1,16 @@
-﻿namespace CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Draw;
 
-public class RecruitmentResult
+namespace CitizenPanel.UI.MVC.Models;
+
+public class ResultViewModel
 {
     public int ReservePotPanelmembers {get; set;}
     public int TotalNeededPanelmembers {get; set;}
-    public List<RecruitmentBucket> Buckets { get; set; } = new List<RecruitmentBucket>();
+    public List<BucketViewModel> Buckets { get; set; } = new List<BucketViewModel>();
+    public List<CriteriaViewModel> Criteria { get; set; } = new();
 }
 
-public class RecruitmentBucket
+public class BucketViewModel
 {
     public List<string> CriteriaNames { get; set; } = new List<string>();
     public List<string> SubCriteriaNames { get; set; } = new List<string>();

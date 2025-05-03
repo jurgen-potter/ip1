@@ -1,4 +1,6 @@
-﻿@{
+﻿@model QuestionnaireSelectViewModel
+
+@{
     ViewBag.Title = "Platformbeheer";
 }
 
@@ -8,6 +10,9 @@
     Voeg nieuwe admin toe
 </a>
 
-<a asp-controller="Admin" asp-action="EditQuestionnaire" class="btn btn-primary">
-    Bewerk vragenlijst Verkenningsmodule
-</a>
+@foreach (var questionnaire in @Model.Questionnaires)
+{
+    <a asp-controller="Admin" asp-action="EditQuestionnaire" asp-route-questionnaireId="@questionnaire.Id" class="btn btn-primary">
+        Bewerk vragenlijst @questionnaire.Title
+    </a>
+}

@@ -14,12 +14,14 @@ public class MemberRegisterController : Controller
     private readonly IDrawManager _drawManager;
     private readonly IEmailSender _emailSender;
     private readonly IMemberManager _memberManager;
+    private readonly IPanelManager _panelManager;
 
-    public MemberRegisterController(IDrawManager drawManager, IEmailSender emailSender, IMemberManager memberManager)
+    public MemberRegisterController(IDrawManager drawManager, IEmailSender emailSender, IMemberManager memberManager, IPanelManager panelManager)
     {
         _emailSender = emailSender;
         _drawManager = drawManager;
         _memberManager = memberManager;
+        _panelManager = panelManager;
     }
     
     // GET
@@ -48,50 +50,51 @@ public class MemberRegisterController : Controller
     }
     
     [HttpGet]
-    public IActionResult RegisterMember(MemberDto memberDto)
+    public IActionResult RegisterMember(string code)
     {
-        Invitation invitation = memberDto.Invitation;
+        Invitation invitation = _drawManager.GetInvitationWithCode(code);
+        
         if (invitation == null)
-        {
-            invitation = _drawManager.GetInvitationWithCode(memberDto.Code);
-        
-            if (invitation == null)
-                return RedirectToAction("InvalidCode", "MemberRegister");
+            return RedirectToAction("InvalidCode", "MemberRegister");
 
-            if (invitation.IsRegistered)
-                return RedirectToAction("Registered", "MemberRegister");
+        if (invitation.IsRegistered)
+            return RedirectToAction("Registered", "MemberRegister");
             
-            if (invitation.IsDrawn)
-                return RedirectToAction("UsedCode", "MemberRegister");
-        }
+        if (invitation.IsDrawn)
+            return RedirectToAction("UsedCode", "MemberRegister");
         
-        List<Criteria> extraCriteria = _drawManager.GetCriteriaByPanel(invitation.PanelId).ToList();
-
+        List<Criteria> extraCriteria = _panelManager.GetExtraCriteriaByPanelId(invitation.PanelId).ToList();
+        
         var model = new RegisterViewModel()
         {
-            Invitation = invitation,
+            Code = code,
             SelectedCriteria = new List<int>(new int[extraCriteria.Count]),
-            CriteriaList = extraCriteria,
-            IsConfirmed = memberDto.IsConfirmed
-            
+            IsConfirmed = false
         };
-        /*
-        var model = new NewMemberViewModel
+
+        foreach (var criteria in extraCriteria)
         {
-            Gender = invitation.Gender,
-            Town = invitation.Postcode,
-            CriteriaList = extraCriteria,
-            SelectedCriteria = new List<int>(new int[extraCriteria.Count]),
-            PanelId = 1,
-            Invitation = invitation,
-            IsConfirmed = memberDto.IsConfirmed
-        };*/
+            var criteriaModel = new CriteriaViewModel()
+            {
+                Name = criteria.Name
+            };
+            foreach (var subCriteria in criteria.SubCriteria)
+            {
+                var subCriteriaModel = new SubCriteriaViewModel()
+                {
+                    Id = subCriteria.Id,
+                    Name = subCriteria.Name
+                };
+                criteriaModel.SubCriteria.Add(subCriteriaModel);
+            }
+            model.CriteriaList.Add(criteriaModel);
+        }
         
         return View(model);
     }
     
     [HttpPost]
-    public async Task<IActionResult> RegisterMember(RegisterViewModel newMember)
+    public IActionResult RegisterMember(string code, RegisterViewModel newMember)
     {
         if (newMember is IValidatableObject validatable && newMember.Email == null)
         {
@@ -110,24 +113,15 @@ public class MemberRegisterController : Controller
             }
         }
         if (!ModelState.IsValid) {
+            newMember.IsConfirmed = true;
             return View(newMember);
         }
         
-        /*
-        var (result, member) = await _memberManager.AddMemberAsync(newMember.FirstName, newMember.LastName, newMember.Email, newMember.Password, newMember.Gender, newMember.BirthDate, newMember.Town, newMember.SelectedCriteria, newMember.PanelId);
-        if (!result.Succeeded)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("Password", error.Description);
-            }
-            return View(newMember);
-        }*/
-        
-        newMember.Invitation.SelectedCriteria = newMember.SelectedCriteria;
-        newMember.Invitation.IsRegistered = true;
-        newMember.Invitation.Email = newMember.Email;
-        _drawManager.ChangeInvitation(newMember.Invitation);
+        Invitation invitation = _drawManager.GetInvitationWithCode(newMember.Code);
+        invitation.SelectedCriteria = newMember.SelectedCriteria;
+        invitation.IsRegistered = true;
+        invitation.Email = newMember.Email;
+        _drawManager.ChangeInvitation(invitation);
 
         TempData["Email"] = newMember.Email;
         return RedirectToAction("RegistrationConfirmed");
