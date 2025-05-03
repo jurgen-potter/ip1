@@ -155,4 +155,9 @@ public class PanelRepository : IPanelRepository
             .Where(c => c.Name != "Geslacht" && c.Name != "Leeftijd")
             .ToList();
     }
+
+    public IEnumerable<Panel> ReadAllPanels()
+    {
+        return _dbContext.Panels.ToList();
+    }
 }

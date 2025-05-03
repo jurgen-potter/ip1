@@ -130,52 +130,66 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             public List<CriteriaViewModel> CriteriaList { get; set; } = new List<CriteriaViewModel>();
             
             public List<int> SelectedCriteria { get; set; }
-            
-            public int PanelId { get; set; }
-        
-            public int InvitationId { get; set; }
         }
         
+        [BindProperty]
+        public int PanelId { get; set; }
+        
+        [BindProperty]
+        public int InvitationId { get; set; }
+        
+        [BindProperty]
         public string Code { get; set; }
+        
+        [BindProperty]
+        public string IsStaff { get; set; }
 
 
-        public async Task OnGetAsync(string code)
+        public async Task OnGetAsync(string code, string staff = "false", int panelId = 0)
         {
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string ?? throw new InvalidOperationException("No valid invitation was given."));
             Input ??= new InputModel();
-            
-            List<Criteria> extraCriteria = _panelManager.GetExtraCriteriaByPanelId(invitation.PanelId).ToList();
-            foreach (Criteria criteria in extraCriteria)
+
+            string invitationString = TempData["Invitation"] as string ?? string.Empty;
+            if (string.IsNullOrEmpty(invitationString))
             {
-                var criteriaModel = new CriteriaViewModel()
-                {
-                    Id = criteria.Id,
-                    Name = criteria.Name
-                };
-                foreach (var subCriteria in criteria.SubCriteria)
-                {
-                    var subCriteriaModel = new SubCriteriaViewModel()
-                    {
-                        Id = subCriteria.Id,
-                        Name = subCriteria.Name
-                    };
-                    criteriaModel.SubCriteria.Add(subCriteriaModel);
-                }
-                Input.CriteriaList.Add(criteriaModel);
+                PanelId = panelId;
+                IsStaff = staff;
             }
+            else
+            {
+                Invitation invitation = JsonConvert.DeserializeObject<Invitation>(invitationString);
+                List<Criteria> extraCriteria = _panelManager.GetExtraCriteriaByPanelId(invitation.PanelId).ToList();
+                foreach (Criteria criteria in extraCriteria)
+                {
+                    var criteriaModel = new CriteriaViewModel()
+                    {
+                        Id = criteria.Id,
+                        Name = criteria.Name
+                    };
+                    foreach (var subCriteria in criteria.SubCriteria)
+                    {
+                        var subCriteriaModel = new SubCriteriaViewModel()
+                        {
+                            Id = subCriteria.Id,
+                            Name = subCriteria.Name
+                        };
+                        criteriaModel.SubCriteria.Add(subCriteriaModel);
+                    }
+                    Input.CriteriaList.Add(criteriaModel);
+                }
             
-            Input.Email = invitation.Email;
-            Input.Gender = invitation.Gender;
-            Input.Town = invitation.Town;
-            Input.SelectedCriteria = invitation.SelectedCriteria;
-            Input.PanelId = invitation.PanelId;
-            Input.InvitationId = invitation.Id;
-            Code = code;
+                Input.Email = invitation.Email;
+                Input.Gender = invitation.Gender;
+                Input.Town = invitation.Town;
+                Input.SelectedCriteria = invitation.SelectedCriteria;
+                PanelId = invitation.PanelId;
+                InvitationId = invitation.Id;
+                Code = code;
+            }
         }
 
-        public async Task<IActionResult> OnPostAsync(string code)
+        public async Task<IActionResult> OnPostAsync(string code = null)
         {
             var returnUrl = Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -183,24 +197,36 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             {
                 var user = CreateMember();
                 user.UserType = UserType.Member;
-                var panel = _panelManager.GetPanelById(Input.PanelId);
-                user.MemberProfile = new MemberProfile()
+                var panel = _panelManager.GetPanelById(PanelId);
+                if (IsStaff == "false")
                 {
-                    FirstName = Input.FirstName,
-                    LastName = Input.LastName,
-                    Gender = Input.Gender,
-                    BirthDate = Input.BirthDate,
-                    Town = Input.Town,
-                    Panels = new List<Panel> { panel }
-                };
+                    user.MemberProfile = new MemberProfile()
+                    {
+                        FirstName = Input.FirstName,
+                        LastName = Input.LastName,
+                        Gender = Input.Gender,
+                        BirthDate = Input.BirthDate,
+                        Town = Input.Town,
+                        Panels = new List<Panel> { panel }
+                    };
                 
-                List<SubCriteria> selectedCriteria = new List<SubCriteria>();
-                if (Input.SelectedCriteria != null && Input.SelectedCriteria.Count != 0)
-                {
-                    selectedCriteria.AddRange(Input.SelectedCriteria.Select(subCriteriaId => 
-                        _drawManager.GetSubCriteria(subCriteriaId)).Where(subCriteria => subCriteria != null));
+                    List<SubCriteria> selectedCriteria = new List<SubCriteria>();
+                    if (Input.SelectedCriteria != null && Input.SelectedCriteria.Count != 0)
+                    {
+                        selectedCriteria.AddRange(Input.SelectedCriteria.Select(subCriteriaId => 
+                            _drawManager.GetSubCriteria(subCriteriaId)).Where(subCriteria => subCriteria != null));
+                    }
+                    user.MemberProfile.SelectedCriteria = selectedCriteria;
                 }
-                user.MemberProfile.SelectedCriteria = selectedCriteria;
+                else
+                {
+                    user.MemberProfile = new MemberProfile()
+                    {
+                        FirstName = Input.FirstName,
+                        LastName = Input.LastName,
+                        Panels = new List<Panel> { panel }
+                    };
+                }
 
                 await _userManager.AddToRoleAsync(user, "Member");
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -211,7 +237,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    _drawManager.RemoveInvitation(Input.InvitationId);
+                    _drawManager.RemoveInvitation(InvitationId);
                     var userId = await _userManager.GetUserIdAsync(user);
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));

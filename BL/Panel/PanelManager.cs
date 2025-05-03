@@ -20,15 +20,14 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadPanelById(panelId);
     }
 
-    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization)
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria)
     {
         Panel newPanel = new Panel()
         {
             Name = name,
             Description = description,
             MemberCount = 0,
-            Criteria = criteria,
-            Organization = organization
+            Criteria = criteria
         };
         _panelRepository.CreatePanel(newPanel);
         return newPanel;
@@ -128,5 +127,10 @@ public class PanelManager : IPanelManager
     public void ChangeRecommendation(Recommendation recommendation)
     {
         _panelRepository.UpdateRecommendation(recommendation);
+    }
+
+    public IEnumerable<Panel> GetAllPanels()
+    {
+        return _panelRepository.ReadAllPanels();
     }
 }

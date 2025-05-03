@@ -148,9 +148,8 @@ public class PanelController : Controller
             }
         }
         
-        var organization = await _userManager.GetUserWithProfilesAndPanelsAsync(User);
-        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria, organization.OrganizationProfile);
-        organization.OrganizationProfile.Panels.Add(newPanel);
+        var organization = await _userManager.GetUserWithProfilesAsync(User);
+        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria);
         await _userManager.UpdateAsync(organization);
         
         return RedirectToAction("Index","Panel",new { id = newPanel.Id });
@@ -171,7 +170,7 @@ public class PanelController : Controller
             return LocalRedirect(returnUrl);
         }
 
-        var panels = user.UserType == UserType.Member ? user.MemberProfile.Panels : user.OrganizationProfile.Panels;
+        var panels = user.UserType == UserType.Member ? user.MemberProfile.Panels : _panelManager.GetAllPanels().ToList();
 
         if (panels.Count == 1)
         {

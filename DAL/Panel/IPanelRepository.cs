@@ -23,4 +23,5 @@ public interface IPanelRepository
     IEnumerable<int> ReadVotedRecommendationsByUser(string userId);
     void UpdateCriteria(Criteria criteria);
     IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId);
+    IEnumerable<Panel> ReadAllPanels();
 }
