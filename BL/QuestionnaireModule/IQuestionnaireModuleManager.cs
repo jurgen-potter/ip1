@@ -7,4 +7,6 @@ public interface IQuestionnaireModuleManager
     Questionnaire GetQuestionnaire(int questionnaireId);
     
     bool EditQuestionnaire(Questionnaire questionnaire);
+    
+    IEnumerable<Questionnaire> GetAllQuestionnaires();
 }

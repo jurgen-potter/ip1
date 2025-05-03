@@ -21,4 +21,9 @@ public class QuestionnaireModuleManager : IQuestionnaireModuleManager
     {
         return _repository.UpdateQuestionnaire(questionnaire);
     }
+
+    public IEnumerable<Questionnaire> GetAllQuestionnaires()
+    {
+        return _repository.ReadAllQuestionnaires();
+    }
 }

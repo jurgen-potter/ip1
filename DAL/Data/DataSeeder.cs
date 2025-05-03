@@ -1113,5 +1113,73 @@ public class DataSeeder
         _panelDbContext.Questionnaires.Add(questionnaire);
         _panelDbContext.Questions.AddRange(question1, question2);
         _panelDbContext.Answers.AddRange(answer1, answer2, answer3, answer4);
+        
+        var questionnaire2 = new Questionnaire
+        {
+            Title = "Procesbepalingsmodule"
+        };
+        var question3 = new Question
+        {
+            Description = "Wat wilt u als organisatie bereiken?",
+            Weight = 5,
+            Position = 1
+        };
+        var answer5 = new Answer
+        {
+            Description = "Aanbevelingen",
+            Position = 1
+        };
+        var answer6 = new Answer
+        {
+            Description = "Actieplannen",
+            Position = 2
+        };
+        var answer7 = new Answer
+        {
+            Description = "Gemeenschap inzichten",
+            Position = 3
+        };
+        var question4 = new Question
+        {
+            Description = "Rond welke problematiek wil u als organisatie werken?",
+            Weight = 3,
+            Position = 2
+        };
+        var answer8 = new Answer
+        {
+            Description = "Klimaatregelingen",
+            Position = 1
+        };
+        var answer9 = new Answer
+        {
+            Description = "Stedelijke planning",
+            Position = 2
+        };
+        var answer10 = new Answer
+        {
+            Description = "Begroting verdeling",
+            Position = 3
+        };
+        answer5.Question = question3;
+        answer6.Question = question3;
+        answer7.Question = question3;
+        question3.Answers.Add(answer5);
+        question3.Answers.Add(answer6);
+        question3.Answers.Add(answer7);
+        question3.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question3);
+
+        answer8.Question = question4;
+        answer9.Question = question4;
+        answer10.Question = question4;
+        question4.Answers.Add(answer8);
+        question4.Answers.Add(answer9);
+        question4.Answers.Add(answer10);
+        question4.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question4);
+
+        _panelDbContext.Questionnaires.Add(questionnaire2);
+        _panelDbContext.Questions.AddRange(question3, question4);
+        _panelDbContext.Answers.AddRange(answer5, answer6, answer7, answer8, answer9, answer10);
     }
 }

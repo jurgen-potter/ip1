@@ -4,7 +4,9 @@ namespace CitizenPanel.DAL.QuestionnaireModule;
 
 public interface IQuestionnaireModuleRepository
 {
-    public Questionnaire ReadQuestionnaire(int questionnaireId);
+    Questionnaire ReadQuestionnaire(int questionnaireId);
 
-    public bool UpdateQuestionnaire(Questionnaire questionnaire);
+    bool UpdateQuestionnaire(Questionnaire questionnaire);
+    
+    IEnumerable<Questionnaire> ReadAllQuestionnaires();
 }

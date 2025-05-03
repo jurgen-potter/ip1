@@ -145,10 +145,12 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
                 </div>
                 <div class="flex-grow-1">
                     <label class="form-label fw-bold question-number">Vraag ${questionIndex + 1}</label>
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-start gap-2">
                         <div class="flex-grow-1 w-100">
-                            <input name="Questions[${questionIndex}].Description" class="form-control mb-0 question-description"/>
-                            <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Description" data-valmsg-replace="true"></span>
+                            <div class="flex-grow-1">
+                                <input name="Questions[${questionIndex}].Description" class="form-control mb-0 question-description"/>
+                                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Description" data-valmsg-replace="true"></span>
+                            </div>
                         </div>
                         <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
                             <i class="bi bi-trash"></i>

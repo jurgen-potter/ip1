@@ -1,0 +1,23 @@
+﻿.drag-handle {
+  cursor: move;
+  user-select: none;
+}
+
+.answer-item {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+  &.over {
+    border-top: 2px solid blue;
+  }
+}
+
+.question-item {
+  &.over {
+    border-top: 3px solid blue;
+  }
+}
+
+.dragged {
+  opacity: 1;
+}
