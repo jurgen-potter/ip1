@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.QuestionnaireModule;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.DAL.QuestionnaireModule;
 
 namespace CitizenPanel.BL.QuestionnaireModule;
@@ -25,5 +25,10 @@ public class QuestionnaireModuleManager : IQuestionnaireModuleManager
     public IEnumerable<Questionnaire> GetAllQuestionnaires()
     {
         return _repository.ReadAllQuestionnaires();
+    }
+
+    public Answer GetAnswer(int answerId)
+    {
+        return _repository.ReadAnswer(answerId);
     }
 }

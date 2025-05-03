@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.QuestionnaireModule;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 
 namespace CitizenPanel.DAL.QuestionnaireModule;
 
@@ -9,4 +9,6 @@ public interface IQuestionnaireModuleRepository
     bool UpdateQuestionnaire(Questionnaire questionnaire);
     
     IEnumerable<Questionnaire> ReadAllQuestionnaires();
+    
+    Answer ReadAnswer(int answerId);
 }

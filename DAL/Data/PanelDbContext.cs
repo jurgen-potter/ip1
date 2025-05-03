@@ -21,6 +21,7 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
     private TenantContext _tenantContext;
     public DbSet<Panel> Panels { get; set; }
     public DbSet<Recommendation> Recommendations { get; set; }
+    public DbSet<Meeting> Meetings { get; set; } 
 
     public DbSet<UserVote> UserVotes { get; set; } 
     public DbSet<Criteria> Criteria { get; set; }
@@ -121,12 +122,11 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
             .HasMany(p => p.Criteria)
             .WithOne(e => e.Panel);
         
-
-        modelBuilder.Entity<UserVote>()
-            .HasOne(uv => uv.Recommendation)
-            .WithMany(r => r.UserVotes)
-            .HasForeignKey(uv => uv.RecommendationId);
-
+            modelBuilder.Entity<Recommendation>()
+                .HasMany<UserVote>(r => r.UserVotes)
+                .WithOne(uv => uv.Recommendation)
+                .HasForeignKey("RecommendationId");
+            
         modelBuilder.Entity<UserVote>()
             .HasOne(iu => iu.Voter);
 

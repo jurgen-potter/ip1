@@ -4,16 +4,27 @@
 @if (Model.Any())
 {
     <ul class="list-group list-group-flush">
-        @foreach (var uv in Model)
+        <p>Voor: </p>
+        @foreach (var uv in Model.Where(uv => uv.Recommended))
         {
-            var member = uv.Voter; 
-            var displayName = 
-                !string.IsNullOrEmpty(member.UserName) 
-                    ? member.UserName 
+            var member = uv.Voter;
+            var displayName =
+                !string.IsNullOrEmpty(member.UserName)
+                    ? member.UserName
                     : member.Email ?? "Onbekende gebruiker";
-
             <li class="list-group-item">@displayName</li>
         }
+        <p>Tegen: </p>
+        @foreach (var uv in Model.Where(uv => !uv.Recommended))
+        {
+            var member = uv.Voter;
+            var displayName =
+                !string.IsNullOrEmpty(member.UserName)
+                    ? member.UserName
+                    : member.Email ?? "Onbekende gebruiker";
+            <li class="list-group-item">@displayName</li>
+        }
+
     </ul>
 }
 else

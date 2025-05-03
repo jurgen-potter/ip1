@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.QuestionnaireModule;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,5 +30,10 @@ public class QuestionnaireModuleRepository : IQuestionnaireModuleRepository
     public IEnumerable<Questionnaire> ReadAllQuestionnaires()
     {
         return _dbContext.Questionnaires;
+    }
+
+    public Answer ReadAnswer(int answerId)
+    {
+        return _dbContext.Answers.Find(answerId);
     }
 }

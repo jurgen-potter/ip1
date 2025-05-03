@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.QuestionnaireModule;
@@ -109,7 +110,7 @@ public class DataSeeder
         var crit2 = new Criteria()
         {
             Name = "Leeftijd",
-            SubCriteria = { subCrit3, subCrit4 , subCrit5 , subCrit6 , subCrit7},
+            SubCriteria = { subCrit3, subCrit4, subCrit5, subCrit6, subCrit7 },
             TenantId = "antwerpen"
         };
         var crit3 = new Criteria()
@@ -125,6 +126,7 @@ public class DataSeeder
             TenantId = "antwerpen"
         };
         _panelDbContext.Criteria.AddRange(crit1, crit2, crit3, crit4);
+
 
         // Create panel objects
         var panel1 = new Panel()
@@ -151,7 +153,58 @@ public class DataSeeder
                     TenantId = "antwerpen"
                 }
             },
-            TenantId = "antwerpen"
+            TenantId = "antwerpen",
+            Meetings = new List<Meeting>()
+            {
+                new Meeting()
+                {
+                    Title = "Tweede bijeenkomst",
+                    Date = new DateOnly(2025, 5, 1),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Betere wegen",
+                            Description = "We willen betere wegen aanleggen in de gemeente antwerpen",
+                            Votes = 0,
+                            TenantId = "antwerpen"
+                        }
+                    },
+                    TenantId = "antwerpen"
+                },
+                new Meeting()
+                {
+                    Title = "Eerste bijeenkomst",
+                    Date = new DateOnly(2025, 4, 12),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Meer bomen",
+                            Description = "We willen graag meer bomen planten in de stad",
+                            Votes = 0,
+                            TenantId = "antwerpen"
+                        }
+                    },
+                    TenantId = "antwerpen"
+                },
+                new Meeting()
+                {
+                    Title = "Derde bijeenkomst",
+                    Date = new DateOnly(2025, 6, 12),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Minder afval",
+                            Description = "Minder afval op de straat door meer vuilnisbakken te plaatsen",
+                            Votes = 0,
+                            TenantId = "antwerpen"
+                        },
+                    },
+                    TenantId = "antwerpen"
+                }
+            }
         };
         _panelDbContext.Panels.Add(panel1);
         panel1.Criteria.Add(crit1);
@@ -575,7 +628,7 @@ public class DataSeeder
                     TenantId = "antwerpen"
                 }
             },
-            
+
             // Men 60+
             new ApplicationUser
             {
@@ -976,14 +1029,110 @@ public class DataSeeder
                 }
             }
         };
+        
+        var panel1Recs = new List<Recommendation>()
+        {
+            new Recommendation
+            {
+                Title = "Meer fietspaden",
+                Description = "Gemeente Antwerpen moet meer fietspaden aanleggen",
+                Votes = 5,
+                TenantId = "antwerpen",
+                UserVotes = new List<UserVote>
+                {
+                    new UserVote()
+                    {
+                        Voter = members[0],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
 
+                    new UserVote()
+                    {
+                        Voter = members[1],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[2],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[3],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+
+                    new UserVote()
+                    {
+                        Voter = members[4],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    }
+                }
+            },
+            new Recommendation
+            {
+                Title = "Autovrije binnenstad",
+                Description = "Gemeente Antwerpen moet auto's uit de binnenstad verbieden",
+                Votes = 4,
+                TenantId = "antwerpen",
+                UserVotes = new List<UserVote>
+                {
+                    new UserVote()
+                    {
+                        Voter = members[0],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+
+                    new UserVote()
+                    {
+                        Voter = members[1],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[2],
+                        Recommended = false,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    },
+            
+                    new UserVote()
+                    {
+                        Voter = members[3],
+                        Recommended = true,
+                        VotedAt = DateTime.UtcNow,
+                        TenantId = "antwerpen"
+                    }
+                }
+            }
+        };
+        
+        panel1.Recommendations = panel1Recs;
+        
         _panelDbContext.AddRange(members);
     }
 
     private void SeedInvitations()
     {
         //invitations
-        var invitation1 = new Invitation()
+        var invitation1 = new Invitation
         {
             //TenantId = "antwerpen",
             Age = 30,
@@ -996,7 +1145,7 @@ public class DataSeeder
             TenantId = "antwerpen"
         };
 
-        var invitation2 = new Invitation()
+        var invitation2 = new Invitation
         {
             //TenantId = "antwerpen",
             Age = 20,
@@ -1009,7 +1158,7 @@ public class DataSeeder
             TenantId = "antwerpen"
         };
 
-        var invitation3 = new Invitation()
+        var invitation3 = new Invitation
         {
             //TenantId = "antwerpen",
             Age = 40,
@@ -1022,7 +1171,7 @@ public class DataSeeder
             TenantId = "antwerpen"
         };
 
-        var invitation4 = new Invitation()
+        var invitation4 = new Invitation
         {
             //TenantId = "antwerpen",
             Age = 40,
@@ -1035,7 +1184,7 @@ public class DataSeeder
             TenantId = "antwerpen"
         };
 
-        var invitation5 = new Invitation()
+        var invitation5 = new Invitation
         {
             //TenantId = "antwerpen",
             Age = 25,
@@ -1051,11 +1200,7 @@ public class DataSeeder
             SelectedCriteria = new List<int>([8, 11]),
             TenantId = "antwerpen"
         };
-        _panelDbContext.Invitations.Add(invitation1);
-        _panelDbContext.Invitations.Add(invitation2);
-        _panelDbContext.Invitations.Add(invitation3);
-        _panelDbContext.Invitations.Add(invitation4);
-        _panelDbContext.Invitations.Add(invitation5);
+        _panelDbContext.Invitations.AddRange(invitation1, invitation2, invitation3, invitation4, invitation5);
     }
 
     private void SeedQuestionnaires()
@@ -1066,36 +1211,74 @@ public class DataSeeder
         };
         var question1 = new Question
         {
-            Description = "Beschik je als organisator nog over minstens 6 maanden voordat de input van de participatie klaar moet zijn voor de politieke besluitvorming?",
+            Description =
+                "Beschik je als organisator nog over minstens 6 maanden voordat de input van de participatie klaar moet zijn voor de politieke besluitvorming?",
             Weight = 5,
             Position = 1
         };
         var answer1 = new Answer
         {
             Description = "Ja",
-            Position = 1
+            Position = 1,
+            Advice = "U heeft genoeg tijd dus een panel kan een goed idee zijn.",
+            IsCritical = false
         };
         var answer2 = new Answer
         {
             Description = "Nee",
-            Position = 2
+            Position = 2,
+            Advice = "U heeft niet genoeg tijd dus een panel is geen goed idee voor u.",
+            IsCritical = true
         };
         var question2 = new Question
         {
-            Description = "Is de gemeente bereid om de realisatie van de voorstellen van het burgerpanel ernstig te overwegen en minstens publiek te motiveren waarom dat niet is gebeurd?",
+            Description =
+                "Is de gemeente bereid om de realisatie van de voorstellen van het burgerpanel ernstig te overwegen en minstens publiek te motiveren waarom dat niet is gebeurd?",
             Weight = 3,
             Position = 2
         };
         var answer3 = new Answer
         {
             Description = "Ja",
-            Position = 1
+            Position = 1,
+            Advice = "Als u bereid bent om de voorstellen ernstig te nemen is een panel een goed idee voor u.",
+            IsCritical = false
         };
         var answer4 = new Answer
         {
             Description = "Nee",
-            Position = 2
+            Position = 2,
+            Advice = "Als u niet bereid bent om de voorstellen ernstig te nemen is een panel geen goed idee voor u.",
+            IsCritical = true
         };
+        var question3 = new Question
+        {
+            Description = "Wat is de bedoeling van het participatieproces bij dit vraagstuk?",
+            Weight = 5,
+            Position = 3
+        };
+        var answer5 = new Answer
+        {
+            Description = "We willen de mening horen van al wie vrijwillig wil deelnemen aan het debat. Iedereen moet kunnen deelnemen.",
+            Position = 1,
+            Advice = "Een panel wordt zorgvuldig bijeengesteld zodat iedereen gerepresenteerd wordt, als iedereen kan meedoen is dit panel geen goed idee voor u.",
+            IsCritical = true
+        };
+        var answer6 = new Answer
+        {
+            Description = "We willen de mening horen van doelgroepen die vaak afwezig blijven bij participatie.",
+            Position = 2,
+            Advice = "Een panel wordt zorgvuldig bijeengesteld zodat iedereen gerepresenteerd wordt, een panel is dus een goed idee voor u.",
+            IsCritical = false
+        };
+        var answer7 = new Answer
+        {
+            Description = "We willen de mening van een representatief staal participanten horen.",
+            Position = 5,
+            Advice = "Een panel wordt zorgvuldig bijeengesteld zodat iedereen gerepresenteerd wordt, een panel is dus een goed idee voor u.",
+            IsCritical = false
+        };
+
         answer1.Question = question1;
         answer2.Question = question1;
         question1.Answers.Add(answer1);
@@ -1110,36 +1293,45 @@ public class DataSeeder
         question2.Questionnaire = questionnaire;
         questionnaire.Questions.Add(question2);
 
+        answer5.Question = question3;
+        answer6.Question = question3;
+        answer7.Question = question3;
+        question3.Answers.Add(answer5);
+        question3.Answers.Add(answer6);
+        question3.Answers.Add(answer7);
+        question3.Questionnaire = questionnaire;
+        questionnaire.Questions.Add(question3);
+        
         _panelDbContext.Questionnaires.Add(questionnaire);
-        _panelDbContext.Questions.AddRange(question1, question2);
-        _panelDbContext.Answers.AddRange(answer1, answer2, answer3, answer4);
+        _panelDbContext.Questions.AddRange(question1, question2, question3);
+        _panelDbContext.Answers.AddRange(answer1, answer2, answer3, answer4, answer5, answer6, answer7);
         
         var questionnaire2 = new Questionnaire
         {
             Title = "Procesbepalingsmodule"
         };
-        var question3 = new Question
+        var question4 = new Question
         {
             Description = "Wat wilt u als organisatie bereiken?",
             Weight = 5,
             Position = 1
         };
-        var answer5 = new Answer
+        var answer11 = new Answer
         {
             Description = "Aanbevelingen",
             Position = 1
         };
-        var answer6 = new Answer
+        var answer12 = new Answer
         {
             Description = "Actieplannen",
             Position = 2
         };
-        var answer7 = new Answer
+        var answer13 = new Answer
         {
             Description = "Gemeenschap inzichten",
             Position = 3
         };
-        var question4 = new Question
+        var question5 = new Question
         {
             Description = "Rond welke problematiek wil u als organisatie werken?",
             Weight = 3,
@@ -1160,26 +1352,26 @@ public class DataSeeder
             Description = "Begroting verdeling",
             Position = 3
         };
-        answer5.Question = question3;
-        answer6.Question = question3;
-        answer7.Question = question3;
-        question3.Answers.Add(answer5);
-        question3.Answers.Add(answer6);
-        question3.Answers.Add(answer7);
-        question3.Questionnaire = questionnaire2;
-        questionnaire2.Questions.Add(question3);
-
-        answer8.Question = question4;
-        answer9.Question = question4;
-        answer10.Question = question4;
-        question4.Answers.Add(answer8);
-        question4.Answers.Add(answer9);
-        question4.Answers.Add(answer10);
+        answer11.Question = question4;
+        answer12.Question = question4;
+        answer13.Question = question4;
+        question4.Answers.Add(answer11);
+        question4.Answers.Add(answer12);
+        question4.Answers.Add(answer13);
         question4.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question4);
 
+        answer8.Question = question5;
+        answer9.Question = question5;
+        answer10.Question = question5;
+        question5.Answers.Add(answer8);
+        question5.Answers.Add(answer9);
+        question5.Answers.Add(answer10);
+        question5.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question5);
+
         _panelDbContext.Questionnaires.Add(questionnaire2);
-        _panelDbContext.Questions.AddRange(question3, question4);
-        _panelDbContext.Answers.AddRange(answer5, answer6, answer7, answer8, answer9, answer10);
+        _panelDbContext.Questions.AddRange(question4, question5);
+        _panelDbContext.Answers.AddRange(answer11, answer12, answer13, answer8, answer9, answer10);
     }
 }

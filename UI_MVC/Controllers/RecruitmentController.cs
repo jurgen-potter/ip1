@@ -1,26 +1,27 @@
-﻿using CitizenPanel.BL;
+using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
 using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
 public class RecruitmentController : Controller
 {
     private readonly IDrawManager _drawManager;
+    // private readonly IMemberManager _memberManager;
 
     public RecruitmentController(IDrawManager drawManager)
     {
         _drawManager = drawManager;
+        // _memberManager = memberManager;
     }
 
     [HttpGet]
-    public IActionResult Index(int panelId = 1)
+    public IActionResult Index(int panelId)
     {
         if (TempData["CriteriaFormData"] is string json)
         {

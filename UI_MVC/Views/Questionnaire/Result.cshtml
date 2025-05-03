@@ -1,0 +1,39 @@
+@model QuestionnaireResponseViewModel
+
+@{
+    ViewBag.Title = "Verkenning resultaat";
+}
+
+<div class="container my-4"> <h2 class="mb-4">Advies op basis van uw antwoorden</h2>
+
+    @foreach (var question in Model.Questionnaire.Questions.OrderBy(q => q.Position))
+    {
+        int selectedAnswerId;
+        if (!Model.Answers.TryGetValue(question.Id, out selectedAnswerId))
+        {
+            continue; // No answer submitted for this question
+        }
+
+        var selectedAnswer = question.Answers.FirstOrDefault(a => a.Id == selectedAnswerId);
+        if (selectedAnswer == null)
+        {
+            continue;
+        }
+
+        if (!Model.IsCritical || selectedAnswer.IsCritical)
+        {
+            <div class="card m-2 p-2">
+                <div class="card-body">
+                    <h5 class="card-title">@question.Description</h5>
+                    <p class="mb-2"><strong>Uw antwoord:</strong> @selectedAnswer.Description</p>
+
+                    @if (!string.IsNullOrWhiteSpace(selectedAnswer.Advice))
+                    {
+                        <p><strong>Aanbeveling:</strong> @selectedAnswer.Advice</p>
+                    }
+                </div>
+            </div>
+        }
+    }
+    <a href="@Url.Action("Index", "Questionnaire")" class="btn btn-outline-secondary">Nieuwe berekening</a>
+</div>

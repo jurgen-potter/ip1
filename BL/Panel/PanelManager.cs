@@ -49,11 +49,6 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadTargetBucketsByPanel(panel);
     }
     
-    public void AddRecommendationOfPanel(string title, string description, Panel panel)
-    {
-        var recommendation = new Recommendation(title, description, 0);
-        _panelRepository.CreateRecommendationOfPanel(recommendation, panel);
-    }
 
     public Panel GetPanelByIdWithRecommendations(int panelId)
     {
@@ -79,9 +74,35 @@ public class PanelManager : IPanelManager
         return _panelRepository.HasUserVotedForRecommendation(member, recommendation);
     }
 
-    public void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation)
+    public void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation, bool recommended)
     {
-        _panelRepository.CreateVoteToRecommendation(member, recommendation);
+        // Controleer eerst of de aanbeveling bestaat
+        if (recommendation == null)
+        {
+            throw new ArgumentException($"Aanbeveling met bestaat niet.");
+        }
+
+        // Controleer of gebruiker al heeft gestemd
+        if (HasUserVotedForRecommendation(member, recommendation))
+        {
+            throw new InvalidOperationException("Gebruiker heeft al gestemd op deze aanbeveling.");
+        }
+        // Creëer een nieuwe stem
+        var userVote = new UserVote
+        {
+            Voter = member,
+            Recommendation = recommendation,
+            VotedAt = DateTime.UtcNow,
+            Recommended = recommended,
+            TenantId = member.MemberProfile.TenantId
+        };
+        
+        _panelRepository.CreateVoteToRecommendation(userVote);
+        
+        // Verhoog de stemteller in de aanbeveling
+        recommendation.Votes++;
+        _panelRepository.UpdateRecommendation(recommendation);
+        
     }
 
     public void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation)
