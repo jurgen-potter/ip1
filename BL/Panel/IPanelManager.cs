@@ -10,8 +10,8 @@ public interface IPanelManager
     public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization);
 
     public Panel GetPanelById(int panelId);
-    void EditPanel(Panel panel);
-    void RemovePanel(Panel panel);
+    public void EditPanel(Panel panel);
+    public void RemovePanel(Panel panel);
     public IEnumerable<RecruitmentBucket> GetTargetBucketsByPanel(Panel panel);
     
     public Panel GetPanelByIdWithRecommendations(int panelId);
@@ -21,10 +21,11 @@ public interface IPanelManager
 
     public void EditRecommendation(Recommendation recommendation);
     
-    bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation);
-    void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation, bool recommended);
-    void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation);
-    IEnumerable<int> GetVotedRecommendationsByUser(string userId);
-    void EditCriteria(Criteria criteria);
+    public bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation);
+    public void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation, bool recommended);
+    public void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation);
+    public IEnumerable<int> GetVotedRecommendationsByUser(string userId);
+    public void EditCriteria(Criteria criteria);
     public IEnumerable<Criteria> GetExtraCriteriaByPanelId(int panelId);
+    public void ChangeRecommendation(Recommendation recommendation);
 }

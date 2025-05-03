@@ -72,14 +72,17 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            @foreach (var rec in Model.Recommendations)
+                            @foreach (var meeting in Model.Meetings)
                             {
-                                <div class="col-md-6">
-                                    <div class="border p-3 rounded bg-light h-100 d-flex flex-column">
-                                        <h6 class="fw-semibold">@rec.Title</h6>
-                                        <p class="small flex-grow-1">@rec.Description</p>
+                                @foreach (var rec in meeting.Recommendations)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="border p-3 rounded bg-light h-100 d-flex flex-column">
+                                            <h6 class="fw-semibold">@rec.Title</h6>
+                                            <p class="small flex-grow-1">@rec.Description</p>
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             }
                         </div>
                     </div>

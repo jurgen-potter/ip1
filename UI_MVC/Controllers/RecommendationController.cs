@@ -13,9 +13,8 @@ public class RecommendationController(IPanelManager panelManager) : Controller
     public IActionResult Index(int panelId = 1)
     {
         var panel = panelManager.GetPanelByIdWithRecommendations(panelId);
-        var recommendations = panel.Recommendations;
-        
-        return View(recommendations);
+        var meetings = panel.Meetings;
+        return View(meetings);
     }
 
     [HttpGet]
@@ -28,5 +27,17 @@ public class RecommendationController(IPanelManager panelManager) : Controller
         return PartialView("_VotersList", votes);
     }
     
-    
+    [HttpPost]
+    [Authorize(Roles = "Organization")]
+    public IActionResult StopVoting(int id)
+    {
+        var recommendation = panelManager.GetRecommendationById(id);
+        if (recommendation == null)
+            return NotFound();
+
+        recommendation.IsVotable = false;
+        panelManager.ChangeRecommendation(recommendation);
+        
+        return Ok();
+    }
 }

@@ -124,4 +124,9 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadExtraCriteriaByPanelId(panelId);
     }
+
+    public void ChangeRecommendation(Recommendation recommendation)
+    {
+        _panelRepository.UpdateRecommendation(recommendation);
+    }
 }

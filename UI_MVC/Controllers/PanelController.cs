@@ -65,15 +65,18 @@ public class PanelController : Controller
             model.Meetings.Add(meetingViewModel);
         }
 
-        foreach (Recommendation recommendation in panel.Recommendations)
+        foreach (Meeting meeting in panel.Meetings.OrderBy(m => m.Date))
         {
-            RecommendationViewModel recommendationModel = new RecommendationViewModel
+            foreach (Recommendation recommendation in meeting.Recommendations)
             {
-                Id = recommendation.Id,
-                Title = recommendation.Title,
-                Description = recommendation.Description
-            };
-            model.Recommendations.Add(recommendationModel);
+                RecommendationViewModel recommendationModel = new RecommendationViewModel
+                {
+                    Id = recommendation.Id,
+                    Title = recommendation.Title,
+                    Description = recommendation.Description
+                };
+                model.Recommendations.Add(recommendationModel);
+            }
         }
 
         return View(model);

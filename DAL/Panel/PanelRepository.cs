@@ -30,9 +30,9 @@ public class PanelRepository : IPanelRepository
     public Panel ReadPanelByIdWithRecommendations(int panelId)
     {
         return _dbContext.Panels
-            .Include(r => r.Recommendations)
-            .ThenInclude(r => r.UserVotes)
             .Include(r => r.Meetings)
+            .ThenInclude(m => m.Recommendations)
+            .ThenInclude(r => r.UserVotes)
             .SingleOrDefault(p => p.Id == panelId);
     }
 
