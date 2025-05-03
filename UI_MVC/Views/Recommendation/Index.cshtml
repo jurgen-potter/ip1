@@ -19,6 +19,13 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">@recommendation.Title</h5>
                     <p class="card-text flex-grow-1">@recommendation.Description</p>
+                    <p class="mb-1" id="@($"hiddenText{recommendation.Id}")" hidden>
+                        <strong>Het stemmen is afgelopen</strong>
+                    </p>
+                    @if (!recommendation.IsVotable)
+                    {
+                        <p class="mb-1"><strong>Het stemmen is afgelopen</strong></p>
+                    }
 
                     @if (User.IsInRole("Organization"))
                     {
