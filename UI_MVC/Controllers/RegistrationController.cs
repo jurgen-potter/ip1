@@ -7,20 +7,28 @@ namespace CitizenPanel.UI.MVC.Controllers;
 using BL.Registration;
 using Models;
 
-public class RegistrationController(IRegistrationManager registrationManager,IEmailSender mailSender, IPanelManager panelManager) : Controller
+public class RegistrationController(IRegistrationManager registrationManager,IEmailSender mailSender, IPanelManager panelManager,IDrawManager drawManager) : Controller
 {
     [HttpGet]
-    public IActionResult Index(int panelId = 1)
+    public IActionResult Index(int panelId)
     {
-        var panel = panelManager.GetPanelById(panelId);
+        var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
+        var panel    = panelManager.GetPanelById(panelId);
+        var result   = drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
 
-        var allBuckets = registrationManager.GetAllBuckets(panel);
+        var vm = new ResultViewModel {
+            TotalNeededPanelmembers   = result.TotalNeededPanelmembers,
+            ReservePotPanelmembers    = result.ReservePotPanelmembers,
+            Buckets = result.Buckets.Select(b => new BucketViewModel {
+                CriteriaNames     = b.CriteriaNames,
+                SubCriteriaNames  = b.SubCriteriaNames,
+                Count             = b.Count,
+                RegisteredCount   = registrationManager
+                    .GetBucketRegistrationsCount(panelId, b.CriteriaNames, b.SubCriteriaNames)
+            }).ToList()
+        };
 
-        ViewBag.PanelId = panelId;
-        ViewBag.DrawStatus = panel.DrawStatus;
-        ViewBag.HasSufficientRegistrations = registrationManager.HasSufficientRegistrations(panel);
-
-        return View(allBuckets);
+        return View(vm);
     }
     
     [HttpPost]
@@ -34,6 +42,8 @@ public class RegistrationController(IRegistrationManager registrationManager,IEm
         return View(model);
     }
 
+    
+    
     [HttpPost]
     public IActionResult StartFinalDrawPhase(FinalDrawViewModel finalDraw)
     {
@@ -44,8 +54,7 @@ public class RegistrationController(IRegistrationManager registrationManager,IEm
         
         var panel = panelManager.GetPanelById(finalDraw.PanelId);
 
-        // Always proceed with the draw regardless of sufficient registrations
-        registrationManager.StartFinalDraw(panel);
+        // registrationManager.StartFinalDraw(panel);
         
         
         TempData["SelectedSubject"] = finalDraw.SelectedSubject;

@@ -1,118 +1,154 @@
-﻿@model IEnumerable<RecruitmentBucket>
-@using CitizenPanel.BL.Domain.Draw;
-@{
-    ViewData["Title"] = "Registratie-overzicht";
-    var panelId = ViewBag.PanelId ?? 1;
-    var drawStatus = (DrawStatus)ViewBag.DrawStatus;
-    var hasSufficientRegistrations = ViewBag.HasSufficientRegistrations;
-}
-
-<h2>Registratie-overzicht voor panel @panelId</h2>
-
-<div class="row mb-4">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5>Lotingsstatus</h5>
-            </div>
-            <div class="card-body">
-                <p>
-                    Status:
-                    <span class="badge @(drawStatus == DrawStatus.FirstPhaseActive ? "bg-primary" : drawStatus == DrawStatus.Complete ? "bg-success" : "bg-secondary")">
-                        @(drawStatus == DrawStatus.FirstPhaseActive ? "Eerste fase actief" : "Loting afgerond")
-                    </span>
-                </p>
-                @if (drawStatus == DrawStatus.Complete)
-                {
-                <a asp-action="DrawResults" asp-route-panelId="@panelId" class="btn btn-info">
-                    Bekijk lotingsresultaten
-                </a>
-                }
-
-                @if (drawStatus == DrawStatus.FirstPhaseActive)
-                {
-                    <form asp-action="EditMail" asp-route-panelId="@panelId" method="post" id="StartFinalPhaseForm">
-                        <button type="button" class="btn btn-primary" id="startSecondPhaseBtn">
-                            Start finale loting
-                        </button>
-                    </form>
-                }
-            </div>
-        </div>
-    </div>
-</div>
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
-}
+﻿@model ResultViewModel
 
 <h3>Overzicht aanmeldingen per doelgroep</h3>
-
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>Geslacht</th>
-        <th>Leeftijdsgroep</th>
-        <th>Aantal Registraties</th>
-        <th>Status</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var bucket in Model)
+<div class="row">
+    @foreach(var bucket in Model.Buckets)
     {
-        @* <tr> *@
-        @*     <td>@bucket.Gender</td> *@
-        @*     <td>@bucket.AgeGroup</td> *@
-        @*     <td>@bucket.Count/@bucket.Target</td> *@
-        @*     <td> *@
-        @*         @if (bucket.Count >= bucket.Target) *@
-        @*         { *@
-        @*             <span class="badge bg-success">Voldoende</span> *@
-        @*         } *@
-        @*         else *@
-        @*         { *@
-        @*             <span class="badge bg-warning text-dark">Onvoldoende</span> *@
-        @*         } *@
-        @*     </td> *@
-        @* </tr> *@
-    }
-    </tbody>
-</table>
-
-<!-- Confirmation Modal -->
-<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmationModalLabel">Bevestiging</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="confirmationModalBody">
-                <p>Weet u zeker dat u de finale lotingsfase wilt starten?</p>
-                <div id="insufficientWarning" style="display: none;" class="alert alert-warning">
-                    <strong>Let op:</strong> Er zijn nog onvoldoende aanmeldingen bij sommige criteria. Het is aan te raden om meer deelnemers te werven voordat u doorgaat.
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                <button type="button" class="btn btn-primary" id="confirmStartFinalPhase">Bevestigen</button>
-            </div>
+    <div class="card col-md-4 mb-3">
+        <div class="card-body">
+            <h5 class="card-title">
+                @(
+                string.Join(" × ",
+                bucket.SubCriteriaNames
+                .Select((sub,i) => $"{sub} ({bucket.CriteriaNames[i]})")
+                )
+                )
+            </h5>
+            <p>
+                Registraties: <strong>@bucket.RegisteredCount</strong> /
+                Benodigd:  <strong>@bucket.Count</strong>
+                @if(bucket.IsSufficient)
+                {
+                <span class="badge bg-success ms-2">Voldoende</span>
+                }
+                else
+                {
+                <span class="badge bg-warning text-dark ms-2">Onvoldoende</span>
+                }
+            </p>
         </div>
     </div>
+    }
 </div>
 
-<div id="hasSufficientRegistrations" type="hidden" data-value="@hasSufficientRegistrations"></div>
 
-@section Scripts {
-    <script defer src="@Url.Content("~/dist/js/registration/index.js")"></script>
-}
+
+
+@* @model IEnumerable<RecruitmentBucket> *@
+@* @using CitizenPanel.BL.Domain.Draw; *@
+@* @{ *@
+@*     ViewData["Title"] = "Registratie-overzicht"; *@
+@*     var panelId = ViewBag.PanelId ?? 1; *@
+@*     var drawStatus = (DrawStatus)ViewBag.DrawStatus; *@
+@*     var hasSufficientRegistrations = ViewBag.HasSufficientRegistrations; *@
+@* } *@
+@* *@
+@* <h2>Registratie-overzicht voor panel @panelId</h2> *@
+@* *@
+@* <div class="row mb-4"> *@
+@*     <div class="col-md-6"> *@
+@*         <div class="card"> *@
+@*             <div class="card-header"> *@
+@*                 <h5>Lotingsstatus</h5> *@
+@*             </div> *@
+@*             <div class="card-body"> *@
+@*                 <p> *@
+@*                     Status: *@
+@*                     <span class="badge @(drawStatus == DrawStatus.FirstPhaseActive ? "bg-primary" : drawStatus == DrawStatus.Complete ? "bg-success" : "bg-secondary")"> *@
+@*                         @(drawStatus == DrawStatus.FirstPhaseActive ? "Eerste fase actief" : "Loting afgerond") *@
+@*                     </span> *@
+@*                 </p> *@
+@*                 @if (drawStatus == DrawStatus.Complete) *@
+@*                 { *@
+@*                 <a asp-action="DrawResults" asp-route-panelId="@panelId" class="btn btn-info"> *@
+@*                     Bekijk lotingsresultaten *@
+@*                 </a> *@
+@*                 } *@
+@* *@
+@*                 @if (drawStatus == DrawStatus.FirstPhaseActive) *@
+@*                 { *@
+@*                     <form asp-action="EditMail" asp-route-panelId="@panelId" method="post" id="StartFinalPhaseForm"> *@
+@*                         <button type="button" class="btn btn-primary" id="startSecondPhaseBtn"> *@
+@*                             Start finale loting *@
+@*                         </button> *@
+@*                     </form> *@
+@*                 } *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+@* *@
+@* @if (TempData["SuccessMessage"] != null) *@
+@* { *@
+@*     <div class="alert alert-success"> *@
+@*         @TempData["SuccessMessage"] *@
+@*     </div> *@
+@* } *@
+@* *@
+@* @if (TempData["ErrorMessage"] != null) *@
+@* { *@
+@*     <div class="alert alert-danger"> *@
+@*         @TempData["ErrorMessage"] *@
+@*     </div> *@
+@* } *@
+@* *@
+@* <h3>Overzicht aanmeldingen per doelgroep</h3> *@
+@* *@
+@* <table class="table table-striped"> *@
+@*     <thead> *@
+@*     <tr> *@
+@*         <th>Geslacht</th> *@
+@*         <th>Leeftijdsgroep</th> *@
+@*         <th>Aantal Registraties</th> *@
+@*         <th>Status</th> *@
+@*     </tr> *@
+@*     </thead> *@
+@*     <tbody> *@
+@*     @foreach (var bucket in Model) *@
+@*     { *@
+@*         $1$ <tr> #1# *@
+@*         $1$     <td>@bucket.Gender</td> #1# *@
+@*         $1$     <td>@bucket.AgeGroup</td> #1# *@
+@*         $1$     <td>@bucket.Count/@bucket.Target</td> #1# *@
+@*         $1$     <td> #1# *@
+@*         $1$         @if (bucket.Count >= bucket.Target) #1# *@
+@*         $1$         { #1# *@
+@*         $1$             <span class="badge bg-success">Voldoende</span> #1# *@
+@*         $1$         } #1# *@
+@*         $1$         else #1# *@
+@*         $1$         { #1# *@
+@*         $1$             <span class="badge bg-warning text-dark">Onvoldoende</span> #1# *@
+@*         $1$         } #1# *@
+@*         $1$     </td> #1# *@
+@*         $1$ </tr> #1# *@
+@*     } *@
+@*     </tbody> *@
+@* </table> *@
+@* *@
+@* <!-- Confirmation Modal --> *@
+@* <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true"> *@
+@*     <div class="modal-dialog"> *@
+@*         <div class="modal-content"> *@
+@*             <div class="modal-header"> *@
+@*                 <h5 class="modal-title" id="confirmationModalLabel">Bevestiging</h5> *@
+@*                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+@*             </div> *@
+@*             <div class="modal-body" id="confirmationModalBody"> *@
+@*                 <p>Weet u zeker dat u de finale lotingsfase wilt starten?</p> *@
+@*                 <div id="insufficientWarning" style="display: none;" class="alert alert-warning"> *@
+@*                     <strong>Let op:</strong> Er zijn nog onvoldoende aanmeldingen bij sommige criteria. Het is aan te raden om meer deelnemers te werven voordat u doorgaat. *@
+@*                 </div> *@
+@*             </div> *@
+@*             <div class="modal-footer"> *@
+@*                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button> *@
+@*                 <button type="button" class="btn btn-primary" id="confirmStartFinalPhase">Bevestigen</button> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+@* *@
+@* <div id="hasSufficientRegistrations" type="hidden" data-value="@hasSufficientRegistrations"></div> *@
+@* *@
+@* @section Scripts { *@
+@*     <script defer src="@Url.Content("~/dist/js/registration/index.js")"></script> *@
+@* } *@

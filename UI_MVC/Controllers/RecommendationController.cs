@@ -10,7 +10,7 @@ namespace CitizenPanel.UI.MVC.Controllers;
 public class RecommendationController(IPanelManager panelManager) : Controller
 {
     [HttpGet]
-    public IActionResult Index(int panelId = 1)
+    public IActionResult Index(int panelId)
     {
         var panel = panelManager.GetPanelByIdWithRecommendations(panelId);
         var recommendations = panel.Recommendations;

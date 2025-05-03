@@ -146,7 +146,7 @@ public class PanelController : Controller
         }
         
         var organization = await _userManager.GetUserWithProfilesAndPanelsAsync(User);
-        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria, organization.OrganizationProfile);
+        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria, organization.OrganizationProfile,model.Result.TotalAvailablePotentialPanelmembers);
         organization.OrganizationProfile.Panels.Add(newPanel);
         await _userManager.UpdateAsync(organization);
         

@@ -1,35 +1,26 @@
-using CitizenPanel.BL;
+﻿using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
 using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
 public class RecruitmentController : Controller
 {
     private readonly IDrawManager _drawManager;
+    private readonly IPanelManager _panelManager;
     // private readonly IMemberManager _memberManager;
 
-    public RecruitmentController(IDrawManager drawManager)
+    public RecruitmentController(IDrawManager drawManager, IPanelManager panelManager)
     {
         _drawManager = drawManager;
+        _panelManager = panelManager;
         // _memberManager = memberManager;
     }
 
     [HttpGet]
     public IActionResult Index(int panelId)
     {
-        if (TempData["CriteriaFormData"] is string json)
-        {
-            var tModel = JsonConvert.DeserializeObject<RecruitmentCriteriaViewModel>(json);
-            return View(tModel);
-        }
-        
         var criteriaList = _drawManager.GetInitialCriteria();
 
         var model = new RecruitmentCriteriaViewModel
@@ -100,11 +91,11 @@ public class RecruitmentController : Controller
 
             criteria.Add(cr);
         }
-
         var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, criteria);
 
         var resultModel = new ResultViewModel()
         {
+            TotalAvailablePotentialPanelmembers = model.TotalAvailablePotentialPanelmembers,
             ReservePotPanelmembers = result.ReservePotPanelmembers,
             TotalNeededPanelmembers = result.TotalNeededPanelmembers,
             Criteria = model.Criteria
@@ -119,47 +110,6 @@ public class RecruitmentController : Controller
                 SubCriteriaNames = bucket.SubCriteriaNames
             });
         }
-        
         return View("Result", resultModel);
-    }
-    
-    [Authorize(Roles = "Organization")]
-    [HttpPost]
-    public IActionResult Save(RecruitmentCriteriaViewModel model)
-    {
-        
-        ModelState.Clear(); //voor validatiefouten te omzeilen, je mag opslaan!
-
-        var domainCriteria = new List<Criteria>();
-
-        for (int i = 0; i < model.Criteria.Count; i++)
-        {
-            var cvm = model.Criteria[i];
-            var criteria = new Criteria
-            {
-                Id = cvm.Id,
-                Name = cvm.Name,
-                SubCriteria = new List<SubCriteria>()
-            };
-
-            for (int j = 0; j < cvm.SubCriteria.Count; j++)
-            {
-                var svm = cvm.SubCriteria[j];
-                var subCriteria = new SubCriteria
-                {
-                    Id = svm.Id,
-                    Name = svm.Name,
-                    Percentage = svm.Percentage
-                };
-
-                criteria.SubCriteria.Add(subCriteria);
-            }
-
-            domainCriteria.Add(criteria);
-        }
-
-        _drawManager.EditCriteria(model.PanelId, domainCriteria);
-
-        return RedirectToAction(nameof(Index), new { panelId = model.PanelId });
     }
 }

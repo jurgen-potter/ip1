@@ -20,7 +20,7 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadPanelById(panelId);
     }
 
-    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization)
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization, int totAvPotMem)
     {
         Panel newPanel = new Panel()
         {
@@ -28,7 +28,8 @@ public class PanelManager : IPanelManager
             Description = description,
             MemberCount = 0,
             Criteria = criteria,
-            Organization = organization
+            Organization = organization,
+            TotalAvailablePotentialPanelmembers = totAvPotMem
         };
         _panelRepository.CreatePanel(newPanel);
         return newPanel;
@@ -124,4 +125,17 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadExtraCriteriaByPanelId(panelId);
     }
+
+    public IEnumerable<Criteria> GetCriteriaAndSubcriteriaWithPanelId(int panelId)
+    {
+        return _panelRepository.ReadExtraCriteriaByPanelId(panelId);
+    }
+
+    public void ChangeTotalAvailablePotentialPanelmembers(int totAvPotMem, int panelId)
+    {
+        var panel = GetPanelById(panelId);
+        panel.TotalAvailablePotentialPanelmembers = totAvPotMem;
+        _panelRepository.UpdatePanel(panel);
+    }
+
 }

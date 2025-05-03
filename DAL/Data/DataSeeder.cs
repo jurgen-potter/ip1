@@ -32,73 +32,18 @@ public class DataSeeder
     private void SeedPanels()
     {
         //criteria
-        var subCrit1 = new SubCriteria()
-        {
-            Name = "Man",
-            Percentage = 40,
-            TenantId = "antwerpen"
-        };
-        var subCrit2 = new SubCriteria()
-        {
-            Name = "Vrouw",
-            Percentage = 60,
-            TenantId = "antwerpen"
-        };
-        var subCrit3 = new SubCriteria()
-        {
-            Name = "18-25",
-            Percentage = 20,
-            TenantId = "antwerpen"
-        };
-        var subCrit4 = new SubCriteria()
-        {
-            Name = "26-35",
-            Percentage = 50,
-            TenantId = "antwerpen"
-        };
-        var subCrit5 = new SubCriteria()
-        {
-            Name = "36-50",
-            Percentage = 10,
-            TenantId = "antwerpen"
-        };
-        var subCrit6 = new SubCriteria()
-        {
-            Name = "51-60",
-            Percentage = 10,
-            TenantId = "antwerpen"
-        };
-        var subCrit7 = new SubCriteria()
-        {
-            Name = "60+",
-            Percentage = 10,
-            TenantId = "antwerpen"
-        };
-        var subCrit8 = new SubCriteria()
-        {
-            Name = "Fiets",
-            Percentage = 10,
-            TenantId = "antwerpen"
-        };
-        var subCrit9 = new SubCriteria()
-        {
-            Name = "Auto",
-            Percentage = 90,
-            TenantId = "antwerpen"
-        };
-        var subCrit10 = new SubCriteria()
-        {
-            Name = "Hoog opgeleid",
-            Percentage = 10,
-            TenantId = "antwerpen"
-        };
-        var subCrit11 = new SubCriteria()
-        {
-            Name = "Laag opgeleid",
-            Percentage = 90,
-            TenantId = "antwerpen"
-        };
-
+        var subCrit1 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
+        var subCrit2 = new SubCriteria() { Name = "Vrouw", Percentage = 60, TenantId = "antwerpen" };
+        var subCrit3 = new SubCriteria() { Name = "18-25", Percentage = 20, TenantId = "antwerpen" };
+        var subCrit4 = new SubCriteria() { Name = "26-35", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit5 = new SubCriteria() { Name = "36-50", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit6 = new SubCriteria() { Name = "51-60", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit7 = new SubCriteria() { Name = "60+", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit8 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
+        var subCrit9 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
+        var subCrit10 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit11 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        
         _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4, subCrit5, subCrit6, subCrit7, subCrit8, subCrit9, subCrit10, subCrit11);
 
         var crit1 = new Criteria()
@@ -154,6 +99,7 @@ public class DataSeeder
                 }
             },
             TenantId = "antwerpen",
+            TotalAvailablePotentialPanelmembers = 1000,
             Meetings = new List<Meeting>()
             {
                 new Meeting()
@@ -265,7 +211,11 @@ public class DataSeeder
                     Age = 22,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             // Panel 1 members
@@ -279,7 +229,11 @@ public class DataSeeder
                     Age = 35,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -292,7 +246,11 @@ public class DataSeeder
                     Age = 50,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -305,7 +263,11 @@ public class DataSeeder
                     Age = 28,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -318,7 +280,11 @@ public class DataSeeder
                     Age = 45,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
 
@@ -333,7 +299,11 @@ public class DataSeeder
                     Age = 33,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -346,7 +316,11 @@ public class DataSeeder
                     Age = 67,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel2},
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -359,7 +333,11 @@ public class DataSeeder
                     Age = 72,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel2 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -372,7 +350,11 @@ public class DataSeeder
                     Age = 19,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel2 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -385,7 +367,11 @@ public class DataSeeder
                     Age = 21,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel2 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
 
@@ -400,7 +386,11 @@ public class DataSeeder
                     Age = 22,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -413,7 +403,11 @@ public class DataSeeder
                     Age = 19,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -426,7 +420,11 @@ public class DataSeeder
                     Age = 24,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -439,7 +437,11 @@ public class DataSeeder
                     Age = 21,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -452,7 +454,11 @@ public class DataSeeder
                     Age = 25,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -465,7 +471,11 @@ public class DataSeeder
                     Age = 18,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
 
@@ -480,7 +490,11 @@ public class DataSeeder
                     Age = 35,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -493,7 +507,11 @@ public class DataSeeder
                     Age = 28,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -506,7 +524,11 @@ public class DataSeeder
                     Age = 37,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -519,7 +541,11 @@ public class DataSeeder
                     Age = 30,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -532,7 +558,11 @@ public class DataSeeder
                     Age = 33,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -545,7 +575,11 @@ public class DataSeeder
                     Age = 39,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
 
@@ -560,7 +594,11 @@ public class DataSeeder
                     Age = 45,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -573,7 +611,11 @@ public class DataSeeder
                     Age = 58,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -586,7 +628,11 @@ public class DataSeeder
                     Age = 52,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -599,7 +645,11 @@ public class DataSeeder
                     Age = 49,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -612,7 +662,11 @@ public class DataSeeder
                     Age = 44,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -625,7 +679,11 @@ public class DataSeeder
                     Age = 55,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
 
@@ -640,7 +698,11 @@ public class DataSeeder
                     Age = 68,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -653,7 +715,11 @@ public class DataSeeder
                     Age = 71,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -666,7 +732,11 @@ public class DataSeeder
                     Age = 65,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -679,7 +749,11 @@ public class DataSeeder
                     Age = 77,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -692,7 +766,11 @@ public class DataSeeder
                     Age = 69,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -705,7 +783,11 @@ public class DataSeeder
                     Age = 73,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
 
@@ -720,7 +802,11 @@ public class DataSeeder
                     Age = 22,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -733,7 +819,11 @@ public class DataSeeder
                     Age = 19,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -746,7 +836,11 @@ public class DataSeeder
                     Age = 24,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -759,7 +853,11 @@ public class DataSeeder
                     Age = 21,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -772,7 +870,11 @@ public class DataSeeder
                     Age = 25,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -785,7 +887,11 @@ public class DataSeeder
                     Age = 18,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit11
+                    }
                 }
             },
 
@@ -800,7 +906,11 @@ public class DataSeeder
                     Age = 35,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -813,7 +923,11 @@ public class DataSeeder
                     Age = 28,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -826,7 +940,11 @@ public class DataSeeder
                     Age = 37,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -839,7 +957,11 @@ public class DataSeeder
                     Age = 30,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit11
+                    }
                 }
             },
             new ApplicationUser
@@ -852,7 +974,11 @@ public class DataSeeder
                     Age = 33,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -865,7 +991,11 @@ public class DataSeeder
                     Age = 39,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
 
@@ -880,7 +1010,11 @@ public class DataSeeder
                     Age = 45,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -893,7 +1027,11 @@ public class DataSeeder
                     Age = 58,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -906,7 +1044,11 @@ public class DataSeeder
                     Age = 52,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -919,7 +1061,11 @@ public class DataSeeder
                     Age = 49,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -932,7 +1078,11 @@ public class DataSeeder
                     Age = 44,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -945,7 +1095,11 @@ public class DataSeeder
                     Age = 55,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
 
@@ -960,7 +1114,11 @@ public class DataSeeder
                     Age = 68,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -973,7 +1131,11 @@ public class DataSeeder
                     Age = 71,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -986,7 +1148,11 @@ public class DataSeeder
                     Age = 65,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -999,7 +1165,11 @@ public class DataSeeder
                     Age = 77,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -1012,7 +1182,11 @@ public class DataSeeder
                     Age = 69,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             },
             new ApplicationUser
@@ -1025,7 +1199,11 @@ public class DataSeeder
                     Age = 73,
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen"
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
                 }
             }
         };

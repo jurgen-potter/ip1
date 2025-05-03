@@ -7,11 +7,13 @@ namespace CitizenPanel.BL.Registration;
 
 public interface IRegistrationManager
 {
-    IEnumerable<RecruitmentBucket> GetInvitationBuckets(Panel panel);
-    IEnumerable<RecruitmentBucket> GetAllBuckets(Panel panel);
-    
-    // New methods for draw phase management
-    DrawStatus GetDrawStatus(Panel panel);
-    void StartFinalDraw(Panel panel);
-    bool HasSufficientRegistrations(Panel panel);
+    int GetBucketRegistrationsCount(int panelId, IEnumerable<string> criteriaNames, IEnumerable<string> subCriteriaNames);
+
+    // IEnumerable<RecruitmentBucket> GetInvitationBuckets(Panel panel);
+    // IEnumerable<RecruitmentBucket> GetAllBuckets(Panel panel);
+    //
+    // // New methods for draw phase management
+    // DrawStatus GetDrawStatus(Panel panel);
+    // void StartFinalDraw(Panel panel);
+    // bool HasSufficientRegistrations(Panel panel);
 }

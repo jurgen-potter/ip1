@@ -35,6 +35,8 @@ public class PanelRepository : IPanelRepository
             .Include(r => r.Meetings)
             .SingleOrDefault(p => p.Id == panelId);
     }
+    
+    
 
 
     public void CreatePanel(Panel panel)
@@ -154,5 +156,22 @@ public class PanelRepository : IPanelRepository
         return panel.Criteria
             .Where(c => c.Name != "Geslacht" && c.Name != "Leeftijd")
             .ToList();
+    }
+    
+    public IEnumerable<Criteria> ReadCriteriaAndSubcriteriaWithPanelId(int panelId)
+    {
+        var panel = _dbContext.Panels
+            .Include(p => p.Criteria)
+            .ThenInclude(c => c.SubCriteria)
+            .FirstOrDefault(p => p.Id == panelId);
+        
+        return panel?.Criteria
+            .ToList();
+    }
+
+    public void UpdateTotalAvailablePotentialPanelmembers(Panel panel)
+    {
+        _dbContext.Update(panel);
+        _dbContext.SaveChanges();
     }
 }
