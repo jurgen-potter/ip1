@@ -128,4 +128,9 @@ public class PanelManager : IPanelManager
     {
         _panelRepository.UpdateCriteria(criteria);
     }
+
+    public void ChangeRecommendation(Recommendation recommendation)
+    {
+        _panelRepository.UpdateRecommendation(recommendation);
+    }
 }

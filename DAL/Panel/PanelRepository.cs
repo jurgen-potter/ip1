@@ -36,8 +36,6 @@ public class PanelRepository : IPanelRepository
     public Panel ReadPanelByIdWithRecommendations(int panelId)
     {
         return _dbContext.Panels
-            .Include(r => r.Recommendations)
-            .ThenInclude(r => r.UserVotes)
             .Include(r => r.Meetings)
             .ThenInclude(m => m.Recommendations)
             .ThenInclude(r => r.UserVotes)
@@ -72,7 +70,7 @@ public class PanelRepository : IPanelRepository
 
     public void CreateRecommendationOfPanel(Recommendation recommendation, Panel panel)
     {
-        panel.Recommendations.Add(recommendation);
+        //panel.Recommendations.Add(recommendation);
         UpdatePanel(panel);
     }
 

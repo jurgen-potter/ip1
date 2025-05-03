@@ -13,9 +13,8 @@ public class RecommendationController(IPanelManager panelManager) : Controller
     public IActionResult Index(int panelId = 1)
     {
         var panel = panelManager.GetPanelByIdWithRecommendations(panelId);
-        var recommendations = panel.Recommendations;
         var meetings = panel.Meetings;
-        return View(panel);
+        return View(meetings);
     }
 
     [HttpGet]
@@ -27,23 +26,18 @@ public class RecommendationController(IPanelManager panelManager) : Controller
         var votes = recommendation?.UserVotes ?? Enumerable.Empty<UserVote>();
         return PartialView("_VotersList", votes);
     }
-    
-    public IActionResult AddRecommendation()
-    {
-        return View();
-    }
 
-    
-    [Authorize(Roles = "Organization")]
     [HttpPost]
-    public IActionResult AddRecommendation(AddRecommendationViewModel viewModel)
+    [Authorize(Roles = "Organization")]
+    public IActionResult StopVoting(int id)
     {
-        var panel = panelManager.GetPanelById(1); //gehardcode omdat panels nog niet echt gelinked zijn aan gebruikers.
-        if (ModelState.IsValid)
-        {
-            panelManager.AddRecommendationOfPanel(viewModel.Title, viewModel.Description, panel);
-            return RedirectToAction(nameof(Index));
-        }
-        return View();
+        var recommendation = panelManager.GetRecommendationById(id);
+        if (recommendation == null)
+            return NotFound();
+
+        recommendation.IsVotable = false;
+        panelManager.ChangeRecommendation(recommendation);
+        
+        return Ok();
     }
 }

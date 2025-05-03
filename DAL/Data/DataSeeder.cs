@@ -110,42 +110,9 @@ public class DataSeeder
                 // new RecruitmentBucket { Gender = "Vrouwen", AgeGroup = "60+", Count = 0, Target = 5 }
             },
             DrawStatus = DrawStatus.FirstPhaseActive,
-            Recommendations = new List<Recommendation>()
-            {
-                new Recommendation()
-                {
-                    Title = "Meer fietspaden",
-                    Description = "Gemeente Antwerpen moet meer fietspaden aanleggen",
-                    Votes = 0,
-                    TenantId = "antwerpen"
-                },
-                new Recommendation()
-                {
-                    Title = "Autovrije binnenstad",
-                    Description = "Gemeente Antwerpen moet auto's uit de binnenstad verbieden",
-                    Votes = 0,
-                    TenantId = "antwerpen"
-                }
-            },
             TenantId = "antwerpen",
             Meetings = new List<Meeting>()
             {
-                new Meeting()
-                {
-                    Title = "Tweede bijeenkomst",
-                    Date = new DateOnly(2025, 5, 1),
-                    Recommendations = new List<Recommendation>()
-                    {
-                        new Recommendation()
-                        {
-                            Title = "Betere wegen",
-                            Description = "We willen betere wegen aanleggen in de gemeente antwerpen",
-                            Votes = 0,
-                            TenantId = "antwerpen"
-                        }
-                    },
-                    TenantId = "antwerpen"
-                },
                 new Meeting()
                 {
                     Title = "Eerste bijeenkomst",
@@ -157,7 +124,33 @@ public class DataSeeder
                             Title = "Meer bomen",
                             Description = "We willen graag meer bomen planten in de stad",
                             Votes = 0,
-                            TenantId = "antwerpen"
+                            TenantId = "antwerpen",
+                            IsVotable = true
+                        },
+                        new Recommendation()
+                        {
+                            Title = "Minder afval",
+                            Description = "Minder afval op de straat door meer vuilnisbakken te plaatsen",
+                            Votes = 0,
+                            TenantId = "antwerpen",
+                            IsVotable = true
+                        }
+                    },
+                    TenantId = "antwerpen"
+                },
+                new Meeting()
+                {
+                    Title = "Tweede bijeenkomst",
+                    Date = new DateOnly(2025, 5, 1),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Betere wegen",
+                            Description = "We willen betere wegen aanleggen in de gemeente antwerpen",
+                            Votes = 0,
+                            TenantId = "antwerpen",
+                            IsVotable = true
                         }
                     },
                     TenantId = "antwerpen"
@@ -166,16 +159,7 @@ public class DataSeeder
                 {
                     Title = "Derde bijeenkomst",
                     Date = new DateOnly(2025, 6, 12),
-                    Recommendations = new List<Recommendation>()
-                    {
-                        new Recommendation()
-                        {
-                            Title = "Minder afval",
-                            Description = "Minder afval op de straat door meer vuilnisbakken te plaatsen",
-                            Votes = 0,
-                            TenantId = "antwerpen"
-                        },
-                    },
+                    Recommendations = new List<Recommendation>(),
                     TenantId = "antwerpen"
                 }
             }
@@ -1073,11 +1057,11 @@ public class DataSeeder
             }
         };
 
-        var rec1 = panel1.Recommendations.FirstOrDefault();
+        var rec1 = panel1.Meetings.FirstOrDefault().Recommendations.FirstOrDefault();
         rec1.UserVotes = userVotesRec1;
         rec1.Votes = userVotesRec1.Count();
         
-        var rec2 = panel1.Recommendations.LastOrDefault();
+        var rec2 = panel1.Meetings.FirstOrDefault().Recommendations.LastOrDefault();
         rec2.UserVotes = userVotesRec2;
         rec2.Votes = userVotesRec2.Count();
         
