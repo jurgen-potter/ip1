@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL;
+using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
 using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
@@ -23,14 +24,13 @@ public class RecruitmentController : Controller
     [HttpGet]
     public IActionResult Index(int panelId)
     {
-        if (panelId == 0)
+        if (TempData["CriteriaFormData"] is string json)
         {
+            var tModel = JsonConvert.DeserializeObject<RecruitmentCriteriaViewModel>(json);
+            return View(tModel);
         }
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        // var pleaseexist =_memberManager.GetPanelIdByMemberId(userId);
         
-        var criteriaList = _drawManager.GetCriteriaByPanel(panelId);
+        var criteriaList = _drawManager.GetInitialCriteria();
 
         var model = new RecruitmentCriteriaViewModel
         {
@@ -103,8 +103,24 @@ public class RecruitmentController : Controller
 
         var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, criteria);
 
+        var resultModel = new ResultViewModel()
+        {
+            ReservePotPanelmembers = result.ReservePotPanelmembers,
+            TotalNeededPanelmembers = result.TotalNeededPanelmembers,
+            Criteria = model.Criteria
+        };
+
+        foreach (var bucket in result.Buckets)
+        {
+            resultModel.Buckets.Add(new BucketViewModel()
+            {
+                Count = bucket.Count,
+                CriteriaNames = bucket.CriteriaNames,
+                SubCriteriaNames = bucket.SubCriteriaNames
+            });
+        }
         
-        return View("Result", result);
+        return View("Result", resultModel);
     }
     
     [Authorize(Roles = "Organization")]

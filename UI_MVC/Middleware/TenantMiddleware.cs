@@ -1,6 +1,9 @@
-﻿using CitizenPanel.BL.Domain.Tenancy;
+﻿using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Tenancy;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace CitizenPanel.UI.MVC.Middleware;
@@ -9,11 +12,14 @@ public class TenantMiddleware : IMiddleware
 {
     private readonly TenantContext _tenantContext;
     private readonly ApplicationUserManager _userManager;
+    private readonly IDrawManager _drawManager;
+    private const string InvitationSessionKey = "CurrentInvitationContext";
 
-    public TenantMiddleware(TenantContext tenantContext, ApplicationUserManager userManager)
+    public TenantMiddleware(TenantContext tenantContext, ApplicationUserManager userManager, IDrawManager drawManager)
     {
         _tenantContext = tenantContext;
         _userManager = userManager;
+        _drawManager = drawManager;
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -24,25 +30,55 @@ public class TenantMiddleware : IMiddleware
             if (!string.IsNullOrEmpty(userId))
             {
                 var user = await _userManager.GetUserWithProfilesByIdAsync(userId);
-                
-                string tenantId = null;
-                
-                if (user?.UserType == UserType.Member && user.MemberProfile != null)
-                {
-                    tenantId = user.MemberProfile.TenantId;
-                }
-                else if (user?.UserType == UserType.Organization && user.OrganizationProfile != null)
-                {
-                    tenantId = user.OrganizationProfile.TenantId;
-                }
+                string tenantId = ResolveTenantFromUser(user);
                 
                 if (!string.IsNullOrEmpty(tenantId))
                 {
                     _tenantContext.Tenant = new Tenant { Id = tenantId };
+                    await next(context);
+                    return;
                 }
             }
         }
+        string tenantIdFromInvitation = ResolveTenantFromQuery(context);
+        
+        if (!string.IsNullOrEmpty(tenantIdFromInvitation))
+        {
+            _tenantContext.Tenant = new Tenant { Id = tenantIdFromInvitation };
+        }
         
         await next(context);
+    }
+    
+    private string ResolveTenantFromUser(ApplicationUser user)
+    {
+        if (user == null) return null;
+        
+        if (user.UserType == UserType.Member && user.MemberProfile != null)
+        {
+            return user.MemberProfile.TenantId;
+        }
+        else if (user.UserType == UserType.Organization && user.OrganizationProfile != null)
+        {
+            return user.OrganizationProfile.TenantId;
+        }
+        
+        return null;
+    }
+    
+    private string ResolveTenantFromQuery(HttpContext context)
+    {
+        // Get tenant by getting the invitation from query
+        string invitationCode = context.Request.Query["code"].ToString();
+        if (!string.IsNullOrEmpty(invitationCode))
+        {
+            var invitation = _drawManager.GetInvitationWithCode(invitationCode);
+            if (invitation != null && !string.IsNullOrEmpty(invitation.TenantId))
+            {
+                return invitation.TenantId;
+            }
+        }
+        
+        return null;
     }
 }

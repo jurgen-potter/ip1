@@ -1,8 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Collections;
-using System.Linq;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 
-namespace CitizenPanel.BL.Domain.QuestionnaireModule;
+namespace CitizenPanel.BL.Domain.Validation;
 
 public class MinCountAttribute : ValidationAttribute
 {

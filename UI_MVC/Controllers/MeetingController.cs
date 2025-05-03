@@ -22,11 +22,12 @@ namespace CitizenPanel.UI.MVC.Controllers
         public IActionResult Details(int id, int panelId)
         {
             var meeting = _meetingManager.GetMeetingByIdWithRecommendations(id);
-
+            
             var panel = _panelManager.GetPanelById(panelId);
 
             var model = new MeetingDetailViewModel
             {
+                MeetingId = meeting.Id,
                 PanelId = panelId,
                 PanelName = panel.Name,
                 MeetingDate = meeting.Date,
@@ -48,6 +49,43 @@ namespace CitizenPanel.UI.MVC.Controllers
 
             return View(model);
         }
+        
+        
+        [Authorize(Roles = "Organization")]
+        [HttpGet]
+        public IActionResult AddRecommendation(int meetingId, int panelId)
+        {
+            var model = new AddRecommendationViewModel
+            {
+                MeetingId = meetingId,
+                PanelId = panelId
+            };
+    
+            return View(model);
+        }
+
+        [Authorize(Roles = "Organization")]
+        [HttpPost]
+        public IActionResult AddRecommendation(AddRecommendationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var meeting = _meetingManager.GetMeetingByIdWithRecommendations(model.MeetingId);
+    
+            var recommendation = new Recommendation()
+            {
+                Title = model.Title,
+                Description = model.Description
+            };
+    
+            meeting.Recommendations.Add(recommendation);
+            _meetingManager.EditMeeting(meeting);
+
+            return RedirectToAction("Details", new { id = model.MeetingId, panelId = model.PanelId });
+        }
+        
 
         [HttpPost]
         [Authorize(Roles = "Organization")]

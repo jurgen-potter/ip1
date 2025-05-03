@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.QuestionnaireModule;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +25,11 @@ public class QuestionnaireModuleRepository : IQuestionnaireModuleRepository
     {
         _dbContext.Questionnaires.Update(questionnaire);
         return _dbContext.SaveChanges() > 0;
+    }
+
+    public IEnumerable<Questionnaire> ReadAllQuestionnaires()
+    {
+        return _dbContext.Questionnaires;
     }
 
     public Answer ReadAnswer(int answerId)

@@ -1,12 +1,14 @@
-﻿using CitizenPanel.BL.Domain.QuestionnaireModule;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 
 namespace CitizenPanel.BL.QuestionnaireModule;
 
 public interface IQuestionnaireModuleManager
 {
-    public Questionnaire GetQuestionnaire(int questionnaireId);
+    Questionnaire GetQuestionnaire(int questionnaireId);
     
-    public bool EditQuestionnaire(Questionnaire questionnaire);
+    bool EditQuestionnaire(Questionnaire questionnaire);
     
-    public Answer GetAnswer(int answerId);
+    IEnumerable<Questionnaire> GetAllQuestionnaires();
+    
+    Answer GetAnswer(int answerId);
 }

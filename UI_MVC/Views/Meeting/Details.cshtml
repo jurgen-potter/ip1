@@ -25,6 +25,13 @@ CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Aanbevelingen</h5>
+                    @if (User.IsInRole("Organization"))
+                    {
+                    <a asp-action="AddRecommendation" asp-controller="Meeting"
+                       asp-route-meetingId="@Model.MeetingId"
+                       asp-route-panelId="@Model.PanelId"
+                       class="btn btn-success">Aanbeveling Toevoegen</a>
+                    }
                 </div>
                 <div class="card-body">
                     @if (Model.Recommendations.Any())
@@ -47,17 +54,18 @@ CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
                     }
                 </div>
             </div>
+      
 
             <div class="card shadow-sm">
                 <div class="card-header bg-white">
-                    <h5 class="mb-0">Notities</h5>
+                    <h5 class="mb-0">Documenten</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">Er zijn nog geen notities toegevoegd voor deze meeting.</p>
+                    <p class="text-muted">Er zijn nog geen documenten toegevoegd voor deze meeting.</p>
                     @if (User.IsInRole("Organization"))
                     {
                         <a href="#" class="btn btn-outline-primary">
-                            <i class="bi bi-plus-circle me-2"></i>Notities toevoegen
+                            <i class="bi bi-plus-circle me-2"></i>Documenten toevoegen
                         </a>
                     }
                     </div>

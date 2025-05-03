@@ -9,5 +9,5 @@ public class CreatePanelViewModel
     public string Name { get; set; }
     public string Description { get; set; }
     
-    public ResultsViewModel Results { get; set; }
+    public ResultViewModel Result { get; set; }
 }

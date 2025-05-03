@@ -19,9 +19,20 @@ public class MeetingRepository : IMeetingRepository
             .FirstOrDefault(m => m.Id == id);
     }
 
+    public Meeting ReadMeetingById(int id)
+    {
+        return _dbContext.Meetings.FirstOrDefault(m => m.Id == id);
+    }
+
     public void CreateMeeting(Meeting meeting)
     {
         _dbContext.Meetings.Add(meeting);
+        _dbContext.SaveChanges();
+    }
+
+    public void UpdateMeeting(Meeting meeting)
+    {
+        _dbContext.Meetings.Update(meeting);
         _dbContext.SaveChanges();
     }
 

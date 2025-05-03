@@ -19,11 +19,22 @@ public class AdminController : Controller
     [HttpGet]
     public IActionResult Index()
     {
-        return View();
+        var questionnaires = _questionnaireModuleManager.GetAllQuestionnaires();
+        var questionnaireSelect = new QuestionnaireSelectViewModel();
+        foreach (var questionnaire in questionnaires)
+        {
+            var questionnaireModel = new QuestionnaireViewModel()
+            {
+                Id = questionnaire.Id,
+                Title = questionnaire.Title
+            };
+            questionnaireSelect.Questionnaires.Add(questionnaireModel);
+        }
+        return View(questionnaireSelect);
     }
 
     [HttpGet]
-    public IActionResult EditQuestionnaire(int questionnaireId = 1)
+    public IActionResult EditQuestionnaire(int questionnaireId)
     {
         Questionnaire questionnaire = _questionnaireModuleManager.GetQuestionnaire(questionnaireId);
 

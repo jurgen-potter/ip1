@@ -117,8 +117,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
                 user.UserType = UserType.Admin;
-
-                await _userManager.AddToRoleAsync(user, "Admin");
+                
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateWithTenantAsync(user, Input.Password);

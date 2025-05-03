@@ -19,10 +19,6 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadPanelById(panelId);
     }
-    public Panel GetPanelByIdWithoutTenant(int panelId)
-    {
-        return _panelRepository.ReadPanelByIdWithoutTenant(panelId);
-    }
 
     public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization)
     {
@@ -53,11 +49,6 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadTargetBucketsByPanel(panel);
     }
     
-    public void AddRecommendationOfPanel(string title, string description, Panel panel)
-    {
-        var recommendation = new Recommendation(title, description, 0);
-        _panelRepository.CreateRecommendationOfPanel(recommendation, panel);
-    }
 
     public Panel GetPanelByIdWithRecommendations(int panelId)
     {
@@ -127,6 +118,11 @@ public class PanelManager : IPanelManager
     public void EditCriteria(Criteria criteria)
     {
         _panelRepository.UpdateCriteria(criteria);
+    }
+    
+    public IEnumerable<Criteria> GetExtraCriteriaByPanelId(int panelId)
+    {
+        return _panelRepository.ReadExtraCriteriaByPanelId(panelId);
     }
 
     public void ChangeRecommendation(Recommendation recommendation)

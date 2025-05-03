@@ -1,15 +1,19 @@
-@model CitizenPanel.UI.MVC.Models.DTO.MemberDto
+
 
 @{
-    ViewBag.Title = "Registreer als een panelmember";
-    Layout = "_Layout";
+    ViewBag.Title = "Registreer als een panellid";
 }
 
 <h2>Aanmelden voor een panel</h2>
-<form asp-controller="MemberRegister" asp-action="RegisterMember" method="get">
-    <div class="form-group">
-        <label asp-for="Code">Code</label>
-        <input asp-for="Code" class="form-control" placeholder="Code"/>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-controller="MemberRegister" asp-action="RegisterMember" method="get">
+            <div class="form-group mb-3">
+                <label for="code">Vul uw uitnodigingscode in</label>
+                <input name="code" class="form-control" placeholder="Code"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Verder</button>
+        </form>
     </div>
-    <input type="submit" value="Register"/>
-</form>
+</div>

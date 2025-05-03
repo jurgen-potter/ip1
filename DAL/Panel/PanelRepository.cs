@@ -26,12 +26,6 @@ public class PanelRepository : IPanelRepository
             .ThenInclude(m => m.MemberProfile)
             .SingleOrDefault(p => p.Id == panelId);
     }
-    public Panel ReadPanelByIdWithoutTenant(int panelId)
-    {
-        return _dbContext.Panels
-            .IgnoreQueryFilters()
-            .SingleOrDefault(p => p.Id == panelId);
-    }
 
     public Panel ReadPanelByIdWithRecommendations(int panelId)
     {
@@ -67,12 +61,7 @@ public class PanelRepository : IPanelRepository
             .FirstOrDefault(p => p.Id == panel.Id);
         return panelWithBuckets?.RecruitmentBuckets.ToList();
     }
-
-    public void CreateRecommendationOfPanel(Recommendation recommendation, Panel panel)
-    {
-        //panel.Recommendations.Add(recommendation);
-        UpdatePanel(panel);
-    }
+    
 
     public Recommendation ReadRecommendationById(int recommendationId)
     {
@@ -150,5 +139,20 @@ public class PanelRepository : IPanelRepository
     {
         _dbContext.Update(criteria);
         _dbContext.SaveChanges();
+    }
+    
+    public IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId)
+    {
+        var panel = _dbContext.Panels
+            .Include(p => p.Criteria)
+            .ThenInclude(c => c.SubCriteria)
+            .FirstOrDefault(p => p.Id == panelId);
+
+        if (panel == null)
+            return [];
+
+        return panel.Criteria
+            .Where(c => c.Name != "Geslacht" && c.Name != "Leeftijd")
+            .ToList();
     }
 }

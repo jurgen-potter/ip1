@@ -26,7 +26,7 @@ public class RecommendationController(IPanelManager panelManager) : Controller
         var votes = recommendation?.UserVotes ?? Enumerable.Empty<UserVote>();
         return PartialView("_VotersList", votes);
     }
-
+    
     [HttpPost]
     [Authorize(Roles = "Organization")]
     public IActionResult StopVoting(int id)
