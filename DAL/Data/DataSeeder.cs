@@ -1048,7 +1048,7 @@ public class DataSeeder
             Email = "drawn@example.com",
             IsRegistered = true,
             IsDrawn = true,
-            SelectedCriteria = new List<int>([1, 4]),
+            SelectedCriteria = new List<int>([8, 11]),
             TenantId = "antwerpen"
         };
         _panelDbContext.Invitations.Add(invitation1);

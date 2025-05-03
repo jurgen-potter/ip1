@@ -24,6 +24,7 @@ using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
+using CitizenPanel.UI.MVC.Models;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
@@ -126,7 +127,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             [Display(Name = "Gemeente")]
             public string Town { get; set; }
             
-            public List<Criteria> CriteriaList { get; set; }
+            public List<CriteriaViewModel> CriteriaList { get; set; } = new List<CriteriaViewModel>();
             
             public List<int> SelectedCriteria { get; set; }
             
@@ -134,6 +135,8 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         
             public int InvitationId { get; set; }
         }
+        
+        public string Code { get; set; }
 
 
         public async Task OnGetAsync(string code)
@@ -144,13 +147,32 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             Input ??= new InputModel();
             
             List<Criteria> extraCriteria = _panelManager.GetExtraCriteriaByPanelId(invitation.PanelId).ToList();
+            foreach (Criteria criteria in extraCriteria)
+            {
+                var criteriaModel = new CriteriaViewModel()
+                {
+                    Id = criteria.Id,
+                    Name = criteria.Name
+                };
+                foreach (var subCriteria in criteria.SubCriteria)
+                {
+                    var subCriteriaModel = new SubCriteriaViewModel()
+                    {
+                        Id = subCriteria.Id,
+                        Name = subCriteria.Name
+                    };
+                    criteriaModel.SubCriteria.Add(subCriteriaModel);
+                }
+                Input.CriteriaList.Add(criteriaModel);
+            }
+            
             Input.Email = invitation.Email;
             Input.Gender = invitation.Gender;
             Input.Town = invitation.Town;
-            Input.CriteriaList = extraCriteria;
             Input.SelectedCriteria = invitation.SelectedCriteria;
             Input.PanelId = invitation.PanelId;
             Input.InvitationId = invitation.Id;
+            Code = code;
         }
 
         public async Task<IActionResult> OnPostAsync(string code)
@@ -161,7 +183,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             {
                 var user = CreateMember();
                 user.UserType = UserType.Member;
-                var panel = _panelManager.GetPanelByIdWithoutTenant(Input.PanelId);
+                var panel = _panelManager.GetPanelById(Input.PanelId);
                 user.MemberProfile = new MemberProfile()
                 {
                     FirstName = Input.FirstName,

@@ -13,7 +13,8 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <form id="registerForm" asp-route-code="@Model.Code" method="post">
+            <input type="hidden" asp-for="@Model.Code" />
             <h2>Vul uw gegevens in.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
@@ -90,7 +91,6 @@
                 {
                     <input type="hidden" asp-for="Input.CriteriaList[i].SubCriteria[j].Id"/>
                     <input type="hidden" asp-for="Input.CriteriaList[i].SubCriteria[j].Name"/>
-                    <input type="hidden" asp-for="Input.CriteriaList[i].SubCriteria[j].Percentage"/>
                 }
             }
             @for (int i = 0; i < Model?.Input.SelectedCriteria?.Count; i++)

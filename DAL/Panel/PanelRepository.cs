@@ -26,12 +26,6 @@ public class PanelRepository : IPanelRepository
             .ThenInclude(m => m.MemberProfile)
             .SingleOrDefault(p => p.Id == panelId);
     }
-    public Panel ReadPanelByIdWithoutTenant(int panelId)
-    {
-        return _dbContext.Panels
-            .IgnoreQueryFilters()
-            .SingleOrDefault(p => p.Id == panelId);
-    }
 
     public Panel ReadPanelByIdWithRecommendations(int panelId)
     {

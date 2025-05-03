@@ -8,7 +8,8 @@ using CitizenPanel.UI.MVC.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
+using Newtonsoft.Json;
+using JsonSerializer=System.Text.Json.JsonSerializer;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
@@ -54,14 +55,44 @@ public class PanelController : Controller
         return View(model);
     }
 
-    [Authorize(Roles = "Organization, Admin")]
+    //[Authorize(Roles = "Organization, Admin")]
     [HttpPost]
     public IActionResult CreatePanelFromResult(ResultViewModel resultViewModel)
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            TempData["ResultViewModel"] = JsonConvert.SerializeObject(resultViewModel);
+            return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = Url.Action("RestorePanelData", "Panel") });
+        }
+        
+        if (!User.IsInRole("Organization") && !User.IsInRole("Admin"))
+        {
+            return Forbid();
+        }
+        
         CreatePanelViewModel model = new CreatePanelViewModel()
         {
             Result = resultViewModel
         };
+        return View("CreatePanel", model);
+    }
+    
+    [Authorize(Roles = "Organization, Admin")]
+    public IActionResult RestorePanelData()
+    {
+        if (!TempData.ContainsKey("ResultViewModel"))
+        {
+            return RedirectToAction("Index", "Recruitment");
+        }
+
+        var resultModelJson = TempData["ResultViewModel"] as string;
+        var resultViewModel = JsonConvert.DeserializeObject<ResultViewModel>(resultModelJson);
+
+        var model = new CreatePanelViewModel()
+        {
+            Result = resultViewModel
+        };
+
         return View("CreatePanel", model);
     }
     

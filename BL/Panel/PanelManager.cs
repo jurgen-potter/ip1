@@ -19,10 +19,6 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadPanelById(panelId);
     }
-    public Panel GetPanelByIdWithoutTenant(int panelId)
-    {
-        return _panelRepository.ReadPanelByIdWithoutTenant(panelId);
-    }
 
     public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization)
     {

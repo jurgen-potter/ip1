@@ -128,10 +128,10 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     {
                         _logger.LogInformation("User logged in.");
                         
-                        /*if (returnUrl )
+                        if (returnUrl.ToLower().Contains("restorepaneldata"))
                         {
                             return LocalRedirect(returnUrl);
-                        }*/
+                        }
                         return RedirectToAction("UserPanel", "Panel", new { returnUrl = returnUrl });
                     }
                     if (result.RequiresTwoFactor) { return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe }); }
