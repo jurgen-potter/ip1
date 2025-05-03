@@ -152,7 +152,9 @@ public class PanelController : Controller
         Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria, organization.OrganizationProfile);
         organization.OrganizationProfile.Panels.Add(newPanel);
         await _userManager.UpdateAsync(organization);
-        
+        var invitations = _drawManager.AddInvitations(model.Result.TotalNeededPanelmembers, model.Result.ReservePotPanelmembers, criteria, newPanel);
+        newPanel.Invitations = invitations.ToList();
+        _panelManager.ChangePanel(newPanel);
         return RedirectToAction("Index","Panel",new { id = newPanel.Id });
     }
     

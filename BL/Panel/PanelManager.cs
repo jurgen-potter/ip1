@@ -34,7 +34,7 @@ public class PanelManager : IPanelManager
         return newPanel;
     }
 
-    public void EditPanel(Panel panel)
+    public void ChangePanel(Panel panel)
     {
         _panelRepository.UpdatePanel(panel);
     }
