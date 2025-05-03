@@ -38,12 +38,4 @@ public class MeetingManager : IMeetingManager
         _repository.UpdateMeeting(meeting);
     }
 
-
-    public void AddRecommendationToMeeting(int meetingId, Recommendation recommendation)
-    {
-        var meeting = GetMeetingById(meetingId);
-        meeting.Recommendations.Add(recommendation);
-        _repository.UpdateMeeting(meeting);
-    }
-
 }
