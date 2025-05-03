@@ -122,10 +122,10 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
             .HasMany(p => p.Criteria)
             .WithOne(e => e.Panel);
         
-            modelBuilder.Entity<Recommendation>()
-                .HasMany<UserVote>(r => r.UserVotes)
-                .WithOne(uv => uv.Recommendation)
-                .HasForeignKey("RecommendationId");
+        modelBuilder.Entity<Recommendation>()
+            .HasMany<UserVote>(r => r.UserVotes)
+            .WithOne(uv => uv.Recommendation)
+            .HasForeignKey("RecommendationId");
             
         modelBuilder.Entity<UserVote>()
             .HasOne(iu => iu.Voter);

@@ -39,6 +39,8 @@ public class PanelRepository : IPanelRepository
             .Include(r => r.Recommendations)
             .ThenInclude(r => r.UserVotes)
             .Include(r => r.Meetings)
+            .ThenInclude(m => m.Recommendations)
+            .ThenInclude(r => r.UserVotes)
             .SingleOrDefault(p => p.Id == panelId);
     }
 

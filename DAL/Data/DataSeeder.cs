@@ -1002,101 +1002,84 @@ public class DataSeeder
             }
         };
         
-        var panel1Recs = new List<Recommendation>()
+        var userVotesRec1 = new List<UserVote>
         {
-            new Recommendation
+            new UserVote
             {
-                Title = "Meer fietspaden",
-                Description = "Gemeente Antwerpen moet meer fietspaden aanleggen",
-                Votes = 5,
-                TenantId = "antwerpen",
-                UserVotes = new List<UserVote>
-                {
-                    new UserVote()
-                    {
-                        Voter = members[0],
-                        Recommended = false,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-
-                    new UserVote()
-                    {
-                        Voter = members[1],
-                        Recommended = true,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-            
-                    new UserVote()
-                    {
-                        Voter = members[2],
-                        Recommended = true,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-            
-                    new UserVote()
-                    {
-                        Voter = members[3],
-                        Recommended = false,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-
-                    new UserVote()
-                    {
-                        Voter = members[4],
-                        Recommended = false,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    }
-                }
+                Voter = members[0],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
             },
-            new Recommendation
+            new UserVote
             {
-                Title = "Autovrije binnenstad",
-                Description = "Gemeente Antwerpen moet auto's uit de binnenstad verbieden",
-                Votes = 4,
-                TenantId = "antwerpen",
-                UserVotes = new List<UserVote>
-                {
-                    new UserVote()
-                    {
-                        Voter = members[0],
-                        Recommended = false,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-
-                    new UserVote()
-                    {
-                        Voter = members[1],
-                        Recommended = true,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-            
-                    new UserVote()
-                    {
-                        Voter = members[2],
-                        Recommended = false,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-            
-                    new UserVote()
-                    {
-                        Voter = members[3],
-                        Recommended = true,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    }
-                }
+                Voter = members[1],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[2],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[3],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[4],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
             }
         };
+
+        var userVotesRec2 = new List<UserVote>
+        {
+            new UserVote
+            {
+                Voter = members[0],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[1],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[2],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[3],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            }
+        };
+
+        var rec1 = panel1.Recommendations.FirstOrDefault();
+        rec1.UserVotes = userVotesRec1;
+        rec1.Votes = userVotesRec1.Count();
         
-        panel1.Recommendations = panel1Recs;
+        var rec2 = panel1.Recommendations.LastOrDefault();
+        rec2.UserVotes = userVotesRec2;
+        rec2.Votes = userVotesRec2.Count();
         
         _panelDbContext.AddRange(members);
     }

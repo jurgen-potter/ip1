@@ -1,7 +1,6 @@
 ﻿@using System.Security.Claims
-@using CitizenPanel.BL.Domain.Panel
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model IEnumerable<CitizenPanel.BL.Domain.Panel.Recommendation>
+@model CitizenPanel.BL.Domain.Panel.Panel
 
 @{
     ViewData["Title"] = "Recommendations";
@@ -9,10 +8,11 @@
 
 <h1>Aanbevelingen</h1>
 <div id="current-user-id" data-user-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)" style="display: none;"></div>
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"> 
-    @foreach (var recommendation in Model)
+<h2>Algemene aanbevelingen</h2>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var recommendation in Model.Recommendations)
     {
-        <div class="col d-flex"> 
+        <div class="col d-flex">
             <div class="card h-100 w-100">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">@recommendation.Title</h5>
@@ -58,6 +58,60 @@
         </div>
     }
 </div>
+
+@foreach (var meeting in Model.Meetings.OrderBy(m => m.Date))
+{ 
+    <h2>@meeting.Title</h2> 
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var recommendation in meeting.Recommendations)
+    {
+        <div class="col d-flex">
+            <div class="card h-100 w-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">@recommendation.Title</h5>
+                    <p class="card-text flex-grow-1">@recommendation.Description</p>
+
+                    @if (User.IsInRole("Organization"))
+                    {
+                        <div class="mt-auto">
+                            <p class="mb-1">Alle stemmen: <span id="vote-count-@recommendation.Id">@recommendation.Votes</span></p>
+                            <ul>
+                                <li>
+                                    <p class="mb-1" style="color: limegreen">Voor deze aanbeveling: <span id="vote-count-@recommendation.Id">@recommendation.UserVotes.Count(uv => uv.Recommended)</span></p>
+                                </li>
+                                <li>
+                                    <p class="mb-1" style="color: red">Tegen deze aanbeveling: <span id="vote-count-@recommendation.Id">@recommendation.UserVotes.Count(uv => !uv.Recommended)</span></p>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-sm btn-outline-info btn-show-voters"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#votersModal"
+                                    data-recommendation-id="@recommendation.Id"
+                                    data-recommendation-title="@recommendation.Title">
+                                Bekijk Stemmers
+                            </button>
+                        </div>
+                    }
+                    @if (!User.IsInRole("Organization"))
+                    {
+                        <div id="vote-form">
+                            <form class="mt-auto">
+                                <input type="hidden" name="id" value="@recommendation.Id"/>
+                                <button type="submit" id="vote-for" class="btn btn-success">Stem voor</button>
+                            </form>
+
+                            <form class="mt-auto">
+                                <input type="hidden" name="id" value="@recommendation.Id"/>
+                                <button type="submit" id="vote-against" class="btn btn-danger">Stem tegen</button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+}
 
 @if (User.IsInRole("Organization"))
 {

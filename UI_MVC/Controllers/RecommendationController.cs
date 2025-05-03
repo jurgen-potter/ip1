@@ -14,8 +14,8 @@ public class RecommendationController(IPanelManager panelManager) : Controller
     {
         var panel = panelManager.GetPanelByIdWithRecommendations(panelId);
         var recommendations = panel.Recommendations;
-        
-        return View(recommendations);
+        var meetings = panel.Meetings;
+        return View(panel);
     }
 
     [HttpGet]
