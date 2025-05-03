@@ -2,6 +2,7 @@
 
 public class MeetingDetailViewModel
 {
+    public int MeetingId { get; set; }
     public int PanelId { get; set; }
     
     public string PanelName { get; set; }
