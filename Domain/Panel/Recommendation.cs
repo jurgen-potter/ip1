@@ -9,7 +9,7 @@ public class Recommendation : ITenanted
     [Required] [MinLength(3)]
     public string Title { get; set; }
     public string Description { get; set; }
-    public bool IsVotable { get; set; }
+    public bool IsVotable { get; set; } = true;
     public int Votes { get; set; }
     public ICollection<UserVote> UserVotes { get; set; }
     [Required]
