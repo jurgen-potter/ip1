@@ -59,12 +59,6 @@
     }
 </div>
 
-@if (User.IsInRole("Organization"))
-{
-<div class="mt-4 mb-2">
-    <a asp-action="AddRecommendation" asp-controller="Recommendation" class="btn btn-success">Aanbeveling Toevoegen</a>
-</div>
-}
 <div class="modal fade" id="votersModal" tabindex="-1" aria-labelledby="votersModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable"> 
         <div class="modal-content">

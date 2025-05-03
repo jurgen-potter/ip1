@@ -16,6 +16,11 @@ public class MeetingManager : IMeetingManager
        return _repository.ReadMeetingByIdWithRecommendations(id);
     }
 
+    public Meeting GetMeetingById(int id)
+    {
+        return _repository.ReadMeetingById(id);
+    }
+
     public Meeting AddMeeting(string title, DateOnly date, int panelId)
     {
         var meeting = new Meeting()
@@ -28,5 +33,17 @@ public class MeetingManager : IMeetingManager
        return meeting;
     }
 
+    public void EditMeeting(Meeting meeting)
+    {
+        _repository.UpdateMeeting(meeting);
+    }
+
+
+    public void AddRecommendationToMeeting(int meetingId, Recommendation recommendation)
+    {
+        var meeting = GetMeetingById(meetingId);
+        meeting.Recommendations.Add(recommendation);
+        _repository.UpdateMeeting(meeting);
+    }
 
 }

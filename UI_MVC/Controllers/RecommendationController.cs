@@ -28,22 +28,5 @@ public class RecommendationController(IPanelManager panelManager) : Controller
         return PartialView("_VotersList", votes);
     }
     
-    public IActionResult AddRecommendation()
-    {
-        return View();
-    }
-
     
-    [Authorize(Roles = "Organization")]
-    [HttpPost]
-    public IActionResult AddRecommendation(AddRecommendationViewModel viewModel)
-    {
-        var panel = panelManager.GetPanelById(1); //gehardcode omdat panels nog niet echt gelinked zijn aan gebruikers.
-        if (ModelState.IsValid)
-        {
-            panelManager.AddRecommendationOfPanel(viewModel.Title, viewModel.Description, panel);
-            return RedirectToAction(nameof(Index));
-        }
-        return View();
-    }
 }
