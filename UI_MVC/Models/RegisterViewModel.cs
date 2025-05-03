@@ -5,9 +5,9 @@ namespace CitizenPanel.UI.MVC.Models;
 
 public class RegisterViewModel : IValidatableObject
 {
-    public List<Criteria> CriteriaList { get; set; }
-    public List<int> SelectedCriteria { get; set; }
-    public Invitation Invitation { get; set; }
+    public string Code { get; set; }
+    public List<CriteriaViewModel> CriteriaList { get; set; } = new List<CriteriaViewModel>();
+    public List<int> SelectedCriteria { get; set; } = new List<int>();
     public bool IsConfirmed { get; set; }
     
     [Required(ErrorMessage = "Email adres is verplicht")]

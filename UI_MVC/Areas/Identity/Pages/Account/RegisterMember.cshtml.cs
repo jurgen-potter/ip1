@@ -136,9 +136,8 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         }
 
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string code)
         {
-            ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             Invitation invitation = JsonConvert.DeserializeObject<Invitation>(TempData["Invitation"] as string ?? throw new InvalidOperationException("No valid invitation was given."));
@@ -154,9 +153,9 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             Input.InvitationId = invitation.Id;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string code)
         {
-            returnUrl ??= Url.Content("~/");
+            var returnUrl = Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
@@ -192,12 +191,12 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 
                     _drawManager.RemoveInvitation(Input.InvitationId);
                     var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                        values: new { area = "Identity", userId = userId, code = token, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Bevestig uw email",

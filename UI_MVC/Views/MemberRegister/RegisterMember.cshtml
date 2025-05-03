@@ -1,7 +1,5 @@
-﻿@using CitizenPanel.BL.Domain.User
-@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 
-@*model CitizenPanel.UI.MVC.Models.NewMemberViewModel*@
 @model RegisterViewModel
 
 @{
@@ -10,7 +8,7 @@
 
 <h2>Vul uw gegevens in</h2>
 <div asp-validation-summary="All" class="text-danger"></div>
-<form asp-controller="MemberRegister" asp-action="RegisterMember" method="post">
+<form asp-controller="MemberRegister" asp-action="RegisterMember" asp-route-code="@Model.Code" method="post">
     <div>
         <label>Email:</label>
         <input asp-for="Email" type="email" class="form-control">
@@ -45,27 +43,16 @@
 
     @for (int i = 0; i < Model?.CriteriaList?.Count; i++)
     {
-        <input type="hidden" asp-for="CriteriaList[i].Id"/>
         <input type="hidden" asp-for="CriteriaList[i].Name"/>
 
         @for (int j = 0; j < Model.CriteriaList[i].SubCriteria.Count; j++)
         {
             <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Id"/>
             <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Name"/>
-            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Percentage"/>
         }
     }
 
-    <input type="hidden" asp-for="IsConfirmed" value="@Model.IsConfirmed"/>
-    <input type="hidden" asp-for="Invitation.Id" value="@Model.Invitation.Id"/>
-    <input type="hidden" asp-for="Invitation.Code" value="@Model.Invitation.Code"/>
-    <input type="hidden" asp-for="Invitation.QRCodeString" value="@Model.Invitation.QRCodeString"/>
-    <input type="hidden" asp-for="Invitation.PanelId" value="@Model.Invitation.PanelId"/>
-    <input type="hidden" asp-for="Invitation.Gender" value="@Model.Invitation.Gender"/>
-    <input type="hidden" asp-for="Invitation.Age" value="@Model.Invitation.Age"/>
-    <input type="hidden" asp-for="Invitation.Town" value="@Model.Invitation.Town"/>
-    <input type="hidden" asp-for="Invitation.IsDrawn" value="@Model.Invitation.IsDrawn"/>
-
+    <input type="hidden" asp-for="@Model.Code">
     <button type="submit" class="btn btn-primary">Aanmelden</button>
 </form>
 
@@ -83,31 +70,8 @@
             </div>
             <div class="modal-footer">
                 <a href="@Url.Action("Index", "Home")" class="btn btn-danger">Ik wil niet meedoen</a>
-                <form id="confirmForm" method="get" asp-controller="MemberRegister" asp-action="RegisterMember">
-                    <input type="hidden" asp-for="IsConfirmed" value="true" />
-                    <input type="hidden" asp-for="Invitation.Id" value="@Model.Invitation.Id"/>
-                    <input type="hidden" asp-for="Invitation.Code" value="@Model.Invitation.Code"/>
-                    <input type="hidden" asp-for="Invitation.QRCodeString" value="@Model.Invitation.QRCodeString"/>
-                    <input type="hidden" asp-for="Invitation.PanelId" value="@Model.Invitation.PanelId"/>
-                    <input type="hidden" asp-for="Invitation.Gender" value="@Model.Invitation.Gender"/>
-                    <input type="hidden" asp-for="Invitation.Age" value="@Model.Invitation.Age"/>
-                    <input type="hidden" asp-for="Invitation.Town" value="@Model.Invitation.Town"/>
-                    <input type="hidden" asp-for="Invitation.IsDrawn" value="@Model.Invitation.IsDrawn"/>
-
-                    @for (int i = 0; i < Model.CriteriaList.Count; i++)
-                    {
-                        <input type="hidden" asp-for="CriteriaList[i].Id"/>
-                        <input type="hidden" asp-for="CriteriaList[i].Name"/>
-
-                        @for (int j = 0; j < Model.CriteriaList[i].SubCriteria.Count; j++)
-                        {
-                            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Id"/>
-                            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Name"/>
-                            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Percentage"/>
-                        }
-                    }
-                    <button type="submit" class="btn btn-success">Ik wil meedoen</button>
-                </form>
+                <input id="isConfirmed" type="hidden" asp-for="@Model.IsConfirmed"/>
+                <button id="confirmParticipation" type="button" class="btn btn-success">Ik wil meedoen</button>
             </div>
         </div>
     </div>

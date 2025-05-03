@@ -56,9 +56,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 builder.Services.AddLiveMonitoring();
 
-builder.Services.Configure<AvailableTenants>(
-    builder.Configuration.GetSection(AvailableTenants.SectionName)
-    );
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services
     .AddTenantContext()
@@ -94,6 +97,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAndMapLiveMonitoring();
+
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();

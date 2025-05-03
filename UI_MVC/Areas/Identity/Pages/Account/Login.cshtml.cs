@@ -155,7 +155,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     if (invitation.IsDrawn)
                     {
                         TempData["Invitation"] = JsonConvert.SerializeObject(invitation);
-                        return RedirectToPage("./RegisterMember", new { ReturnUrl = returnUrl});
+                        return RedirectToPage("./RegisterMember", new { code = invitation.Code });
                     }
                     else
                     {
