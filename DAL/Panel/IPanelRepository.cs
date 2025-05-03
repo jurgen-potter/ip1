@@ -12,7 +12,6 @@ public interface IPanelRepository
     void UpdatePanel(Panel panel);
     void DeletePanel(Panel panel);
     public IEnumerable<RecruitmentBucket> ReadTargetBucketsByPanel(Panel panel);
-    public void CreateRecommendationOfPanel(Recommendation recommendation, Panel panel);
     Panel ReadPanelByIdWithRecommendations(int panelId);
     Recommendation ReadRecommendationById(int recommendationId);
     public Recommendation ReadRecommendationWithVotersById(int recommendationId);

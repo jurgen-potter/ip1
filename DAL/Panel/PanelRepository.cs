@@ -67,12 +67,7 @@ public class PanelRepository : IPanelRepository
             .FirstOrDefault(p => p.Id == panel.Id);
         return panelWithBuckets?.RecruitmentBuckets.ToList();
     }
-
-    public void CreateRecommendationOfPanel(Recommendation recommendation, Panel panel)
-    {
-        panel.Recommendations.Add(recommendation);
-        UpdatePanel(panel);
-    }
+    
 
     public Recommendation ReadRecommendationById(int recommendationId)
     {
