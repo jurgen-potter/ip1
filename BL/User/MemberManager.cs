@@ -69,6 +69,11 @@ public class MemberManager : IMemberManager
         return _memberRepository.ReadUserById(memberId);
     }
 
+    public ApplicationUser GetOrganizationWithAnswers(string organizationId)
+    {
+        return _memberRepository.ReadOrganizationWithAnswers(organizationId);
+    }
+
     public void ChangeMember(ApplicationUser member)
     {
         _memberRepository.UpdateMember(member);
@@ -79,9 +84,9 @@ public class MemberManager : IMemberManager
         _memberRepository.DeleteMember(member);
     }
 
-    public Task ChangeOrganizationAnswersAsync(string userId, List<Answer> answers)
+    public Task ChangeOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
     {
-        return _memberRepository.UpdateOrganizationAnswersAsync(userId, answers);
+        return _memberRepository.UpdateOrganizationAnswersAsync(userId, questionnaireId, answers);
     }
 
     /*public IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId)

@@ -11,6 +11,7 @@ public interface IMemberManager
     
     IEnumerable<ApplicationUser> GetAllMembers();
     ApplicationUser GetMemberById(string memberId);
+    ApplicationUser GetOrganizationWithAnswers(string organizationId);
     void ChangeMember(ApplicationUser member);
     void RemoveMember(ApplicationUser member);
     
@@ -21,5 +22,5 @@ public interface IMemberManager
     // Additional methods to support the RegistrationManager functionality
     int GetMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);*/
 
-    Task ChangeOrganizationAnswersAsync(string userId, List<Answer> answers);
+    Task ChangeOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers);
 }

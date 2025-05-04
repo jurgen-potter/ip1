@@ -28,12 +28,15 @@ public class QuestionnaireController : Controller
     public async Task<IActionResult> Index(int questionnaireId)
     {
         var questionnaire = _questionnaireModuleManager.GetQuestionnaire(questionnaireId);
-        var user = await _userManager.GetUserAsync(User);
-
+        var userId = _userManager.GetUserId(User);
+        var organization = _memberManager.GetOrganizationWithAnswers(userId);
         List<int> selectedAnswerIds = new();
-        if (User.IsInRole("Organization") && user?.OrganizationProfile?.Answers != null)
+
+        if (User.IsInRole("Organization") && organization?.OrganizationProfile?.Answers != null)
         {
-            selectedAnswerIds = user.OrganizationProfile.Answers.Select(a => a.Id).ToList();
+            selectedAnswerIds = organization.OrganizationProfile.Answers
+                .Where(a => a.Question != null && a.Question.Questionnaire?.Id == questionnaireId)
+                .Select(a => a.Id).ToList();
         }
 
         var viewModel = new QuestionnaireResponseViewModel()
@@ -80,7 +83,7 @@ public class QuestionnaireController : Controller
             answers.Add(_questionnaireModuleManager.GetAnswer(answer.Value));
         }
         var user = await _userManager.GetUserAsync(User);
-        await _memberManager.ChangeOrganizationAnswersAsync(user.Id, answers);
+        await _memberManager.ChangeOrganizationAnswersAsync(user.Id, model.QuestionnaireId, answers);
         return RedirectToAction(nameof(Index), new { questionnaireId = model.QuestionnaireId });
     }
 }

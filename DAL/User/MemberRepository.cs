@@ -27,6 +27,14 @@ public class MemberRepository : IMemberRepository
         return _dbContext.ApplicationUsers.Find(userId);
     }
     
+    public ApplicationUser ReadOrganizationWithAnswers(string organizationId)
+    {
+        return _dbContext.ApplicationUsers
+            .Include(aU => aU.OrganizationProfile)
+            .ThenInclude(op => op.Answers)
+            .SingleOrDefault(au => au.Id == organizationId);
+    }
+    
     public void UpdateMember(ApplicationUser member)
     {
         _dbContext.Update(member);
@@ -37,7 +45,7 @@ public class MemberRepository : IMemberRepository
         _dbContext.ApplicationUsers.Remove(member);
     }
 
-    public async Task UpdateOrganizationAnswersAsync(string userId, List<Answer> answers)
+    public async Task UpdateOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
     {
         var user = await _dbContext.Users
             .Include(u => u.OrganizationProfile)
@@ -45,7 +53,14 @@ public class MemberRepository : IMemberRepository
             .FirstOrDefaultAsync(u => u.Id == userId);
         
         // Clear current answers
-        user.OrganizationProfile.Answers.Clear();
+        var answersToRemove = user.OrganizationProfile.Answers
+            .Where( a => a.Question != null && a.Question.Questionnaire?.Id == questionnaireId)
+            .ToList(); // Materialize the query to avoid modifying collection during iteration
+
+        foreach (var answer in answersToRemove)
+        {
+            user.OrganizationProfile.Answers.Remove(answer);
+        }
         await _dbContext.SaveChangesAsync();
 
         // Add new answers
