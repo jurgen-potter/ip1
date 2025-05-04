@@ -1279,7 +1279,8 @@ public class DataSeeder
         {
             Description = "Wat wilt u als organisatie bereiken?",
             Weight = 5,
-            Position = 1
+            Position = 1,
+            IsDetail = true
         };
         var answer11 = new Answer
         {
@@ -1298,9 +1299,10 @@ public class DataSeeder
         };
         var question5 = new Question
         {
-            Description = "Rond welke problematiek wil u als organisatie werken?",
+            Description = "Rond welke problematiek wilt u als organisatie werken?",
             Weight = 3,
-            Position = 2
+            Position = 2,
+            IsDetail = true
         };
         var answer8 = new Answer
         {
@@ -1317,6 +1319,115 @@ public class DataSeeder
             Description = "Begroting verdeling",
             Position = 3
         };
+        var question6 = new Question
+        {
+            Description = "Hoe wilt u samenkomen?",
+            Weight = 3,
+            Position = 3,
+            IsDetail = true
+        };
+        var answer14 = new Answer
+        {
+            Description = "In een zaal",
+            Position = 1,
+            Question = question6
+        };
+        var answer15 = new Answer
+        {
+            Description = "Online",
+            Position = 2,
+            Question = question6
+        };
+        var question7 = new Question
+        {
+            Description = "Welke output wilt u op het eind van het panel genereren?",
+            Weight = 3,
+            Position = 4,
+            IsDetail = true
+        };
+        var answer16 = new Answer
+        {
+            Description = "Rapport",
+            Position = 1,
+            Question = question7
+        };
+        var answer17 = new Answer
+        {
+            Description = "Presentatie",
+            Position = 2,
+            Question = question7
+        };
+        var question8 = new Question
+        {
+            Description = "Hoe ziet u het rekruteren van deelnemers?",
+            Weight = 3,
+            Position = 5,
+            IsDetail = false
+        };
+        var answer18 = new Answer
+        {
+            Description = "Ambitieus en duur",
+            Advice = "een “state of the art” loting",
+            Position = 1,
+            Question = question8
+        };
+        var answer19 = new Answer
+        {
+            Description = "Weinig ambitieus en goedkoop",
+            Advice = "open oproep voor deelnemers, selectie daaruit per bevolkingssegment en verder actief aangevuld met “afwezige doelgroepen”",
+            Position = 2,
+            Question = question8
+        };
+        var question9 = new Question
+        {
+            Description = "Hoe ziet u het organiseren van bijeenkomsten?",
+            Weight = 3,
+            Position = 6,
+            IsDetail = false
+        };
+        var answer20 = new Answer
+        {
+            Description = "Heel ambitieus",
+            Advice = "1 weekend vorming en informatie van talrijke experts, betrokkenen... over de materie, exhaustief infopakket; 2 debatweekends met finaal een stemming via digitale tool",
+            Position = 1,
+            Question = question9
+        };
+        var answer21 = new Answer
+        {
+            Description = "Redelijke ambitieus",
+            Advice = "1 halve dag vorming en informatie..., infopakket; 2 debatdagen met finaal stemming via digitale tool",
+            Position = 2,
+            Question = question9
+        };
+        var answer22 = new Answer
+        {
+            Description = "Weinig ambitieus",
+            Advice = "Een folder en korte introductie bij start van de deliberatie zelf, stemming bij handopsteking",
+            Position = 3,
+            Question = question9
+        };
+        var question10 = new Question
+        {
+            Description = "Hoe ziet u het organiseren van bijeenkomsten?",
+            Weight = 3,
+            Position = 7,
+            IsDetail = false
+        };
+        var answer23 = new Answer
+        {
+            Description = "Heel ambitieus",
+            Advice = "campagne met online filmpjes enz.",
+            Position = 1,
+            Question = question10
+        };
+        var answer24 = new Answer
+        {
+            Description = "Weinig ambitieus",
+            Advice = "artikel op website en infoblad",
+            Position = 2,
+            Question = question10
+        };
+
         answer11.Question = question4;
         answer12.Question = question4;
         answer13.Question = question4;
@@ -1334,9 +1445,35 @@ public class DataSeeder
         question5.Answers.Add(answer10);
         question5.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question5);
+        
+        question6.Answers.Add(answer14);
+        question6.Answers.Add(answer15);
+        question6.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question6);
+        
+        question7.Answers.Add(answer16);
+        question7.Answers.Add(answer17);
+        question7.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question7);
+        
+        question8.Answers.Add(answer18);
+        question8.Answers.Add(answer19);
+        question8.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question8);
+        
+        question9.Answers.Add(answer20);
+        question9.Answers.Add(answer21);
+        question9.Answers.Add(answer22);
+        question9.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question9);
+        
+        question10.Answers.Add(answer23);
+        question10.Answers.Add(answer24);
+        question10.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question10);
 
         _panelDbContext.Questionnaires.Add(questionnaire2);
-        _panelDbContext.Questions.AddRange(question4, question5);
-        _panelDbContext.Answers.AddRange(answer11, answer12, answer13, answer8, answer9, answer10);
+        _panelDbContext.Questions.AddRange(question4, question5, question6, question7, question8, question9, question10);
+        _panelDbContext.Answers.AddRange(answer11, answer12, answer13, answer8, answer9, answer10, answer11, answer12, answer13, answer14, answer15, answer16, answer17, answer18, answer19, answer20, answer21, answer22, answer23, answer24);
     }
 }
