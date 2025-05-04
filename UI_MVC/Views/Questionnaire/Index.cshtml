@@ -41,16 +41,7 @@
 
         <div class="d-flex justify-content-start mt-4 gap-2">
             <button type="submit" class="btn btn-success mt-3">Verzenden</button>
-            @if (User.IsInRole("Organization"))
-            {
-                <button
-                    type="submit"
-                    formaction="@Url.Action("Save")"
-                    formnovalidate
-                    class="btn btn-success">
-                    Opslaan
-                </button>
-            }
+            <button type="submit" formaction="@Url.Action("PrepareSave")" formnovalidate class="btn btn-success mt-3">Opslaan</button>
         </div>
     </form>
 </div>

@@ -7,6 +7,7 @@ using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
@@ -67,15 +68,25 @@ public class QuestionnaireController : Controller
     }
 
     [HttpPost]
-    [Authorize(Roles = "Organization")]
-    public async Task<IActionResult> Save(QuestionnaireResponseViewModel model)
+    [AllowAnonymous]
+    public IActionResult PrepareSave(QuestionnaireResponseViewModel model)
     {
-        if (!User.IsInRole("Organization"))
-        {
-            return Forbid();
-        }
-        
-        ModelState.Clear();
+        if (!ModelState.IsValid)
+            return View("Index", model);
+
+        // Store form data temporarily (you may serialize if needed)
+        TempData["FormData"] = JsonConvert.SerializeObject(model);
+
+        return RedirectToAction("Save");
+    }
+
+    
+    [HttpGet]
+    [Authorize(Roles = "Organization")]
+    public async Task<IActionResult> Save()
+    {
+        var json = TempData["FormData"].ToString();
+        var model = JsonConvert.DeserializeObject<QuestionnaireResponseViewModel>(json);
         
         var answers = new List<Answer>();
         foreach (var answer in model.Answers)
