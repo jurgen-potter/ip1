@@ -22,9 +22,14 @@
                     <p class="mb-1" id="@($"hiddenText{recommendation.Id}")" hidden>
                         <strong>Het stemmen is afgelopen</strong>
                     </p>
+
                     @if (!recommendation.IsVotable)
                     {
                         <p class="mb-1"><strong>Het stemmen is afgelopen</strong></p>
+                    }
+                    else if (recommendation.UserVotes.Count() >= recommendation.NeededVotes && User.IsInRole("Organization"))
+                    {
+                        <p class="mb-1" id="@($"toHideText{recommendation.Id}")"><strong>U heeft genoeg stemmen voor een gebalanceerd resultaat</strong></p>
                     }
 
                     @if (User.IsInRole("Organization"))

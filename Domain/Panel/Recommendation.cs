@@ -11,6 +11,7 @@ public class Recommendation : ITenanted
     public string Description { get; set; }
     public bool IsVotable { get; set; } = true;
     public int Votes { get; set; }
+    public int NeededVotes { get; set; }
     public ICollection<UserVote> UserVotes { get; set; }
     [Required]
     public string TenantId { get; set; }

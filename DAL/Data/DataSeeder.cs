@@ -151,7 +151,8 @@ public class DataSeeder
                             Description = "We willen graag meer bomen planten in de stad",
                             Votes = 0,
                             TenantId = "antwerpen",
-                            IsVotable = true
+                            IsVotable = true,
+                            NeededVotes = 5
                         },
                         new Recommendation()
                         {
@@ -159,7 +160,8 @@ public class DataSeeder
                             Description = "Minder afval op de straat door meer vuilnisbakken te plaatsen",
                             Votes = 0,
                             TenantId = "antwerpen",
-                            IsVotable = true
+                            IsVotable = true,
+                            NeededVotes = 5
                         }
                     },
                     TenantId = "antwerpen"
@@ -176,7 +178,8 @@ public class DataSeeder
                             Description = "We willen betere wegen aanleggen in de gemeente antwerpen",
                             Votes = 0,
                             TenantId = "antwerpen",
-                            IsVotable = true
+                            IsVotable = true,
+                            NeededVotes = 10
                         }
                     },
                     TenantId = "antwerpen"

@@ -35,10 +35,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 (button as HTMLButtonElement).hidden = true;
             }
         })
-        
+
+        const toHideText  = document.getElementById('toHideText' + selectedRecommendationId);
+        if (toHideText) {
+            toHideText.hidden = true;
+        }
+
         const hiddenText = document.getElementById('hiddenText' + selectedRecommendationId);
         hiddenText?.removeAttribute('hidden');
-
+        
         const modalInstance = bootstrap.Modal.getInstance(confirmationModal);
         modalInstance?.hide();
         selectedRecommendationId = null;
