@@ -128,7 +128,7 @@ public class PanelManager : IPanelManager
 
     public IEnumerable<Criteria> GetCriteriaAndSubcriteriaWithPanelId(int panelId)
     {
-        return _panelRepository.ReadExtraCriteriaByPanelId(panelId);
+        return _panelRepository.ReadCriteriaAndSubcriteriaWithPanelId(panelId);
     }
 
     public void ChangeTotalAvailablePotentialPanelmembers(int totAvPotMem, int panelId)
