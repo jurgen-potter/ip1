@@ -2,6 +2,7 @@
 using CitizenPanel.BL.Domain.Draw;
 using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 

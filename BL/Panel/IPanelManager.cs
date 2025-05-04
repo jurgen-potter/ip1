@@ -11,10 +11,7 @@ public interface IPanelManager
 
     public Panel GetPanelById(int panelId);
     Panel GetPanelByIdWithMembers(int panelId);
-    void EditPanel(Panel panel);
-    void RemovePanel(Panel panel);
 
-    public Panel GetPanelById(int panelId);
     public void ChangePanel(Panel panel);
     public void RemovePanel(Panel panel);
     public IEnumerable<RecruitmentBucket> GetTargetBucketsByPanel(Panel panel);

@@ -185,6 +185,6 @@ public class RegistrationManager(IPanelManager panelManager, IDrawManager drawMa
         panel.DrawStatus = DrawStatus.Complete;
         panel.DrawResult = drawResult;
 
-        panelManager.EditPanel(panel);
+        panelManager.ChangePanel(panel);
     }
 }
