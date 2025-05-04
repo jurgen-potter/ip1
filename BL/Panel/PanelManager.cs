@@ -32,7 +32,6 @@ public class PanelManager : IPanelManager
             Description = description,
             MemberCount = 0,
             Criteria = criteria,
-            Organization = organization,
             TotalAvailablePotentialPanelmembers = totAvPotMem
         };
         _panelRepository.CreatePanel(newPanel);
