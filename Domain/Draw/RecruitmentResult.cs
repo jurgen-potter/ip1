@@ -12,4 +12,7 @@ public class RecruitmentBucket
     public List<string> CriteriaNames { get; set; } = new List<string>();
     public List<string> SubCriteriaNames { get; set; } = new List<string>();
     public int Count { get; set; }
+    
+    public int ActualCount { get; set; }
+
 }

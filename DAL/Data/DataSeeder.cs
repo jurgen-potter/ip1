@@ -99,7 +99,7 @@ public class DataSeeder
                 }
             },
             TenantId = "antwerpen",
-            TotalAvailablePotentialPanelmembers = 1000,
+            TotalAvailablePotentialPanelmembers = 10000,
             Meetings = new List<Meeting>()
             {
                 new Meeting()

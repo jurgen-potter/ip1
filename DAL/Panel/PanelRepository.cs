@@ -20,10 +20,10 @@ public class PanelRepository : IPanelRepository
         return _dbContext.Panels
             .Include(p => p.DrawResult)
             .ThenInclude(dr => dr.SelectedMembers)
-            .ThenInclude(m => m.MemberProfile)
             .Include(p => p.DrawResult)
             .ThenInclude(dr => dr.ReserveMembers)
-            .ThenInclude(m => m.MemberProfile)
+            .Include(p => p.DrawResult)
+            .ThenInclude(dr => dr.NotSelectedMembers)
             .SingleOrDefault(p => p.Id == panelId);
     }
 

@@ -78,6 +78,11 @@ public class MemberManager : IMemberManager
         _memberRepository.DeleteMember(member);
     }
 
+    public IEnumerable<MemberProfile> GetMembersOfPanelWithCriteria(int panelId)
+    {
+        return _memberRepository.ReadMembersOfPanelWithCriteria(panelId);
+    }
+
     /*public IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId)
     {
         return _memberRepository.ReadMembersByPanelId(panelId);
