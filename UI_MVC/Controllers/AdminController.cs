@@ -17,6 +17,7 @@ public class AdminController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult Index()
     {
         var questionnaires = _questionnaireModuleManager.GetAllQuestionnaires();
@@ -34,6 +35,7 @@ public class AdminController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult EditQuestionnaire(int questionnaireId)
     {
         Questionnaire questionnaire = _questionnaireModuleManager.GetQuestionnaire(questionnaireId);
@@ -70,6 +72,7 @@ public class AdminController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public IActionResult EditQuestionnaire(EditQuestionnaireViewModel model)
     {
         ModelState.Clear();

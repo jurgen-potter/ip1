@@ -22,6 +22,7 @@ public class RecruitmentController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Index(int panelId)
     {
         if (TempData["CriteriaFormData"] is string json)
@@ -67,6 +68,7 @@ public class RecruitmentController : Controller
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public IActionResult Calculate(RecruitmentCriteriaViewModel model)
     {
         if (!ModelState.IsValid)
@@ -123,8 +125,8 @@ public class RecruitmentController : Controller
         return View("Result", resultModel);
     }
     
-    [Authorize(Roles = "Organization")]
     [HttpPost]
+    [Authorize(Roles = "Organization")]
     public IActionResult Save(RecruitmentCriteriaViewModel model)
     {
         
