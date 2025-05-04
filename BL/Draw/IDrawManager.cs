@@ -6,7 +6,7 @@ namespace CitizenPanel.BL;
 
 public interface IDrawManager
 {
-    public IEnumerable<Invitation> AddInvitations(int totalMembers, int extraMembers, List<Criteria> criteria, Panel panel);
+    public IEnumerable<Invitation> AddInvitations(int amount, List<Criteria> criteria, Panel panel);
     public Invitation GetInvitationWithCode(string code);
     public IEnumerable<Invitation> GetAllInvitations();
     public Invitation ChangeInvitation(Invitation invitation);

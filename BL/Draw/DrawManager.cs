@@ -14,141 +14,72 @@ public class DrawManager : IDrawManager
     {
         _drawRepository = drawRepository;
     }
-
-    public IEnumerable<Invitation> AddInvitations(List<DummyMember> members)
-    {
-        QRCodeGenerator qrGenerator = new QRCodeGenerator();
-        List<Invitation> invitations = new List<Invitation>();
-        foreach (DummyMember dummyMember in members)
-        {
-            int age = dummyMember.Age;
-            Gender gender = dummyMember.Gender;
-            int panelId = dummyMember.PanelId;
-            string town = dummyMember.Town;
-            string code = GenerateCode();
-
-            string qrCodePlace = "https://whimp-24.ew.r.appspot.com/MemberRegister/RegisterMember?code=" + code; 
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
-            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
-            byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
-            string qrCodeString = Convert.ToBase64String(qrCodeAsPngByteArr);
-
-            
-            Invitation invitation = new Invitation()
-            {
-                Code = code,
-                Age = age,
-                Gender = gender,
-                PanelId = panelId,
-                QRCodeString = qrCodeString,
-            };
-            Invitation newInvitation = _drawRepository.CreateInvitation(invitation);
-            invitations.Add(newInvitation);
-        }
-        
-        return invitations;
-    }
-
-    public IEnumerable<Invitation> AddInvitations(int totalMembers, int extraMembers, List<Criteria> criteria, Panel panel)
-    {
-        var panelInvitations = GenerateInvitations(totalMembers, criteria, panel);
-        var reserveInvitations = GenerateInvitations(extraMembers - totalMembers, criteria, panel);
-
-        return panelInvitations.Concat(reserveInvitations);
-    }
-
     
-    private IEnumerable<Invitation> GenerateInvitations(int amount, List<Criteria> criteria, Panel panel)
+    public IEnumerable<Invitation> AddInvitations(int amount, List<Criteria> criteria, Panel panel)
     {
-        QRCodeGenerator qrGenerator = new QRCodeGenerator();
-        List<Invitation> invitations = new List<Invitation>();
+    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+    List<Invitation> invitations = new List<Invitation>();
 
-        double menPercentage = 0;
-        double womenPercentage = 0;
-        double age1825Percentage = 0;
-        double age2635Percentage = 0;
-        double age3650Percentage = 0;
-        double age5160Percentage = 0;
-        double age60PlusPercentage = 0;
+    Dictionary<Gender, double> genderPercentages = new();
+    Dictionary<string, double> ageGroupPercentages = new(); // e.g., "18-25" => 10
 
-        foreach (Criteria c in criteria)
+    // Step 1: Parse criteria into gender and age group maps
+    foreach (var c in criteria)
+    {
+        if (c.Name.ToUpper() == "GESLACHT")
         {
-            if (c.Name.ToUpper().Equals("GESLACHT"))
+            foreach (var sub in c.SubCriteria)
             {
-                foreach (SubCriteria subCriteria in c.SubCriteria)
-                {
-                    if (subCriteria.Name.ToUpper() == "MAN") menPercentage = subCriteria.Percentage;
-                    if (subCriteria.Name.ToUpper() == "VROUW") womenPercentage = subCriteria.Percentage;
-                }
-            }
-
-            if (c.Name.ToUpper().Equals("LEEFTIJD"))
-            {
-                foreach (SubCriteria subCriteria in c.SubCriteria)
-                {
-                    switch (subCriteria.Name.ToUpper())
-                    {
-                        case "18-25": age1825Percentage = subCriteria.Percentage; break;
-                        case "26-35": age2635Percentage = subCriteria.Percentage; break;
-                        case "36-50": age3650Percentage = subCriteria.Percentage; break;
-                        case "51-60": age5160Percentage = subCriteria.Percentage; break;
-                        case "60+": age60PlusPercentage = subCriteria.Percentage; break;
-                    }
-                }
+                if (sub.Name.ToUpper() == "MAN")
+                    genderPercentages[Gender.Male] = sub.Percentage;
+                else if (sub.Name.ToUpper() == "VROUW")
+                    genderPercentages[Gender.Female] = sub.Percentage;
             }
         }
-
-        List<int> genders = new List<int>
+        else if (c.Name.ToUpper() == "LEEFTIJD")
         {
-            (int)(amount * menPercentage / 100),
-            (int)(amount * womenPercentage / 100)
-        };
-
-        List<int> ages = new List<int>
-        {
-            (int)(amount * age1825Percentage / 100),
-            (int)(amount * age2635Percentage / 100),
-            (int)(amount * age3650Percentage / 100),
-            (int)(amount * age5160Percentage / 100),
-            (int)(amount * age60PlusPercentage / 100)
-        };
-
-        List<int> actualGenderAmounts = CalculateAmount(genders, amount);
-        List<int> actualAgeAmounts = CalculateAmount(ages, amount);
-
-        List<(int age, Gender gender)> memberAttributes = new List<(int, Gender)>();
-
-        int ageIndex = 0;
-        for (int g = 0; g < actualGenderAmounts.Count; g++)
-        {
-            Gender gender = (Gender)g;
-            int genderCount = actualGenderAmounts[g];
-
-            for (int i = 0; i < genderCount; i++)
-            {
-                while (ageIndex < actualAgeAmounts.Count && actualAgeAmounts[ageIndex] == 0)
-                    ageIndex++;
-
-                if (ageIndex >= actualAgeAmounts.Count)
-                    ageIndex = 0;
-
-                int age = ageIndex switch
-                {
-                    0 => 18,
-                    1 => 26,
-                    2 => 36,
-                    3 => 51,
-                    4 => 61,
-                    _ => 36
-                };
-
-                actualAgeAmounts[ageIndex]--;
-                memberAttributes.Add((age, gender));
-            }
+            foreach (var sub in c.SubCriteria)
+                ageGroupPercentages[sub.Name.ToUpper()] = sub.Percentage;
         }
+    }
 
-        foreach (var (age, gender) in memberAttributes)
+    // Step 2: Cross-multiply to calculate (gender, ageGroup) counts
+    Dictionary<(Gender gender, string ageGroup), int> invitationCounts = new();
+
+    foreach (var genderEntry in genderPercentages)
+    {
+        foreach (var ageEntry in ageGroupPercentages)
         {
+            double combinedPercentage = (genderEntry.Value / 100.0) * (ageEntry.Value / 100.0);
+            int count = (int)Math.Round(combinedPercentage * amount);
+
+            var key = (genderEntry.Key, ageEntry.Key);
+            if (invitationCounts.ContainsKey(key))
+                invitationCounts[key] += count;
+            else
+                invitationCounts[key] = count;
+        }
+    }
+
+    // Step 3: Create invitations based on the calculated distribution
+    foreach (var pair in invitationCounts)
+    {
+        var gender = pair.Key.gender;
+        var ageGroup = pair.Key.ageGroup;
+        int count = pair.Value;
+
+        for (int i = 0; i < count; i++)
+        {
+            int age = ageGroup switch
+            {
+                "18-25" => 18,
+                "26-35" => 26,
+                "36-50" => 36,
+                "51-60" => 51,
+                "60+"   => 61,
+                _ => 36
+            };
+
             string code = GenerateCode();
             string qrCodePlace = $"https://whimp-24.ew.r.appspot.com/MemberRegister/RegisterMember?code={code}";
 
@@ -169,10 +100,12 @@ public class DrawManager : IDrawManager
             Invitation newInvitation = _drawRepository.CreateInvitation(invitation);
             invitations.Add(newInvitation);
         }
-
-        return invitations;
     }
 
+    return invitations;
+    }
+
+    
     private List<int> CalculateAmount(List<int> amounts, int totalAmount)
     {
         var amount = amounts.Sum();
