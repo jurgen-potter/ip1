@@ -17,7 +17,13 @@
         <div class="col d-flex">
             <div class="card h-100 w-100">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">@recommendation.Title</h5>
+                    <h5 class="card-title">
+                        @if (recommendation.IsAnonymous)
+                        {
+                            @($"(Anonieme stemming) ")
+                        }
+                        @recommendation.Title
+                    </h5>
                     <p class="card-text flex-grow-1">@recommendation.Description</p>
                     <p class="mb-1" id="@($"hiddenText{recommendation.Id}")" hidden>
                         <strong>Het stemmen is afgelopen</strong>
@@ -45,13 +51,16 @@
                                 </li>
                             </ul>
                             <div class="d-flex justify-content-start mt-4 gap-2">
-                                <button type="button" class="btn btn-sm btn-outline-info btn-show-voters"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#votersModal"
-                                        data-recommendation-id="@recommendation.Id"
-                                        data-recommendation-title="@recommendation.Title">
-                                    Bekijk Stemmers
-                                </button>
+                                @if (!recommendation.IsAnonymous)
+                                {
+                                    <button type="button" class="btn btn-sm btn-outline-info btn-show-voters"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#votersModal"
+                                            data-recommendation-id="@recommendation.Id"
+                                            data-recommendation-title="@recommendation.Title">
+                                        Bekijk Stemmers
+                                    </button>
+                                }
                                 @if (recommendation.IsVotable)
                                 {
                                     <button type="button" class="btn btn-sm btn-outline-danger btn-stop-voting"

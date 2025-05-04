@@ -79,6 +79,7 @@ namespace CitizenPanel.UI.MVC.Controllers
                 Title = model.Title,
                 Description = model.Description,
                 NeededVotes = model.NeededVotes,
+                IsAnonymous = model.IsAnonymous,
                 TenantId = meeting.TenantId
             };
     

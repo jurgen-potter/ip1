@@ -179,7 +179,8 @@ public class DataSeeder
                             Votes = 0,
                             TenantId = "antwerpen",
                             IsVotable = true,
-                            NeededVotes = 10
+                            NeededVotes = 10,
+                            IsAnonymous = true
                         }
                     },
                     TenantId = "antwerpen"
