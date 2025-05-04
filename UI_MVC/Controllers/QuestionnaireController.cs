@@ -15,9 +15,9 @@ public class QuestionnaireController : Controller
     }
     
     [HttpGet]
-    public IActionResult Index()
+    public IActionResult Index(int questionnaireId)
     {
-        return View(_questionnaireModuleManager.GetQuestionnaire(1));
+        return View(_questionnaireModuleManager.GetQuestionnaire(questionnaireId));
     }
 
     [HttpPost]

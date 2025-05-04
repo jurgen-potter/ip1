@@ -18,6 +18,8 @@ public class Question
     
     public Questionnaire Questionnaire { get; set; }
     
+    public bool IsDetail { get; set; } = false;
+    
     [MinCount(1)]
     public ICollection<Answer> Answers { get; set; } = new List<Answer>();
 }
