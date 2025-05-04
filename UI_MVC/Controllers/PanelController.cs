@@ -26,7 +26,8 @@ public class PanelController : Controller
         _userManager = userManager;
     }
     
-    // GET
+    [HttpGet]
+    [Authorize]
     public IActionResult Index(int id)
     {
         Panel panel = _panelManager.GetPanelByIdWithRecommendations(id);
@@ -82,8 +83,8 @@ public class PanelController : Controller
         return View(model);
     }
 
-    //[Authorize(Roles = "Organization, Admin")]
     [HttpPost]
+    [Authorize]
     public IActionResult CreatePanelFromResult(ResultViewModel resultViewModel)
     {
         if (!User.Identity.IsAuthenticated)
@@ -104,6 +105,7 @@ public class PanelController : Controller
         return View("CreatePanel", model);
     }
     
+    [HttpGet]
     [Authorize(Roles = "Organization, Admin")]
     public IActionResult RestorePanelData()
     {
@@ -123,8 +125,8 @@ public class PanelController : Controller
         return View("CreatePanel", model);
     }
     
-    [Authorize(Roles = "Organization, Admin")]
     [HttpPost]
+    [Authorize(Roles = "Organization, Admin")]
     public async Task<IActionResult> CreatePanel(CreatePanelViewModel model)
     {
         if(!ModelState.IsValid)

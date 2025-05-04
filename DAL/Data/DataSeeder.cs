@@ -1408,7 +1408,7 @@ public class DataSeeder
         };
         var question10 = new Question
         {
-            Description = "Hoe ziet u het organiseren van bijeenkomsten?",
+            Description = "Hoe wilt u de resultaten communiceren?",
             Weight = 3,
             Position = 7,
             IsDetail = false
