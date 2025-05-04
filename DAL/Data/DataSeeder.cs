@@ -225,14 +225,8 @@ public class DataSeeder
         var paul = _panelDbContext.ApplicationUsers
             .Include(u => u.MemberProfile)
             .SingleOrDefault(u => u.UserName == "paul@example.com");
-        panel1.Organization = antwerpen?.OrganizationProfile;
         panel1.Members.Add(paul?.MemberProfile);
-        panel2.Organization = brussel?.OrganizationProfile;
-        panel3.Organization = antwerpen?.OrganizationProfile;
         //panel3.Members.Add(paul?.MemberProfile);
-        antwerpen?.OrganizationProfile.Panels.Add(panel1);
-        antwerpen?.OrganizationProfile.Panels.Add(panel3);
-        brussel?.OrganizationProfile.Panels.Add(panel2);
         paul?.MemberProfile.Panels.Add(panel1);
         //paul?.MemberProfile.Panels.Add(panel3);
         

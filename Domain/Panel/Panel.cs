@@ -27,8 +27,6 @@ public class Panel : ITenanted
     
     public ICollection<MemberProfile> Members { get; set; } = new List<MemberProfile>();
     
-    public OrganizationProfile Organization { get; set; }
-    
     public ICollection<Criteria> Criteria { get; set; } = new List<Criteria>();
     public ICollection<RecruitmentBucket> RecruitmentBuckets { get; set; }
     public DrawStatus DrawStatus { get; set; }

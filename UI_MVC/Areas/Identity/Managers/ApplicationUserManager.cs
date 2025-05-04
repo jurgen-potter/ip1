@@ -66,7 +66,6 @@ public class ApplicationUserManager : UserManager<ApplicationUser>
         var userId = GetUserId(userPrincipal);
         var user = await GetUserWithProfilesBase()
             .Include(u => u.MemberProfile.Panels)
-            .Include(u => u.OrganizationProfile.Panels)
             .SingleOrDefaultAsync(u => u.Id == userId);
         return user;
     }

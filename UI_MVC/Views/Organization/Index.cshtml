@@ -1,0 +1,19 @@
+﻿
+
+@{
+    ViewBag.Title = "Organisatie overzicht";
+}
+
+<h2>Organisatie overzicht</h2>
+
+<a asp-controller="Panel" asp-action="UserPanel" class="btn btn-primary">
+    Panel(s) bekijken
+</a>
+
+<a asp-controller="Recruitment" class="btn btn-primary">
+    Panel aanmaken
+</a>
+
+<a asp-page="/Account/Register" asp-area="Identity" asp-route-staff="true" class="btn btn-primary">
+    Voeg nieuwe organisatiebeheerder toe
+</a>
