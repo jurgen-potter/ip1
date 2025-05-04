@@ -1,29 +1,30 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
-using CitizenPanel.DAL;
-using CitizenPanel.DAL.Registration;
 
 namespace CitizenPanel.BL.Registration;
 
-public class RegistrationManager(IPanelManager panelManager,IDrawManager drawManager,IMemberManager memberManager) : IRegistrationManager
+public class RegistrationManager(IPanelManager panelManager, IDrawManager drawManager, IMemberManager memberManager) : IRegistrationManager
 {
-    public IEnumerable<RecruitmentBucket> AssignActualRegistrationsToBuckets(List<RecruitmentBucket> buckets, List<MemberProfile> profiles)
-{
-    foreach (var bucket in buckets)
+    public IEnumerable<RecruitmentBucket> AssignActualRegistrationsToBuckets(List<RecruitmentBucket> buckets, List<ApplicationUser> users)
     {
-        int matchCount = 0;
-        foreach (var profile in profiles)
+        foreach (var bucket in buckets)
         {
-            bool matches = MatchesBucket(profile, bucket);
-            if (matches)
-                matchCount++;
-        }
-        bucket.ActualCount = matchCount;
-    }
+            int matchCount = 0;
+            foreach (var user in users)
+            {
+                var mp = user.MemberProfile;
+                if (mp == null) continue;
 
-    return buckets;
-}
+                bool matches = MatchesBucket(mp, bucket);
+                if (matches)
+                    matchCount++;
+            }
+            bucket.ActualCount = matchCount;
+        }
+
+        return buckets;
+    }
 
     private bool MatchesBucket(MemberProfile mp, RecruitmentBucket bucket)
     {
@@ -66,7 +67,7 @@ public class RegistrationManager(IPanelManager panelManager,IDrawManager drawMan
 
             if (hasAgeCriteria && IsAgeGroup(sub))
                 continue;
-            
+
             if (!mp.SelectedCriteria.Any(sc =>
                     sc.Name.Equals(sub, StringComparison.OrdinalIgnoreCase) ||
                     sub.Contains(sc.Name, StringComparison.OrdinalIgnoreCase) ||
@@ -75,6 +76,7 @@ public class RegistrationManager(IPanelManager panelManager,IDrawManager drawMan
                 return false;
             }
         }
+
         return true;
     }
 
@@ -87,13 +89,12 @@ public class RegistrationManager(IPanelManager panelManager,IDrawManager drawMan
     private bool IsInAgeGroup(int age, string group)
     {
         group = group.Trim();
-        // b.v. "60+"
+
         if (group.EndsWith("+"))
         {
             if (int.TryParse(group.TrimEnd('+'), out var lower))
                 return age >= lower;
         }
-        // b.v. "18-25"
         else if (group.Contains('-'))
         {
             var parts = group.Split('-', StringSplitOptions.RemoveEmptyEntries);
@@ -104,87 +105,86 @@ public class RegistrationManager(IPanelManager panelManager,IDrawManager drawMan
                 return age >= lo && age <= hi;
             }
         }
+
         return false;
     }
     
-     public void StartFinalDraw(Panel panel)
+
+    public void StartFinalDraw(Panel panel)
     {
-        // Haal alle criteria en subcriteria op voor dit panel
         var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panel.Id);
+        var allUsers = memberManager.GetMembersOfPanelWithCriteria(panel.Id).ToList();
         
-        // Haal alle ingeschreven leden op voor dit panel
-        var allMembers = memberManager.GetMembersOfPanelWithCriteria(panel.Id).ToList();
+        var recruitmentResult = drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
         
-        // Bereken de benodigde aantallen voor het panel
-        var result = drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
-        
-        // Verdeel de leden in buckets op basis van criteria
-        var bucketsWithActuals = AssignActualRegistrationsToBuckets(result.Buckets, allMembers);
-        
-        // Initialiseer de DrawResult
+        var bucketsWithTargetsAndActuals = AssignActualRegistrationsToBuckets(recruitmentResult.Buckets, allUsers);
+
         var drawResult = new DrawResult
         {
-            SelectedMembers = new List<MemberProfile>(),
-            ReserveMembers = new List<MemberProfile>(),
-            NotSelectedMembers = new List<MemberProfile>(),
-            TotalNeededPanelmembers = result.TotalNeededPanelmembers,
-            ReservePanelmembers = result.ReservePotPanelmembers
+            SelectedMembers = new List<ApplicationUser>(),
+            ReserveMembers = new List<ApplicationUser>(),
+            NotSelectedMembers = new List<ApplicationUser>(),
+            TotalNeededPanelmembers = recruitmentResult.TotalNeededPanelmembers,
+            ReservePanelmembers = recruitmentResult.ReservePotPanelmembers
         };
-        
-        // Bereken hoeveel mensen we nodig hebben uit elke bucket
-        int totalSelected = result.TotalNeededPanelmembers;
-        int totalReserve = result.ReservePotPanelmembers;
-        
-        // Maak een set om bij te houden welke leden al geselecteerd zijn
-        var selectedMemberIds = new HashSet<int>();
-        
-        // Random number generator voor de loting
+
+        var selectedAndReservedUserIds = new HashSet<string>();
+        var eligibleForReservePoolCandidates = new List<ApplicationUser>(); 
+
         var random = new Random();
-        
-        // Selecteer uit elke bucket
-        foreach (var bucket in bucketsWithActuals)
+
+        foreach (var bucket in bucketsWithTargetsAndActuals)
         {
-            // Bereken hoeveel leden we uit deze bucket nodig hebben
-            int targetCount = (int)Math.Ceiling(bucket.Count * ((double)totalSelected / panel.TotalAvailablePotentialPanelmembers));
-            int reserveCount = (int)Math.Ceiling(bucket.Count * ((double)totalReserve / panel.TotalAvailablePotentialPanelmembers));
-            
-            // Vind alle leden die in deze bucket passen
-            var eligibleMembers = allMembers
-                .Where(m => !selectedMemberIds.Contains(m.Id) && MatchesBucket(m, bucket))
+            int targetCount = bucket.Count;
+
+            var eligibleUsersInBucket = allUsers
+                .Where(u => u.MemberProfile != null &&
+                            !selectedAndReservedUserIds.Contains(u.Id) &&
+                            MatchesBucket(u.MemberProfile, bucket))
                 .ToList();
-            
-            // Als er niet genoeg leden zijn, gebruik wat we hebben
-            targetCount = Math.Min(targetCount, eligibleMembers.Count);
-            reserveCount = Math.Min(reserveCount, eligibleMembers.Count - targetCount);
-            
-            // Shuffle de lijst om willekeurig te selecteren
-            var shuffledMembers = eligibleMembers.OrderBy(_ => random.Next()).ToList();
-            
-            // Selecteer leden voor het panel
-            for (int i = 0; i < targetCount && i < shuffledMembers.Count; i++)
+
+            int actualSelectedCount = Math.Min(targetCount, eligibleUsersInBucket.Count);
+
+            var shuffledUsers = eligibleUsersInBucket.OrderBy(_ => random.Next()).ToList(); 
+
+            for (int i = 0; i < actualSelectedCount; i++)
             {
-                drawResult.SelectedMembers.Add(shuffledMembers[i]);
-                selectedMemberIds.Add(shuffledMembers[i].Id);
+                var userToSelect = shuffledUsers[i];
+                drawResult.SelectedMembers.Add(userToSelect);
+                selectedAndReservedUserIds.Add(userToSelect.Id); 
             }
-            
-            // Selecteer leden voor de reserve lijst
-            for (int i = targetCount; i < targetCount + reserveCount && i < shuffledMembers.Count; i++)
+
+            for (int i = actualSelectedCount; i < shuffledUsers.Count; i++)
             {
-                drawResult.ReserveMembers.Add(shuffledMembers[i]);
-                selectedMemberIds.Add(shuffledMembers[i].Id);
+                 var userForReserveCandidate = shuffledUsers[i];
+                 if (!selectedAndReservedUserIds.Contains(userForReserveCandidate.Id) && eligibleForReservePoolCandidates.All(u => u.Id != userForReserveCandidate.Id))
+                 {
+                     eligibleForReservePoolCandidates.Add(userForReserveCandidate);
+                 }
             }
         }
         
-        // Voeg alle niet-geselecteerde leden toe aan de NotSelectedMembers lijst
-        drawResult.NotSelectedMembers = allMembers
-            .Where(m => !selectedMemberIds.Contains(m.Id))
+        var shuffledReservePool = eligibleForReservePoolCandidates.OrderBy(_ => random.Next()).ToList(); 
+
+        int actualReserveCount = Math.Min(recruitmentResult.ReservePotPanelmembers, shuffledReservePool.Count);
+
+        for (int i = 0; i < actualReserveCount; i++)
+        {
+             var userToReserve = shuffledReservePool[i];
+             if (!selectedAndReservedUserIds.Contains(userToReserve.Id))
+             {
+                drawResult.ReserveMembers.Add(userToReserve);
+                selectedAndReservedUserIds.Add(userToReserve.Id); 
+             }
+        }
+
+        drawResult.NotSelectedMembers = allUsers
+            .Where(u => !selectedAndReservedUserIds.Contains(u.Id)) 
             .ToList();
-        
-        // Update de panel status
+
         panel.DrawStatus = DrawStatus.Complete;
         panel.DrawResult = drawResult;
-        
-        // Sla de wijzigingen op in de database
+
         panelManager.EditPanel(panel);
     }
 }

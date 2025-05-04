@@ -36,12 +36,14 @@ public class MemberRepository : IMemberRepository
         _dbContext.ApplicationUsers.Remove(member);
     }
 
-    public IEnumerable<MemberProfile> ReadMembersOfPanelWithCriteria(int panelId)
+    public IEnumerable<ApplicationUser> ReadMembersOfPanelWithCriteria(int panelId)
     {
-        return _dbContext.MemberProfiles
-            .Include(mp => mp.SelectedCriteria)   
-            .Include(mp => mp.Panels)
-            .Where(mp => mp.Panels.Any(p => p.Id == panelId))
+        return _dbContext.ApplicationUsers
+            .Include(u => u.MemberProfile)
+            .ThenInclude(mp => mp.SelectedCriteria)
+            .Include(u => u.MemberProfile)
+            .ThenInclude(mp => mp.Panels)
+            .Where(u => u.MemberProfile != null && u.MemberProfile.Panels.Any(p => p.Id == panelId))
             .ToList();
     }
 

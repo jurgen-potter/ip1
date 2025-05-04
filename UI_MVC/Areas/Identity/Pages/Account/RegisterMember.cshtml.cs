@@ -183,7 +183,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             {
                 var user = CreateMember();
                 user.UserType = UserType.Member;
-                var panel = _panelManager.GetPanelById(Input.PanelId);
+                var panel = _panelManager.GetPanelByIdWithMembers(Input.PanelId);
                 user.MemberProfile = new MemberProfile()
                 {
                     FirstName = Input.FirstName,

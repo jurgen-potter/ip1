@@ -11,7 +11,7 @@ public interface IMemberRepository
     void DeleteMember(ApplicationUser member);
 
     
-    IEnumerable<MemberProfile>ReadMembersOfPanelWithCriteria(int panelId);
+    IEnumerable<ApplicationUser>ReadMembersOfPanelWithCriteria(int panelId);
     /*// Specialized queries for the RegistrationManager
     IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId);
     IEnumerable<ApplicationUser> ReadMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);

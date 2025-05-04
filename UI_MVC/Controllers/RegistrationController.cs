@@ -18,11 +18,11 @@ public class RegistrationController(
     public IActionResult Index(int panelId)
     {
         var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
-        var members = memberManager.GetMembersOfPanelWithCriteria(panelId).ToList();
+        var users = memberManager.GetMembersOfPanelWithCriteria(panelId).ToList();
         var panel = panelManager.GetPanelById(panelId);
         var result = drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
 
-        var bucketsWithActuals = registrationManager.AssignActualRegistrationsToBuckets(result.Buckets, members);
+        var bucketsWithActuals = registrationManager.AssignActualRegistrationsToBuckets(result.Buckets, users);
 
         var vm = new ResultViewModel
         {
@@ -64,7 +64,6 @@ public class RegistrationController(
         return View(model);
     }
 
-
     [HttpPost]
     public IActionResult StartFinalDrawPhase(FinalDrawViewModel finalDraw)
     {
@@ -73,9 +72,7 @@ public class RegistrationController(
             return View("EditMail", finalDraw);
         }
 
-        var panel = panelManager.GetPanelById(finalDraw.PanelId);
-
-        // Voer de loting uit
+        var panel = panelManager.GetPanelByIdWithMembers(finalDraw.PanelId);
         registrationManager.StartFinalDraw(panel);
 
         TempData["SelectedSubject"] = finalDraw.SelectedSubject;
@@ -86,19 +83,13 @@ public class RegistrationController(
         TempData["NotSelectedMessage"] =
             "Helaas bent u niet geselecteerd voor deelname aan het panel. Bedankt voor uw interesse.";
 
-        // Altijd doorverwijzen naar resultaten
-        return RedirectToAction("DrawResults", new { finalDraw.PanelId });
+
+        return RedirectToAction(nameof(DrawResults), new { panelId = finalDraw.PanelId });
     }
 
     [HttpGet]
     public IActionResult DrawResults(int panelId)
     {
-        // Haal panel object op
-        var panel = panelManager.GetPanelById(panelId);
-
-        // Haal lotingsresultaat op
-        var drawResults = panel.DrawResult;
-
         var selectedSubject = TempData["SelectedSubject"] as string;
         var selectedMessage = TempData["SelectedMessage"] as string;
         var reserveSubject = TempData["ReserveSubject"] as string;
@@ -106,27 +97,28 @@ public class RegistrationController(
         var notSelectedSubject = TempData["NotSelectedSubject"] as string;
         var notSelectedMessage = TempData["NotSelectedMessage"] as string;
 
-        // // Verstuur e-mails naar geselecteerde deelnemers
-        // foreach (var selected in drawResults.SelectedMembers)
-        // {
-        //     mailSender.SendEmailAsync(selected.Email, selectedSubject, selectedMessage);
-        // }
-        //
-        // // Verstuur e-mails naar reserve deelnemers
-        // foreach (var reserve in drawResults.ReserveMembers)
-        // {
-        //     mailSender.SendEmailAsync(reserve.Email, reserveSubject, reserveMessage);
-        // }
-        //
-        // // Verstuur e-mails naar niet-geselecteerde deelnemers
-        // foreach (var notSelected in drawResults.NotSelectedMembers)
-        // {
-        //     mailSender.SendEmailAsync(notSelected.Email, notSelectedSubject, notSelectedMessage);
-        // }
+        var panel = panelManager.GetPanelByIdWithMembers(panelId);
+
+        var dr = panel.DrawResult;
+
+
+        foreach (var selected in dr.SelectedMembers)
+        {
+            mailSender.SendEmailAsync(selected.Email, selectedSubject, selectedMessage);
+        }
+
+        foreach (var reserve in dr.ReserveMembers)
+        {
+            mailSender.SendEmailAsync(reserve.Email, reserveSubject, reserveMessage);
+        }
+
+        foreach (var notSelected in dr.NotSelectedMembers)
+        {
+            mailSender.SendEmailAsync(notSelected.Email, notSelectedSubject, notSelectedMessage);
+        }
 
         ViewBag.PanelId = panelId;
         ViewBag.DrawStatus = panel.DrawStatus;
-
-        return View(drawResults);
+        return View(dr);
     }
 }

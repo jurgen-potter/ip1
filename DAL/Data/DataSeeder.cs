@@ -188,14 +188,14 @@ public class DataSeeder
             .Include(u => u.MemberProfile)
             .SingleOrDefault(u => u.UserName == "paul@example.com");
         panel1.Organization = antwerpen?.OrganizationProfile;
-        panel1.Members.Add(paul?.MemberProfile);
+        panel3.Members.Add(paul?.MemberProfile);
         panel2.Organization = brussel?.OrganizationProfile;
         panel3.Organization = antwerpen?.OrganizationProfile;
         //panel3.Members.Add(paul?.MemberProfile);
         antwerpen?.OrganizationProfile.Panels.Add(panel1);
         antwerpen?.OrganizationProfile.Panels.Add(panel3);
         brussel?.OrganizationProfile.Panels.Add(panel2);
-        paul?.MemberProfile.Panels.Add(panel1);
+        paul?.MemberProfile.Panels.Add(panel3);
         //paul?.MemberProfile.Panels.Add(panel3);
         
         // Create initial list with members for Panel 1 and Panel 2
@@ -207,6 +207,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Jan",
                     Gender = Gender.Male,
                     Age = 22,
                     Town = "Antwerpen",
@@ -225,6 +226,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Els",
                     Gender = Gender.Female,
                     Age = 35,
                     Town = "Antwerpen",
@@ -242,6 +244,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Bart",
                     Gender = Gender.Male,
                     Age = 50,
                     Town = "Antwerpen",
@@ -259,6 +262,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Sophie",
                     Gender = Gender.Female,
                     Age = 28,
                     Town = "Antwerpen",
@@ -276,6 +280,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Tom",
                     Gender = Gender.Male,
                     Age = 45,
                     Town = "Antwerpen",
@@ -295,6 +300,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Lisa",
                     Gender = Gender.Female,
                     Age = 33,
                     Town = "Antwerpen",
@@ -312,6 +318,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Mark",
                     Gender = Gender.Male,
                     Age = 67,
                     Town = "Antwerpen",
@@ -329,6 +336,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Lotte",
                     Gender = Gender.Female,
                     Age = 72,
                     Town = "Antwerpen",
@@ -342,10 +350,11 @@ public class DataSeeder
             },
             new ApplicationUser
             {
-                Email = "pieter@example.com",
+                Email = "pieteer@example.com",
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Pieteer",
                     Gender = Gender.Male,
                     Age = 19,
                     Town = "Antwerpen",
@@ -363,6 +372,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Emma",
                     Gender = Gender.Female,
                     Age = 21,
                     Town = "Antwerpen",
@@ -382,6 +392,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Jans",
                     Gender = Gender.Male,
                     Age = 22,
                     Town = "Antwerpen",
@@ -399,6 +410,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Peter",
                     Gender = Gender.Male,
                     Age = 19,
                     Town = "Antwerpen",
@@ -416,6 +428,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "David",
                     Gender = Gender.Male,
                     Age = 24,
                     Town = "Antwerpen",
@@ -433,6 +446,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Johan",
                     Gender = Gender.Male,
                     Age = 21,
                     Town = "Antwerpen",
@@ -450,6 +464,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Koen",
                     Gender = Gender.Male,
                     Age = 25,
                     Town = "Antwerpen",
@@ -467,6 +482,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Simon",
                     Gender = Gender.Male,
                     Age = 18,
                     Town = "Antwerpen",
@@ -486,6 +502,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Thomas",
                     Gender = Gender.Male,
                     Age = 35,
                     Town = "Antwerpen",
@@ -503,6 +520,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Maarten",
                     Gender = Gender.Male,
                     Age = 28,
                     Town = "Antwerpen",
@@ -520,6 +538,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Jeroen",
                     Gender = Gender.Male,
                     Age = 37,
                     Town = "Antwerpen",
@@ -537,6 +556,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Pieter",
                     Gender = Gender.Male,
                     Age = 30,
                     Town = "Antwerpen",
@@ -554,6 +574,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Wouter",
                     Gender = Gender.Male,
                     Age = 33,
                     Town = "Antwerpen",
@@ -571,6 +592,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Michel",
                     Gender = Gender.Male,
                     Age = 39,
                     Town = "Antwerpen",
@@ -590,6 +612,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Frank",
                     Gender = Gender.Male,
                     Age = 45,
                     Town = "Antwerpen",
@@ -607,6 +630,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Marc",
                     Gender = Gender.Male,
                     Age = 58,
                     Town = "Antwerpen",
@@ -624,6 +648,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Patrick",
                     Gender = Gender.Male,
                     Age = 52,
                     Town = "Antwerpen",
@@ -641,6 +666,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Dirk",
                     Gender = Gender.Male,
                     Age = 49,
                     Town = "Antwerpen",
@@ -658,6 +684,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Hans",
                     Gender = Gender.Male,
                     Age = 44,
                     Town = "Antwerpen",
@@ -675,6 +702,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Erik",
                     Gender = Gender.Male,
                     Age = 55,
                     Town = "Antwerpen",
@@ -694,6 +722,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Jozef",
                     Gender = Gender.Male,
                     Age = 68,
                     Town = "Antwerpen",
@@ -711,6 +740,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Willem",
                     Gender = Gender.Male,
                     Age = 71,
                     Town = "Antwerpen",
@@ -728,6 +758,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Gerard",
                     Gender = Gender.Male,
                     Age = 65,
                     Town = "Antwerpen",
@@ -745,6 +776,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Robert",
                     Gender = Gender.Male,
                     Age = 77,
                     Town = "Antwerpen",
@@ -762,6 +794,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Hugo",
                     Gender = Gender.Male,
                     Age = 69,
                     Town = "Antwerpen",
@@ -779,6 +812,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Albert",
                     Gender = Gender.Male,
                     Age = 73,
                     Town = "Antwerpen",
@@ -798,6 +832,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Anna",
                     Gender = Gender.Female,
                     Age = 22,
                     Town = "Antwerpen",
@@ -811,10 +846,11 @@ public class DataSeeder
             },
             new ApplicationUser
             {
-                Email = "lisa@example.com",
+                Email = "lisa2@example.com",
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Lissa",
                     Gender = Gender.Female,
                     Age = 19,
                     Town = "Antwerpen",
@@ -828,10 +864,11 @@ public class DataSeeder
             },
             new ApplicationUser
             {
-                Email = "emma@example.com",
+                Email = "emma2@example.com",
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Emmy",
                     Gender = Gender.Female,
                     Age = 24,
                     Town = "Antwerpen",
@@ -849,6 +886,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Sara",
                     Gender = Gender.Female,
                     Age = 21,
                     Town = "Antwerpen",
@@ -866,6 +904,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Laura",
                     Gender = Gender.Female,
                     Age = 25,
                     Town = "Antwerpen",
@@ -883,6 +922,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Nina",
                     Gender = Gender.Female,
                     Age = 18,
                     Town = "Antwerpen",
@@ -902,6 +942,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Eva",
                     Gender = Gender.Female,
                     Age = 35,
                     Town = "Antwerpen",
@@ -919,6 +960,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Sophie",
                     Gender = Gender.Female,
                     Age = 28,
                     Town = "Antwerpen",
@@ -936,6 +978,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Julie",
                     Gender = Gender.Female,
                     Age = 37,
                     Town = "Antwerpen",
@@ -953,6 +996,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Els",
                     Gender = Gender.Female,
                     Age = 30,
                     Town = "Antwerpen",
@@ -970,6 +1014,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Lieve",
                     Gender = Gender.Female,
                     Age = 33,
                     Town = "Antwerpen",
@@ -987,6 +1032,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Anja",
                     Gender = Gender.Female,
                     Age = 39,
                     Town = "Antwerpen",
@@ -1006,6 +1052,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Maria",
                     Gender = Gender.Female,
                     Age = 45,
                     Town = "Antwerpen",
@@ -1023,6 +1070,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Ann",
                     Gender = Gender.Female,
                     Age = 58,
                     Town = "Antwerpen",
@@ -1040,6 +1088,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Ingrid",
                     Gender = Gender.Female,
                     Age = 52,
                     Town = "Antwerpen",
@@ -1057,6 +1106,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Martine",
                     Gender = Gender.Female,
                     Age = 49,
                     Town = "Antwerpen",
@@ -1074,6 +1124,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Hilde",
                     Gender = Gender.Female,
                     Age = 44,
                     Town = "Antwerpen",
@@ -1091,6 +1142,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Sonja",
                     Gender = Gender.Female,
                     Age = 55,
                     Town = "Antwerpen",
@@ -1110,6 +1162,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Helena",
                     Gender = Gender.Female,
                     Age = 68,
                     Town = "Antwerpen",
@@ -1127,6 +1180,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Godelieve",
                     Gender = Gender.Female,
                     Age = 71,
                     Town = "Antwerpen",
@@ -1144,6 +1198,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Rosa",
                     Gender = Gender.Female,
                     Age = 65,
                     Town = "Antwerpen",
@@ -1161,6 +1216,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Margareta",
                     Gender = Gender.Female,
                     Age = 77,
                     Town = "Antwerpen",
@@ -1178,6 +1234,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Mariette",
                     Gender = Gender.Female,
                     Age = 69,
                     Town = "Antwerpen",
@@ -1195,6 +1252,7 @@ public class DataSeeder
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
+                    FirstName = "Alice",
                     Gender = Gender.Female,
                     Age = 73,
                     Town = "Antwerpen",

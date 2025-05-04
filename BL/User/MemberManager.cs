@@ -78,7 +78,7 @@ public class MemberManager : IMemberManager
         _memberRepository.DeleteMember(member);
     }
 
-    public IEnumerable<MemberProfile> GetMembersOfPanelWithCriteria(int panelId)
+    public IEnumerable<ApplicationUser> GetMembersOfPanelWithCriteria(int panelId)
     {
         return _memberRepository.ReadMembersOfPanelWithCriteria(panelId);
     }

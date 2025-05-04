@@ -10,6 +10,7 @@ public interface IPanelManager
     public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization, int totAvPotMem);
 
     public Panel GetPanelById(int panelId);
+    Panel GetPanelByIdWithMembers(int panelId);
     void EditPanel(Panel panel);
     void RemovePanel(Panel panel);
     public IEnumerable<RecruitmentBucket> GetTargetBucketsByPanel(Panel panel);

@@ -18,10 +18,20 @@ public class PanelRepository : IPanelRepository
     public Panel ReadPanelById(int panelId)
     {
         return _dbContext.Panels
+            .SingleOrDefault(p => p.Id == panelId);
+    }
+
+    public Panel ReadPanelByIdWithMembers(int panelId)
+    {
+        return _dbContext.Panels
             .Include(p => p.DrawResult)
             .ThenInclude(dr => dr.SelectedMembers)
+            .ThenInclude(m => m.MemberProfile)
+            .ThenInclude(mp => mp.SelectedCriteria)
             .Include(p => p.DrawResult)
             .ThenInclude(dr => dr.ReserveMembers)
+            .ThenInclude(m => m.MemberProfile)
+            .ThenInclude(mp => mp.SelectedCriteria)
             .Include(p => p.DrawResult)
             .ThenInclude(dr => dr.NotSelectedMembers)
             .SingleOrDefault(p => p.Id == panelId);
@@ -35,8 +45,6 @@ public class PanelRepository : IPanelRepository
             .Include(r => r.Meetings)
             .SingleOrDefault(p => p.Id == panelId);
     }
-    
-    
 
 
     public void CreatePanel(Panel panel)
@@ -63,7 +71,7 @@ public class PanelRepository : IPanelRepository
             .FirstOrDefault(p => p.Id == panel.Id);
         return panelWithBuckets?.RecruitmentBuckets.ToList();
     }
-    
+
 
     public Recommendation ReadRecommendationById(int recommendationId)
     {
@@ -74,12 +82,12 @@ public class PanelRepository : IPanelRepository
     public Recommendation ReadRecommendationWithVotersById(int recommendationId)
     {
         return _dbContext.Recommendations
-            .Include(r => r.UserVotes) 
+            .Include(r => r.UserVotes)
             .ThenInclude(uv => uv.Voter)
             .ThenInclude(v => v.MemberProfile)
             .SingleOrDefault(r => r.Id == recommendationId);
     }
-    
+
     public void UpdateRecommendation(Recommendation recommendation)
     {
         _dbContext.Recommendations.Update(recommendation);
@@ -142,7 +150,7 @@ public class PanelRepository : IPanelRepository
         _dbContext.Update(criteria);
         _dbContext.SaveChanges();
     }
-    
+
     public IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId)
     {
         var panel = _dbContext.Panels
@@ -157,14 +165,14 @@ public class PanelRepository : IPanelRepository
             .Where(c => c.Name != "Geslacht" && c.Name != "Leeftijd")
             .ToList();
     }
-    
+
     public IEnumerable<Criteria> ReadCriteriaAndSubcriteriaWithPanelId(int panelId)
     {
         var panel = _dbContext.Panels
             .Include(p => p.Criteria)
             .ThenInclude(c => c.SubCriteria)
             .FirstOrDefault(p => p.Id == panelId);
-        
+
         return panel?.Criteria
             .ToList();
     }

@@ -8,13 +8,9 @@ public class DrawResult : ITenanted
 {
     public int Id { get; set; }
     
-    // public ICollection<ApplicationUser> SelectedMembers { get; set; } = new List<ApplicationUser>();
-    // public ICollection<ApplicationUser> ReserveMembers { get; set; } = new List<ApplicationUser>();
-    // public ICollection<ApplicationUser> NotSelectedMembers { get; set; } = new List<ApplicationUser>();
-    public ICollection<MemberProfile> SelectedMembers { get; set; } = new List<MemberProfile>();
-    public ICollection<MemberProfile> ReserveMembers { get; set; } = new List<MemberProfile>();
-    public ICollection<MemberProfile> NotSelectedMembers { get; set; } = new List<MemberProfile>();
-    
+    public ICollection<ApplicationUser> SelectedMembers { get; set; } = new List<ApplicationUser>();
+    public ICollection<ApplicationUser> ReserveMembers { get; set; } = new List<ApplicationUser>();
+    public ICollection<ApplicationUser> NotSelectedMembers { get; set; } = new List<ApplicationUser>();
     public int TotalNeededPanelmembers { get; set; }
     public int ReservePanelmembers { get; set; }
     [Required]

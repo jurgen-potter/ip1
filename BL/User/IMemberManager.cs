@@ -13,7 +13,7 @@ public interface IMemberManager
     void ChangeMember(ApplicationUser member);
     void RemoveMember(ApplicationUser member);
 
-    IEnumerable<MemberProfile> GetMembersOfPanelWithCriteria(int panelId);
+    IEnumerable<ApplicationUser> GetMembersOfPanelWithCriteria(int panelId);
 
 
     /*// Specialized queries for the RegistrationManager
