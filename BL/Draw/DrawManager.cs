@@ -14,82 +14,141 @@ public class DrawManager : IDrawManager
     {
         _drawRepository = drawRepository;
     }
-
-    public IEnumerable<Invitation> AddInvitations(List<DummyMember> members)
+    
+    public IEnumerable<Invitation> AddInvitations(int amount, List<Criteria> criteria, Panel panel)
     {
-        QRCodeGenerator qrGenerator = new QRCodeGenerator();
-        List<Invitation> invitations = new List<Invitation>();
-        foreach (DummyMember dummyMember in members)
-        {
-            int age = dummyMember.Age;
-            Gender gender = dummyMember.Gender;
-            int panelId = dummyMember.PanelId;
-            string town = dummyMember.Town;
-            string code = GenerateCode();
+    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+    List<Invitation> invitations = new List<Invitation>();
 
-            string qrCodePlace = "https://whimp-24.ew.r.appspot.com/MemberRegister/RegisterMember?code=" + code; 
+    Dictionary<Gender, double> genderPercentages = new();
+    Dictionary<string, double> ageGroupPercentages = new(); // e.g., "18-25" => 10
+
+    // Step 1: Parse criteria into gender and age group maps
+    foreach (var c in criteria)
+    {
+        if (c.Name.ToUpper() == "GESLACHT")
+        {
+            foreach (var sub in c.SubCriteria)
+            {
+                if (sub.Name.ToUpper() == "MAN")
+                    genderPercentages[Gender.Male] = sub.Percentage;
+                else if (sub.Name.ToUpper() == "VROUW")
+                    genderPercentages[Gender.Female] = sub.Percentage;
+            }
+        }
+        else if (c.Name.ToUpper() == "LEEFTIJD")
+        {
+            foreach (var sub in c.SubCriteria)
+                ageGroupPercentages[sub.Name.ToUpper()] = sub.Percentage;
+        }
+    }
+
+    // Step 2: Cross-multiply to calculate (gender, ageGroup) counts
+    Dictionary<(Gender gender, string ageGroup), int> invitationCounts = new();
+
+    foreach (var genderEntry in genderPercentages)
+    {
+        foreach (var ageEntry in ageGroupPercentages)
+        {
+            double combinedPercentage = (genderEntry.Value / 100.0) * (ageEntry.Value / 100.0);
+            int count = (int)Math.Round(combinedPercentage * amount);
+
+            var key = (genderEntry.Key, ageEntry.Key);
+            if (invitationCounts.ContainsKey(key))
+                invitationCounts[key] += count;
+            else
+                invitationCounts[key] = count;
+        }
+    }
+
+    // Step 3: Create invitations based on the calculated distribution
+    foreach (var pair in invitationCounts)
+    {
+        var gender = pair.Key.gender;
+        var ageGroup = pair.Key.ageGroup;
+        int count = pair.Value;
+
+        for (int i = 0; i < count; i++)
+        {
+            int age = ageGroup switch
+            {
+                "18-25" => 18,
+                "26-35" => 26,
+                "36-50" => 36,
+                "51-60" => 51,
+                "60+"   => 61,
+                _ => 36
+            };
+
+            string code = GenerateCode();
+            string qrCodePlace = $"https://whimp-24.ew.r.appspot.com/MemberRegister/RegisterMember?code={code}";
+
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
             PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
             byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
             string qrCodeString = Convert.ToBase64String(qrCodeAsPngByteArr);
 
-            
-            Invitation invitation = new Invitation()
+            Invitation invitation = new Invitation
             {
                 Code = code,
                 Age = age,
                 Gender = gender,
-                PanelId = panelId,
-                QRCodeString = qrCodeString,
+                PanelId = panel.Id,
+                QRCodeString = qrCodeString
             };
+
             Invitation newInvitation = _drawRepository.CreateInvitation(invitation);
             invitations.Add(newInvitation);
         }
-        
-        return invitations;
     }
 
-    public IEnumerable<Invitation> AddInvitations(Panel panel, List<DummyMember> members)
-    {
-        QRCodeGenerator qrGenerator = new QRCodeGenerator();
-        List<Invitation> invitations = new List<Invitation>();
+    return invitations;
+    }
 
-        foreach (Criteria criteria in panel.Criteria)
+    
+    private List<int> CalculateAmount(List<int> amounts, int totalAmount)
+    {
+        var amount = amounts.Sum();
+        int count = amounts.Count;
+
+        while (amount < totalAmount)
         {
-            foreach (SubCriteria subCriteria in criteria.SubCriteria)
+            var neededAmount = totalAmount - amount;
+
+            if (neededAmount >= count)
             {
-                
+                for (int i = 0; i < count; i++)
+                {
+                    amounts[i]++;
+                }
+                amount += count;
+            }
+            else
+            {
+                for (int i = 0; i < neededAmount; i++)
+                {
+                    amounts[i]++;
+                }
+                amount += neededAmount;
             }
         }
         
-        foreach (DummyMember dummyMember in members)
+        while (amount > totalAmount)
         {
-            int age = dummyMember.Age;
-            Gender gender = dummyMember.Gender;
-            int panelId = dummyMember.PanelId;
-            string town = dummyMember.Town;
-            string code = GenerateCode();
+            var neededAmount = amount - totalAmount;
 
-            string qrCodePlace = "https://whimp-24.ew.r.appspot.com/MemberRegister/RegisterMember?code=" + code;
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
-            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
-            byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
-            string qrCodeString = Convert.ToBase64String(qrCodeAsPngByteArr);
-
-
-            Invitation invitation = new Invitation()
+            for (int i = 0; i < count && neededAmount > 0; i++)
             {
-                Code = code,
-                Age = age,
-                Gender = gender,
-                PanelId = panelId,
-                QRCodeString = qrCodeString,
-            };
-            Invitation newInvitation = _drawRepository.CreateInvitation(invitation);
-            invitations.Add(newInvitation);
+                if (amounts[i] > 0)
+                {
+                    amounts[i]--;
+                    neededAmount--;
+                    amount--;
+                }
+            }
         }
-
-        return invitations;
+        
+        return amounts;
     }
 
     public Invitation GetInvitationWithCode(string code)

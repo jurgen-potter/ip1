@@ -66,7 +66,7 @@ public class TryOutInvitationQRCodeController : Controller
         members.Add(dummy4);
         members.Add(dummy5);
         
-        IEnumerable<Invitation> invitesDummy = _drawManager.AddInvitations(members);
+        //IEnumerable<Invitation> invitesDummy = _drawManager.AddInvitations(members);
         
         IEnumerable<Invitation> invites = _drawManager.GetAllInvitations();
         return View(invites);
