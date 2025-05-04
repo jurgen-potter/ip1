@@ -90,12 +90,29 @@
                                     <div class="col-auto fs-5 p-0">
                                         <span class="drag-handle">&#x2630;</span>
                                     </div>
+
                                     <div class="col">
-                                        <input asp-for="@Model.Questions[@i].Answers[@j].Description"
-                                               class="form-control answer-description"/>
+                                        <div class="form-floating mb-2">
+                                            <input asp-for="@Model.Questions[@i].Answers[@j].Description"
+                                                   id="Description-@i-@j"
+                                                   class="form-control answer-description"
+                                                   placeholder="Beschrijving" />
+                                            <label for="Description-@i-@j">Beschrijving</label>
+                                        </div>
                                         <span asp-validation-for="@Model.Questions[@i].Answers[@j].Description"
-                                              class="text-danger small"></span>
+                                              class="text-danger small d-block mb-2"></span>
+
+                                        <div class="form-floating mb-2">
+                                            <input asp-for="@Model.Questions[@i].Answers[@j].Advice"
+                                                   id="Advice-@i-@j"
+                                                   class="form-control answer-advice"
+                                                   placeholder="Aanbeveling" />
+                                            <label for="Advice-@i-@j" class="advice-label">Aanbeveling</label>
+                                        </div>
+                                        <span asp-validation-for="@Model.Questions[@i].Answers[@j].Advice"
+                                              class="text-danger small d-block"></span>
                                     </div>
+                                    
                                     <div class="col-auto">
                                         <button type="button" class="btn btn-danger btn-sm remove-answer-btn">
                                             Verwijder

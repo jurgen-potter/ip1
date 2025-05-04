@@ -59,6 +59,7 @@ public class AdminController : Controller
                 {
                     Id = answer.Id,
                     Description = answer.Description,
+                    Advice = answer.Advice,
                     IsCritical = answer.IsCritical,
                     ToDelete = false
                 };
@@ -137,6 +138,7 @@ public class AdminController : Controller
                             if (existingAnswer != null)
                             {
                                 existingAnswer.Description = answerModel.Description;
+                                existingAnswer.Advice = answerModel.Advice;
                                 existingAnswer.Position = answerPosition++;
                                 existingAnswer.IsCritical = answerModel.IsCritical;
                                 updatedAnswers.Add(existingAnswer);
@@ -147,6 +149,7 @@ public class AdminController : Controller
                             var newAnswer = new Answer
                             {
                                 Description = answerModel.Description,
+                                Advice = answerModel.Advice,
                                 Position = answerPosition++,
                                 IsCritical = answerModel.IsCritical
                             };
@@ -170,6 +173,7 @@ public class AdminController : Controller
                     Answers = questionModel.Answers.Select(a => new Answer
                     {
                         Description = a.Description,
+                        Advice = a.Advice,
                         Position = answerPosition++,
                         IsCritical = a.IsCritical
                     }).ToList()

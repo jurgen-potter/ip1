@@ -43,6 +43,9 @@ public class EditAnswerViewModel
     [MaxLength(1000, ErrorMessage = "Antwoord mag maximaal 1000 karakters bevatten.")]
     public string Description { get; set; }
     
+    [MaxLength(1000)]
+    public string Advice { get; set; }
+    
     public bool IsCritical{ get; set; }
     
     public bool ToDelete { get; set; }

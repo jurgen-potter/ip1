@@ -19,6 +19,7 @@ function editQuestionnaireInit(): void {
             const detailCheck = question.querySelector(".detail-check") as HTMLInputElement;
             const isDetail = question.querySelector('.detail-value') as HTMLInputElement;
             isDetail.value = detailCheck.checked.toString();
+            toggleAdviceOnQuestion(question);
         }
         
         addQuestionHandlers(question);
@@ -65,6 +66,7 @@ function addQuestionHandlers(question: HTMLLIElement): void {
         detailCheck.addEventListener('change', () => {
             const isDetail = question.querySelector('.detail-value') as HTMLInputElement;
             isDetail.value = detailCheck.checked.toString();
+            toggleAdviceOnQuestion(question);
         });
     }
 
@@ -94,6 +96,11 @@ function addAnswerHandlers(answer: HTMLLIElement): void {
         answerDescription.setAttribute('value', answerDescription.value);
     });
 
+    const answerAdvice = answer.querySelector(".answer-advice") as HTMLInputElement;
+    answerAdvice.addEventListener('input', () => {
+        answerAdvice.setAttribute('value', answerAdvice.value);
+    });
+
     if (isDiscover) {
         const criticalCheck = answer.querySelector(".critical-check") as HTMLInputElement;
         criticalCheck.addEventListener('change', () => {
@@ -103,6 +110,26 @@ function addAnswerHandlers(answer: HTMLLIElement): void {
     }
 
     addAnswerDnDHandlers(answer);
+}
+
+function toggleAdviceOnQuestion(question: HTMLLIElement): void {
+    const detailCheck = question.querySelector(".detail-check") as HTMLInputElement;
+    const answerItems = question.querySelectorAll<HTMLLIElement>('.answer-item');
+    answerItems.forEach((answer) => {
+        toggleAdviceOnAnswer(answer, detailCheck);
+    })
+}
+
+function toggleAdviceOnAnswer(answer: HTMLLIElement, detailCheck: HTMLInputElement): void {
+    const advice = answer.querySelector('.answer-advice') as HTMLInputElement;
+    const label = answer.querySelector('.advice-label') as HTMLLabelElement;
+    if (detailCheck.checked) {
+        advice.classList.add('d-none');
+        label.classList.add('d-none');
+    } else {
+        advice.classList.remove('d-none');
+        label.classList.remove('d-none');
+    }
 }
 
 // Change arrow direction when question is expanded/collapsed
@@ -247,8 +274,16 @@ function generateAnswerHtml(questionIndex: string | number, answerIndex: number)
                 <span class="drag-handle">&#x2630</span>
             </div>
             <div class="col">
-                <input name="Questions[${questionIndex}].Answers[${answerIndex}].Description" class="form-control answer-description" />
+                <div class="form-floating mb-2">
+                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].Description" id="Description-@i-@j" class="form-control answer-description" />
+                    <label for="Description-${questionIndex}-${answerIndex}">Beschrijving</label>
+                </div>
                 <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Description" data-valmsg-replace="true"></span>
+                <div class="form-floating mb-2">
+                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].Advice" id="Advice-@i-@j" class="form-control answer-advice" />
+                    <label for="Advice-${questionIndex}-${answerIndex}" class="advice-label">Aanbeveling</label>
+                </div>
+                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Advice" data-valmsg-replace="true"></span>
             </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
@@ -424,9 +459,14 @@ function updateAnswerIndices(answerList: HTMLUListElement): void {
         const description = answer.querySelector('.answer-description') as HTMLInputElement;
         description.name = `Questions[${questionIndex}].Answers[${index}].Description`;
 
-        const criticalCheck = answer.querySelector('.critical-check') as HTMLInputElement;
-        const isCriticalValue = (answer.querySelector('.critical-value') as HTMLInputElement).value;
-        criticalCheck.checked = isCriticalValue.toLowerCase() === "true";
+        const advice = answer.querySelector('.answer-advice') as HTMLInputElement;
+        advice.name = `Questions[${questionIndex}].Answers[${index}].Advice`;
+
+        if (isDiscover) {
+            const criticalCheck = answer.querySelector('.critical-check') as HTMLInputElement;
+            const isCriticalValue = (answer.querySelector('.critical-value') as HTMLInputElement).value;
+            criticalCheck.checked = isCriticalValue.toLowerCase() === "true";
+        }
     });
 }
 
@@ -457,9 +497,12 @@ function updateQuestionIndices(): void {
         const questionDescription = question.querySelector('.question-description') as HTMLInputElement;
         questionDescription.name = `Questions[${index}].Description`;
 
-        const detailCheck = question.querySelector('.detail-check') as HTMLInputElement;
-        const isDetailValue = (question.querySelector('.detail-value') as HTMLInputElement).value;
-        detailCheck.checked = isDetailValue.toLowerCase() === "true";
+        if (!isDiscover) {
+            const detailCheck = question.querySelector('.detail-check') as HTMLInputElement;
+            const isDetailValue = (question.querySelector('.detail-value') as HTMLInputElement).value;
+            detailCheck.checked = isDetailValue.toLowerCase() === "true";
+            toggleAdviceOnQuestion(question);
+        }
         
         /*const weightInput = question.querySelector('.question-weight') as HTMLInputElement;
         weightInput.name = `Questions[${index}].Weight`;*/
