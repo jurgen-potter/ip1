@@ -1,7 +1,7 @@
 @model QuestionnaireResponseViewModel
 
 @{
-    ViewBag.Title = "Verkenning resultaat";
+    ViewBag.Title = @Model.Questionnaire.Title;
 }
 
 <div class="container my-4"> <h2 class="mb-4">Advies op basis van uw antwoorden</h2>
