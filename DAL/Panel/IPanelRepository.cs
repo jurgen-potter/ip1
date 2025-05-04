@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
 
@@ -7,6 +7,7 @@ namespace CitizenPanel.DAL;
 public interface IPanelRepository
 {
     Panel ReadPanelById(int panelId);
+    Panel ReadPanelByIdWithMembers(int panelId);
     void CreatePanel(Panel panel);
     void UpdatePanel(Panel panel);
     void DeletePanel(Panel panel);
@@ -23,5 +24,6 @@ public interface IPanelRepository
     IEnumerable<int> ReadVotedRecommendationsByUser(string userId);
     void UpdateCriteria(Criteria criteria);
     IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId);
+    IEnumerable<Criteria> ReadCriteriaAndSubcriteriaWithPanelId(int panelId);
     IEnumerable<Panel> ReadAllPanels();
 }

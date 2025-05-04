@@ -1,10 +1,11 @@
-﻿@model IEnumerable<RecruitmentBucket>
-@using CitizenPanel.BL.Domain.Draw;
+﻿@using CitizenPanel.BL.Domain.Draw
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ResultViewModel
 @{
     ViewData["Title"] = "Registratie-overzicht";
     var panelId = ViewBag.PanelId ?? 1;
-    var drawStatus = (DrawStatus)ViewBag.DrawStatus;
-    var hasSufficientRegistrations = ViewBag.HasSufficientRegistrations;
+    var drawStatus = ViewBag.DrawStatus != null ? (DrawStatus)ViewBag.DrawStatus : DrawStatus.FirstPhaseActive;
+    var hasSufficientRegistrations = ViewBag.HasSufficientRegistrations ?? false;
 }
 
 <h2>Registratie-overzicht voor panel @panelId</h2>
@@ -56,35 +57,69 @@
     </div>
 }
 
+@if (ViewBag.TotalMembers != null)
+{
+    <div class="alert alert-info">
+        <h5>Debug Informatie</h5>
+        <p>Totaal aantal members: @ViewBag.TotalMembers</p>
+        
+        @if (ViewBag.MemberDetails != null && ViewBag.MemberDetails.Count > 0)
+        {
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Gender</th>
+                        <th>Age</th>
+                        <th>Town</th>
+                        <th>Selected Criteria</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var member in ViewBag.MemberDetails)
+                    {
+                        <tr>
+                            <td>@member.Id</td>
+                            <td>@member.Gender</td>
+                            <td>@member.Age</td>
+                            <td>@member.Town</td>
+                            <td>@member.SelectedCriteria</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+}
+
 <h3>Overzicht aanmeldingen per doelgroep</h3>
 
 <table class="table table-striped">
     <thead>
     <tr>
-        <th>Geslacht</th>
-        <th>Leeftijdsgroep</th>
+        <th>Criteria</th>
         <th>Aantal Registraties</th>
         <th>Status</th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var bucket in Model)
+    @foreach (var bucket in Model.Buckets)
     {
-        @* <tr> *@
-        @*     <td>@bucket.Gender</td> *@
-        @*     <td>@bucket.AgeGroup</td> *@
-        @*     <td>@bucket.Count/@bucket.Target</td> *@
-        @*     <td> *@
-        @*         @if (bucket.Count >= bucket.Target) *@
-        @*         { *@
-        @*             <span class="badge bg-success">Voldoende</span> *@
-        @*         } *@
-        @*         else *@
-        @*         { *@
-        @*             <span class="badge bg-warning text-dark">Onvoldoende</span> *@
-        @*         } *@
-        @*     </td> *@
-        @* </tr> *@
+        <tr>
+            <td>
+                @(string.Join(" × ", bucket.SubCriteriaNames.Select((sub,i) => $"{sub} ({bucket.CriteriaNames[i]})")))
+            </td>
+            <td>@bucket.RegisteredCount/@bucket.Count</td>
+            <td>
+                @if (bucket.IsSufficient)
+                {
+                    <span class="badge bg-success">Voldoende</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning text-dark">Onvoldoende</span>
+                }
+            </td>
+        </tr>
     }
     </tbody>
 </table>
@@ -114,5 +149,5 @@
 <div id="hasSufficientRegistrations" type="hidden" data-value="@hasSufficientRegistrations"></div>
 
 @section Scripts {
-    <script defer src="@Url.Content("~/dist/js/registration/index.js")"></script>
+    <script defer src="~/dist/js/registration/index.js"></script>
 }

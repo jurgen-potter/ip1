@@ -63,6 +63,7 @@ public class IdentitySeeder
         
         user3.MemberProfile = new MemberProfile()
         {
+            Gender = Gender.Male,
             TenantId = "antwerpen"
         };
         user3.UserType = UserType.Member;

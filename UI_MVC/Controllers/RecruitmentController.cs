@@ -1,23 +1,20 @@
-using CitizenPanel.BL;
+﻿using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
 using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
-using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
 public class RecruitmentController : Controller
 {
     private readonly IDrawManager _drawManager;
+    private readonly IPanelManager _panelManager;
     // private readonly IMemberManager _memberManager;
 
-    public RecruitmentController(IDrawManager drawManager)
+    public RecruitmentController(IDrawManager drawManager, IPanelManager panelManager)
     {
         _drawManager = drawManager;
+        _panelManager = panelManager;
         // _memberManager = memberManager;
     }
 
@@ -25,12 +22,6 @@ public class RecruitmentController : Controller
     [AllowAnonymous]
     public IActionResult Index(int panelId)
     {
-        if (TempData["CriteriaFormData"] is string json)
-        {
-            var tModel = JsonConvert.DeserializeObject<RecruitmentCriteriaViewModel>(json);
-            return View(tModel);
-        }
-        
         var criteriaList = _drawManager.GetInitialCriteria();
 
         var model = new RecruitmentCriteriaViewModel
@@ -102,11 +93,11 @@ public class RecruitmentController : Controller
 
             criteria.Add(cr);
         }
-
         var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, criteria);
 
         var resultModel = new ResultViewModel()
         {
+            TotalAvailablePotentialPanelmembers = model.TotalAvailablePotentialPanelmembers,
             ReservePotPanelmembers = result.ReservePotPanelmembers,
             TotalNeededPanelmembers = result.TotalNeededPanelmembers,
             Criteria = model.Criteria
@@ -121,7 +112,6 @@ public class RecruitmentController : Controller
                 SubCriteriaNames = bucket.SubCriteriaNames
             });
         }
-        
         return View("Result", resultModel);
     }
     
