@@ -31,6 +31,9 @@ public class Panel : ITenanted
     public ICollection<RecruitmentBucket> RecruitmentBuckets { get; set; }
     public DrawStatus DrawStatus { get; set; }
     public DrawResult DrawResult { get; set; }
+    public ICollection<Recommendation> Recommendations { get; set; } = new List<Recommendation>();
+    public int TotalAvailablePotentialPanelmembers{ get; set; }
+    
     [Required]
     public string TenantId { get; set; }
     

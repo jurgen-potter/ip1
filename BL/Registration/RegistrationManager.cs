@@ -1,137 +1,190 @@
-﻿/*using CitizenPanel.BL.Domain.Draw;
+﻿using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
-using CitizenPanel.DAL;
-using CitizenPanel.DAL.Registration;
 
 namespace CitizenPanel.BL.Registration;
 
-public class RegistrationManager(IMemberManager memberManager, IPanelManager panelManager) : IRegistrationManager
+public class RegistrationManager(IPanelManager panelManager, IDrawManager drawManager, IMemberManager memberManager) : IRegistrationManager
 {
-    public IEnumerable<RecruitmentBucket> GetInvitationBuckets(Panel panel)
+    public IEnumerable<RecruitmentBucket> AssignActualRegistrationsToBuckets(List<RecruitmentBucket> buckets, List<ApplicationUser> users)
     {
-        // Dit moet nog gekoppelt worden aan de criteria van het panel zelf
-        var ageGroups = new List<(string Name, int Min, int Max)>
+        foreach (var bucket in buckets)
         {
-            ("18-25", 18, 25),
-            ("26-40", 26, 40),
-            ("41-60", 41, 60),
-            ("60+", 61, int.MaxValue)
-        };
-        
-        // Group by gender and age group
-        var buckets = new List<RecruitmentBucket>();
-        foreach (var genderGroup in new[] { Gender.Male, Gender.Female })
-        {
-            string genderName = genderGroup == Gender.Male ? "Mannen" : "Vrouwen";
-            foreach (var ageGroup in ageGroups)
+            int matchCount = 0;
+            foreach (var user in users)
             {
-                // Use repository to get count instead of fetching all members
-                var count = memberManager.GetMemberCountByPanelIdGenderAndAgeRange(
-                    panel.Id, genderGroup, ageGroup.Min, ageGroup.Max);
-                
-                buckets.Add(new RecruitmentBucket
-                {
-                    Gender = genderName,
-                    AgeGroup = ageGroup.Name,
-                    Count = count
-                });
+                var mp = user.MemberProfile;
+                if (mp == null) continue;
+
+                bool matches = MatchesBucket(mp, bucket);
+                if (matches)
+                    matchCount++;
             }
+            bucket.ActualCount = matchCount;
         }
+
         return buckets;
     }
 
-    public IEnumerable<RecruitmentBucket> GetAllBuckets(Panel panel)
+    private bool MatchesBucket(MemberProfile mp, RecruitmentBucket bucket)
     {
-        var existingBuckets = GetInvitationBuckets(panel).ToList();
-
-        var targetBuckets = panelManager.GetTargetBucketsByPanel(panel);
-        
-        
-        // // Update existing buckets with real values
-        foreach (var bucket in targetBuckets)
+        // Check Gender
+        bool hasGenderCriteria = false;
+        foreach (var sub in bucket.SubCriteriaNames)
         {
-            var existingBucket =
-                existingBuckets.FirstOrDefault(b => b.Gender == bucket.Gender && b.AgeGroup == bucket.AgeGroup);
-            if (existingBucket != null)
+            if (sub.Equals("Man", StringComparison.OrdinalIgnoreCase))
             {
-                bucket.Count = existingBucket.Count; // Use real count if it exists
+                hasGenderCriteria = true;
+                if (mp.Gender != Gender.Male)
+                    return false;
+            }
+            else if (sub.Equals("Vrouw", StringComparison.OrdinalIgnoreCase))
+            {
+                hasGenderCriteria = true;
+                if (mp.Gender != Gender.Female)
+                    return false;
             }
         }
-        return targetBuckets.OrderBy(b => b.Gender).ThenBy(b => b.AgeGroup).ToList();
+
+        // Check Age
+        bool hasAgeCriteria = false;
+        foreach (var sub in bucket.SubCriteriaNames)
+        {
+            if (IsAgeGroup(sub))
+            {
+                hasAgeCriteria = true;
+                if (!IsInAgeGroup(mp.Age, sub))
+                    return false;
+            }
+        }
+
+        // Check other criteria
+        foreach (var sub in bucket.SubCriteriaNames)
+        {
+            if (hasGenderCriteria && (sub.Equals("Man", StringComparison.OrdinalIgnoreCase) ||
+                                       sub.Equals("Vrouw", StringComparison.OrdinalIgnoreCase)))
+                continue;
+
+            if (hasAgeCriteria && IsAgeGroup(sub))
+                continue;
+
+            if (!mp.SelectedCriteria.Any(sc =>
+                    sc.Name.Equals(sub, StringComparison.OrdinalIgnoreCase) ||
+                    sub.Contains(sc.Name, StringComparison.OrdinalIgnoreCase) ||
+                    sc.Name.Contains(sub, StringComparison.OrdinalIgnoreCase)))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    // Get the current draw status for a panel
-    public DrawStatus GetDrawStatus(Panel panel)
+    private static bool IsAgeGroup(string group)
     {
-        return panel.DrawStatus;
+        group = group.Trim();
+        return group.EndsWith("+") || group.Contains("-");
     }
 
-    // Start the final draw for a panel
+    private bool IsInAgeGroup(int age, string group)
+    {
+        group = group.Trim();
+
+        if (group.EndsWith("+"))
+        {
+            if (int.TryParse(group.TrimEnd('+'), out var lower))
+                return age >= lower;
+        }
+        else if (group.Contains('-'))
+        {
+            var parts = group.Split('-', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 2
+                && int.TryParse(parts[0], out var lo)
+                && int.TryParse(parts[1], out var hi))
+            {
+                return age >= lo && age <= hi;
+            }
+        }
+
+        return false;
+    }
+    
+
     public void StartFinalDraw(Panel panel)
     {
-        // Perform the draw
-        var buckets = GetAllBuckets(panel);
-        var result = new DrawResult();
-        var random = new Random();
+        var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panel.Id);
+        var allUsers = memberManager.GetMembersOfPanelWithCriteria(panel.Id).ToList();
+        
+        var recruitmentResult = drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
+        
+        var bucketsWithTargetsAndActuals = AssignActualRegistrationsToBuckets(recruitmentResult.Buckets, allUsers);
 
-        // Define age ranges for bucket filtering
-        var ageRanges = new Dictionary<string, (int Min, int Max)>
+        var drawResult = new DrawResult
         {
-            { "18-25", (18, 25) },
-            { "26-40", (26, 40) },
-            { "41-60", (41, 60) },
-            { "60+", (61, int.MaxValue) }
+            SelectedMembers = new List<ApplicationUser>(),
+            ReserveMembers = new List<ApplicationUser>(),
+            NotSelectedMembers = new List<ApplicationUser>(),
+            TotalNeededPanelmembers = recruitmentResult.TotalNeededPanelmembers,
+            ReservePanelmembers = recruitmentResult.ReservePotPanelmembers
         };
 
-        foreach (var bucket in buckets)
+        var selectedAndReservedUserIds = new HashSet<string>();
+        var eligibleForReservePoolCandidates = new List<ApplicationUser>(); 
+
+        var random = new Random();
+
+        foreach (var bucket in bucketsWithTargetsAndActuals)
         {
-            Gender genderEnum = bucket.Gender == "Mannen" ? Gender.Male : Gender.Female;
-            var ageRange = ageRanges[bucket.AgeGroup];
+            int targetCount = bucket.Count;
 
-            var bucketMembers = memberManager.GetMembersByPanelIdGenderAndAgeRange(
-                panel.Id,
-                genderEnum,
-                ageRange.Min,
-                ageRange.Max
-            ).ToList();
+            var eligibleUsersInBucket = allUsers
+                .Where(u => u.MemberProfile != null &&
+                            !selectedAndReservedUserIds.Contains(u.Id) &&
+                            MatchesBucket(u.MemberProfile, bucket))
+                .ToList();
 
-            var shuffledMembers = bucketMembers.OrderBy(x => random.Next()).ToList();
+            int actualSelectedCount = Math.Min(targetCount, eligibleUsersInBucket.Count);
 
-            int mainCount = Math.Min(bucket.Target, shuffledMembers.Count);
-            int reserveCount = (int)Math.Ceiling(mainCount * 0.1); // 10% reserves, afgerond
-            
-            for (int i = 0; i < shuffledMembers.Count; i++)
+            var shuffledUsers = eligibleUsersInBucket.OrderBy(_ => random.Next()).ToList(); 
+
+            for (int i = 0; i < actualSelectedCount; i++)
             {
-                var member = shuffledMembers[i];
-
-                if (i < mainCount)
-                {
-                    result.SelectedMembers.Add(member);
-                }
-                else if (i < mainCount + reserveCount)
-                {
-                    result.ReserveMembers.Add(member);
-                }
-                else
-                {
-                    result.NotSelectedMembers.Add(member);
-                }
+                var userToSelect = shuffledUsers[i];
+                drawResult.SelectedMembers.Add(userToSelect);
+                selectedAndReservedUserIds.Add(userToSelect.Id); 
             }
 
-            panel.DrawResult = result;
-
-            panel.DrawStatus = DrawStatus.Complete;
-
-            panelManager.EditPanel(panel);
+            for (int i = actualSelectedCount; i < shuffledUsers.Count; i++)
+            {
+                 var userForReserveCandidate = shuffledUsers[i];
+                 if (!selectedAndReservedUserIds.Contains(userForReserveCandidate.Id) && eligibleForReservePoolCandidates.All(u => u.Id != userForReserveCandidate.Id))
+                 {
+                     eligibleForReservePoolCandidates.Add(userForReserveCandidate);
+                 }
+            }
         }
-    }
+        
+        var shuffledReservePool = eligibleForReservePoolCandidates.OrderBy(_ => random.Next()).ToList(); 
 
-    // Check if there are sufficient registrations for all criteria
-    public bool HasSufficientRegistrations(Panel panel)
-    {
-        var buckets = GetAllBuckets(panel);
-        // Check if any bucket has fewer registrations than the target
-        return !buckets.Any(b => b.Count < b.Target);
+        int actualReserveCount = Math.Min(recruitmentResult.ReservePotPanelmembers, shuffledReservePool.Count);
+
+        for (int i = 0; i < actualReserveCount; i++)
+        {
+             var userToReserve = shuffledReservePool[i];
+             if (!selectedAndReservedUserIds.Contains(userToReserve.Id))
+             {
+                drawResult.ReserveMembers.Add(userToReserve);
+                selectedAndReservedUserIds.Add(userToReserve.Id); 
+             }
+        }
+
+        drawResult.NotSelectedMembers = allUsers
+            .Where(u => !selectedAndReservedUserIds.Contains(u.Id)) 
+            .ToList();
+
+        panel.DrawStatus = DrawStatus.Complete;
+        panel.DrawResult = drawResult;
+
+        panelManager.ChangePanel(panel);
     }
-}*/
+}

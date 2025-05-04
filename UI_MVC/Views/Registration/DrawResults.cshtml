@@ -1,18 +1,20 @@
 ﻿@model CitizenPanel.BL.Domain.Draw.DrawResult
-@using CitizenPanel.BL.Domain.Draw;
+@using CitizenPanel.BL.Domain.Draw
+@using CitizenPanel.BL.Domain.User;
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-ViewData["Title"] = "Lotingsresultaten";
-var panelId = ViewBag.PanelId ?? 1;
-var drawStatus = (DrawStatus)ViewBag.DrawStatus;
+    ViewData["Title"] = "Lotingsresultaten";
+    var panelId = ViewBag.PanelId ?? 1;
+    var drawStatus = (DrawStatus)ViewBag.DrawStatus;
 }
 
 <h2>Lotingsresultaten voor panel @panelId</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
-<div class="alert alert-success">
-    @TempData["SuccessMessage"]
-</div>
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
 }
 
 <div class="row mb-4">
@@ -26,7 +28,7 @@ var drawStatus = (DrawStatus)ViewBag.DrawStatus;
                     Status:
                     <span class="badge bg-success">Loting afgerond</span>
                 </p>
-                <a asp-action="Index" asp-route-panelId="@panelId" method="get" class="btn btn-secondary">
+                <a asp-action="Index" asp-route-panelId="@panelId" class="btn btn-secondary">
                     Terug naar overzicht
                 </a>
             </div>
@@ -34,107 +36,83 @@ var drawStatus = (DrawStatus)ViewBag.DrawStatus;
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <h3>Geselecteerde deelnemers</h3>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Email</th>
-                <th>Geslacht</th>
-                <th>Leeftijd</th>
-                <th>Categorie</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var member in Model.SelectedMembers)
-            {
-            <tr>
-                <td>@member.Email</td>
-                <td>@(member.MemberProfile.Gender == CitizenPanel.BL.Domain.User.Gender.Male ? "Man" : "Vrouw")</td>
-                <td>@member.MemberProfile.Age</td>
-                <td>
-                    @{
-                    string category = "";
-                    if (member.MemberProfile.Gender == CitizenPanel.BL.Domain.User.Gender.Male)
+@foreach (var group in new[]
+          {
+              new { Title = "Geselecteerde deelnemers", Members = Model.SelectedMembers },
+              new { Title = "Reserve deelnemers", Members = Model.ReserveMembers },
+          })
+{
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>@group.Title</h3>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Naam</th>
+                    <th>Geslacht</th>
+                    <th>Leeftijd</th>
+                    <th>Categorie</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var member in group.Members)
+                {
+                    var mp = member.MemberProfile;
+                    if (mp == null)
                     {
-                    category = "Mannen, ";
-                    }
-                    else
-                    {
-                    category = "Vrouwen, ";
+                        continue;
                     }
 
-                    if (member.MemberProfile.Age >= 18 && member.MemberProfile.Age <= 25)
-                    category += "18-25";
-                    else if (member.MemberProfile.Age >= 26 && member.MemberProfile.Age <= 40)
-                    category += "26-40";
-                    else if (member.MemberProfile.Age >= 41 && member.MemberProfile.Age <= 60)
-                    category += "41-60";
-                    else
-                    category += "60+";
+                    var nameDisplay = string.IsNullOrEmpty(mp.FirstName) ? "[Geen naam]" : mp.FirstName;
+
+                    var genderDisplay = mp.Gender == Gender.Male ? "Man" : "Vrouw";
+
+                    string ageGroup;
+                    if (mp.Age <= 0) 
+                    {
+                        ageGroup = "[Onbekend]"; 
                     }
-                    @category
-                </td>
-            </tr>
-            }
-            </tbody>
-        </table>
+                    else if (mp.Age >= 18 && mp.Age <= 25)
+                    {
+                        ageGroup = "18-25";
+                    }
+                    else if (mp.Age <= 40)
+                    {
+                        ageGroup = "26-40";
+                    }
+                    else if (mp.Age <= 60)
+                    {
+                        ageGroup = "41-60";
+                    }
+                    else
+                    {
+                        ageGroup = "60+";
+                    }
+
+                    var criteriaList = new List<string> { genderDisplay, ageGroup };
+                    if (mp.SelectedCriteria != null)
+                    {
+                        criteriaList.AddRange(mp.SelectedCriteria.Where(sc => sc != null && !string.IsNullOrEmpty(sc.Name)).Select(sc => sc.Name));
+                    }
+
+                    var categoryDisplay = string.Join(" × ", criteriaList);
+
+                    <tr>
+                        <td>@nameDisplay</td>
+                        <td>@genderDisplay</td>
+                        <td>@mp.Age</td>
+                        <td>@categoryDisplay</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-
-<div class="row mt-4">
-    <div class="col-md-12">
-        <h3>Reserve deelnemers</h3>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Email</th>
-                <th>Geslacht</th>
-                <th>Leeftijd</th>
-                <th>Categorie</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var member in Model.ReserveMembers)
-            {
-            <tr>
-                <td>@member.Email</td>
-                <td>@(member.MemberProfile.Gender == CitizenPanel.BL.Domain.User.Gender.Male ? "Man" : "Vrouw")</td>
-                <td>@member.MemberProfile.Age</td>
-                <td>
-                    @{
-                    string category = "";
-                    if (member.MemberProfile.Gender == CitizenPanel.BL.Domain.User.Gender.Male)
-                    {
-                    category = "Mannen, ";
-                    }
-                    else
-                    {
-                    category = "Vrouwen, ";
-                    }
-
-                    if (member.MemberProfile.Age >= 18 && member.MemberProfile.Age <= 25)
-                    category += "18-25";
-                    else if (member.MemberProfile.Age >= 26 && member.MemberProfile.Age <= 40)
-                    category += "26-40";
-                    else if (member.MemberProfile.Age >= 41 && member.MemberProfile.Age <= 60)
-                    category += "41-60";
-                    else
-                    category += "60+";
-                    }
-                    @category
-                </td>
-            </tr>
-            }
-            </tbody>
-        </table>
-    </div>
-</div>
+}
 
 @if (!Model.SelectedMembers.Any() && !Model.ReserveMembers.Any())
 {
-<div class="alert alert-warning">
-    Er zijn geen resultaten beschikbaar. De loting moet mogelijk opnieuw worden uitgevoerd.
-</div>
+    <div class="alert alert-warning">
+        Er zijn geen resultaten beschikbaar. De loting moet mogelijk opnieuw worden uitgevoerd.
+    </div>
 }

@@ -4,6 +4,7 @@ namespace CitizenPanel.UI.MVC.Models;
 
 public class ResultViewModel
 {
+    public int TotalAvailablePotentialPanelmembers {get; set;}
     public int ReservePotPanelmembers {get; set;}
     public int TotalNeededPanelmembers {get; set;}
     public List<BucketViewModel> Buckets { get; set; } = new List<BucketViewModel>();
@@ -12,7 +13,10 @@ public class ResultViewModel
 
 public class BucketViewModel
 {
-    public List<string> CriteriaNames { get; set; } = new List<string>();
-    public List<string> SubCriteriaNames { get; set; } = new List<string>();
-    public int Count { get; set; }
+    public List<string> CriteriaNames     { get; set; } = new();
+    public List<string> SubCriteriaNames  { get; set; } = new();
+    public int Count                      { get; set; }  
+    public int RegisteredCount            { get; set; }  
+
+    public bool IsSufficient => RegisteredCount >= Count;
 }

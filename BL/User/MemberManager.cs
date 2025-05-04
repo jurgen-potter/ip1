@@ -89,6 +89,11 @@ public class MemberManager : IMemberManager
         return _memberRepository.UpdateOrganizationAnswersAsync(userId, questionnaireId, answers);
     }
 
+    public IEnumerable<ApplicationUser> GetMembersOfPanelWithCriteria(int panelId)
+    {
+        return _memberRepository.ReadMembersOfPanelWithCriteria(panelId);
+    }
+
     /*public IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId)
     {
         return _memberRepository.ReadMembersByPanelId(panelId);

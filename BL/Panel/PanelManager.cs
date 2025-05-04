@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.DAL;
 using CitizenPanel.BL.Domain.User;
@@ -19,15 +19,20 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadPanelById(panelId);
     }
-
-    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria)
+    
+    public Panel GetPanelByIdWithMembers(int panelId)
+    {
+        return _panelRepository.ReadPanelByIdWithMembers(panelId);
+    }
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization, int totAvPotMem)
     {
         Panel newPanel = new Panel()
         {
             Name = name,
             Description = description,
             MemberCount = 0,
-            Criteria = criteria
+            Criteria = criteria,
+            TotalAvailablePotentialPanelmembers = totAvPotMem
         };
         _panelRepository.CreatePanel(newPanel);
         return newPanel;
@@ -124,6 +129,11 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadExtraCriteriaByPanelId(panelId);
     }
 
+    public IEnumerable<Criteria> GetCriteriaAndSubcriteriaWithPanelId(int panelId)
+    {
+        return _panelRepository.ReadCriteriaAndSubcriteriaWithPanelId(panelId);
+    }
+    
     public void ChangeRecommendation(Recommendation recommendation)
     {
         _panelRepository.UpdateRecommendation(recommendation);
