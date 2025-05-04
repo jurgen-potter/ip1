@@ -16,14 +16,20 @@
 
     <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
         <h1 class="h3 mb-0">@Model.Name</h1>
-        <div class="d-flex gap-2">
-            <a asp-controller="Registration" asp-action="Index" asp-route-panelId="@Model.PanelId" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-eye me-1"></i> Aanmeldingen Bekijken
-            </a>
-            <a asp-action="Edit" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
-                <i class="bi bi-pencil-square me-1"></i> Edit Panel
-            </a>
-        </div>
+        @if (User.IsInRole("Organization"))
+        {
+            <div class="d-flex gap-2">
+                <a asp-controller="Registration" asp-action="Index" asp-route-panelId="@Model.PanelId" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-eye me-1"></i> Aanmeldingen Bekijken
+                </a>
+                <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
+                    <i class="bi bi-pencil-square me-1"></i> Voeg panellid toe
+                </a>
+                <a asp-action="Edit" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
+                    <i class="bi bi-pencil-square me-1"></i> Edit Panel
+                </a>
+            </div>
+        }
     </div>
 
     <div class="row g-4">
@@ -72,14 +78,17 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            @foreach (var rec in Model.Recommendations)
+                            @foreach (var meeting in Model.Meetings)
                             {
-                                <div class="col-md-6">
-                                    <div class="border p-3 rounded bg-light h-100 d-flex flex-column">
-                                        <h6 class="fw-semibold">@rec.Title</h6>
-                                        <p class="small flex-grow-1">@rec.Description</p>
+                                @foreach (var rec in meeting.Recommendations)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="border p-3 rounded bg-light h-100 d-flex flex-column">
+                                            <h6 class="fw-semibold">@rec.Title</h6>
+                                            <p class="small flex-grow-1">@rec.Description</p>
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             }
                         </div>
                     </div>

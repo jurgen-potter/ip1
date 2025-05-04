@@ -81,43 +81,10 @@ public class DataSeeder
             StartDate = new DateOnly(2025, 1, 12),
             EndDate = new DateOnly(2025, 7, 22),
             DrawStatus = DrawStatus.FirstPhaseActive,
-            Recommendations = new List<Recommendation>()
-            {
-                new Recommendation()
-                {
-                    Title = "Meer fietspaden",
-                    Description = "Gemeente Antwerpen moet meer fietspaden aanleggen",
-                    Votes = 0,
-                    TenantId = "antwerpen"
-                },
-                new Recommendation()
-                {
-                    Title = "Autovrije binnenstad",
-                    Description = "Gemeente Antwerpen moet auto's uit de binnenstad verbieden",
-                    Votes = 0,
-                    TenantId = "antwerpen"
-                }
-            },
             TenantId = "antwerpen",
             TotalAvailablePotentialPanelmembers = 10000,
             Meetings = new List<Meeting>()
             {
-                new Meeting()
-                {
-                    Title = "Tweede bijeenkomst",
-                    Date = new DateOnly(2025, 5, 1),
-                    Recommendations = new List<Recommendation>()
-                    {
-                        new Recommendation()
-                        {
-                            Title = "Betere wegen",
-                            Description = "We willen betere wegen aanleggen in de gemeente antwerpen",
-                            Votes = 0,
-                            TenantId = "antwerpen"
-                        }
-                    },
-                    TenantId = "antwerpen"
-                },
                 new Meeting()
                 {
                     Title = "Eerste bijeenkomst",
@@ -129,7 +96,37 @@ public class DataSeeder
                             Title = "Meer bomen",
                             Description = "We willen graag meer bomen planten in de stad",
                             Votes = 0,
-                            TenantId = "antwerpen"
+                            TenantId = "antwerpen",
+                            IsVotable = true,
+                            NeededVotes = 5
+                        },
+                        new Recommendation()
+                        {
+                            Title = "Minder afval",
+                            Description = "Minder afval op de straat door meer vuilnisbakken te plaatsen",
+                            Votes = 0,
+                            TenantId = "antwerpen",
+                            IsVotable = true,
+                            NeededVotes = 5
+                        }
+                    },
+                    TenantId = "antwerpen"
+                },
+                new Meeting()
+                {
+                    Title = "Tweede bijeenkomst",
+                    Date = new DateOnly(2025, 5, 1),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Betere wegen",
+                            Description = "We willen betere wegen aanleggen in de gemeente antwerpen",
+                            Votes = 0,
+                            TenantId = "antwerpen",
+                            IsVotable = true,
+                            NeededVotes = 10,
+                            IsAnonymous = true
                         }
                     },
                     TenantId = "antwerpen"
@@ -138,16 +135,7 @@ public class DataSeeder
                 {
                     Title = "Derde bijeenkomst",
                     Date = new DateOnly(2025, 6, 12),
-                    Recommendations = new List<Recommendation>()
-                    {
-                        new Recommendation()
-                        {
-                            Title = "Minder afval",
-                            Description = "Minder afval op de straat door meer vuilnisbakken te plaatsen",
-                            Votes = 0,
-                            TenantId = "antwerpen"
-                        },
-                    },
+                    Recommendations = new List<Recommendation>(),
                     TenantId = "antwerpen"
                 }
             }
@@ -1266,101 +1254,84 @@ public class DataSeeder
             }
         };
         
-        var panel1Recs = new List<Recommendation>()
+        var userVotesRec1 = new List<UserVote>
         {
-            new Recommendation
+            new UserVote
             {
-                Title = "Meer fietspaden",
-                Description = "Gemeente Antwerpen moet meer fietspaden aanleggen",
-                Votes = 5,
-                TenantId = "antwerpen",
-                UserVotes = new List<UserVote>
-                {
-                    new UserVote()
-                    {
-                        Voter = members[0],
-                        Recommended = false,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-
-                    new UserVote()
-                    {
-                        Voter = members[1],
-                        Recommended = true,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-            
-                    new UserVote()
-                    {
-                        Voter = members[2],
-                        Recommended = true,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-            
-                    new UserVote()
-                    {
-                        Voter = members[3],
-                        Recommended = false,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-
-                    new UserVote()
-                    {
-                        Voter = members[4],
-                        Recommended = false,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    }
-                }
+                Voter = members[0],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
             },
-            new Recommendation
+            new UserVote
             {
-                Title = "Autovrije binnenstad",
-                Description = "Gemeente Antwerpen moet auto's uit de binnenstad verbieden",
-                Votes = 4,
-                TenantId = "antwerpen",
-                UserVotes = new List<UserVote>
-                {
-                    new UserVote()
-                    {
-                        Voter = members[0],
-                        Recommended = false,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-
-                    new UserVote()
-                    {
-                        Voter = members[1],
-                        Recommended = true,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-            
-                    new UserVote()
-                    {
-                        Voter = members[2],
-                        Recommended = false,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    },
-            
-                    new UserVote()
-                    {
-                        Voter = members[3],
-                        Recommended = true,
-                        VotedAt = DateTime.UtcNow,
-                        TenantId = "antwerpen"
-                    }
-                }
+                Voter = members[1],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[2],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[3],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[4],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
             }
         };
+
+        var userVotesRec2 = new List<UserVote>
+        {
+            new UserVote
+            {
+                Voter = members[0],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[1],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[2],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[3],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            }
+        };
+
+        var rec1 = panel1.Meetings.FirstOrDefault().Recommendations.FirstOrDefault();
+        rec1.UserVotes = userVotesRec1;
+        rec1.Votes = userVotesRec1.Count();
         
-        panel1.Recommendations = panel1Recs;
+        var rec2 = panel1.Meetings.FirstOrDefault().Recommendations.LastOrDefault();
+        rec2.UserVotes = userVotesRec2;
+        rec2.Votes = userVotesRec2.Count();
         
         _panelDbContext.AddRange(members);
     }
@@ -1550,7 +1521,8 @@ public class DataSeeder
         {
             Description = "Wat wilt u als organisatie bereiken?",
             Weight = 5,
-            Position = 1
+            Position = 1,
+            IsDetail = true
         };
         var answer11 = new Answer
         {
@@ -1569,9 +1541,10 @@ public class DataSeeder
         };
         var question5 = new Question
         {
-            Description = "Rond welke problematiek wil u als organisatie werken?",
+            Description = "Rond welke problematiek wilt u als organisatie werken?",
             Weight = 3,
-            Position = 2
+            Position = 2,
+            IsDetail = true
         };
         var answer8 = new Answer
         {
@@ -1588,6 +1561,115 @@ public class DataSeeder
             Description = "Begroting verdeling",
             Position = 3
         };
+        var question6 = new Question
+        {
+            Description = "Hoe wilt u samenkomen?",
+            Weight = 3,
+            Position = 3,
+            IsDetail = true
+        };
+        var answer14 = new Answer
+        {
+            Description = "In een zaal",
+            Position = 1,
+            Question = question6
+        };
+        var answer15 = new Answer
+        {
+            Description = "Online",
+            Position = 2,
+            Question = question6
+        };
+        var question7 = new Question
+        {
+            Description = "Welke output wilt u op het eind van het panel genereren?",
+            Weight = 3,
+            Position = 4,
+            IsDetail = true
+        };
+        var answer16 = new Answer
+        {
+            Description = "Rapport",
+            Position = 1,
+            Question = question7
+        };
+        var answer17 = new Answer
+        {
+            Description = "Presentatie",
+            Position = 2,
+            Question = question7
+        };
+        var question8 = new Question
+        {
+            Description = "Hoe ziet u het rekruteren van deelnemers?",
+            Weight = 3,
+            Position = 5,
+            IsDetail = false
+        };
+        var answer18 = new Answer
+        {
+            Description = "Ambitieus en duur",
+            Advice = "een “state of the art” loting",
+            Position = 1,
+            Question = question8
+        };
+        var answer19 = new Answer
+        {
+            Description = "Weinig ambitieus en goedkoop",
+            Advice = "open oproep voor deelnemers, selectie daaruit per bevolkingssegment en verder actief aangevuld met “afwezige doelgroepen”",
+            Position = 2,
+            Question = question8
+        };
+        var question9 = new Question
+        {
+            Description = "Hoe ziet u het organiseren van bijeenkomsten?",
+            Weight = 3,
+            Position = 6,
+            IsDetail = false
+        };
+        var answer20 = new Answer
+        {
+            Description = "Heel ambitieus",
+            Advice = "1 weekend vorming en informatie van talrijke experts, betrokkenen... over de materie, exhaustief infopakket; 2 debatweekends met finaal een stemming via digitale tool",
+            Position = 1,
+            Question = question9
+        };
+        var answer21 = new Answer
+        {
+            Description = "Redelijke ambitieus",
+            Advice = "1 halve dag vorming en informatie..., infopakket; 2 debatdagen met finaal stemming via digitale tool",
+            Position = 2,
+            Question = question9
+        };
+        var answer22 = new Answer
+        {
+            Description = "Weinig ambitieus",
+            Advice = "Een folder en korte introductie bij start van de deliberatie zelf, stemming bij handopsteking",
+            Position = 3,
+            Question = question9
+        };
+        var question10 = new Question
+        {
+            Description = "Hoe wilt u de resultaten communiceren?",
+            Weight = 3,
+            Position = 7,
+            IsDetail = false
+        };
+        var answer23 = new Answer
+        {
+            Description = "Heel ambitieus",
+            Advice = "campagne met online filmpjes enz.",
+            Position = 1,
+            Question = question10
+        };
+        var answer24 = new Answer
+        {
+            Description = "Weinig ambitieus",
+            Advice = "artikel op website en infoblad",
+            Position = 2,
+            Question = question10
+        };
+
         answer11.Question = question4;
         answer12.Question = question4;
         answer13.Question = question4;
@@ -1605,9 +1687,35 @@ public class DataSeeder
         question5.Answers.Add(answer10);
         question5.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question5);
+        
+        question6.Answers.Add(answer14);
+        question6.Answers.Add(answer15);
+        question6.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question6);
+        
+        question7.Answers.Add(answer16);
+        question7.Answers.Add(answer17);
+        question7.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question7);
+        
+        question8.Answers.Add(answer18);
+        question8.Answers.Add(answer19);
+        question8.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question8);
+        
+        question9.Answers.Add(answer20);
+        question9.Answers.Add(answer21);
+        question9.Answers.Add(answer22);
+        question9.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question9);
+        
+        question10.Answers.Add(answer23);
+        question10.Answers.Add(answer24);
+        question10.Questionnaire = questionnaire2;
+        questionnaire2.Questions.Add(question10);
 
         _panelDbContext.Questionnaires.Add(questionnaire2);
-        _panelDbContext.Questions.AddRange(question4, question5);
-        _panelDbContext.Answers.AddRange(answer11, answer12, answer13, answer8, answer9, answer10);
+        _panelDbContext.Questions.AddRange(question4, question5, question6, question7, question8, question9, question10);
+        _panelDbContext.Answers.AddRange(answer11, answer12, answer13, answer8, answer9, answer10, answer11, answer12, answer13, answer14, answer15, answer16, answer17, answer18, answer19, answer20, answer21, answer22, answer23, answer24);
     }
 }

@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.DAL;
 using CitizenPanel.BL.Domain.User;
@@ -39,7 +39,7 @@ public class PanelManager : IPanelManager
         return newPanel;
     }
 
-    public void EditPanel(Panel panel)
+    public void ChangePanel(Panel panel)
     {
         _panelRepository.UpdatePanel(panel);
     }
@@ -135,5 +135,13 @@ public class PanelManager : IPanelManager
         return _panelRepository.ReadCriteriaAndSubcriteriaWithPanelId(panelId);
     }
     
+    public void ChangeRecommendation(Recommendation recommendation)
+    {
+        _panelRepository.UpdateRecommendation(recommendation);
+    }
 
+    public IEnumerable<Panel> GetAllPanels()
+    {
+        return _panelRepository.ReadAllPanels();
+    }
 }

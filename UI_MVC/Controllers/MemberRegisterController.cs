@@ -3,6 +3,7 @@ using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Newtonsoft.Json;
@@ -24,7 +25,8 @@ public class MemberRegisterController : Controller
         _panelManager = panelManager;
     }
     
-    // GET
+    [HttpGet]
+    [AllowAnonymous]
     public IActionResult Index()
     {
         return View();
@@ -32,24 +34,28 @@ public class MemberRegisterController : Controller
     
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult InvalidCode()
     {
         return View();
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Registered()
     {
         return View();
     }
     
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult UsedCode()
     {
         return View();
     }
     
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult RegisterMember(string code)
     {
         Invitation invitation = _drawManager.GetInvitationWithCode(code);
@@ -94,6 +100,7 @@ public class MemberRegisterController : Controller
     }
     
     [HttpPost]
+    [AllowAnonymous]
     public IActionResult RegisterMember(string code, RegisterViewModel newMember)
     {
         if (newMember is IValidatableObject validatable && newMember.Email == null)
@@ -127,6 +134,8 @@ public class MemberRegisterController : Controller
         return RedirectToAction("RegistrationConfirmed");
     }
 
+    [HttpGet]
+    [AllowAnonymous]
     public IActionResult RegistrationConfirmed()
     {
         var email = TempData["Email"]?.ToString();

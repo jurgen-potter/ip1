@@ -17,6 +17,7 @@ public class AdminController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult Index()
     {
         var questionnaires = _questionnaireModuleManager.GetAllQuestionnaires();
@@ -34,6 +35,7 @@ public class AdminController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult EditQuestionnaire(int questionnaireId)
     {
         Questionnaire questionnaire = _questionnaireModuleManager.GetQuestionnaire(questionnaireId);
@@ -49,7 +51,8 @@ public class AdminController : Controller
             {
                 Id = question.Id,
                 Description = question.Description,
-                Weight = question.Weight,
+                //Weight = question.Weight,
+                IsDetail = question.IsDetail,
                 ToDelete = false
             };
             foreach (Answer answer in question.Answers)
@@ -58,6 +61,7 @@ public class AdminController : Controller
                 {
                     Id = answer.Id,
                     Description = answer.Description,
+                    Advice = answer.Advice,
                     IsCritical = answer.IsCritical,
                     ToDelete = false
                 };
@@ -70,6 +74,7 @@ public class AdminController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public IActionResult EditQuestionnaire(EditQuestionnaireViewModel model)
     {
         ModelState.Clear();
@@ -121,8 +126,9 @@ public class AdminController : Controller
                 if (existingQuestion != null)
                 {
                     existingQuestion.Description = questionModel.Description;
-                    existingQuestion.Weight = questionModel.Weight;
+                    //existingQuestion.Weight = questionModel.Weight;
                     existingQuestion.Position = questionPosition++;
+                    existingQuestion.IsDetail = questionModel.IsDetail;
 
                     var updatedAnswers = new List<Answer>();
                     int answerPosition = 0;
@@ -135,6 +141,7 @@ public class AdminController : Controller
                             if (existingAnswer != null)
                             {
                                 existingAnswer.Description = answerModel.Description;
+                                existingAnswer.Advice = answerModel.Advice;
                                 existingAnswer.Position = answerPosition++;
                                 existingAnswer.IsCritical = answerModel.IsCritical;
                                 updatedAnswers.Add(existingAnswer);
@@ -145,6 +152,7 @@ public class AdminController : Controller
                             var newAnswer = new Answer
                             {
                                 Description = answerModel.Description,
+                                Advice = answerModel.Advice,
                                 Position = answerPosition++,
                                 IsCritical = answerModel.IsCritical
                             };
@@ -162,11 +170,13 @@ public class AdminController : Controller
                 var newQuestion = new Question
                 {
                     Description = questionModel.Description,
-                    Weight = questionModel.Weight,
+                    //Weight = questionModel.Weight,
                     Position = questionPosition++,
+                    IsDetail = questionModel.IsDetail,
                     Answers = questionModel.Answers.Select(a => new Answer
                     {
                         Description = a.Description,
+                        Advice = a.Advice,
                         Position = answerPosition++,
                         IsCritical = a.IsCritical
                     }).ToList()

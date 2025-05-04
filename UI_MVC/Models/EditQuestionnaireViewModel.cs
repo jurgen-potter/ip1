@@ -24,11 +24,13 @@ public class EditQuestionViewModel
     [MaxLength(1000, ErrorMessage = "Vraag mag maximaal 1000 karakters bevatten.")]
     public string Description { get; set; }
     
-    [Range(1, 10)]
-    public int Weight { get; set; }
+    /*[Range(1, 10)]
+    public int Weight { get; set; }*/
 
     [MinCount(1, ErrorMessage = "Er moet minstens een antwoord aangemaakt zijn.")]
     public List<EditAnswerViewModel> Answers { get; set; } = new();
+    
+    public bool IsDetail { get; set; }
     
     public bool ToDelete { get; set; }
 }
@@ -40,6 +42,9 @@ public class EditAnswerViewModel
     [Required(ErrorMessage = "Antwoord mag niet leeg zijn.")]
     [MaxLength(1000, ErrorMessage = "Antwoord mag maximaal 1000 karakters bevatten.")]
     public string Description { get; set; }
+    
+    [MaxLength(1000)]
+    public string Advice { get; set; }
     
     public bool IsCritical{ get; set; }
     

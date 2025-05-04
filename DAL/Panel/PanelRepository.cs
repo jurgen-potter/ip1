@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
 using Microsoft.EntityFrameworkCore;
@@ -40,9 +40,9 @@ public class PanelRepository : IPanelRepository
     public Panel ReadPanelByIdWithRecommendations(int panelId)
     {
         return _dbContext.Panels
-            .Include(r => r.Recommendations)
-            .ThenInclude(r => r.UserVotes)
             .Include(r => r.Meetings)
+            .ThenInclude(m => m.Recommendations)
+            .ThenInclude(r => r.UserVotes)
             .SingleOrDefault(p => p.Id == panelId);
     }
 
@@ -177,9 +177,8 @@ public class PanelRepository : IPanelRepository
             .ToList();
     }
 
-    public void UpdateTotalAvailablePotentialPanelmembers(Panel panel)
+    public IEnumerable<Panel> ReadAllPanels()
     {
-        _dbContext.Update(panel);
-        _dbContext.SaveChanges();
+        return _dbContext.Panels.ToList();
     }
 }

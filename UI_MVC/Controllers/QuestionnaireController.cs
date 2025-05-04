@@ -1,6 +1,7 @@
 using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.BL.QuestionnaireModule;
 using CitizenPanel.UI.MVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers;
@@ -15,12 +16,14 @@ public class QuestionnaireController : Controller
     }
     
     [HttpGet]
-    public IActionResult Index()
+    [AllowAnonymous]
+    public IActionResult Index(int questionnaireId)
     {
-        return View(_questionnaireModuleManager.GetQuestionnaire(1));
+        return View(_questionnaireModuleManager.GetQuestionnaire(questionnaireId));
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public IActionResult Result(QuestionnaireResponseViewModel questionnaireResponseViewModel)
     {
         questionnaireResponseViewModel.Questionnaire = _questionnaireModuleManager.GetQuestionnaire(questionnaireResponseViewModel.QuestionnaireId);

@@ -26,7 +26,8 @@ public class PanelController : Controller
         _userManager = userManager;
     }
     
-    // GET
+    [HttpGet]
+    [Authorize]
     public IActionResult Index(int id)
     {
         Panel panel = _panelManager.GetPanelByIdWithRecommendations(id);
@@ -65,22 +66,25 @@ public class PanelController : Controller
             model.Meetings.Add(meetingViewModel);
         }
 
-        foreach (Recommendation recommendation in panel.Recommendations)
+        foreach (Meeting meeting in panel.Meetings.OrderBy(m => m.Date))
         {
-            RecommendationViewModel recommendationModel = new RecommendationViewModel
+            foreach (Recommendation recommendation in meeting.Recommendations)
             {
-                Id = recommendation.Id,
-                Title = recommendation.Title,
-                Description = recommendation.Description
-            };
-            model.Recommendations.Add(recommendationModel);
+                RecommendationViewModel recommendationModel = new RecommendationViewModel
+                {
+                    Id = recommendation.Id,
+                    Title = recommendation.Title,
+                    Description = recommendation.Description
+                };
+                model.Recommendations.Add(recommendationModel);
+            }
         }
 
         return View(model);
     }
 
-    //[Authorize(Roles = "Organization, Admin")]
     [HttpPost]
+    [Authorize]
     public IActionResult CreatePanelFromResult(ResultViewModel resultViewModel)
     {
         if (!User.Identity.IsAuthenticated)
@@ -101,6 +105,7 @@ public class PanelController : Controller
         return View("CreatePanel", model);
     }
     
+    [HttpGet]
     [Authorize(Roles = "Organization, Admin")]
     public IActionResult RestorePanelData()
     {
@@ -120,8 +125,8 @@ public class PanelController : Controller
         return View("CreatePanel", model);
     }
     
-    [Authorize(Roles = "Organization, Admin")]
     [HttpPost]
+    [Authorize(Roles = "Organization, Admin")]
     public async Task<IActionResult> CreatePanel(CreatePanelViewModel model)
     {
         if(!ModelState.IsValid)
@@ -149,7 +154,9 @@ public class PanelController : Controller
         Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria, organization.OrganizationProfile,model.Result.TotalAvailablePotentialPanelmembers);
         organization.OrganizationProfile.Panels.Add(newPanel);
         await _userManager.UpdateAsync(organization);
-        
+        var invitations = _drawManager.AddInvitations(model.Result.ReservePotPanelmembers, criteria, newPanel);
+        newPanel.Invitations = invitations.ToList();
+        _panelManager.ChangePanel(newPanel);
         return RedirectToAction("Index","Panel",new { id = newPanel.Id });
     }
     
@@ -168,7 +175,7 @@ public class PanelController : Controller
             return LocalRedirect(returnUrl);
         }
 
-        var panels = user.UserType == UserType.Member ? user.MemberProfile.Panels : user.OrganizationProfile.Panels;
+        var panels = user.UserType == UserType.Member ? user.MemberProfile.Panels : _panelManager.GetAllPanels().ToList();
 
         if (panels.Count == 1)
         {

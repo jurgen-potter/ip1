@@ -33,5 +33,4 @@ public class OrganizationProfile : ITenanted
     public string ApplicationUserId { get; set; }
     public ApplicationUser ApplicationUser { get; set; }
     public string TenantId { get; set; }
-    public ICollection<Panel.Panel> Panels { get; set; } = new List<Panel.Panel>();
 }

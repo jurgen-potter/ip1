@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.User;
 
@@ -25,4 +25,5 @@ public interface IPanelRepository
     void UpdateCriteria(Criteria criteria);
     IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId);
     IEnumerable<Criteria> ReadCriteriaAndSubcriteriaWithPanelId(int panelId);
+    IEnumerable<Panel> ReadAllPanels();
 }

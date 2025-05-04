@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Panel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -31,13 +33,15 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IPanelManager _panelManager;
 
         public RegisterModel(
             ApplicationUserManager userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IPanelManager panelManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -45,6 +49,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _panelManager = panelManager;
         }
 
         /// <summary>
@@ -100,11 +105,15 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "De wachtwoorden komen niet overeen.")]
             public string ConfirmPassword { get; set; }
         }
+        
+        public string IsStaff { get; set; }
+        
 
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string returnUrl = null, string staff = "false")
         {
             ReturnUrl = returnUrl;
+            IsStaff = staff;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
@@ -116,17 +125,20 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             {
                 var user = CreateOrganization();
                 user.UserType = UserType.Organization;
-                
-                string newTenantId = Guid.NewGuid().ToString();
-                user.OrganizationProfile = new OrganizationProfile()
-                {
-                    TenantId = newTenantId
-                };
 
                 await _userManager.AddToRoleAsync(user, "Organization");
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                var result = await _userManager.CreateWithTenantAsync(user, Input.Password, generateNewTenantId: true);
+                IdentityResult result;
+                if (IsStaff == "false")
+                {
+                    result = await _userManager.CreateWithTenantAsync(user, Input.Password, generateNewTenantId: true);
+                }
+                else
+                {
+                    user.OrganizationProfile = new OrganizationProfile();
+                    result = await _userManager.CreateWithTenantAsync(user, Input.Password);
+                }
 
                 if (result.Succeeded)
                 {

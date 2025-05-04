@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
@@ -13,11 +14,15 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    [HttpGet]
+    [AllowAnonymous]
     public IActionResult Index()
     {
         return View();
     }
 
+    [HttpGet]
+    [AllowAnonymous]
     public IActionResult Privacy()
     {
         return View();

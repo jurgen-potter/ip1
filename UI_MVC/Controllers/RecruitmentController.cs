@@ -19,6 +19,7 @@ public class RecruitmentController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Index(int panelId)
     {
         var criteriaList = _drawManager.GetInitialCriteria();
@@ -58,6 +59,7 @@ public class RecruitmentController : Controller
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public IActionResult Calculate(RecruitmentCriteriaViewModel model)
     {
         if (!ModelState.IsValid)
@@ -111,5 +113,45 @@ public class RecruitmentController : Controller
             });
         }
         return View("Result", resultModel);
+    }
+    
+    [HttpPost]
+    [Authorize(Roles = "Organization")]
+    public IActionResult Save(RecruitmentCriteriaViewModel model)
+    {
+        
+        ModelState.Clear(); //voor validatiefouten te omzeilen, je mag opslaan!
+
+        var domainCriteria = new List<Criteria>();
+
+        for (int i = 0; i < model.Criteria.Count; i++)
+        {
+            var cvm = model.Criteria[i];
+            var criteria = new Criteria
+            {
+                Id = cvm.Id,
+                Name = cvm.Name,
+                SubCriteria = new List<SubCriteria>()
+            };
+
+            for (int j = 0; j < cvm.SubCriteria.Count; j++)
+            {
+                var svm = cvm.SubCriteria[j];
+                var subCriteria = new SubCriteria
+                {
+                    Id = svm.Id,
+                    Name = svm.Name,
+                    Percentage = svm.Percentage
+                };
+
+                criteria.SubCriteria.Add(subCriteria);
+            }
+
+            domainCriteria.Add(criteria);
+        }
+
+        _drawManager.EditCriteria(model.PanelId, domainCriteria);
+
+        return RedirectToAction(nameof(Index), new { panelId = model.PanelId });
     }
 }

@@ -19,6 +19,7 @@ namespace CitizenPanel.UI.MVC.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Details(int id, int panelId)
         {
             var meeting = _meetingManager.GetMeetingByIdWithRecommendations(id);
@@ -51,8 +52,8 @@ namespace CitizenPanel.UI.MVC.Controllers
         }
         
         
-        [Authorize(Roles = "Organization")]
         [HttpGet]
+        [Authorize(Roles = "Organization")]
         public IActionResult AddRecommendation(int meetingId, int panelId)
         {
             var model = new AddRecommendationViewModel
@@ -64,8 +65,8 @@ namespace CitizenPanel.UI.MVC.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Organization")]
         [HttpPost]
+        [Authorize(Roles = "Organization")]
         public IActionResult AddRecommendation(AddRecommendationViewModel model)
         {
             if (!ModelState.IsValid)
@@ -77,7 +78,10 @@ namespace CitizenPanel.UI.MVC.Controllers
             var recommendation = new Recommendation()
             {
                 Title = model.Title,
-                Description = model.Description
+                Description = model.Description,
+                NeededVotes = model.NeededVotes,
+                IsAnonymous = model.IsAnonymous,
+                TenantId = meeting.TenantId
             };
     
             meeting.Recommendations.Add(recommendation);
