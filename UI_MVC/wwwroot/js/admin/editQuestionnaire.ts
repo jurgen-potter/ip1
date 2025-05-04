@@ -2,6 +2,7 @@
 let dragSrcEl: HTMLElement | null = null;
 let sourceListId: string = "";
 let dragType: "question" | "answer" | "" = "";
+let isDiscover: boolean;
 
 window.addEventListener('DOMContentLoaded', () => {
     editQuestionnaireInit();
@@ -9,8 +10,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Set up all event handlers
 function editQuestionnaireInit(): void {
+    const questionnaireIdInput = document.getElementById("questionnaire-id") as HTMLInputElement;
+    isDiscover = questionnaireIdInput.value === "1"
+    
     const questionItems = document.querySelectorAll<HTMLLIElement>('.question-item');
     questionItems.forEach((question) => {
+        if (!isDiscover) {
+            const detailCheck = question.querySelector(".detail-check") as HTMLInputElement;
+            const isDetail = question.querySelector('.detail-value') as HTMLInputElement;
+            isDetail.value = detailCheck.checked.toString();
+            toggleAdviceOnQuestion(question);
+        }
+        
         addQuestionHandlers(question);
     });
 
@@ -50,10 +61,25 @@ function addQuestionHandlers(question: HTMLLIElement): void {
         questionDescription.setAttribute('value', questionDescription.value);
     });
 
+    if (!isDiscover) {
+        const detailCheck = question.querySelector(".detail-check") as HTMLInputElement;
+        detailCheck.addEventListener('change', () => {
+            const isDetail = question.querySelector('.detail-value') as HTMLInputElement;
+            isDetail.value = detailCheck.checked.toString();
+            toggleAdviceOnQuestion(question);
+        });
+    }
+
     addQuestionDnDHandlers(question);
 
     const answerItems = question.querySelectorAll<HTMLLIElement>('.answer-item');
     answerItems.forEach(answer => {
+        if (isDiscover) {
+            const criticalCheck = answer.querySelector(".critical-check") as HTMLInputElement;
+            const isCritical = answer.querySelector('.critical-value') as HTMLInputElement;
+            isCritical.value = criticalCheck.checked.toString();
+        }
+        
         addAnswerHandlers(answer);
     });
 }
@@ -70,13 +96,40 @@ function addAnswerHandlers(answer: HTMLLIElement): void {
         answerDescription.setAttribute('value', answerDescription.value);
     });
 
-    const criticalCheck = answer.querySelector(".critical-check") as HTMLInputElement;
-    criticalCheck.addEventListener('change', () => {
-        const isCritical = answer.querySelector('.critical-value') as HTMLInputElement;
-        isCritical.value = criticalCheck.checked.toString();
+    const answerAdvice = answer.querySelector(".answer-advice") as HTMLInputElement;
+    answerAdvice.addEventListener('input', () => {
+        answerAdvice.setAttribute('value', answerAdvice.value);
     });
 
+    if (isDiscover) {
+        const criticalCheck = answer.querySelector(".critical-check") as HTMLInputElement;
+        criticalCheck.addEventListener('change', () => {
+            const isCritical = answer.querySelector('.critical-value') as HTMLInputElement;
+            isCritical.value = criticalCheck.checked.toString();
+        });
+    }
+
     addAnswerDnDHandlers(answer);
+}
+
+function toggleAdviceOnQuestion(question: HTMLLIElement): void {
+    const detailCheck = question.querySelector(".detail-check") as HTMLInputElement;
+    const answerItems = question.querySelectorAll<HTMLLIElement>('.answer-item');
+    answerItems.forEach((answer) => {
+        toggleAdviceOnAnswer(answer, detailCheck);
+    })
+}
+
+function toggleAdviceOnAnswer(answer: HTMLLIElement, detailCheck: HTMLInputElement): void {
+    const advice = answer.querySelector('.answer-advice') as HTMLInputElement;
+    const label = answer.querySelector('.advice-label') as HTMLLabelElement;
+    if (detailCheck.checked) {
+        advice.classList.add('d-none');
+        label.classList.add('d-none');
+    } else {
+        advice.classList.remove('d-none');
+        label.classList.remove('d-none');
+    }
 }
 
 // Change arrow direction when question is expanded/collapsed
@@ -134,6 +187,17 @@ function addAnswer(questionIndex: string): void {
 
 // Generate HTML for a new question given the question index
 function generateQuestionHtml(questionIndex: number): HTMLLIElement {
+    const isDetailHtml = isDiscover
+        ? ""
+        : `
+        <div class="col-auto">
+            <div class="form-check">
+                <input type="hidden" value="false" class="detail-value" />
+                <input name="Questions[${questionIndex}].IsDetail" class="form-check-input detail-check" type="checkbox" />
+                <label class="form-check-label">Panel Detail</label>
+            </div>
+        </div>`;
+    
     const newQuestion = document.createElement("li");
     newQuestion.classList.add("card", "mb-3", "question-item");
     newQuestion.innerHTML = `
@@ -155,6 +219,7 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
                         <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
                             <i class="bi bi-trash"></i>
                         </button>
+                        ${isDetailHtml}
                     </div>
                 </div>
                 <button class="btn btn-sm expand-btn ms-2 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#question-body-${questionIndex}" aria-expanded="true" aria-controls="question-body-@i">
@@ -163,7 +228,7 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
             </div>
             <div class="collapse show question-body" id="question-body-${questionIndex}">
                 <div class="card-body">
-                    <label class="form-label fw-bold">Weging</label>
+<!--                    <label class="form-label fw-bold">Weging</label>
                     <input name="Questions[${questionIndex}].Weight" type="range" min="1" max="10" class="form-range mb-2 question-weight" value="1"/>
                     <div class="d-flex justify-content-between px-1 text-muted small">
                         <span>1</span>
@@ -176,7 +241,7 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
                         <span>8</span>
                         <span>9</span>
                         <span>10</span>
-                    </div>
+                    </div>-->
                     <label class="form-label fw-bold">Antwoorden</label>
                     <ul id="answers-list-${questionIndex}">
                     </ul>
@@ -189,6 +254,17 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
 
 // Generate HTML for a new answer given the question and answer index
 function generateAnswerHtml(questionIndex: string | number, answerIndex: number): HTMLLIElement {
+    const isCriticalHtml = isDiscover
+        ? `
+        <div class="col-auto">
+            <div class="form-check">
+                <input type="hidden" value="false" class="critical-value" />
+                <input name="Questions[${questionIndex}].Answers[${answerIndex}].IsCritical" class="form-check-input critical-check" type="checkbox" />
+                <label class="form-check-label">Breekpunt</label>
+            </div>
+        </div>`
+        : "";
+    
     const newAnswer = document.createElement("li");
     newAnswer.classList.add("row", "answer-item", "mb-2", "align-items-center", "p-2");
     newAnswer.innerHTML = `
@@ -198,19 +274,21 @@ function generateAnswerHtml(questionIndex: string | number, answerIndex: number)
                 <span class="drag-handle">&#x2630</span>
             </div>
             <div class="col">
-                <input name="Questions[${questionIndex}].Answers[${answerIndex}].Description" class="form-control answer-description" />
+                <div class="form-floating mb-2">
+                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].Description" id="Description-@i-@j" class="form-control answer-description" />
+                    <label for="Description-${questionIndex}-${answerIndex}">Beschrijving</label>
+                </div>
                 <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Description" data-valmsg-replace="true"></span>
+                <div class="form-floating mb-2">
+                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].Advice" id="Advice-@i-@j" class="form-control answer-advice" />
+                    <label for="Advice-${questionIndex}-${answerIndex}" class="advice-label">Aanbeveling</label>
+                </div>
+                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Advice" data-valmsg-replace="true"></span>
             </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
             </div>
-            <div class="col-auto">
-                <div class="form-check">
-                    <input type="hidden" value="false" class="critical-value" />
-                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].IsCritical" class="form-check-input critical-check" type="checkbox" />
-                    <label class="form-check-label">Breekpunt</label>
-                </div>
-            </div>
+            ${isCriticalHtml}
         `;
     return newAnswer;
 }
@@ -381,9 +459,14 @@ function updateAnswerIndices(answerList: HTMLUListElement): void {
         const description = answer.querySelector('.answer-description') as HTMLInputElement;
         description.name = `Questions[${questionIndex}].Answers[${index}].Description`;
 
-        const criticalCheck = answer.querySelector('.critical-check') as HTMLInputElement;
-        const isCriticalValue = (answer.querySelector('.critical-value') as HTMLInputElement).value;
-        criticalCheck.checked = isCriticalValue === "true";
+        const advice = answer.querySelector('.answer-advice') as HTMLInputElement;
+        advice.name = `Questions[${questionIndex}].Answers[${index}].Advice`;
+
+        if (isDiscover) {
+            const criticalCheck = answer.querySelector('.critical-check') as HTMLInputElement;
+            const isCriticalValue = (answer.querySelector('.critical-value') as HTMLInputElement).value;
+            criticalCheck.checked = isCriticalValue.toLowerCase() === "true";
+        }
     });
 }
 
@@ -414,8 +497,15 @@ function updateQuestionIndices(): void {
         const questionDescription = question.querySelector('.question-description') as HTMLInputElement;
         questionDescription.name = `Questions[${index}].Description`;
 
-        const weightInput = question.querySelector('.question-weight') as HTMLInputElement;
-        weightInput.name = `Questions[${index}].Weight`;
+        if (!isDiscover) {
+            const detailCheck = question.querySelector('.detail-check') as HTMLInputElement;
+            const isDetailValue = (question.querySelector('.detail-value') as HTMLInputElement).value;
+            detailCheck.checked = isDetailValue.toLowerCase() === "true";
+            toggleAdviceOnQuestion(question);
+        }
+        
+        /*const weightInput = question.querySelector('.question-weight') as HTMLInputElement;
+        weightInput.name = `Questions[${index}].Weight`;*/
 
         const addAnswerBtn = question.querySelector('.add-answer-btn') as HTMLButtonElement;
         addAnswerBtn.setAttribute('question-index', `${index}`);
