@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Bewerk vragenlijst";
+    bool isDiscover = Model.Id == 1;
 }
 
 @section Styles {
@@ -17,7 +18,7 @@
 </div>
 
 <form asp-action="EditQuestionnaire" method="post">
-    <input type="hidden" asp-for="Id" value="@Model.Id"/>
+    <input type="hidden" id="questionnaire-id" asp-for="Id" value="@Model.Id"/>
     <input type="hidden" asp-for="Title" value="@Model.Title"/>
     <span asp-validation-for="@Model.Questions" class="text-danger small"></span>
 
@@ -46,6 +47,17 @@
                             <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
                                 <i class="bi bi-trash"></i>
                             </button>
+                            @if (!isDiscover)
+                            {
+                                <div class="col-auto">
+                                    <div class="form-check">
+                                        <input type="hidden" class="detail-value"/>
+                                        <input asp-for="@Model.Questions[@i].IsDetail"
+                                               class="form-check-input detail-check" type="checkbox"/>
+                                        <label class="form-check-label">Panel detail</label>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                     <button class="btn btn-sm expand-btn ms-2 mt-1" type="button" data-bs-toggle="collapse"
@@ -55,7 +67,7 @@
                 </div>
                 <div class="collapse show question-body" id="question-body-@i">
                     <div class="card-body">
-                        <label class="form-label fw-bold">Weging</label>
+                        @*<label class="form-label fw-bold">Weging</label>
                         <input asp-for="@Model.Questions[@i].Weight" type="range" min="1" max="10"
                                class="form-range mb-2 question-weight"/>
                         <div class="d-flex justify-content-between px-1 text-muted small">
@@ -63,7 +75,7 @@
                             {
                                 <span>@val</span>
                             }
-                        </div>
+                        </div>*@
 
                         <label class="form-label fw-bold">Antwoorden</label>
                         <span asp-validation-for="@Model.Questions[@i].Answers" class="text-danger small"></span>
@@ -89,15 +101,18 @@
                                             Verwijder
                                         </button>
                                     </div>
-                                    <div class="col-auto">
-                                        <div class="form-check">
-                                            <input type="hidden" value="@Model.Questions[@i].Answers[@j].IsCritical"
-                                                   class="critical-value"/>
-                                            <input asp-for="@Model.Questions[@i].Answers[@j].IsCritical"
-                                                   class="form-check-input critical-check" type="checkbox"/>
-                                            <label class="form-check-label">Breekpunt</label>
+                                    @if (isDiscover)
+                                    {
+                                        <div class="col-auto">
+                                            <div class="form-check">
+                                                <input type="hidden" value="@Model.Questions[@i].Answers[@j].IsCritical"
+                                                       class="critical-value"/>
+                                                <input asp-for="@Model.Questions[@i].Answers[@j].IsCritical"
+                                                       class="form-check-input critical-check" type="checkbox"/>
+                                                <label class="form-check-label">Breekpunt</label>
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
                                 </li>
                             }
                         </ul>
