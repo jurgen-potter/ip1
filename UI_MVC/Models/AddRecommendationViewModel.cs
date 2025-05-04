@@ -12,4 +12,6 @@ public class AddRecommendationViewModel
     public string Title { get; set; }
     
     public string Description { get; set; }
+    public int NeededVotes { get; set; }
+    public bool IsAnonymous { get; set; }
 }

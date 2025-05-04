@@ -77,7 +77,10 @@ namespace CitizenPanel.UI.MVC.Controllers
             var recommendation = new Recommendation()
             {
                 Title = model.Title,
-                Description = model.Description
+                Description = model.Description,
+                NeededVotes = model.NeededVotes,
+                IsAnonymous = model.IsAnonymous,
+                TenantId = meeting.TenantId
             };
     
             meeting.Recommendations.Add(recommendation);

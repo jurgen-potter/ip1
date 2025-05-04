@@ -23,6 +23,18 @@ ViewData["Title"] = "Aanbeveling Toevoegen";
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
+    <div class="form-group">
+        <label asp-for="NeededVotes">Hoevel stemmen zijn er minstens nodig?</label>
+        <input type="number" asp-for="NeededVotes" class="form-control"></input>
+        <span asp-validation-for="NeededVotes" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsAnonymous">Wilt u dat deze stemming anoniem is?</label>
+        <input type="checkbox" asp-for="IsAnonymous" class="form-check"></input>
+        <span asp-validation-for="IsAnonymous" class="text-danger"></span>
+    </div>
+
     <div class="mt-4 mb-2">
         <button type="submit" class="btn btn-primary">Voeg Toe</button>
         <a asp-action="Details" asp-route-id="@Model.MeetingId" asp-route-panelId="@Model.PanelId" class="btn btn-secondary">Terug</a>
