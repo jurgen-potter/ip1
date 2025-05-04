@@ -1,4 +1,5 @@
 using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.BL.Domain.User;
 using Microsoft.AspNetCore.Identity;
 
@@ -10,6 +11,7 @@ public interface IMemberManager
     
     IEnumerable<ApplicationUser> GetAllMembers();
     ApplicationUser GetMemberById(string memberId);
+    ApplicationUser GetOrganizationWithAnswers(string organizationId);
     void ChangeMember(ApplicationUser member);
     void RemoveMember(ApplicationUser member);
 
@@ -23,4 +25,5 @@ public interface IMemberManager
     // Additional methods to support the RegistrationManager functionality
     int GetMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);*/
 
+    Task ChangeOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers);
 }

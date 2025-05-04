@@ -8,4 +8,5 @@ public class QuestionnaireResponseViewModel
     public Questionnaire Questionnaire { get; set; }
     public bool IsCritical { get; set; }
     public Dictionary<int, int> Answers { get; set; } = new();
+    public List<int> SelectedAnswerIds { get; set; } = new();
 }

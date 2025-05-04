@@ -1,4 +1,5 @@
 ﻿using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.DAL;
@@ -7,6 +8,7 @@ public interface IMemberRepository
 {
     IEnumerable<ApplicationUser> ReadAllMembers();
     ApplicationUser ReadUserById(string memberId);
+    ApplicationUser ReadOrganizationWithAnswers(string organizationId);
     void UpdateMember(ApplicationUser member);
     void DeleteMember(ApplicationUser member);
 
@@ -18,4 +20,5 @@ public interface IMemberRepository
 
     // Additional methods to support the RegistrationManager functionality
     int ReadMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge);*/
+    Task UpdateOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers);
 }

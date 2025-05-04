@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CitizenPanel.BL.Domain.User;
 
 namespace CitizenPanel.BL.Domain.QuestionnaireModule;
 
@@ -19,4 +20,6 @@ public class Answer
     public int Position { get; set; }
     
     public Question Question { get; set; }
+    
+    public ICollection<OrganizationProfile> OrganizationProfiles { get; set; }
 }

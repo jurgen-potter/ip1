@@ -1,5 +1,6 @@
 using CitizenPanel.BL.Domain.Draw;
 using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.DAL;
 using Microsoft.AspNetCore.Identity;
@@ -68,6 +69,11 @@ public class MemberManager : IMemberManager
         return _memberRepository.ReadUserById(memberId);
     }
 
+    public ApplicationUser GetOrganizationWithAnswers(string organizationId)
+    {
+        return _memberRepository.ReadOrganizationWithAnswers(organizationId);
+    }
+
     public void ChangeMember(ApplicationUser member)
     {
         _memberRepository.UpdateMember(member);
@@ -76,6 +82,11 @@ public class MemberManager : IMemberManager
     public void RemoveMember(ApplicationUser member)
     {
         _memberRepository.DeleteMember(member);
+    }
+
+    public Task ChangeOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
+    {
+        return _memberRepository.UpdateOrganizationAnswersAsync(userId, questionnaireId, answers);
     }
 
     public IEnumerable<ApplicationUser> GetMembersOfPanelWithCriteria(int panelId)

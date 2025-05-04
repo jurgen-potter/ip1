@@ -1,41 +1,100 @@
+using System.Security.Claims;
+using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.QuestionnaireModule;
+using CitizenPanel.BL.Domain.User;
 using CitizenPanel.BL.QuestionnaireModule;
 using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
 public class QuestionnaireController : Controller
 {
     private readonly IQuestionnaireModuleManager _questionnaireModuleManager;
+    private readonly IMemberManager _memberManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public QuestionnaireController(IQuestionnaireModuleManager questionnaireModuleManager)
+    public QuestionnaireController(IQuestionnaireModuleManager questionnaireModuleManager, IMemberManager memberManager, UserManager<ApplicationUser> userManager)
     {
         _questionnaireModuleManager = questionnaireModuleManager;
+        _memberManager = memberManager;
+        _userManager = userManager;
     }
     
     [HttpGet]
     [AllowAnonymous]
-    public IActionResult Index(int questionnaireId)
+    public async Task<IActionResult> Index(int questionnaireId)
     {
-        return View(_questionnaireModuleManager.GetQuestionnaire(questionnaireId));
+        var questionnaire = _questionnaireModuleManager.GetQuestionnaire(questionnaireId);
+        var userId = _userManager.GetUserId(User);
+        var organization = _memberManager.GetOrganizationWithAnswers(userId);
+        List<int> selectedAnswerIds = new();
+
+        if (User.IsInRole("Organization") && organization?.OrganizationProfile?.Answers != null)
+        {
+            selectedAnswerIds = organization.OrganizationProfile.Answers
+                .Where(a => a.Question != null && a.Question.Questionnaire?.Id == questionnaireId)
+                .Select(a => a.Id).ToList();
+        }
+
+        var viewModel = new QuestionnaireResponseViewModel()
+        {
+            Questionnaire = questionnaire,
+            QuestionnaireId = questionnaireId,
+            SelectedAnswerIds = selectedAnswerIds
+        };
+
+        return View(viewModel);
     }
 
     [HttpPost]
     [AllowAnonymous]
-    public IActionResult Result(QuestionnaireResponseViewModel questionnaireResponseViewModel)
+    public IActionResult Result(QuestionnaireResponseViewModel model)
     {
-        questionnaireResponseViewModel.Questionnaire = _questionnaireModuleManager.GetQuestionnaire(questionnaireResponseViewModel.QuestionnaireId);
+        model.Questionnaire = _questionnaireModuleManager.GetQuestionnaire(model.QuestionnaireId);
         
         var answers = new List<Answer>();
-        foreach (var answer in questionnaireResponseViewModel.Answers)
+        foreach (var answer in model.Answers)
         {
             answers.Add(_questionnaireModuleManager.GetAnswer(answer.Value));
         }
 
-        questionnaireResponseViewModel.IsCritical = answers.Any(a => a.IsCritical);
+        model.IsCritical = answers.Any(a => a.IsCritical);
         
-        return View(questionnaireResponseViewModel);
+        return View(model);
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public IActionResult PrepareSave(QuestionnaireResponseViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View("Index", model);
+
+        // Store form data temporarily (you may serialize if needed)
+        TempData["FormData"] = JsonConvert.SerializeObject(model);
+
+        return RedirectToAction("Save");
+    }
+
+    
+    [HttpGet]
+    [Authorize(Roles = "Organization")]
+    public async Task<IActionResult> Save()
+    {
+        var json = TempData["FormData"].ToString();
+        var model = JsonConvert.DeserializeObject<QuestionnaireResponseViewModel>(json);
+        
+        var answers = new List<Answer>();
+        foreach (var answer in model.Answers)
+        {
+            answers.Add(_questionnaireModuleManager.GetAnswer(answer.Value));
+        }
+        var user = await _userManager.GetUserAsync(User);
+        await _memberManager.ChangeOrganizationAnswersAsync(user.Id, model.QuestionnaireId, answers);
+        return RedirectToAction(nameof(Index), new { questionnaireId = model.QuestionnaireId });
     }
 }

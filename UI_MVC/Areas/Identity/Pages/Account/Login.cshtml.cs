@@ -132,6 +132,10 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                         {
                             return LocalRedirect(returnUrl);
                         }
+                        else if (returnUrl.ToLower().Contains("save"))
+                        {
+                            return LocalRedirect(returnUrl);
+                        }
                         return RedirectToAction("UserPanel", "Panel", new { returnUrl = returnUrl });
                     }
                     if (result.RequiresTwoFactor) { return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe }); }
