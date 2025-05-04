@@ -1,4 +1,5 @@
 ﻿using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.BL.Domain.Tenancy;
 using Microsoft.AspNetCore.Identity;
 
@@ -33,4 +34,5 @@ public class OrganizationProfile : ITenanted
     public string ApplicationUserId { get; set; }
     public ApplicationUser ApplicationUser { get; set; }
     public string TenantId { get; set; }
+    public ICollection<Answer> Answers { get; set; } = new List<Answer>();
 }

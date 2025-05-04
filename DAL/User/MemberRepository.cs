@@ -1,4 +1,5 @@
 ﻿using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.QuestionnaireModule;
 using CitizenPanel.BL.Domain.User;
 using CitizenPanel.DAL.Data;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,28 @@ public class MemberRepository : IMemberRepository
     public void DeleteMember(ApplicationUser member)
     {
         _dbContext.ApplicationUsers.Remove(member);
+    }
+
+    public async Task UpdateOrganizationAnswersAsync(string userId, List<Answer> answers)
+    {
+        var user = await _dbContext.Users
+            .Include(u => u.OrganizationProfile)
+            .ThenInclude(op => op.Answers)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        
+        // Clear current answers
+        user.OrganizationProfile.Answers.Clear();
+        await _dbContext.SaveChangesAsync();
+
+        // Add new answers
+        foreach (var answer in answers)
+        {
+            user.OrganizationProfile.Answers.Add(answer);
+        }
+        
+        _dbContext.Update(user);
+
+        await _dbContext.SaveChangesAsync();
     }
 
     /*public IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId)

@@ -113,6 +113,11 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
             .WithMany()
             .UsingEntity(j => j.ToTable("MemberSelectedCriteria"));
         
+        modelBuilder.Entity<OrganizationProfile>()
+            .HasMany(op => op.Answers)
+            .WithMany(a => a.OrganizationProfiles)
+            .UsingEntity(j => j.ToTable("OrganizationSelectedAnswers"));
+        
         modelBuilder.Entity<Criteria>()
             .HasMany(e => e.SubCriteria)
             .WithMany()

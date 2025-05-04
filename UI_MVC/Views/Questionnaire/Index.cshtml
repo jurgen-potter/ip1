@@ -1,15 +1,15 @@
-@model CitizenPanel.BL.Domain.QuestionnaireModule.Questionnaire
+@model QuestionnaireResponseViewModel
 
 @{
-    ViewBag.Title = @Model.Title;
+    ViewBag.Title = @Model.Questionnaire.Title;
 }
 
 <div class="container my-4">
     <h2 class="mb-4">Is een panel voor u?</h2>
 
     <form asp-action="Result" method="post">
-        <input type="hidden" name="questionnaireId" value="@Model.Id"/>
-        @foreach (var question in Model.Questions)
+        <input type="hidden" name="questionnaireId" value="@Model.QuestionnaireId"/>
+        @foreach (var question in Model.Questionnaire.Questions)
         {
             <div class="card mb-4">
                 <div class="card-header"><strong>Vraag @question.Position</strong></div>
@@ -17,6 +17,7 @@
                     <p class="mb-3">@question.Description</p>
                     @foreach (var answer in question.Answers.OrderBy(a => a.Position))
                     {
+                        var isChecked = Model.SelectedAnswerIds.Contains(answer.Id);
                         <div class="form-check mb-2">
                             <input
                                 class="form-check-input"
@@ -24,6 +25,7 @@
                                 name="Answers[@question.Id]"
                                 value="@answer.Id"
                                 id="@($"q{question.Id}_a{answer.Id}")"
+                                @(isChecked ? "checked" : "")
                                 required />
 
                             <label
@@ -39,6 +41,16 @@
 
         <div class="d-flex justify-content-start mt-4 gap-2">
             <button type="submit" class="btn btn-success mt-3">Verzenden</button>
+            @if (User.IsInRole("Organization"))
+            {
+                <button
+                    type="submit"
+                    formaction="@Url.Action("Save")"
+                    formnovalidate
+                    class="btn btn-success">
+                    Opslaan
+                </button>
+            }
         </div>
     </form>
 </div>
