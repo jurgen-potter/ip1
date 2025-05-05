@@ -172,1007 +172,17 @@ public class DataSeeder(PanelDbContext panelDbContext)
         paul?.MemberProfile.Panels.Add(panel3);
         //paul?.MemberProfile.Panels.Add(panel3);
         
-        // Create initial list with members for Panel 1 and Panel 2
+        
+
         var members = new List<ApplicationUser>
         {
-            new ApplicationUser
+new ApplicationUser
             {
-                Email = "jan@zonderid.com",
+                Email = "kate@example.com",
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
-                    FirstName = "Jan",
-                    Gender = Gender.Male,
-                    Age = 22,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            // Panel 1 members
-            new ApplicationUser
-            {
-                Email = "els@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Els",
-                    Gender = Gender.Female,
-                    Age = 35,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "bart@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Bart",
-                    Gender = Gender.Male,
-                    Age = 50,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "sophie@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Sophie",
-                    Gender = Gender.Female,
-                    Age = 28,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "tom@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Tom",
-                    Gender = Gender.Male,
-                    Age = 45,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-
-            // Panel 2 members
-            new ApplicationUser
-            {
-                Email = "lisa@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Lisa",
-                    Gender = Gender.Female,
-                    Age = 33,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "mark@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Mark",
-                    Gender = Gender.Male,
-                    Age = 67,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel2},
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "lotte@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Lotte",
-                    Gender = Gender.Female,
-                    Age = 72,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel2 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "pieteer@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Pieteer",
-                    Gender = Gender.Male,
-                    Age = 19,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel2 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "emma@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Emma",
-                    Gender = Gender.Female,
-                    Age = 21,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel2 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-
-            // Additional members for Panel 1
-            new ApplicationUser
-            {
-                Email = "jan@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Jans",
-                    Gender = Gender.Male,
-                    Age = 22,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "peter@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Peter",
-                    Gender = Gender.Male,
-                    Age = 19,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "david@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "David",
-                    Gender = Gender.Male,
-                    Age = 24,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "johan@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Johan",
-                    Gender = Gender.Male,
-                    Age = 21,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "koen@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Koen",
-                    Gender = Gender.Male,
-                    Age = 25,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "simon@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Simon",
-                    Gender = Gender.Male,
-                    Age = 18,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-
-            // Men 26-40
-            new ApplicationUser
-            {
-                Email = "thomas@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Thomas",
-                    Gender = Gender.Male,
-                    Age = 35,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "maarten@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Maarten",
-                    Gender = Gender.Male,
-                    Age = 28,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "jeroen@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Jeroen",
-                    Gender = Gender.Male,
-                    Age = 37,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "pieter@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Pieter",
-                    Gender = Gender.Male,
-                    Age = 30,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "wouter@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Wouter",
-                    Gender = Gender.Male,
-                    Age = 33,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "michel@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Michel",
-                    Gender = Gender.Male,
-                    Age = 39,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-
-            // Men 41-60
-            new ApplicationUser
-            {
-                Email = "frank@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Frank",
-                    Gender = Gender.Male,
-                    Age = 45,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "marc@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Marc",
-                    Gender = Gender.Male,
-                    Age = 58,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "patrick@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Patrick",
-                    Gender = Gender.Male,
-                    Age = 52,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "dirk@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Dirk",
-                    Gender = Gender.Male,
-                    Age = 49,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "hans@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Hans",
-                    Gender = Gender.Male,
-                    Age = 44,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "erik@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Erik",
-                    Gender = Gender.Male,
-                    Age = 55,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-
-            // Men 60+
-            new ApplicationUser
-            {
-                Email = "jozef@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Jozef",
-                    Gender = Gender.Male,
-                    Age = 68,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "willem@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Willem",
-                    Gender = Gender.Male,
-                    Age = 71,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "gerard@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Gerard",
-                    Gender = Gender.Male,
-                    Age = 65,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "robert@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Robert",
-                    Gender = Gender.Male,
-                    Age = 77,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "hugo@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Hugo",
-                    Gender = Gender.Male,
-                    Age = 69,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "albert@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Albert",
-                    Gender = Gender.Male,
-                    Age = 73,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-
-            // Women 18-25
-            new ApplicationUser
-            {
-                Email = "anna@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Anna",
-                    Gender = Gender.Female,
-                    Age = 22,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "lisa2@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Lissa",
-                    Gender = Gender.Female,
-                    Age = 19,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "emma2@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Emmy",
-                    Gender = Gender.Female,
-                    Age = 24,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "sara@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Sara",
-                    Gender = Gender.Female,
-                    Age = 21,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "laura@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Laura",
-                    Gender = Gender.Female,
-                    Age = 25,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "nina@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Nina",
-                    Gender = Gender.Female,
-                    Age = 18,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit11
-                    }
-                }
-            },
-
-            // Women 26-40
-            new ApplicationUser
-            {
-                Email = "eva@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Eva",
-                    Gender = Gender.Female,
-                    Age = 35,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "sophie@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Sophie",
-                    Gender = Gender.Female,
-                    Age = 28,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "julie@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Julie",
-                    Gender = Gender.Female,
-                    Age = 37,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "els@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Els",
-                    Gender = Gender.Female,
-                    Age = 30,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit11
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "lieve@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Lieve",
-                    Gender = Gender.Female,
-                    Age = 33,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "anja@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Anja",
-                    Gender = Gender.Female,
-                    Age = 39,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-
-            // Women 41-60
-            new ApplicationUser
-            {
-                Email = "maria@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Maria",
-                    Gender = Gender.Female,
-                    Age = 45,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "ann@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Ann",
-                    Gender = Gender.Female,
-                    Age = 58,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "ingrid@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Ingrid",
-                    Gender = Gender.Female,
-                    Age = 52,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "martine@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Martine",
-                    Gender = Gender.Female,
-                    Age = 49,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "hilde@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Hilde",
-                    Gender = Gender.Female,
-                    Age = 44,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "sonja@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Sonja",
-                    Gender = Gender.Female,
-                    Age = 55,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-
-            // Women 60+
-            new ApplicationUser
-            {
-                Email = "helena@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Helena",
-                    Gender = Gender.Female,
-                    Age = 68,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "godelieve@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Godelieve",
-                    Gender = Gender.Female,
-                    Age = 71,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "rosa@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Rosa",
+                    FirstName = "Kate",
                     Gender = Gender.Female,
                     Age = 65,
                     Town = "Antwerpen",
@@ -1186,11 +196,11 @@ public class DataSeeder(PanelDbContext panelDbContext)
             },
             new ApplicationUser
             {
-                Email = "margareta@example.com",
+                Email = "rozie@example.com",
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
-                    FirstName = "Margareta",
+                    FirstName = "Rozie",
                     Gender = Gender.Female,
                     Age = 77,
                     Town = "Antwerpen",
@@ -1204,11 +214,11 @@ public class DataSeeder(PanelDbContext panelDbContext)
             },
             new ApplicationUser
             {
-                Email = "mariette@example.com",
+                Email = "rozalinda@example.com",
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
-                    FirstName = "Mariette",
+                    FirstName = "Rozalinda",
                     Gender = Gender.Female,
                     Age = 69,
                     Town = "Antwerpen",
@@ -1222,7 +232,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             },
             new ApplicationUser
             {
-                Email = "alice@example.com",
+                Email = "alice2@example.com",
                 UserType = UserType.Member,
                 MemberProfile = new MemberProfile
                 {
@@ -1237,7 +247,25 @@ public class DataSeeder(PanelDbContext panelDbContext)
                         subCrit8,subCrit10
                     }
                 }
+            },
+            new ApplicationUser
+            {
+            Email = "emma3@example.com",
+            UserType = UserType.Member,
+            MemberProfile = new MemberProfile
+            {
+                FirstName = "Emma",
+                Gender = Gender.Female,
+                Age = 24,
+                Town = "Antwerpen",
+                Panels = new List<Panel> { panel1 },
+                TenantId = "antwerpen",
+                SelectedCriteria = new List<SubCriteria>()
+                {
+                    subCrit8,subCrit10
+                }
             }
+        }
         };
         
         var userVotesRec1 = new List<UserVote>
@@ -1324,10 +352,670 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
     private void SeedInvitations()
     {
-        //invitations
-        var invitation1 = new Invitation
+        
+        // Create initial list with members for Panel 1 and Panel 2
+        var invitations = new List<Invitation>
         {
-            //TenantId = "antwerpen",
+            new Invitation()
+            {
+                Email = "jan@zonderid.com",
+                Gender = Gender.Male,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            
+            // Panel 1 members
+            new Invitation()
+            {
+                Email = "els@example.com",
+                Gender = Gender.Female,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "1wer-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            new Invitation()
+            {
+                Email = "bart@example.com",
+                Gender = Gender.Male,
+                Age = 36,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "q1er-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "sophie2@example.com",
+                Gender = Gender.Female,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qw1r-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 11]),
+            },
+            new Invitation()
+            {
+                Email = "tom@example.com",
+                Gender = Gender.Male,
+                Age = 36,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwe1-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+
+            // Additional members for Panel 1
+            new Invitation()
+            {
+                Email = "jan@example.com",
+                Gender = Gender.Male,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-1yui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            new Invitation()
+            {
+                Email = "peter@example.com",
+                Gender = Gender.Male,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-t1ui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "david@example.com",
+                Gender = Gender.Male,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-ty1i-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+            new Invitation()
+            {
+                Email = "johan@example.com",
+                Gender = Gender.Male,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyu1-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            new Invitation()
+            {
+                Email = "koen@example.com",
+                Gender = Gender.Male,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-1pas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "simon@example.com",
+                Gender = Gender.Male,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-o1as-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+
+            // Men 26-40
+            new Invitation()
+            {
+                Email = "thomas@example.com",
+                Gender = Gender.Male,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-op1s-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "maarten@example.com",
+                Gender = Gender.Male,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opa1-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "jeroen@example.com",
+                Gender = Gender.Male,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-1fgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            new Invitation()
+            {
+                Email = "pieter@example.com",
+                Gender = Gender.Male,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-d1gh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+            new Invitation()
+            {
+                Email = "wouter@example.com",
+                Gender = Gender.Male,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-df1h-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+            new Invitation()
+            {
+                Email = "michel@example.com",
+                Gender = Gender.Male,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-dfg1-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+
+            // Men 41-60
+            new Invitation()
+            {
+                Email = "frank@example.com",
+                Gender = Gender.Male,
+                Age = 36,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-dfgh-1klz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+            new Invitation()
+            {
+                Email = "marc@example.com",
+                Gender = Gender.Male,
+                Age = 51,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-dfgh-j1lz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+            new Invitation()
+            {
+                Email = "patrick@example.com",
+                Gender = Gender.Male,
+                Age = 51,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-dfgh-jk1z",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+            new Invitation()
+            {
+                Email = "dirk@example.com",
+                Gender = Gender.Male,
+                Age = 36,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-dfgh-jkl1",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+            new Invitation()
+            {
+                Email = "hans@example.com",
+                Gender = Gender.Male,
+                Age = 36,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "2wer-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+            new Invitation()
+            {
+                Email = "erik@example.com",
+                Gender = Gender.Male,
+                Age = 51,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "q2er-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+
+            // Men 60+
+            new Invitation()
+            {
+                Email = "jozef@example.com",
+                Gender = Gender.Male,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qw2r-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            new Invitation()
+            {
+                Email = "willem@example.com",
+                Gender = Gender.Male,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwe2-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            new Invitation()
+            {
+                Email = "gerard@example.com",
+                Gender = Gender.Male,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-2yui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            new Invitation()
+            {
+                Email = "robert@example.com",
+                Gender = Gender.Male,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-t2ui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            new Invitation()
+            {
+                Email = "hugo@example.com",
+                Gender = Gender.Male,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-ty2i-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            new Invitation()
+            {
+                Email = "albert@example.com",
+                Gender = Gender.Male,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyu2-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+
+            // Women 18-25
+            new Invitation()
+            {
+                Email = "anna@example.com",
+                Gender = Gender.Female,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-2pas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            new Invitation()
+            {
+                Email = "lisa2@example.com",
+                Gender = Gender.Female,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-o2as-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 11]),
+            },
+            new Invitation()
+            {
+                Email = "emma2@example.com",
+                Gender = Gender.Female,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-op2s-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 11]),
+            },
+            new Invitation()
+            {
+                Email = "sara@example.com",
+                Gender = Gender.Female,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opa2-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 11]),
+            },
+            new Invitation()
+            {
+                Email = "laura@example.com",
+                Gender = Gender.Female,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-2fgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 11]),
+            },
+            new Invitation()
+            {
+                Email = "nina@example.com",
+                Gender = Gender.Female,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-d2gh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 11]),
+            },
+
+            // Women 26-40
+            new Invitation()
+            {
+                Email = "eva@example.com",
+                Gender = Gender.Female,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-df2h-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 11]),
+            },
+            new Invitation()
+            {
+                Email = "sophie@example.com",
+                Gender = Gender.Female,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-dfg2-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 11]),
+            },
+            new Invitation()
+            {
+                Email = "julie@example.com",
+                Gender = Gender.Female,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-dfgh-2klz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 11]),
+            },
+            new Invitation()
+            {
+                Email = "els2@example.com",
+                Gender = Gender.Female,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-dfgh-j2lz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 11]),
+            },
+            new Invitation()
+            {
+                Email = "lieve@example.com",
+                Gender = Gender.Female,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-dfgh-jk2z",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "anja@example.com",
+                Gender = Gender.Female,
+                Age = 36,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opas-dfgh-jkl2",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+
+            // Women 41-60
+            new Invitation()
+            {
+                Email = "maria@example.com",
+                Gender = Gender.Female,
+                Age = 36,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "3wer-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "ann@example.com",
+                Gender = Gender.Female,
+                Age = 51,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "q3er-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "ingrid@example.com",
+                Gender = Gender.Female,
+                Age = 51,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qw3r-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "martine@example.com",
+                Gender = Gender.Female,
+                Age = 36,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwe3-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "hilde@example.com",
+                Gender = Gender.Female,
+                Age = 36,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-3yui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "sonja@example.com",
+                Gender = Gender.Female,
+                Age = 51,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-t3ui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+
+            // Women 60+
+            new Invitation()
+            {
+                Email = "helena@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-ty3i-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "godelieve@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyu3-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "rosa@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-3pas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "margareta@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-o3as-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([9, 10]),
+            },
+            new Invitation()
+            {
+                Email = "mariette@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-op3s-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            },
+            new Invitation()
+            {
+                Email = "alice@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 1,
+                TenantId = "antwerpen",
+                Code = "qwer-tyui-opa3-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 10]),
+            }
+            
+        };
+        //invitations
+        var invitation1 = new Invitation()
+        {
+            Email = "invi1@example.com",
             Age = 30,
             Code = "blLy-Tvxl-1TXG-nYg3-CBtD",
             Gender = Gender.Female,
@@ -1340,7 +1028,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
         var invitation2 = new Invitation
         {
-            //TenantId = "antwerpen",
+            Email = "invi2@example.com",
             Age = 20,
             Code = "tDK6-KFhD-ipIi-tQjz-m6cZ",
             Gender = Gender.Male,
@@ -1353,7 +1041,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
         var invitation3 = new Invitation
         {
-            //TenantId = "antwerpen",
+            Email = "invi3@example.com",
             Age = 40,
             Code = "Iga7-FHyw-yVfo-8wvN-Bxa8",
             Gender = Gender.Male,
@@ -1366,7 +1054,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
         var invitation4 = new Invitation
         {
-            //TenantId = "antwerpen",
+            Email = "invi4@example.com",
             Age = 40,
             Code = "FIcV-zyXs-reXO-I6dh-rMCB",
             Gender = Gender.Female,
@@ -1379,7 +1067,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
         var invitation5 = new Invitation
         {
-            //TenantId = "antwerpen",
             Age = 25,
             Code = "HEMf-Xu0L-1ETh-urZJ-26s9",
             Gender = Gender.Male,
@@ -1394,6 +1081,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             TenantId = "antwerpen"
         };
         panelDbContext.Invitations.AddRange(invitation1, invitation2, invitation3, invitation4, invitation5);
+        panelDbContext.Invitations.AddRange(invitations);
     }
 
     private void SeedQuestionnaires()

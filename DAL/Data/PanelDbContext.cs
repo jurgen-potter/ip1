@@ -80,20 +80,22 @@ public class PanelDbContext(
             .HasForeignKey<OrganizationProfile>(o => o.ApplicationUserId);
 
         modelBuilder.Entity<DrawResult>()
-            .HasMany(dr => dr.SelectedMembers)
+            .HasMany(dr => dr.SelectedInvitations)
             .WithOne()
             .HasForeignKey("SelectedDrawResultId");
 
         modelBuilder.Entity<DrawResult>()
-            .HasMany(dr => dr.ReserveMembers)
+            .HasMany(dr => dr.ReserveInvitations)
             .WithOne()
             .HasForeignKey("ReserveDrawResultId");
 
         modelBuilder.Entity<DrawResult>()
-            .HasMany(dr => dr.NotSelectedMembers)
+            .HasMany(dr => dr.NotSelectedInvitations)
             .WithOne()
             .HasForeignKey("NotSelectedDrawResultId");
-        
+
+        modelBuilder.Entity<Panel>()
+            .HasMany(p => p.Invitations);
         
         modelBuilder.Entity<Panel>()
             .OwnsMany(p => p.RecruitmentBuckets);

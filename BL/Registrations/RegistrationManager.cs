@@ -5,26 +5,49 @@ using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Users;
 
+
 namespace CitizenPanel.BL.Registrations;
 
-public class RegistrationManager(
-    IPanelManager panelManager,
-    IDrawManager drawManager,
-    IMemberManager memberManager) : IRegistrationManager
+public class RegistrationManager : IRegistrationManager
 {
-    public IEnumerable<RecruitmentBucket> AssignActualRegistrationsToBuckets(List<RecruitmentBucket> buckets, List<ApplicationUser> users)
+    private readonly IPanelManager _panelManager;
+    private readonly IDrawManager _drawManager;
+    private readonly IMemberManager _memberManager;
+    
+    private const string GenderMaleCriterion = "Man";
+    private const string GenderFemaleCriterion = "Vrouw";
+    
+    private Dictionary<int, string> _criteriaNameCache;
+
+    public RegistrationManager(
+        IPanelManager panelManager,
+        IDrawManager drawManager,
+        IMemberManager memberManager)
     {
+        _panelManager = panelManager;
+        _drawManager = drawManager;
+        _memberManager = memberManager;
+        _criteriaNameCache = new Dictionary<int, string>();
+    }
+
+    public List<RecruitmentBucket> AssignActualRegistrationsToBuckets(List<RecruitmentBucket> buckets, List<Invitation> invitations)
+    {
+        // Als er invitations zijn, haal alle criteria op voor het panel van de eerste invitation
+        if (invitations.Any())
+        {
+            int panelId = invitations.First().PanelId;
+            LoadCriteriaCache(panelId);
+        }
+
         foreach (var bucket in buckets)
         {
             int matchCount = 0;
-            foreach (var user in users)
+            foreach (var invitation in invitations)
             {
-                var mp = user.MemberProfile;
-                if (mp == null) continue;
-
-                bool matches = MatchesBucket(mp, bucket);
-                if (matches)
+                if (DoesInvitationMatchBucket(invitation, bucket))
+                {
                     matchCount++;
+                }
             }
             bucket.ActualCount = matchCount;
         }
@@ -32,69 +55,101 @@ public class RegistrationManager(
         return buckets;
     }
 
-    private bool MatchesBucket(MemberProfile mp, RecruitmentBucket bucket)
+    private void LoadCriteriaCache(int panelId)
+    {
+        _criteriaNameCache.Clear();
+        var allCriteria = _panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
+        
+        foreach (var criterion in allCriteria)
+        {
+            foreach (var subcriterion in criterion.SubCriteria)
+            {
+                if (!_criteriaNameCache.ContainsKey(subcriterion.Id))
+                {
+                    _criteriaNameCache[subcriterion.Id] = subcriterion.Name;
+                }
+            }
+        }
+    }
+
+    private bool DoesInvitationMatchBucket(Invitation invitation, RecruitmentBucket bucket)
     {
         // Check Gender
-        bool hasGenderCriteria = false;
-        foreach (var sub in bucket.SubCriteriaNames)
-        {
-            if (sub.Equals("Man", StringComparison.OrdinalIgnoreCase))
-            {
-                hasGenderCriteria = true;
-                if (mp.Gender != Gender.Male)
-                    return false;
-            }
-            else if (sub.Equals("Vrouw", StringComparison.OrdinalIgnoreCase))
-            {
-                hasGenderCriteria = true;
-                if (mp.Gender != Gender.Female)
-                    return false;
-            }
-        }
+        bool requiresMale = bucket.SubCriteriaNames.Any(s => s.Equals(GenderMaleCriterion, StringComparison.OrdinalIgnoreCase));
+        bool requiresFemale = bucket.SubCriteriaNames.Any(s => s.Equals(GenderFemaleCriterion, StringComparison.OrdinalIgnoreCase));
+        
+        if (requiresMale && invitation.Gender != Gender.Male) return false;
+        if (requiresFemale && invitation.Gender != Gender.Female) return false;
 
         // Check Age
-        bool hasAgeCriteria = false;
-        foreach (var sub in bucket.SubCriteriaNames)
+        string requiredAgeGroup = bucket.SubCriteriaNames.FirstOrDefault(IsAgeGroup);
+        if (requiredAgeGroup != null && !IsInAgeGroup(invitation.Age, requiredAgeGroup)) return false;
+
+        // Check Other Criteria
+        var otherCriteria = bucket.SubCriteriaNames
+            .Where(s => !s.Equals(GenderMaleCriterion, StringComparison.OrdinalIgnoreCase) &&
+                        !s.Equals(GenderFemaleCriterion, StringComparison.OrdinalIgnoreCase) &&
+                        !IsAgeGroup(s))
+            .ToList();
+
+        if (otherCriteria.Any())
         {
-            if (IsAgeGroup(sub))
+            if (invitation.SelectedCriteria == null || !invitation.SelectedCriteria.Any())
+                return false; // No criteria selected, can't match
+
+            // Get names from the ID's using our cache
+            var invitationCriteriaNames = GetCriteriaNames(invitation.SelectedCriteria);
+            
+            // Check if all required criteria are matched
+            foreach (var requiredCriterion in otherCriteria)
             {
-                hasAgeCriteria = true;
-                if (!IsInAgeGroup(mp.Age, sub))
+                bool matchFound = false;
+                foreach (var criterionName in invitationCriteriaNames)
+                {
+                    if (criterionName.Equals(requiredCriterion, StringComparison.OrdinalIgnoreCase) ||
+                        criterionName.Contains(requiredCriterion, StringComparison.OrdinalIgnoreCase) ||
+                        requiredCriterion.Contains(criterionName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        matchFound = true;
+                        break;
+                    }
+                }
+                
+                if (!matchFound)
                     return false;
-            }
-        }
-
-        // Check other criteria
-        foreach (var sub in bucket.SubCriteriaNames)
-        {
-            if (hasGenderCriteria && (sub.Equals("Man", StringComparison.OrdinalIgnoreCase) ||
-                                       sub.Equals("Vrouw", StringComparison.OrdinalIgnoreCase)))
-                continue;
-
-            if (hasAgeCriteria && IsAgeGroup(sub))
-                continue;
-
-            if (!mp.SelectedCriteria.Any(sc =>
-                    sc.Name.Equals(sub, StringComparison.OrdinalIgnoreCase) ||
-                    sub.Contains(sc.Name, StringComparison.OrdinalIgnoreCase) ||
-                    sc.Name.Contains(sub, StringComparison.OrdinalIgnoreCase)))
-            {
-                return false;
             }
         }
 
         return true;
     }
 
+    // Helper om criteria namen op te halen uit de cache
+    private IEnumerable<string> GetCriteriaNames(List<int> criteriaIds)
+    {
+        if (criteriaIds == null) 
+            return Enumerable.Empty<string>();
+        
+        List<string> names = new List<string>();
+        foreach (var id in criteriaIds)
+        {
+            if (_criteriaNameCache.TryGetValue(id, out string name))
+            {
+                names.Add(name);
+            }
+        }
+        
+        return names;
+    }
+
     private static bool IsAgeGroup(string group)
     {
-        group = group.Trim();
-        return group.EndsWith("+") || group.Contains("-");
+        group = group?.Trim() ?? string.Empty;
+        return group.EndsWith("+") || (group.Contains('-') && group.Replace("-", "").All(char.IsDigit));
     }
 
     private bool IsInAgeGroup(int age, string group)
     {
-        group = group.Trim();
+        group = group?.Trim() ?? string.Empty;
 
         if (group.EndsWith("+"))
         {
@@ -105,8 +160,8 @@ public class RegistrationManager(
         {
             var parts = group.Split('-', StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 2
-                && int.TryParse(parts[0], out var lo)
-                && int.TryParse(parts[1], out var hi))
+                && int.TryParse(parts[0].Trim(), out var lo)
+                && int.TryParse(parts[1].Trim(), out var hi))
             {
                 return age >= lo && age <= hi;
             }
@@ -114,83 +169,140 @@ public class RegistrationManager(
 
         return false;
     }
-    
 
+    // Voor de StartFinalDraw methode zou je dezelfde aanpak moeten gebruiken
     public void StartFinalDraw(Panel panel)
     {
-        var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panel.Id);
-        var allUsers = memberManager.GetMembersOfPanelWithCriteria(panel.Id).ToList();
-        
-        var recruitmentResult = drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
-        
-        var bucketsWithTargetsAndActuals = AssignActualRegistrationsToBuckets(recruitmentResult.Buckets, allUsers);
+        var criteria = _panelManager.GetCriteriaAndSubcriteriaWithPanelId(panel.Id);
+        var recruitmentPlan = _drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
 
-        var drawResult = new DrawResult
+        // Load criteria names to cache
+        LoadCriteriaCache(panel.Id);
+
+        // Ophalen van alle geregistreerde uitnodigingen voor dit panel
+        var registeredInvitations = _memberManager.GetInvitationsByPanelId(panel.Id).ToList();
+        
+        // Map invitations to eligible buckets
+        var invitationsByBucket = MapInvitationsToEligibleBuckets(recruitmentPlan.Buckets, registeredInvitations);
+
+        // Update bucket actual counts
+        UpdateBucketActualCounts(recruitmentPlan.Buckets, invitationsByBucket);
+
+        // Perform the selection
+        var drawSelectionResult = PerformSelection(recruitmentPlan, invitationsByBucket);
+
+        // Update panel draw status and results
+        panel.DrawStatus = DrawStatus.Complete;
+        panel.DrawResult = new DrawResult
         {
-            SelectedMembers = new List<ApplicationUser>(),
-            ReserveMembers = new List<ApplicationUser>(),
-            NotSelectedMembers = new List<ApplicationUser>(),
-            TotalNeededPanelmembers = recruitmentResult.TotalNeededPanelmembers,
-            ReservePanelmembers = recruitmentResult.ReservePotPanelmembers
+            SelectedInvitations = drawSelectionResult.SelectedInvitations,
+            ReserveInvitations = drawSelectionResult.ReserveInvitations,
+            NotSelectedInvitations = registeredInvitations
+                                        .Except(drawSelectionResult.SelectedInvitations)
+                                        .Except(drawSelectionResult.ReserveInvitations)
+                                        .ToList(),
+            TotalNeededPanelmembers = recruitmentPlan.TotalNeededPanelmembers,
+            ReservePanelmembers = recruitmentPlan.ReservePotPanelmembers,
+            TenantId = panel.TenantId
         };
 
-        var selectedAndReservedUserIds = new HashSet<string>();
-        var eligibleForReservePoolCandidates = new List<ApplicationUser>(); 
+        _panelManager.ChangePanel(panel);
+    }
+    
+    private Dictionary<RecruitmentBucket, List<Invitation>> MapInvitationsToEligibleBuckets(
+        List<RecruitmentBucket> buckets, List<Invitation> invitations)
+    {
+        var invitationsByBucket = buckets.ToDictionary(b => b, b => new List<Invitation>());
 
+        foreach (var invitation in invitations)
+        {
+            foreach (var bucket in buckets)
+            {
+                if (DoesInvitationMatchBucket(invitation, bucket))
+                {
+                    invitationsByBucket[bucket].Add(invitation);
+                }
+            }
+        }
+        return invitationsByBucket;
+    }
+    
+    private void UpdateBucketActualCounts(
+        List<RecruitmentBucket> buckets,
+        Dictionary<RecruitmentBucket, List<Invitation>> invitationsByBucket)
+    {
+        foreach (var bucket in buckets)
+        {
+            bucket.ActualCount = invitationsByBucket.TryGetValue(bucket, out var eligibleInvitations) ? eligibleInvitations.Count : 0;
+        }
+    }
+    
+    private DrawSelectionInternalResult PerformSelection(
+        RecruitmentResult recruitmentPlan,
+        Dictionary<RecruitmentBucket, List<Invitation>> invitationsByBucket)
+    {
+        var selectedInvitations = new List<Invitation>();
+        var potentialReserveInvitations = new List<Invitation>();
+        var selectedOrReservedInvitationIds = new HashSet<string>();
         var random = new Random();
 
-        foreach (var bucket in bucketsWithTargetsAndActuals)
+        foreach (var bucket in recruitmentPlan.Buckets)
         {
             int targetCount = bucket.Count;
-
-            var eligibleUsersInBucket = allUsers
-                .Where(u => u.MemberProfile != null &&
-                            !selectedAndReservedUserIds.Contains(u.Id) &&
-                            MatchesBucket(u.MemberProfile, bucket))
-                .ToList();
-
-            int actualSelectedCount = Math.Min(targetCount, eligibleUsersInBucket.Count);
-
-            var shuffledUsers = eligibleUsersInBucket.OrderBy(_ => random.Next()).ToList(); 
-
-            for (int i = 0; i < actualSelectedCount; i++)
+            if (!invitationsByBucket.TryGetValue(bucket, out var eligibleInvitations) || !eligibleInvitations.Any())
             {
-                var userToSelect = shuffledUsers[i];
-                drawResult.SelectedMembers.Add(userToSelect);
-                selectedAndReservedUserIds.Add(userToSelect.Id); 
+                continue;
             }
 
-            for (int i = actualSelectedCount; i < shuffledUsers.Count; i++)
+            var shuffledEligibleInvitations = eligibleInvitations.OrderBy(_ => random.Next()).ToList();
+
+            int selectedCount = 0;
+            foreach (var invitation in shuffledEligibleInvitations)
             {
-                 var userForReserveCandidate = shuffledUsers[i];
-                 if (!selectedAndReservedUserIds.Contains(userForReserveCandidate.Id) && eligibleForReservePoolCandidates.All(u => u.Id != userForReserveCandidate.Id))
-                 {
-                     eligibleForReservePoolCandidates.Add(userForReserveCandidate);
-                 }
+                if (selectedCount < targetCount && selectedOrReservedInvitationIds.Add(invitation.Code))
+                {
+                    selectedInvitations.Add(invitation);
+                    selectedCount++;
+                }
+                else if (!selectedOrReservedInvitationIds.Contains(invitation.Code))
+                {
+                     potentialReserveInvitations.Add(invitation);
+                }
             }
         }
-        
-        var shuffledReservePool = eligibleForReservePoolCandidates.OrderBy(_ => random.Next()).ToList(); 
 
-        int actualReserveCount = Math.Min(recruitmentResult.ReservePotPanelmembers, shuffledReservePool.Count);
+        potentialReserveInvitations = potentialReserveInvitations.DistinctBy(inv => inv.Code).ToList();
 
-        for (int i = 0; i < actualReserveCount; i++)
+        var reserveInvitations = new List<Invitation>();
+        var shuffledReservePool = potentialReserveInvitations
+                                    .Where(inv => !selectedOrReservedInvitationIds.Contains(inv.Code))
+                                    .OrderBy(_ => random.Next())
+                                    .ToList();
+
+        int reserveTarget = recruitmentPlan.ReservePotPanelmembers;
+        int reserveSelectedCount = 0;
+
+        foreach (var invitation in shuffledReservePool)
         {
-             var userToReserve = shuffledReservePool[i];
-             if (!selectedAndReservedUserIds.Contains(userToReserve.Id))
-             {
-                drawResult.ReserveMembers.Add(userToReserve);
-                selectedAndReservedUserIds.Add(userToReserve.Id); 
-             }
+            if (reserveSelectedCount < reserveTarget && selectedOrReservedInvitationIds.Add(invitation.Code))
+            {
+                reserveInvitations.Add(invitation);
+                reserveSelectedCount++;
+            }
+            else if (reserveSelectedCount >= reserveTarget) break;
         }
 
-        drawResult.NotSelectedMembers = allUsers
-            .Where(u => !selectedAndReservedUserIds.Contains(u.Id)) 
-            .ToList();
-
-        panel.DrawStatus = DrawStatus.Complete;
-        panel.DrawResult = drawResult;
-
-        panelManager.ChangePanel(panel);
+        return new DrawSelectionInternalResult
+        {
+            SelectedInvitations = selectedInvitations,
+            ReserveInvitations = reserveInvitations
+        };
+    }
+    
+    // Internal helper class to return selections from PerformSelection
+    private class DrawSelectionInternalResult
+    {
+        public List<Invitation> SelectedInvitations { get; set; }
+        public List<Invitation> ReserveInvitations { get; set; }
     }
 }

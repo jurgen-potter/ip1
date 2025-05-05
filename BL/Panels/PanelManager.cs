@@ -17,9 +17,9 @@ public class PanelManager(
         return repository.ReadPanelById(panelId);
     }
     
-    public Panel GetPanelByIdWithMembers(int panelId)
+    public Panel GetPanelByIdWithInvitations(int panelId)
     {
-        return repository.ReadPanelByIdWithMembers(panelId);
+        return repository.ReadInvitationsOfPanelById(panelId);
     }
     public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totAvPotMem)
     {

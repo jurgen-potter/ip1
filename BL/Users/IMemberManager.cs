@@ -1,3 +1,4 @@
+using CitizenPanel.BL.Domain.Draws;
 using CitizenPanel.BL.Domain.QuestionnaireModules;
 using CitizenPanel.BL.Domain.Users;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +15,7 @@ public interface IMemberManager
     void ChangeMember(ApplicationUser member);
     void RemoveMember(ApplicationUser member);
 
-    IEnumerable<ApplicationUser> GetMembersOfPanelWithCriteria(int panelId);
+    public IEnumerable<Invitation> GetInvitationsByPanelId(int panelId);
 
 
     /*// Specialized queries for the RegistrationManager

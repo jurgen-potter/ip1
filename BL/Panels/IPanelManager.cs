@@ -10,7 +10,7 @@ public interface IPanelManager
     public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totAvPotMem);
 
     public Panel GetPanelById(int panelId);
-    Panel GetPanelByIdWithMembers(int panelId);
+    Panel GetPanelByIdWithInvitations(int panelId);
 
     public void ChangePanel(Panel panel);
     public void RemovePanel(Panel panel);

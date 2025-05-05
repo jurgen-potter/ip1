@@ -1,12 +1,11 @@
 ﻿@model CitizenPanel.BL.Domain.Draws.DrawResult
-@using CitizenPanel.BL.Domain.Draws
 @using CitizenPanel.BL.Domain.Users;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Lotingsresultaten";
     var panelId = ViewBag.PanelId;
     var panelName = ViewBag.PanelName;
-    var drawStatus = (DrawStatus)ViewBag.DrawStatus;
+    var criteriaNamesLookup = ViewBag.CriteriaNames as Dictionary<int, string> ?? new Dictionary<int, string>();
 }
 
 <h2>Lotingsresultaten voor panel: @panelName</h2>
@@ -39,81 +38,88 @@
 
 @foreach (var group in new[]
           {
-              new { Title = "Geselecteerde deelnemers", Members = Model.SelectedMembers },
-              new { Title = "Reserve deelnemers", Members = Model.ReserveMembers },
+              new { Title = "Geselecteerde deelnemers", Invitations = Model.SelectedInvitations },
+              new { Title = "Reserve deelnemers", Invitations = Model.ReserveInvitations },
           })
 {
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <h3>@group.Title</h3>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Naam</th>
-                    <th>Geslacht</th>
-                    <th>Leeftijd</th>
-                    <th>Categorie</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var member in group.Members)
-                {
-                    var mp = member.MemberProfile;
-                    if (mp == null)
-                    {
-                        continue;
-                    }
-
-                    var nameDisplay = string.IsNullOrEmpty(mp.FirstName) ? "[Geen naam]" : mp.FirstName;
-
-                    var genderDisplay = mp.Gender == Gender.Male ? "Man" : "Vrouw";
-
-                    string ageGroup;
-                    if (mp.Age <= 0) 
-                    {
-                        ageGroup = "[Onbekend]"; 
-                    }
-                    else if (mp.Age >= 18 && mp.Age <= 25)
-                    {
-                        ageGroup = "18-25";
-                    }
-                    else if (mp.Age <= 40)
-                    {
-                        ageGroup = "26-40";
-                    }
-                    else if (mp.Age <= 60)
-                    {
-                        ageGroup = "41-60";
-                    }
-                    else
-                    {
-                        ageGroup = "60+";
-                    }
-
-                    var criteriaList = new List<string> { genderDisplay, ageGroup };
-                    if (mp.SelectedCriteria != null)
-                    {
-                        criteriaList.AddRange(mp.SelectedCriteria.Where(sc => sc != null && !string.IsNullOrEmpty(sc.Name)).Select(sc => sc.Name));
-                    }
-
-                    var categoryDisplay = string.Join(" × ", criteriaList);
-
+    @if (group.Invitations.Any())
+    {
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h3>@group.Title</h3>
+                <table class="table table-striped">
+                    <thead>
                     <tr>
-                        <td>@nameDisplay</td>
-                        <td>@genderDisplay</td>
-                        <td>@mp.Age</td>
-                        <td>@categoryDisplay</td>
+                        <th>Naam</th>
+                        <th>Geslacht</th>
+                        <th>Leeftijd</th>
+                        <th>Stad</th>
+                        <th>Categorie</th>
                     </tr>
-                }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @foreach (var invitation in group.Invitations)
+                    {
+                        var identifierDisplay = !string.IsNullOrEmpty(invitation.Email) ? invitation.Email : invitation.Code ?? "[Onbekend]";
+                        var genderDisplay = invitation.Gender == Gender.Male ? "Man" : invitation.Gender == Gender.Female ? "Vrouw" : "[Onbekend]";
+                        var townDisplay = !string.IsNullOrEmpty(invitation.Town) ? invitation.Town : "[Onbekend]";
+
+                        string ageGroupDisplay;
+                        if (invitation.Age <= 0)
+                        {
+                            ageGroupDisplay = "[Onbekende leeftijd]";
+                        }
+                        else if (invitation.Age >= 18 && invitation.Age <= 25)
+                        {
+                            ageGroupDisplay = "18-25";
+                        }
+                        else if (invitation.Age <= 40)
+                        {
+                            ageGroupDisplay = "26-40";
+                        }
+                        else if (invitation.Age <= 60)
+                        {
+                            ageGroupDisplay = "41-60";
+                        }
+                        else
+                        {
+                            ageGroupDisplay = "60+";
+                        }
+
+                        var criteriaDisplayList = new List<string> { genderDisplay, ageGroupDisplay }; 
+                        if (invitation.SelectedCriteria != null)
+                        {
+                            foreach (var criteriaId in invitation.SelectedCriteria)
+                            {
+                                if (criteriaNamesLookup.TryGetValue(criteriaId, out var name))
+                                {
+                                    criteriaDisplayList.Add(name);
+                                }
+                            }
+                        }
+
+                        var distinctCriteria = criteriaDisplayList.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+                        var categoryDisplay = string.Join(" × ", distinctCriteria);
+
+                        <tr>
+                            <td>@identifierDisplay</td>
+                            <td>@genderDisplay</td>
+                            <td>@invitation.Age</td>
+                            <td>@townDisplay</td>
+                            <td>@categoryDisplay</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    }
 }
 
-@if (!Model.SelectedMembers.Any() && !Model.ReserveMembers.Any())
-{
-    <div class="alert alert-warning">
-        Er zijn geen resultaten beschikbaar. De loting moet mogelijk opnieuw worden uitgevoerd.
-    </div>
-}
+
+    @if (!Model.SelectedInvitations.Any() && !Model.ReserveInvitations.Any())
+    {
+        <div class="alert alert-warning">
+            Er zijn geen resultaten beschikbaar. De loting moet mogelijk opnieuw worden uitgevoerd.
+        </div>
+    }

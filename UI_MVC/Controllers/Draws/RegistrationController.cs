@@ -2,7 +2,6 @@ using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Registrations;
 using CitizenPanel.BL.Users;
-using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.Draws;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +19,7 @@ public class RegistrationController(
     public IActionResult Index(int panelId)
     {
         var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
-        var users = memberManager.GetMembersOfPanelWithCriteria(panelId).ToList();
+        var users = memberManager.GetInvitationsByPanelId(panelId).ToList();
         var panel = panelManager.GetPanelById(panelId);
         var result = drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
 
@@ -75,7 +74,7 @@ public class RegistrationController(
             return View("EditMail", finalDraw);
         }
 
-        var panel = panelManager.GetPanelByIdWithMembers(finalDraw.PanelId);
+        var panel = panelManager.GetPanelByIdWithInvitations(finalDraw.PanelId);
         registrationManager.StartFinalDraw(panel);
 
         TempData["SelectedSubject"] = finalDraw.SelectedSubject;
@@ -98,27 +97,41 @@ public class RegistrationController(
         var notSelectedSubject = TempData["NotSelectedSubject"] as string ?? "Test";
         var notSelectedMessage = TempData["NotSelectedMessage"] as string ?? "Test";
 
-        var panel = panelManager.GetPanelByIdWithMembers(panelId);
+        var panel = panelManager.GetPanelByIdWithInvitations(panelId);
 
+        var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
+        var criteriaNamesLookup = new Dictionary<int, string>();
+        foreach(var criterion in criteria)
+        {
+            foreach(var subcriterion in criterion.SubCriteria)
+            {
+                if (!criteriaNamesLookup.ContainsKey(subcriterion.Id))
+                {
+                    criteriaNamesLookup[subcriterion.Id] = subcriterion.Name;
+                }
+            }
+        }
+        ViewBag.CriteriaNames = criteriaNamesLookup;
+        
         var dr = panel.DrawResult;
 
         if (selectedSubject != "Test")
         {
-            foreach (var selected in dr.SelectedMembers)
+            foreach (var selected in dr.SelectedInvitations)
             {
                 mailSender.SendEmailAsync(selected.Email, selectedSubject,
                     selectedMessage.Replace(Environment.NewLine, "<br />"));
             }
-
-            foreach (var reserve in dr.ReserveMembers)
+        
+            foreach (var reserve in dr.ReserveInvitations)
             {
                 mailSender.SendEmailAsync(reserve.Email, reserveSubject,
                     reserveMessage.Replace(Environment.NewLine, "<br />"));
             }
-
-            if (dr.NotSelectedMembers.Count > 0)
+        
+            if (dr.NotSelectedInvitations.Count > 0)
             {
-                foreach (var notSelected in dr.NotSelectedMembers)
+                foreach (var notSelected in dr.NotSelectedInvitations.ToList())
                 {
                     mailSender.SendEmailAsync(notSelected.Email, notSelectedSubject,
                         notSelectedMessage.Replace(Environment.NewLine, "<br />"));
