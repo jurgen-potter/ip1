@@ -128,11 +128,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     {
                         _logger.LogInformation("User logged in.");
                         
-                        if (returnUrl.ToLower().Contains("restorepaneldata"))
-                        {
-                            return LocalRedirect(returnUrl);
-                        }
-                        else if (returnUrl.ToLower().Contains("save"))
+                        if (returnUrl.ToLower().Contains("save") || returnUrl.ToLower().Contains("createpanelfromresult"))
                         {
                             return LocalRedirect(returnUrl);
                         }

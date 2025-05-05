@@ -24,7 +24,7 @@ public class PanelManager : IPanelManager
     {
         return _panelRepository.ReadPanelByIdWithMembers(panelId);
     }
-    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, OrganizationProfile organization, int totAvPotMem)
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totAvPotMem)
     {
         Panel newPanel = new Panel()
         {

@@ -149,12 +149,12 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         {
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             Input ??= new InputModel();
+            IsStaff = staff;
 
             string invitationString = TempData["Invitation"] as string ?? string.Empty;
             if (string.IsNullOrEmpty(invitationString))
             {
                 PanelId = panelId;
-                IsStaff = staff;
             }
             else
             {

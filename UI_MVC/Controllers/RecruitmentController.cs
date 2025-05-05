@@ -3,6 +3,7 @@ using CitizenPanel.BL.Domain.Draw;
 using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
@@ -114,6 +115,40 @@ public class RecruitmentController : Controller
             });
         }
         return View("Result", resultModel);
+    }
+    
+    [HttpPost]
+    [AllowAnonymous]
+    public IActionResult ReadResult (ResultViewModel resultViewModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View("Result", resultViewModel);
+        }
+        
+        TempData["ResultViewModel"] = JsonConvert.SerializeObject(resultViewModel);
+
+        return RedirectToAction("CreatePanelFromResult", "Recruitment");
+    }
+    
+    [HttpGet]
+    [Authorize(Roles = "Organization")]
+    public IActionResult CreatePanelFromResult()
+    {
+        if (!TempData.ContainsKey("ResultViewModel"))
+        {
+            return RedirectToAction("Index", "Recruitment");
+        }
+
+        var resultModelJson = TempData["ResultViewModel"] as string;
+        var resultViewModel = JsonConvert.DeserializeObject<ResultViewModel>(resultModelJson);
+
+        var model = new CreatePanelViewModel()
+        {
+            Result = resultViewModel
+        };
+
+        return View("~/Views/Panel/CreatePanel.cshtml", model);
     }
     
     [HttpPost]
