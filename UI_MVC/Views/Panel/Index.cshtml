@@ -22,6 +22,9 @@
                 <a asp-controller="Registration" asp-action="Index" asp-route-panelId="@Model.PanelId" class="btn btn-outline-secondary btn-sm">
                     <i class="bi bi-eye me-1"></i> Aanmeldingen Bekijken
                 </a>
+                <a asp-controller="Panel" asp-action="Invitations" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
+                    <i class="bi bi-eye me-1"></i> Uitnodigingen bekijken
+                </a>
                 <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
                     <i class="bi bi-pencil-square me-1"></i> Voeg panellid toe
                 </a>

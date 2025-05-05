@@ -23,9 +23,9 @@ public class DrawRepository : IDrawRepository
         return _dbContext.Invitations.SingleOrDefault(i => i.Code == code);
     }
 
-    public IEnumerable<Invitation> ReadAllInvitations()
+    public IEnumerable<Invitation> ReadAllInvitationsByPanelId(int panelId)
     {
-        return _dbContext.Invitations;
+        return _dbContext.Invitations.Where(i => i.PanelId == panelId);
     }
 
     public Invitation UpdateInvitation(Invitation invitation)

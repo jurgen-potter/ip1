@@ -7,7 +7,7 @@ public interface IDrawRepository
 {
     public Invitation CreateInvitation(Invitation invitation);
     public Invitation ReadInvitationWithCode(string code);
-    public IEnumerable<Invitation> ReadAllInvitations();
+    public IEnumerable<Invitation> ReadAllInvitationsByPanelId(int panelId);
     public Invitation UpdateInvitation(Invitation invitation);
     
     public SubCriteria CreateSubCriteria(SubCriteria subCriteria);
