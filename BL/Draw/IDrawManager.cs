@@ -25,5 +25,6 @@ public interface IDrawManager
     );
 
     public bool RemoveInvitation(int invitationId);
+    public bool RemoveInvitationByEmail(string email);
     public IEnumerable<Criteria> GetInitialCriteria();
 }

@@ -20,4 +20,5 @@ public interface IDrawRepository
     IEnumerable<Criteria> ReadCriteriaByPanel(int panelId);
     public void UpdateCriteria(int panelId, IEnumerable<Criteria> criteria);
     public bool DeleteInvitation(int invitationId);
+    public bool DeleteInvitationByEmail(string email);
 }

@@ -317,7 +317,12 @@ public class DrawManager : IDrawManager
     {
         return _drawRepository.DeleteInvitation(invitationId);
     }
-    
+
+    public bool RemoveInvitationByEmail(string email)
+    {
+        return _drawRepository.DeleteInvitationByEmail(email);
+    }
+
     public IEnumerable<Criteria> GetInitialCriteria()
     {
         var criteriaList = new List<Criteria>()

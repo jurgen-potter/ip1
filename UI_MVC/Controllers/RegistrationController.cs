@@ -115,6 +115,7 @@ public class RegistrationController(
         foreach (var notSelected in dr.NotSelectedMembers)
         {
             mailSender.SendEmailAsync(notSelected.Email, notSelectedSubject, notSelectedMessage);
+            drawManager.RemoveInvitationByEmail(notSelected.Email);
         }
 
         ViewBag.PanelId = panelId;

@@ -87,6 +87,16 @@ public class DrawRepository : IDrawRepository
         return _dbContext.SaveChanges() > 0;
     }
 
+    public bool DeleteInvitationByEmail(string email)
+    {
+        var invitation = _dbContext.Invitations.SingleOrDefault(i => i.Email == email);
+        if (invitation == null)
+            return false;
+        
+        _dbContext.Invitations.Remove(invitation);
+        return _dbContext.SaveChanges() > 0;
+    }
+
     public void UpdateCriteria(int panelId, IEnumerable<Criteria> updatedCriteria)
     {
         // haal alle bestaande criteria voor deze panel
