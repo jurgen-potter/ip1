@@ -131,7 +131,7 @@ public class RegistrationController(
         
             if (dr.NotSelectedInvitations.Count > 0)
             {
-                foreach (var notSelected in dr.NotSelectedInvitations)
+                foreach (var notSelected in dr.NotSelectedInvitations.ToList())
                 {
                     mailSender.SendEmailAsync(notSelected.Email, notSelectedSubject,
                         notSelectedMessage.Replace(Environment.NewLine, "<br />"));
