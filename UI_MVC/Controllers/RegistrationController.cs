@@ -79,10 +79,8 @@ public class RegistrationController(
         TempData["SelectedMessage"] = finalDraw.SelectedMessage;
         TempData["ReserveSubject"] = finalDraw.ReserveSubject;
         TempData["ReserveMessage"] = finalDraw.ReserveMessage;
-        TempData["NotSelectedSubject"] = "Niet geselecteerd voor het panel";
-        TempData["NotSelectedMessage"] =
-            "Helaas bent u niet geselecteerd voor deelname aan het panel. Bedankt voor uw interesse.";
-
+        TempData["NotSelectedSubject"] = finalDraw.NotSelectedSubject;
+        TempData["NotSelectedMessage"] = finalDraw.NotSelectedMessage;
 
         return RedirectToAction(nameof(DrawResults), new { panelId = finalDraw.PanelId });
     }
@@ -104,17 +102,17 @@ public class RegistrationController(
 
         foreach (var selected in dr.SelectedMembers)
         {
-            mailSender.SendEmailAsync(selected.Email, selectedSubject, selectedMessage);
+            mailSender.SendEmailAsync(selected.Email, selectedSubject, selectedMessage.Replace(Environment.NewLine, "<br />"));
         }
 
         foreach (var reserve in dr.ReserveMembers)
         {
-            mailSender.SendEmailAsync(reserve.Email, reserveSubject, reserveMessage);
+            mailSender.SendEmailAsync(reserve.Email, reserveSubject, reserveMessage.Replace(Environment.NewLine, "<br />"));
         }
 
         foreach (var notSelected in dr.NotSelectedMembers)
         {
-            mailSender.SendEmailAsync(notSelected.Email, notSelectedSubject, notSelectedMessage);
+            mailSender.SendEmailAsync(notSelected.Email, notSelectedSubject, notSelectedMessage.Replace(Environment.NewLine, "<br />"));
         }
 
         ViewBag.PanelId = panelId;
