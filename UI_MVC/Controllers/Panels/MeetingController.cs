@@ -1,29 +1,23 @@
 ﻿using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.UI.MVC.Models;
+using CitizenPanel.UI.MVC.Models.Panels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CitizenPanel.UI.MVC.Controllers
+namespace CitizenPanel.UI.MVC.Controllers.Panels
 {
-    public class MeetingController : Controller
+    public class MeetingController(
+        IMeetingManager meetingManager,
+        IPanelManager panelManager) : Controller
     {
-        private readonly IMeetingManager _meetingManager;
-        private readonly IPanelManager _panelManager;
-
-        public MeetingController(IMeetingManager meetingManager, IPanelManager panelManager)
-        {
-            _meetingManager = meetingManager;
-            _panelManager = panelManager;
-        }
-
         [HttpGet]
         [Authorize]
         public IActionResult Details(int id, int panelId)
         {
-            var meeting = _meetingManager.GetMeetingByIdWithRecommendations(id);
+            var meeting = meetingManager.GetMeetingByIdWithRecommendations(id);
             
-            var panel = _panelManager.GetPanelById(panelId);
+            var panel = panelManager.GetPanelById(panelId);
 
             var model = new MeetingDetailViewModel
             {
@@ -72,7 +66,7 @@ namespace CitizenPanel.UI.MVC.Controllers
             {
                 return View(model);
             }
-            var meeting = _meetingManager.GetMeetingByIdWithRecommendations(model.MeetingId);
+            var meeting = meetingManager.GetMeetingByIdWithRecommendations(model.MeetingId);
     
             var recommendation = new Recommendation()
             {
@@ -84,7 +78,7 @@ namespace CitizenPanel.UI.MVC.Controllers
             };
     
             meeting.Recommendations.Add(recommendation);
-            _meetingManager.EditMeeting(meeting);
+            meetingManager.EditMeeting(meeting);
 
             return RedirectToAction("Details", new { id = model.MeetingId, panelId = model.PanelId });
         }
@@ -104,7 +98,7 @@ namespace CitizenPanel.UI.MVC.Controllers
                 return BadRequest(new { success = false, errors = "Meeting date cannot be in the past" });
             }
             
-            var meeting = _meetingManager.AddMeeting(viewModel.Title, viewModel.Date,viewModel.PanelId);
+            var meeting = meetingManager.AddMeeting(viewModel.Title, viewModel.Date,viewModel.PanelId);
 
             return Json(new
             {

@@ -12,7 +12,9 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 [ApiController]
 [Route("/api/[controller]")]
 [Authorize]
-public class RecommendationsController(IPanelManager panelManager, IMemberManager memberManager) : ControllerBase
+public class RecommendationsController(
+    IPanelManager panelManager,
+    IMemberManager memberManager) : ControllerBase
 {
     
     [HttpGet("votes")]

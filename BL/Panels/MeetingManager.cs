@@ -3,22 +3,16 @@ using CitizenPanel.DAL.Panels;
 
 namespace CitizenPanel.BL.Panels;
 
-public class MeetingManager : IMeetingManager
+public class MeetingManager(IMeetingRepository repository) : IMeetingManager
 {
-    private readonly IMeetingRepository _repository;
-
-    public MeetingManager(IMeetingRepository repository)
-    {
-        _repository = repository;
-    }
     public Meeting GetMeetingByIdWithRecommendations(int id)
     {
-       return _repository.ReadMeetingByIdWithRecommendations(id);
+       return repository.ReadMeetingByIdWithRecommendations(id);
     }
 
     public Meeting GetMeetingById(int id)
     {
-        return _repository.ReadMeetingById(id);
+        return repository.ReadMeetingById(id);
     }
 
     public Meeting AddMeeting(string title, DateOnly date, int panelId)
@@ -29,13 +23,13 @@ public class MeetingManager : IMeetingManager
             Title = title,
             Date = date
         };
-       _repository.CreateMeeting(meeting);
+       repository.CreateMeeting(meeting);
        return meeting;
     }
 
     public void EditMeeting(Meeting meeting)
     {
-        _repository.UpdateMeeting(meeting);
+        repository.UpdateMeeting(meeting);
     }
 
 }

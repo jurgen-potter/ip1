@@ -7,7 +7,10 @@ using CitizenPanel.BL.Users;
 
 namespace CitizenPanel.BL.Registrations;
 
-public class RegistrationManager(IPanelManager panelManager, IDrawManager drawManager, IMemberManager memberManager) : IRegistrationManager
+public class RegistrationManager(
+    IPanelManager panelManager,
+    IDrawManager drawManager,
+    IMemberManager memberManager) : IRegistrationManager
 {
     public IEnumerable<RecruitmentBucket> AssignActualRegistrationsToBuckets(List<RecruitmentBucket> buckets, List<ApplicationUser> users)
     {

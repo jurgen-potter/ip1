@@ -1,4 +1,4 @@
-﻿namespace CitizenPanel.UI.MVC.Models;
+﻿namespace CitizenPanel.UI.MVC.Models.Panels;
 
 public class MeetingDetailViewModel
 {

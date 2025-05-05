@@ -4,36 +4,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CitizenPanel.DAL.Panels;
 
-public class MeetingRepository : IMeetingRepository
+public class MeetingRepository(PanelDbContext dbContext) : IMeetingRepository
 {
-    private readonly PanelDbContext _dbContext;
-
-    public MeetingRepository(PanelDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public Meeting ReadMeetingByIdWithRecommendations(int id)
     {
-        return _dbContext.Meetings.Include(r => r.Recommendations)
+        return dbContext.Meetings.Include(r => r.Recommendations)
             .FirstOrDefault(m => m.Id == id);
     }
 
     public Meeting ReadMeetingById(int id)
     {
-        return _dbContext.Meetings.FirstOrDefault(m => m.Id == id);
+        return dbContext.Meetings.FirstOrDefault(m => m.Id == id);
     }
 
     public void CreateMeeting(Meeting meeting)
     {
-        _dbContext.Meetings.Add(meeting);
-        _dbContext.SaveChanges();
+        dbContext.Meetings.Add(meeting);
+        dbContext.SaveChanges();
     }
 
     public void UpdateMeeting(Meeting meeting)
     {
-        _dbContext.Meetings.Update(meeting);
-        _dbContext.SaveChanges();
+        dbContext.Meetings.Update(meeting);
+        dbContext.SaveChanges();
     }
 
 }

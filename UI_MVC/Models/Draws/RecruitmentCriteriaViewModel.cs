@@ -1,7 +1,7 @@
-﻿using CitizenPanel.UI.MVC.Validation;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using CitizenPanel.UI.MVC.Validation;
 
-namespace CitizenPanel.UI.MVC.Models;
+namespace CitizenPanel.UI.MVC.Models.Draws;
 
 public class RecruitmentCriteriaViewModel
 {

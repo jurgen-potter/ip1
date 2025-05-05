@@ -1,8 +1,7 @@
-﻿using CitizenPanel.BL.Domain.QuestionnaireModules;
+﻿using System.ComponentModel.DataAnnotations;
 using CitizenPanel.BL.Domain.Validation;
-using System.ComponentModel.DataAnnotations;
 
-namespace CitizenPanel.UI.MVC.Models;
+namespace CitizenPanel.UI.MVC.Models.QuestionnaireModules;
 
 public class EditQuestionnaireViewModel
 {

@@ -1,31 +1,21 @@
 ﻿using CitizenPanel.BL.Domain.Draws;
 using CitizenPanel.BL.Draws;
-using CitizenPanel.BL.Panels;
-using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
+using CitizenPanel.UI.MVC.Models.Draws;
+using CitizenPanel.UI.MVC.Models.Panels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace CitizenPanel.UI.MVC.Controllers;
+namespace CitizenPanel.UI.MVC.Controllers.Draws;
 
-public class RecruitmentController : Controller
+public class RecruitmentController(IDrawManager drawManager) : Controller
 {
-    private readonly IDrawManager _drawManager;
-    private readonly IPanelManager _panelManager;
-    // private readonly IMemberManager _memberManager;
-
-    public RecruitmentController(IDrawManager drawManager, IPanelManager panelManager)
-    {
-        _drawManager = drawManager;
-        _panelManager = panelManager;
-        // _memberManager = memberManager;
-    }
-
     [HttpGet]
     [AllowAnonymous]
     public IActionResult Index(int panelId)
     {
-        var criteriaList = _drawManager.GetInitialCriteria();
+        var criteriaList = drawManager.GetInitialCriteria();
 
         var model = new RecruitmentCriteriaViewModel
         {
@@ -96,7 +86,7 @@ public class RecruitmentController : Controller
 
             criteria.Add(cr);
         }
-        var result = _drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, criteria);
+        var result = drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, criteria);
 
         var resultModel = new ResultViewModel()
         {
@@ -150,45 +140,5 @@ public class RecruitmentController : Controller
         };
 
         return View("~/Views/Panel/CreatePanel.cshtml", model);
-    }
-    
-    [HttpPost]
-    [Authorize(Roles = "Organization")]
-    public IActionResult Save(RecruitmentCriteriaViewModel model)
-    {
-        
-        ModelState.Clear(); //voor validatiefouten te omzeilen, je mag opslaan!
-
-        var domainCriteria = new List<Criteria>();
-
-        for (int i = 0; i < model.Criteria.Count; i++)
-        {
-            var cvm = model.Criteria[i];
-            var criteria = new Criteria
-            {
-                Id = cvm.Id,
-                Name = cvm.Name,
-                SubCriteria = new List<SubCriteria>()
-            };
-
-            for (int j = 0; j < cvm.SubCriteria.Count; j++)
-            {
-                var svm = cvm.SubCriteria[j];
-                var subCriteria = new SubCriteria
-                {
-                    Id = svm.Id,
-                    Name = svm.Name,
-                    Percentage = svm.Percentage
-                };
-
-                criteria.SubCriteria.Add(subCriteria);
-            }
-
-            domainCriteria.Add(criteria);
-        }
-
-        _drawManager.EditCriteria(model.PanelId, domainCriteria);
-
-        return RedirectToAction(nameof(Index), new { panelId = model.PanelId });
     }
 }

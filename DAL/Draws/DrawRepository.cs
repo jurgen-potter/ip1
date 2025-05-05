@@ -4,15 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CitizenPanel.DAL.Draws;
 
-public class DrawRepository : IDrawRepository
+public class DrawRepository(PanelDbContext dbContext) : IDrawRepository
 {
-    private readonly PanelDbContext _dbContext;
-
-    public DrawRepository(PanelDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-    
     public Invitation CreateInvitation(Invitation invitation)
     {
         return invitation;
@@ -20,38 +13,38 @@ public class DrawRepository : IDrawRepository
 
     public Invitation ReadInvitationWithCode(string code)
     {
-        return _dbContext.Invitations.SingleOrDefault(i => i.Code == code);
+        return dbContext.Invitations.SingleOrDefault(i => i.Code == code);
     }
 
     public IEnumerable<Invitation> ReadAllInvitationsByPanelId(int panelId)
     {
-        return _dbContext.Invitations.Where(i => i.PanelId == panelId);
+        return dbContext.Invitations.Where(i => i.PanelId == panelId);
     }
 
     public Invitation UpdateInvitation(Invitation invitation)
     {
-        _dbContext.Invitations.Update(invitation);
-        _dbContext.SaveChanges();
+        dbContext.Invitations.Update(invitation);
+        dbContext.SaveChanges();
         return invitation;
     }
 
     public SubCriteria CreateSubCriteria(SubCriteria subCriteria)
     {
-        _dbContext.SubCriteria.Add(subCriteria);
-        _dbContext.SaveChanges();
+        dbContext.SubCriteria.Add(subCriteria);
+        dbContext.SaveChanges();
         return subCriteria;
     }
 
     public Criteria CreateCriteria(Criteria criteria)
     {
-        _dbContext.Criteria.Add(criteria);
-        _dbContext.SaveChanges();
+        dbContext.Criteria.Add(criteria);
+        dbContext.SaveChanges();
         return criteria;
     }
 
     public Criteria ReadCriteria(int criteriaId)
     {
-        return _dbContext.Criteria
+        return dbContext.Criteria
             .Where(e => e.Id == criteriaId)
             .Include(e => e.SubCriteria)
             .SingleOrDefault();
@@ -59,19 +52,19 @@ public class DrawRepository : IDrawRepository
     
     public IEnumerable<Criteria> ReadAllCriteria()
     {
-        return _dbContext.Criteria
+        return dbContext.Criteria
             .Include(e => e.SubCriteria)
             .ToList();
     }
     
     public SubCriteria ReadSubCriteria(int subCriteriaId)
     {
-        return _dbContext.SubCriteria.Find(subCriteriaId);
+        return dbContext.SubCriteria.Find(subCriteriaId);
     }
 
     public IEnumerable<Criteria> ReadCriteriaByPanel(int panelId)
     {
-        return _dbContext.Criteria
+        return dbContext.Criteria
             .Where(e => e.Panel.Id == panelId)
             .Include(e => e.SubCriteria)
             .ToList();
@@ -79,28 +72,28 @@ public class DrawRepository : IDrawRepository
     
     public bool DeleteInvitation(int invitationId)
     {
-        var invitation = _dbContext.Invitations.Find(invitationId);
+        var invitation = dbContext.Invitations.Find(invitationId);
         if (invitation == null)
             return false;
 
-        _dbContext.Invitations.Remove(invitation);
-        return _dbContext.SaveChanges() > 0;
+        dbContext.Invitations.Remove(invitation);
+        return dbContext.SaveChanges() > 0;
     }
 
     public bool DeleteInvitationByEmail(string email)
     {
-        var invitation = _dbContext.Invitations.SingleOrDefault(i => i.Email == email);
+        var invitation = dbContext.Invitations.SingleOrDefault(i => i.Email == email);
         if (invitation == null)
             return false;
         
-        _dbContext.Invitations.Remove(invitation);
-        return _dbContext.SaveChanges() > 0;
+        dbContext.Invitations.Remove(invitation);
+        return dbContext.SaveChanges() > 0;
     }
 
     public void UpdateCriteria(int panelId, IEnumerable<Criteria> updatedCriteria)
     {
         // haal alle bestaande criteria voor deze panel
-        var existing = _dbContext.Criteria
+        var existing = dbContext.Criteria
             .Include(c => c.SubCriteria)
             .Where(c => c.Panel.Id == panelId)
             .ToList();
@@ -108,7 +101,7 @@ public class DrawRepository : IDrawRepository
         // verwijder criteria die verdwenen zijn
         foreach (var toRemove in existing.Where(e => updatedCriteria.All(u => u.Id != e.Id)))
         {
-            _dbContext.Criteria.Remove(toRemove);
+            dbContext.Criteria.Remove(toRemove);
         }
 
         // verwerk elke criteria uit de aangeleverde lijst
@@ -118,7 +111,7 @@ public class DrawRepository : IDrawRepository
             {
                 // nieuw
                 var crit = new Criteria {
-                    Panel = _dbContext.Panels.Find(panelId),
+                    Panel = dbContext.Panels.Find(panelId),
                     Name = upd.Name
                 };
                 foreach (var sc in upd.SubCriteria)
@@ -126,7 +119,7 @@ public class DrawRepository : IDrawRepository
                         Name = sc.Name,
                         Percentage = sc.Percentage
                     });
-                _dbContext.Criteria.Add(crit);
+                dbContext.Criteria.Add(crit);
             }
             else
             {
@@ -135,7 +128,7 @@ public class DrawRepository : IDrawRepository
                 existCrit.Name = upd.Name;
 
                 // subcriteria: eerst alle oude weghalen
-                _dbContext.SubCriteria.RemoveRange(existCrit.SubCriteria);
+                dbContext.SubCriteria.RemoveRange(existCrit.SubCriteria);
                 // en vervangen door de nieuwe
                 existCrit.SubCriteria = upd.SubCriteria
                     .Select(sc => new SubCriteria {
@@ -145,7 +138,7 @@ public class DrawRepository : IDrawRepository
             }
         }
 
-        _dbContext.SaveChanges();
+        dbContext.SaveChanges();
     }
 
 }

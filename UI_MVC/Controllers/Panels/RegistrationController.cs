@@ -2,12 +2,12 @@ using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Registrations;
 using CitizenPanel.BL.Users;
-using Microsoft.AspNetCore.Mvc;
+using CitizenPanel.UI.MVC.Models;
+using CitizenPanel.UI.MVC.Models.Draws;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CitizenPanel.UI.MVC.Controllers;
-
-using Models;
+namespace CitizenPanel.UI.MVC.Controllers.Panels;
 
 public class RegistrationController(
     IRegistrationManager registrationManager,

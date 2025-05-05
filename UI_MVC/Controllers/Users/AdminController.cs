@@ -1,26 +1,20 @@
 ﻿using CitizenPanel.BL.Domain.QuestionnaireModules;
 using CitizenPanel.BL.QuestionnaireModules;
 using CitizenPanel.UI.MVC.Models;
+using CitizenPanel.UI.MVC.Models.QuestionnaireModules;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CitizenPanel.UI.MVC.Controllers;
+namespace CitizenPanel.UI.MVC.Controllers.Users;
 
 [Authorize(Roles = "Admin")]
-public class AdminController : Controller
+public class AdminController(IQuestionnaireModuleManager questionnaireModuleManager) : Controller
 {
-    private readonly IQuestionnaireModuleManager _questionnaireModuleManager;
-
-    public AdminController(IQuestionnaireModuleManager questionnaireModuleManager)
-    {
-        _questionnaireModuleManager = questionnaireModuleManager;
-    }
-
     [HttpGet]
     [Authorize(Roles = "Admin")]
     public IActionResult Index()
     {
-        var questionnaires = _questionnaireModuleManager.GetAllQuestionnaires();
+        var questionnaires = questionnaireModuleManager.GetAllQuestionnaires();
         var questionnaireSelect = new QuestionnaireSelectViewModel();
         foreach (var questionnaire in questionnaires)
         {
@@ -38,7 +32,7 @@ public class AdminController : Controller
     [Authorize(Roles = "Admin")]
     public IActionResult EditQuestionnaire(int questionnaireId)
     {
-        Questionnaire questionnaire = _questionnaireModuleManager.GetQuestionnaire(questionnaireId);
+        Questionnaire questionnaire = questionnaireModuleManager.GetQuestionnaire(questionnaireId);
 
         EditQuestionnaireViewModel model = new EditQuestionnaireViewModel
         {
@@ -107,7 +101,7 @@ public class AdminController : Controller
             return View(model);
         }
         
-        var questionnaire = _questionnaireModuleManager.GetQuestionnaire(model.Id);
+        var questionnaire = questionnaireModuleManager.GetQuestionnaire(model.Id);
         if (questionnaire == null)
         {
             return NotFound();
@@ -187,7 +181,7 @@ public class AdminController : Controller
 
         questionnaire.Questions = updatedQuestions;
 
-        _questionnaireModuleManager.EditQuestionnaire(questionnaire);
+        questionnaireModuleManager.EditQuestionnaire(questionnaire);
 
         return RedirectToAction(nameof(Index));
     }

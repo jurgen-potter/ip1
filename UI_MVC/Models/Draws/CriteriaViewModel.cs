@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CitizenPanel.UI.MVC.Models;
+namespace CitizenPanel.UI.MVC.Models.Draws;
 
 public class CriteriaViewModel
 {

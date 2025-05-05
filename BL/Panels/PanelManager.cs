@@ -6,24 +6,20 @@ using CitizenPanel.DAL.Panels;
 
 namespace CitizenPanel.BL.Panels;
 
-public class PanelManager : IPanelManager
+public class PanelManager(
+    IPanelRepository repository,
+    IDrawManager drawManager) : IPanelManager
 {
-    private readonly IPanelRepository _panelRepository;
-    private readonly IDrawManager _drawManager;
+    private readonly IDrawManager _drawManager = drawManager;
 
-    public PanelManager(IPanelRepository repository, IDrawManager drawManager) {
-        _panelRepository = repository;
-        _drawManager = drawManager;
-    }
-    
     public Panel GetPanelById(int panelId)
     {
-        return _panelRepository.ReadPanelById(panelId);
+        return repository.ReadPanelById(panelId);
     }
     
     public Panel GetPanelByIdWithMembers(int panelId)
     {
-        return _panelRepository.ReadPanelByIdWithMembers(panelId);
+        return repository.ReadPanelByIdWithMembers(panelId);
     }
     public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totAvPotMem)
     {
@@ -35,48 +31,48 @@ public class PanelManager : IPanelManager
             Criteria = criteria,
             TotalAvailablePotentialPanelmembers = totAvPotMem
         };
-        _panelRepository.CreatePanel(newPanel);
+        repository.CreatePanel(newPanel);
         return newPanel;
     }
 
     public void ChangePanel(Panel panel)
     {
-        _panelRepository.UpdatePanel(panel);
+        repository.UpdatePanel(panel);
     }
 
     public void RemovePanel(Panel panel)
     {
-        _panelRepository.DeletePanel(panel);
+        repository.DeletePanel(panel);
     }
 
     public IEnumerable<RecruitmentBucket> GetTargetBucketsByPanel(Panel panel)
     {
-        return _panelRepository.ReadTargetBucketsByPanel(panel);
+        return repository.ReadTargetBucketsByPanel(panel);
     }
     
 
     public Panel GetPanelByIdWithRecommendations(int panelId)
     {
-        return _panelRepository.ReadPanelByIdWithRecommendations(panelId);
+        return repository.ReadPanelByIdWithRecommendations(panelId);
     }
 
     public Recommendation GetRecommendationById(int recommendationId)
     {
-        return _panelRepository.ReadRecommendationById(recommendationId);
+        return repository.ReadRecommendationById(recommendationId);
     }
     
     public Recommendation GetRecommendationWithVoters(int recommendationId)
     {
-        return _panelRepository.ReadRecommendationWithVotersById(recommendationId);
+        return repository.ReadRecommendationWithVotersById(recommendationId);
     }
 
     public void EditRecommendation(Recommendation recommendation)
     {
-        _panelRepository.UpdateRecommendation(recommendation);
+        repository.UpdateRecommendation(recommendation);
     }
     public bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation)
     {
-        return _panelRepository.HasUserVotedForRecommendation(member, recommendation);
+        return repository.HasUserVotedForRecommendation(member, recommendation);
     }
 
     public void AddVoteToRecommendation(ApplicationUser member, Recommendation recommendation, bool recommended)
@@ -102,46 +98,46 @@ public class PanelManager : IPanelManager
             TenantId = member.MemberProfile.TenantId
         };
         
-        _panelRepository.CreateVoteToRecommendation(userVote);
+        repository.CreateVoteToRecommendation(userVote);
         
         // Verhoog de stemteller in de aanbeveling
         recommendation.Votes++;
-        _panelRepository.UpdateRecommendation(recommendation);
+        repository.UpdateRecommendation(recommendation);
         
     }
 
     public void RemoveVoteFromRecommendation(ApplicationUser member, Recommendation recommendation)
     {
-        _panelRepository.DeleteVoteFromRecommendation(member, recommendation);
+        repository.DeleteVoteFromRecommendation(member, recommendation);
     }
     
     public IEnumerable<int> GetVotedRecommendationsByUser(string userId)
     {
-        return _panelRepository.ReadVotedRecommendationsByUser(userId);
+        return repository.ReadVotedRecommendationsByUser(userId);
     }
 
     public void EditCriteria(Criteria criteria)
     {
-        _panelRepository.UpdateCriteria(criteria);
+        repository.UpdateCriteria(criteria);
     }
     
     public IEnumerable<Criteria> GetExtraCriteriaByPanelId(int panelId)
     {
-        return _panelRepository.ReadExtraCriteriaByPanelId(panelId);
+        return repository.ReadExtraCriteriaByPanelId(panelId);
     }
 
     public IEnumerable<Criteria> GetCriteriaAndSubcriteriaWithPanelId(int panelId)
     {
-        return _panelRepository.ReadCriteriaAndSubcriteriaWithPanelId(panelId);
+        return repository.ReadCriteriaAndSubcriteriaWithPanelId(panelId);
     }
     
     public void ChangeRecommendation(Recommendation recommendation)
     {
-        _panelRepository.UpdateRecommendation(recommendation);
+        repository.UpdateRecommendation(recommendation);
     }
 
     public IEnumerable<Panel> GetAllPanels()
     {
-        return _panelRepository.ReadAllPanels();
+        return repository.ReadAllPanels();
     }
 }

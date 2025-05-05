@@ -1,6 +1,6 @@
 using CitizenPanel.BL.Domain.QuestionnaireModules;
 
-namespace CitizenPanel.UI.MVC.Models;
+namespace CitizenPanel.UI.MVC.Models.QuestionnaireModules;
 
 public class QuestionnaireResponseViewModel
 { 

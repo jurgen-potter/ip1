@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CitizenPanel.UI.MVC.Models.Draws;
 
-namespace CitizenPanel.UI.MVC.Models;
+namespace CitizenPanel.UI.MVC.Models.Panels;
 
 public class CreatePanelViewModel
 {

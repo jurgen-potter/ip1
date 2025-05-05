@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CitizenPanel.BL.Domain.Panels;
 
-namespace CitizenPanel.UI.MVC.Models;
+namespace CitizenPanel.UI.MVC.Models.Panels;
 
 public class PanelViewModel
 {

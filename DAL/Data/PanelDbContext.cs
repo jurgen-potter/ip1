@@ -15,10 +15,11 @@ using System.Linq.Expressions;
 
 namespace CitizenPanel.DAL.Data;
 
-public class PanelDbContext : IdentityDbContext<ApplicationUser>
+public class PanelDbContext(
+    DbContextOptions<PanelDbContext> options,
+    IConfiguration configuration,
+    TenantContext tenantContext) : IdentityDbContext<ApplicationUser>(options)
 {
-    private readonly IConfiguration _configuration;
-    private TenantContext _tenantContext;
     public DbSet<Panel> Panels { get; set; }
     public DbSet<Recommendation> Recommendations { get; set; }
     public DbSet<Meeting> Meetings { get; set; } 
@@ -35,18 +36,11 @@ public class PanelDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<MemberProfile> MemberProfiles { get; set; }
     public DbSet<OrganizationProfile> OrganizationProfiles { get; set; }
     
-    public string TenantId => _tenantContext.GetCurrentTenantId();
-    
-    public PanelDbContext(DbContextOptions<PanelDbContext> options, IConfiguration configuration, TenantContext tenantContext) : base(options)
-    {
-        _configuration = configuration;
-        _tenantContext = tenantContext;
-        
-    }
-    
+    public string TenantId => tenantContext.GetCurrentTenantId();
+
     override protected void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            string connectionString = configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseNpgsql(connectionString);
         }
         optionsBuilder.LogTo(message => System.Diagnostics.Debug.WriteLine(message), LogLevel.Information);

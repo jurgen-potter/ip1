@@ -5,30 +5,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CitizenPanel.DAL.Users;
 
-public class MemberRepository : IMemberRepository
+public class MemberRepository(PanelDbContext dbContext) : IMemberRepository
 {
-    private readonly PanelDbContext _dbContext;
-
-    public MemberRepository(PanelDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public IEnumerable<ApplicationUser> ReadAllMembers()
     {
-        return _dbContext.ApplicationUsers
+        return dbContext.ApplicationUsers
             .Where(u => u.UserType == UserType.Member)
             .ToList();
     }
 
     public ApplicationUser ReadUserById(string userId)
     {
-        return _dbContext.ApplicationUsers.Find(userId);
+        return dbContext.ApplicationUsers.Find(userId);
     }
     
     public ApplicationUser ReadOrganizationWithAnswers(string organizationId)
     {
-        return _dbContext.ApplicationUsers
+        return dbContext.ApplicationUsers
             .Include(aU => aU.OrganizationProfile)
             .ThenInclude(op => op.Answers)
             .SingleOrDefault(au => au.Id == organizationId);
@@ -36,17 +29,17 @@ public class MemberRepository : IMemberRepository
     
     public void UpdateMember(ApplicationUser member)
     {
-        _dbContext.Update(member);
+        dbContext.Update(member);
     }
 
     public void DeleteMember(ApplicationUser member)
     {
-        _dbContext.ApplicationUsers.Remove(member);
+        dbContext.ApplicationUsers.Remove(member);
     }
 
     public async Task UpdateOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
     {
-        var user = await _dbContext.Users
+        var user = await dbContext.Users
             .Include(u => u.OrganizationProfile)
             .ThenInclude(op => op.Answers)
             .FirstOrDefaultAsync(u => u.Id == userId);
@@ -60,7 +53,7 @@ public class MemberRepository : IMemberRepository
         {
             user.OrganizationProfile.Answers.Remove(answer);
         }
-        await _dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         // Add new answers
         foreach (var answer in answers)
@@ -68,14 +61,14 @@ public class MemberRepository : IMemberRepository
             user.OrganizationProfile.Answers.Add(answer);
         }
         
-        _dbContext.Update(user);
+        dbContext.Update(user);
 
-        await _dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
     }
 
     public IEnumerable<ApplicationUser> ReadMembersOfPanelWithCriteria(int panelId)
     {
-        return _dbContext.ApplicationUsers
+        return dbContext.ApplicationUsers
             .Include(u => u.MemberProfile)
             .ThenInclude(mp => mp.SelectedCriteria)
             .Include(u => u.MemberProfile)

@@ -6,26 +6,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CitizenPanel.DAL.Data;
 
-public class DataSeeder
+public class DataSeeder(PanelDbContext panelDbContext)
 {
-    private readonly PanelDbContext _panelDbContext;
-
-    public DataSeeder(PanelDbContext panelDbContext)
-    {
-        _panelDbContext = panelDbContext;
-    }
-
     public void Seed()
     {
         SeedPanels();
-        _panelDbContext.SaveChanges();
-        _panelDbContext.ChangeTracker.Clear();
+        panelDbContext.SaveChanges();
+        panelDbContext.ChangeTracker.Clear();
 
         SeedInvitations();
         SeedQuestionnaires();
 
-        _panelDbContext.SaveChanges();
-        _panelDbContext.ChangeTracker.Clear();
+        panelDbContext.SaveChanges();
+        panelDbContext.ChangeTracker.Clear();
     }
 
     private void SeedPanels()
@@ -43,7 +36,7 @@ public class DataSeeder
         var subCrit10 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
         var subCrit11 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
         
-        _panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4, subCrit5, subCrit6, subCrit7, subCrit8, subCrit9, subCrit10, subCrit11);
+        panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4, subCrit5, subCrit6, subCrit7, subCrit8, subCrit9, subCrit10, subCrit11);
 
         var crit1 = new Criteria()
         {
@@ -69,7 +62,7 @@ public class DataSeeder
             SubCriteria = { subCrit10, subCrit11 },
             TenantId = "antwerpen"
         };
-        _panelDbContext.Criteria.AddRange(crit1, crit2, crit3, crit4);
+        panelDbContext.Criteria.AddRange(crit1, crit2, crit3, crit4);
 
 
         // Create panel objects
@@ -139,7 +132,7 @@ public class DataSeeder
                 }
             }
         };
-        _panelDbContext.Panels.Add(panel1);
+        panelDbContext.Panels.Add(panel1);
         panel1.Criteria.Add(crit1);
         panel1.Criteria.Add(crit2);
         panel1.Criteria.Add(crit3);
@@ -153,7 +146,7 @@ public class DataSeeder
             EndDate = new DateOnly(2025, 8, 14),
             TenantId = "brussel"
         };
-        _panelDbContext.Panels.Add(panel2);
+        panelDbContext.Panels.Add(panel2);
         
         var panel3 = new Panel()
         {
@@ -163,15 +156,15 @@ public class DataSeeder
             EndDate = new DateOnly(2025, 7, 17),
             TenantId = "antwerpen"
         };
-        _panelDbContext.Panels.Add(panel3);
+        panelDbContext.Panels.Add(panel3);
         
-        var antwerpen = _panelDbContext.ApplicationUsers
+        var antwerpen = panelDbContext.ApplicationUsers
             .Include(u => u.OrganizationProfile)
             .SingleOrDefault(u => u.UserName == "antwerpen@example.com");
-        var brussel = _panelDbContext.ApplicationUsers
+        var brussel = panelDbContext.ApplicationUsers
             .Include(u => u.OrganizationProfile)
             .SingleOrDefault(u => u.UserName == "brussel@example.com");
-        var paul = _panelDbContext.ApplicationUsers
+        var paul = panelDbContext.ApplicationUsers
             .Include(u => u.MemberProfile)
             .SingleOrDefault(u => u.UserName == "paul@example.com");
         panel3.Members.Add(paul?.MemberProfile);
@@ -1326,7 +1319,7 @@ public class DataSeeder
         rec2.UserVotes = userVotesRec2;
         rec2.Votes = userVotesRec2.Count();
         
-        _panelDbContext.AddRange(members);
+        panelDbContext.AddRange(members);
     }
 
     private void SeedInvitations()
@@ -1400,7 +1393,7 @@ public class DataSeeder
             SelectedCriteria = new List<int>([8, 11]),
             TenantId = "antwerpen"
         };
-        _panelDbContext.Invitations.AddRange(invitation1, invitation2, invitation3, invitation4, invitation5);
+        panelDbContext.Invitations.AddRange(invitation1, invitation2, invitation3, invitation4, invitation5);
     }
 
     private void SeedQuestionnaires()
@@ -1502,9 +1495,9 @@ public class DataSeeder
         question3.Questionnaire = questionnaire;
         questionnaire.Questions.Add(question3);
         
-        _panelDbContext.Questionnaires.Add(questionnaire);
-        _panelDbContext.Questions.AddRange(question1, question2, question3);
-        _panelDbContext.Answers.AddRange(answer1, answer2, answer3, answer4, answer5, answer6, answer7);
+        panelDbContext.Questionnaires.Add(questionnaire);
+        panelDbContext.Questions.AddRange(question1, question2, question3);
+        panelDbContext.Answers.AddRange(answer1, answer2, answer3, answer4, answer5, answer6, answer7);
         
         var questionnaire2 = new Questionnaire
         {
@@ -1707,8 +1700,8 @@ public class DataSeeder
         question10.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question10);
 
-        _panelDbContext.Questionnaires.Add(questionnaire2);
-        _panelDbContext.Questions.AddRange(question4, question5, question6, question7, question8, question9, question10);
-        _panelDbContext.Answers.AddRange(answer11, answer12, answer13, answer8, answer9, answer10, answer11, answer12, answer13, answer14, answer15, answer16, answer17, answer18, answer19, answer20, answer21, answer22, answer23, answer24);
+        panelDbContext.Questionnaires.Add(questionnaire2);
+        panelDbContext.Questions.AddRange(question4, question5, question6, question7, question8, question9, question10);
+        panelDbContext.Answers.AddRange(answer11, answer12, answer13, answer8, answer9, answer10, answer11, answer12, answer13, answer14, answer15, answer16, answer17, answer18, answer19, answer20, answer21, answer22, answer23, answer24);
     }
 }

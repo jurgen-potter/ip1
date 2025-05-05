@@ -4,27 +4,21 @@ using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Users;
 using CitizenPanel.UI.MVC.Models;
+using CitizenPanel.UI.MVC.Models.Draws;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CitizenPanel.UI.MVC.Controllers;
+namespace CitizenPanel.UI.MVC.Controllers.Users;
 
-public class MemberRegisterController : Controller
+public class MemberRegisterController(
+    IDrawManager drawManager,
+    IEmailSender emailSender,
+    IMemberManager memberManager,
+    IPanelManager panelManager) : Controller
 {
-    private readonly IDrawManager _drawManager;
-    private readonly IEmailSender _emailSender;
-    private readonly IMemberManager _memberManager;
-    private readonly IPanelManager _panelManager;
+    private readonly IMemberManager _memberManager = memberManager;
 
-    public MemberRegisterController(IDrawManager drawManager, IEmailSender emailSender, IMemberManager memberManager, IPanelManager panelManager)
-    {
-        _emailSender = emailSender;
-        _drawManager = drawManager;
-        _memberManager = memberManager;
-        _panelManager = panelManager;
-    }
-    
     [HttpGet]
     [AllowAnonymous]
     public IActionResult Index()
@@ -58,7 +52,7 @@ public class MemberRegisterController : Controller
     [AllowAnonymous]
     public IActionResult RegisterMember(string code)
     {
-        Invitation invitation = _drawManager.GetInvitationWithCode(code);
+        Invitation invitation = drawManager.GetInvitationWithCode(code);
         
         if (invitation == null)
             return RedirectToAction("InvalidCode", "MemberRegister");
@@ -69,7 +63,7 @@ public class MemberRegisterController : Controller
         if (invitation.IsDrawn)
             return RedirectToAction("UsedCode", "MemberRegister");
         
-        List<Criteria> extraCriteria = _panelManager.GetExtraCriteriaByPanelId(invitation.PanelId).ToList();
+        List<Criteria> extraCriteria = panelManager.GetExtraCriteriaByPanelId(invitation.PanelId).ToList();
         
         var model = new RegisterViewModel()
         {
@@ -124,11 +118,11 @@ public class MemberRegisterController : Controller
             return View(newMember);
         }
         
-        Invitation invitation = _drawManager.GetInvitationWithCode(newMember.Code);
+        Invitation invitation = drawManager.GetInvitationWithCode(newMember.Code);
         invitation.SelectedCriteria = newMember.SelectedCriteria;
         invitation.IsRegistered = true;
         invitation.Email = newMember.Email;
-        _drawManager.ChangeInvitation(invitation);
+        drawManager.ChangeInvitation(invitation);
 
         TempData["Email"] = newMember.Email;
         return RedirectToAction("RegistrationConfirmed");
@@ -139,7 +133,7 @@ public class MemberRegisterController : Controller
     public IActionResult RegistrationConfirmed()
     {
         var email = TempData["Email"]?.ToString();
-        _emailSender.SendEmailAsync(email, "Bevestiging aanmelding", "Uw gegevens zijn opgeslagen");
+        emailSender.SendEmailAsync(email, "Bevestiging aanmelding", "Uw gegevens zijn opgeslagen");
         
         return View();
     }

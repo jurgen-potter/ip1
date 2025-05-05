@@ -6,30 +6,23 @@ using CitizenPanel.BL.Panels;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.DTO;
+using CitizenPanel.UI.MVC.Models.Panels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using JsonSerializer=System.Text.Json.JsonSerializer;
 
-namespace CitizenPanel.UI.MVC.Controllers;
+namespace CitizenPanel.UI.MVC.Controllers.Panels;
 
-public class PanelController : Controller
+public class PanelController(
+    IPanelManager panelManager,
+    IDrawManager drawManager,
+    ApplicationUserManager userManager) : Controller
 {
-    private readonly IPanelManager _panelManager;
-    private readonly IDrawManager _drawManager;
-    private readonly ApplicationUserManager _userManager;
-
-    public PanelController(IPanelManager panelManager, IDrawManager drawManager, ApplicationUserManager userManager)
-    {
-        _panelManager = panelManager;
-        _drawManager = drawManager;
-        _userManager = userManager;
-    }
-    
     [HttpGet]
     [Authorize]
     public IActionResult Index(int id)
     {
-        Panel panel = _panelManager.GetPanelByIdWithRecommendations(id);
+        Panel panel = panelManager.GetPanelByIdWithRecommendations(id);
         
         PanelViewModel model = new PanelViewModel()
         {
@@ -100,24 +93,24 @@ public class PanelController : Controller
                 {
                     if (sub.Percentage > 0)
                     {
-                        subCriteria.Add(_drawManager.AddSubCriteria(sub.Name, sub.Percentage));
+                        subCriteria.Add(drawManager.AddSubCriteria(sub.Name, sub.Percentage));
                     }
                 }
-                criteria.Add(_drawManager.AddCriteria(crit.Name, subCriteria));
+                criteria.Add(drawManager.AddCriteria(crit.Name, subCriteria));
             }
         }
         
-        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria, model.Result.TotalAvailablePotentialPanelmembers);
-        var invitations = _drawManager.AddInvitations(model.Result.ReservePotPanelmembers, criteria, newPanel);
+        Panel newPanel = panelManager.AddPanel(model.Name, model.Description, criteria, model.Result.TotalAvailablePotentialPanelmembers);
+        var invitations = drawManager.AddInvitations(model.Result.ReservePotPanelmembers, criteria, newPanel);
         newPanel.Invitations = invitations.ToList();
-        _panelManager.ChangePanel(newPanel);
+        panelManager.ChangePanel(newPanel);
         return RedirectToAction("Index","Panel",new { id = newPanel.Id });
     }
     
     [Authorize]
     public async Task<IActionResult> UserPanel(string returnUrl)
     {
-        var user = await _userManager.GetUserWithProfilesAndPanelsAsync(User);
+        var user = await userManager.GetUserWithProfilesAndPanelsAsync(User);
 
         if (user is null)
         {
@@ -129,7 +122,7 @@ public class PanelController : Controller
             return LocalRedirect(returnUrl);
         }
 
-        var panels = user.UserType == UserType.Member ? user.MemberProfile.Panels : _panelManager.GetAllPanels().ToList();
+        var panels = user.UserType == UserType.Member ? user.MemberProfile.Panels : panelManager.GetAllPanels().ToList();
 
         if (panels.Count == 1)
         {
@@ -184,7 +177,7 @@ public class PanelController : Controller
     [Authorize]
     public IActionResult Invitations(int panelId)
     {
-        var invitations = _drawManager.GetAllInvitationsByPanelId(panelId);
+        var invitations = drawManager.GetAllInvitationsByPanelId(panelId);
         return View(invitations);
     }
 }

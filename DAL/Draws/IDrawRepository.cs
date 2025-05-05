@@ -2,7 +2,6 @@
 
 namespace CitizenPanel.DAL.Draws;
 
-//NugetPackage nog toevoegen aan DAL
 public interface IDrawRepository
 {
     public Invitation CreateInvitation(Invitation invitation);

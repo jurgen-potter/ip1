@@ -2,10 +2,12 @@
 using CitizenPanel.BL.Panels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-namespace CitizenPanel.UI.MVC.Controllers;
+
+namespace CitizenPanel.UI.MVC.Controllers.Panels;
 
 [Authorize]
-public class RecommendationController(IPanelManager panelManager) : Controller
+public class RecommendationController(
+    IPanelManager panelManager) : Controller
 {
     [HttpGet]
     public IActionResult Index(int panelId)

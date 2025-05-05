@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using CitizenPanel.BL.Domain.Draws;
+using CitizenPanel.UI.MVC.Models.Draws;
 
 namespace CitizenPanel.UI.MVC.Models;
 

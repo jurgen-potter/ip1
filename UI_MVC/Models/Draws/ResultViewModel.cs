@@ -1,6 +1,4 @@
-using CitizenPanel.BL.Domain.Draws;
-
-namespace CitizenPanel.UI.MVC.Models;
+namespace CitizenPanel.UI.MVC.Models.Draws;
 
 public class ResultViewModel
 {

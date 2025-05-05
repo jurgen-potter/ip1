@@ -6,19 +6,12 @@ using CitizenPanel.BL.Draws;
 
 namespace CitizenPanel.UI.MVC.Middleware;
 
-public class TenantMiddleware : IMiddleware
+public class TenantMiddleware(
+    TenantContext tenantContext,
+    ApplicationUserManager userManager,
+    IDrawManager drawManager) : IMiddleware
 {
-    private readonly TenantContext _tenantContext;
-    private readonly ApplicationUserManager _userManager;
-    private readonly IDrawManager _drawManager;
     private const string InvitationSessionKey = "CurrentInvitationContext";
-
-    public TenantMiddleware(TenantContext tenantContext, ApplicationUserManager userManager, IDrawManager drawManager)
-    {
-        _tenantContext = tenantContext;
-        _userManager = userManager;
-        _drawManager = drawManager;
-    }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -27,12 +20,12 @@ public class TenantMiddleware : IMiddleware
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!string.IsNullOrEmpty(userId))
             {
-                var user = await _userManager.GetUserWithProfilesByIdAsync(userId);
+                var user = await userManager.GetUserWithProfilesByIdAsync(userId);
                 string tenantId = ResolveTenantFromUser(user);
                 
                 if (!string.IsNullOrEmpty(tenantId))
                 {
-                    _tenantContext.Tenant = new Tenant { Id = tenantId };
+                    tenantContext.Tenant = new Tenant { Id = tenantId };
                     await next(context);
                     return;
                 }
@@ -42,7 +35,7 @@ public class TenantMiddleware : IMiddleware
         
         if (!string.IsNullOrEmpty(tenantIdFromInvitation))
         {
-            _tenantContext.Tenant = new Tenant { Id = tenantIdFromInvitation };
+            tenantContext.Tenant = new Tenant { Id = tenantIdFromInvitation };
         }
         
         await next(context);
@@ -70,7 +63,7 @@ public class TenantMiddleware : IMiddleware
         string invitationCode = context.Request.Query["code"].ToString();
         if (!string.IsNullOrEmpty(invitationCode))
         {
-            var invitation = _drawManager.GetInvitationWithCode(invitationCode);
+            var invitation = drawManager.GetInvitationWithCode(invitationCode);
             if (invitation != null && !string.IsNullOrEmpty(invitation.TenantId))
             {
                 return invitation.TenantId;

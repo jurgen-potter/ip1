@@ -6,15 +6,8 @@ using QRCoder;
 
 namespace CitizenPanel.BL.Draws;
 
-public class DrawManager : IDrawManager
+public class DrawManager(IDrawRepository drawRepository) : IDrawManager
 {
-    private readonly IDrawRepository _drawRepository;
-
-    public DrawManager(IDrawRepository drawRepository)
-    {
-        _drawRepository = drawRepository;
-    }
-    
     public IEnumerable<Invitation> AddInvitations(int amount, List<Criteria> criteria, Panel panel)
     {
     QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -97,7 +90,7 @@ public class DrawManager : IDrawManager
                 QRCodeString = qrCodeString
             };
 
-            Invitation newInvitation = _drawRepository.CreateInvitation(invitation);
+            Invitation newInvitation = drawRepository.CreateInvitation(invitation);
             invitations.Add(newInvitation);
         }
     }
@@ -107,17 +100,17 @@ public class DrawManager : IDrawManager
     
     public Invitation GetInvitationWithCode(string code)
     {
-        return _drawRepository.ReadInvitationWithCode(code);
+        return drawRepository.ReadInvitationWithCode(code);
     }
 
     public IEnumerable<Invitation> GetAllInvitationsByPanelId(int panelId)
     {
-        return _drawRepository.ReadAllInvitationsByPanelId(panelId);
+        return drawRepository.ReadAllInvitationsByPanelId(panelId);
     }
 
     public Invitation ChangeInvitation(Invitation invitation)
     {
-        return _drawRepository.UpdateInvitation(invitation);
+        return drawRepository.UpdateInvitation(invitation);
     }
 
     public string GenerateCode()
@@ -153,22 +146,22 @@ public class DrawManager : IDrawManager
     
     public Criteria GetCriteria(int criteriaId)
     {
-        return _drawRepository.ReadCriteria(criteriaId);
+        return drawRepository.ReadCriteria(criteriaId);
     }
 
     public IEnumerable<Criteria> GetAllCriteria()
     {
-        return _drawRepository.ReadAllCriteria();
+        return drawRepository.ReadAllCriteria();
     }
 
     public SubCriteria GetSubCriteria(int subCriteriaId)
     {
-        return _drawRepository.ReadSubCriteria(subCriteriaId);
+        return drawRepository.ReadSubCriteria(subCriteriaId);
     }
 
     public IEnumerable<Criteria> GetCriteriaByPanel(int panelId)
     {
-        return _drawRepository.ReadCriteriaByPanel(panelId);
+        return drawRepository.ReadCriteriaByPanel(panelId);
     }
     
     public Criteria AddCriteria(string name, List<SubCriteria> subCriteria)
@@ -178,7 +171,7 @@ public class DrawManager : IDrawManager
             Name = name,
             SubCriteria = subCriteria
         };
-        return _drawRepository.CreateCriteria(criteria);
+        return drawRepository.CreateCriteria(criteria);
     }
 
     public SubCriteria AddSubCriteria(string name, double percentage)
@@ -188,12 +181,12 @@ public class DrawManager : IDrawManager
             Name = name,
             Percentage = percentage
         };
-        return _drawRepository.CreateSubCriteria(subCriteria);
+        return drawRepository.CreateSubCriteria(subCriteria);
     }
     
     public void EditCriteria(int panelId, IEnumerable<Criteria> criteria)
     {
-        _drawRepository.UpdateCriteria(panelId, criteria);
+        drawRepository.UpdateCriteria(panelId, criteria);
     }
     
     public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, IEnumerable<Criteria> criteriaList)
@@ -269,12 +262,12 @@ public class DrawManager : IDrawManager
     
     public bool RemoveInvitation(int invitationId)
     {
-        return _drawRepository.DeleteInvitation(invitationId);
+        return drawRepository.DeleteInvitation(invitationId);
     }
 
     public bool RemoveInvitationByEmail(string email)
     {
-        return _drawRepository.DeleteInvitationByEmail(email);
+        return drawRepository.DeleteInvitationByEmail(email);
     }
 
     public IEnumerable<Criteria> GetInitialCriteria()

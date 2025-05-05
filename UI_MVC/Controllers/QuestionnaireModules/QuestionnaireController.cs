@@ -3,33 +3,26 @@ using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.QuestionnaireModules;
 using CitizenPanel.BL.Users;
 using CitizenPanel.UI.MVC.Models;
+using CitizenPanel.UI.MVC.Models.QuestionnaireModules;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace CitizenPanel.UI.MVC.Controllers;
+namespace CitizenPanel.UI.MVC.Controllers.QuestionnaireModules;
 
-public class QuestionnaireController : Controller
+public class QuestionnaireController(
+    IQuestionnaireModuleManager questionnaireModuleManager,
+    IMemberManager memberManager,
+    UserManager<ApplicationUser> userManager) : Controller
 {
-    private readonly IQuestionnaireModuleManager _questionnaireModuleManager;
-    private readonly IMemberManager _memberManager;
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public QuestionnaireController(IQuestionnaireModuleManager questionnaireModuleManager, IMemberManager memberManager, UserManager<ApplicationUser> userManager)
-    {
-        _questionnaireModuleManager = questionnaireModuleManager;
-        _memberManager = memberManager;
-        _userManager = userManager;
-    }
-    
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> Index(int questionnaireId)
     {
-        var questionnaire = _questionnaireModuleManager.GetQuestionnaire(questionnaireId);
-        var userId = _userManager.GetUserId(User);
-        var organization = _memberManager.GetOrganizationWithAnswers(userId);
+        var questionnaire = questionnaireModuleManager.GetQuestionnaire(questionnaireId);
+        var userId = userManager.GetUserId(User);
+        var organization = memberManager.GetOrganizationWithAnswers(userId);
         List<int> selectedAnswerIds = new();
 
         if (User.IsInRole("Organization") && organization?.OrganizationProfile?.Answers != null)
@@ -53,12 +46,12 @@ public class QuestionnaireController : Controller
     [AllowAnonymous]
     public IActionResult Result(QuestionnaireResponseViewModel model)
     {
-        model.Questionnaire = _questionnaireModuleManager.GetQuestionnaire(model.QuestionnaireId);
+        model.Questionnaire = questionnaireModuleManager.GetQuestionnaire(model.QuestionnaireId);
         
         var answers = new List<Answer>();
         foreach (var answer in model.Answers)
         {
-            answers.Add(_questionnaireModuleManager.GetAnswer(answer.Value));
+            answers.Add(questionnaireModuleManager.GetAnswer(answer.Value));
         }
 
         model.IsCritical = answers.Any(a => a.IsCritical);
@@ -90,10 +83,10 @@ public class QuestionnaireController : Controller
         var answers = new List<Answer>();
         foreach (var answer in model.Answers)
         {
-            answers.Add(_questionnaireModuleManager.GetAnswer(answer.Value));
+            answers.Add(questionnaireModuleManager.GetAnswer(answer.Value));
         }
-        var user = await _userManager.GetUserAsync(User);
-        await _memberManager.ChangeOrganizationAnswersAsync(user.Id, model.QuestionnaireId, answers);
+        var user = await userManager.GetUserAsync(User);
+        await memberManager.ChangeOrganizationAnswersAsync(user.Id, model.QuestionnaireId, answers);
         return RedirectToAction(nameof(Index), new { questionnaireId = model.QuestionnaireId });
     }
 }

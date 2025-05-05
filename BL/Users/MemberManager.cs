@@ -9,21 +9,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CitizenPanel.BL.Users;
 
-public class MemberManager : IMemberManager
+public class MemberManager(
+    IDrawManager drawManager,
+    IPanelManager panelManager,
+    IMemberRepository memberRepository,
+    UserManager<ApplicationUser> userManager) : IMemberManager
 {
-    private readonly IDrawManager _drawManager;
-    private readonly IPanelManager _panelManager;
-    private readonly IMemberRepository _memberRepository;
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public MemberManager(IDrawManager drawManager, IPanelManager panelManager, IMemberRepository memberRepository, UserManager<ApplicationUser> userManager)
-    {
-        _drawManager = drawManager;
-        _panelManager = panelManager;
-        _memberRepository = memberRepository;
-        _userManager = userManager;
-    }
-    
     public async Task<(IdentityResult result, ApplicationUser user)> AddMemberAsync(string newMemberFirstName, string newMemberLastName, string newMemberEmail, string newMemberPassword, Gender newMemberGender, DateOnly newMemberBirthDate, string newMemberTown, List<int> newMemberSelectedCriteria, int newMemberPanelId)
     {
         List<SubCriteria> selectedCriteria = new List<SubCriteria>();
@@ -32,7 +23,7 @@ public class MemberManager : IMemberManager
         {
             foreach (var criteria in newMemberSelectedCriteria)
             {
-                var crit = _drawManager.GetSubCriteria(criteria);
+                var crit = drawManager.GetSubCriteria(criteria);
                 if (crit != null)
                 {
                     selectedCriteria.Add(crit);
@@ -52,48 +43,48 @@ public class MemberManager : IMemberManager
                 BirthDate = newMemberBirthDate,
                 Town = newMemberTown,
                 SelectedCriteria = selectedCriteria,
-                Panels = new List<Panel> { _panelManager.GetPanelById(newMemberPanelId) }
+                Panels = new List<Panel> { panelManager.GetPanelById(newMemberPanelId) }
             }
         };
         
-        var result = await _userManager.CreateAsync(member, newMemberPassword);
+        var result = await userManager.CreateAsync(member, newMemberPassword);
 
         return result.Succeeded ? (result, member) : (result, null);
     }
 
     public IEnumerable<ApplicationUser> GetAllMembers()
     {
-        return _memberRepository.ReadAllMembers();
+        return memberRepository.ReadAllMembers();
     }
 
     public ApplicationUser GetMemberById(string memberId)
     {
-        return _memberRepository.ReadUserById(memberId);
+        return memberRepository.ReadUserById(memberId);
     }
 
     public ApplicationUser GetOrganizationWithAnswers(string organizationId)
     {
-        return _memberRepository.ReadOrganizationWithAnswers(organizationId);
+        return memberRepository.ReadOrganizationWithAnswers(organizationId);
     }
 
     public void ChangeMember(ApplicationUser member)
     {
-        _memberRepository.UpdateMember(member);
+        memberRepository.UpdateMember(member);
     }
 
     public void RemoveMember(ApplicationUser member)
     {
-        _memberRepository.DeleteMember(member);
+        memberRepository.DeleteMember(member);
     }
 
     public Task ChangeOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
     {
-        return _memberRepository.UpdateOrganizationAnswersAsync(userId, questionnaireId, answers);
+        return memberRepository.UpdateOrganizationAnswersAsync(userId, questionnaireId, answers);
     }
 
     public IEnumerable<ApplicationUser> GetMembersOfPanelWithCriteria(int panelId)
     {
-        return _memberRepository.ReadMembersOfPanelWithCriteria(panelId);
+        return memberRepository.ReadMembersOfPanelWithCriteria(panelId);
     }
 
     /*public IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId)
