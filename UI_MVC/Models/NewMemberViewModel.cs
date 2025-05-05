@@ -1,6 +1,6 @@
-﻿using CitizenPanel.BL.Domain.User;
+﻿using CitizenPanel.BL.Domain.Users;
 using System.ComponentModel.DataAnnotations;
-using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Draws;
 
 namespace CitizenPanel.UI.MVC.Models;
 

@@ -1,11 +1,9 @@
-﻿using System.Security.Claims;
-using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Panel;
-using CitizenPanel.UI.MVC.Models;
+﻿using CitizenPanel.BL.Domain.Panels;
+using CitizenPanel.BL.Panels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 namespace CitizenPanel.UI.MVC.Controllers;
+
 [Authorize]
 public class RecommendationController(IPanelManager panelManager) : Controller
 {

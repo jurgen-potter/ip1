@@ -1,8 +1,8 @@
-using CitizenPanel.BL.Domain.Draw;
-using CitizenPanel.BL.Domain.Panel;
-using CitizenPanel.BL.Domain.QuestionnaireModule;
+using CitizenPanel.BL.Domain.Draws;
+using CitizenPanel.BL.Domain.Panels;
+using CitizenPanel.BL.Domain.QuestionnaireModules;
 using CitizenPanel.BL.Domain.Tenancy;
-using CitizenPanel.BL.Domain.User;
+using CitizenPanel.BL.Domain.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;

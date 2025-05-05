@@ -1,10 +1,8 @@
-﻿using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Draw;
-using CitizenPanel.BL.Domain.Tenancy;
-using CitizenPanel.BL.Domain.User;
+﻿using CitizenPanel.BL.Domain.Tenancy;
+using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
-using Newtonsoft.Json;
 using System.Security.Claims;
+using CitizenPanel.BL.Draws;
 
 namespace CitizenPanel.UI.MVC.Middleware;
 

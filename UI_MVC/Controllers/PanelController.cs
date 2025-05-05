@@ -1,14 +1,13 @@
-using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Draw;
-using CitizenPanel.BL.Domain.Panel;
-using CitizenPanel.BL.Domain.User;
+using CitizenPanel.BL.Domain.Draws;
+using CitizenPanel.BL.Domain.Panels;
+using CitizenPanel.BL.Domain.Users;
+using CitizenPanel.BL.Draws;
+using CitizenPanel.BL.Panels;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using JsonSerializer=System.Text.Json.JsonSerializer;
 
 namespace CitizenPanel.UI.MVC.Controllers;

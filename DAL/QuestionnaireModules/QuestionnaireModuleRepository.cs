@@ -1,0 +1,39 @@
+using CitizenPanel.BL.Domain.QuestionnaireModules;
+using CitizenPanel.DAL.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace CitizenPanel.DAL.QuestionnaireModules;
+
+public class QuestionnaireModuleRepository : IQuestionnaireModuleRepository
+{
+    private readonly PanelDbContext _dbContext;
+
+    public QuestionnaireModuleRepository(PanelDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+    
+    public Questionnaire ReadQuestionnaire(int questionnaireId)
+    {
+        return _dbContext.Questionnaires
+            .Include(q => q.Questions.OrderBy(qp => qp.Position))
+            .ThenInclude(a => a.Answers.OrderBy(ap => ap.Position))
+            .SingleOrDefault(q => q.Id == questionnaireId);
+    }
+
+    public bool UpdateQuestionnaire(Questionnaire questionnaire)
+    {
+        _dbContext.Questionnaires.Update(questionnaire);
+        return _dbContext.SaveChanges() > 0;
+    }
+
+    public IEnumerable<Questionnaire> ReadAllQuestionnaires()
+    {
+        return _dbContext.Questionnaires;
+    }
+
+    public Answer ReadAnswer(int answerId)
+    {
+        return _dbContext.Answers.Find(answerId);
+    }
+}

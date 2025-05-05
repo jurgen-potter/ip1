@@ -1,5 +1,6 @@
-﻿using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Draw;
+﻿using CitizenPanel.BL.Domain.Draws;
+using CitizenPanel.BL.Draws;
+using CitizenPanel.BL.Panels;
 using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;

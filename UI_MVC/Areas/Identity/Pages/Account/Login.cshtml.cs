@@ -15,8 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Draw;
-using CitizenPanel.BL.Domain.User;
+using CitizenPanel.BL.Domain.Draws;
+using CitizenPanel.BL.Domain.Users;
+using CitizenPanel.BL.Draws;
 using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account

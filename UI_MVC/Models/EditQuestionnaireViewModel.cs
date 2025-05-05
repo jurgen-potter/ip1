@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL.Domain.QuestionnaireModule;
+﻿using CitizenPanel.BL.Domain.QuestionnaireModules;
 using CitizenPanel.BL.Domain.Validation;
 using System.ComponentModel.DataAnnotations;
 

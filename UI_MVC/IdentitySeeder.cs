@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using CitizenPanel.BL.Domain.User;
+using CitizenPanel.BL.Domain.Users;
 
 namespace CitizenPanel.UI.MVC;
 

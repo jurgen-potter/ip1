@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using CitizenPanel.BL.Domain.User;
+using CitizenPanel.BL.Domain.Users;
 using System;
 using System.Linq;
 using System.Text;

@@ -1,12 +1,12 @@
 using System.ComponentModel.DataAnnotations;
-using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Draw;
+using CitizenPanel.BL.Domain.Draws;
+using CitizenPanel.BL.Draws;
+using CitizenPanel.BL.Panels;
+using CitizenPanel.BL.Users;
 using CitizenPanel.UI.MVC.Models;
-using CitizenPanel.UI.MVC.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 

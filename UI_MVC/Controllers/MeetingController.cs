@@ -1,8 +1,7 @@
-﻿using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Panel;
+﻿using CitizenPanel.BL.Domain.Panels;
+using CitizenPanel.BL.Panels;
 using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers

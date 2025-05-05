@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
-using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.User;
-using CitizenPanel.DAL;
+using CitizenPanel.BL.Domain.Users;
+using CitizenPanel.BL.Panels;
+using CitizenPanel.BL.Users;
 using CitizenPanel.UI.MVC.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,8 +1,7 @@
-using System.Security.Claims;
-using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.QuestionnaireModule;
-using CitizenPanel.BL.Domain.User;
-using CitizenPanel.BL.QuestionnaireModule;
+using CitizenPanel.BL.Domain.QuestionnaireModules;
+using CitizenPanel.BL.Domain.Users;
+using CitizenPanel.BL.QuestionnaireModules;
+using CitizenPanel.BL.Users;
 using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

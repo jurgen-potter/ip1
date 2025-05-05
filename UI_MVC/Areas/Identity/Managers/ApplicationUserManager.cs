@@ -1,5 +1,5 @@
 ﻿using CitizenPanel.BL.Domain.Tenancy;
-using CitizenPanel.BL.Domain.User;
+using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.DAL.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

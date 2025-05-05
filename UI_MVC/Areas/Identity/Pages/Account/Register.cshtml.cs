@@ -3,7 +3,7 @@
 #nullable disable
 
 using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Panel;
+using CitizenPanel.BL.Domain.Panels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,7 +20,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using CitizenPanel.BL.Domain.User;
+using CitizenPanel.BL.Domain.Users;
+using CitizenPanel.BL.Panels;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account

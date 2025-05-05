@@ -1,0 +1,184 @@
+using CitizenPanel.BL.Domain.Draws;
+using CitizenPanel.BL.Domain.Panels;
+using CitizenPanel.BL.Domain.Users;
+using CitizenPanel.DAL.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace CitizenPanel.DAL.Panels;
+
+public class PanelRepository : IPanelRepository
+{
+    private readonly PanelDbContext _dbContext;
+
+    public PanelRepository(PanelDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public Panel ReadPanelById(int panelId)
+    {
+        return _dbContext.Panels
+            .SingleOrDefault(p => p.Id == panelId);
+    }
+
+    public Panel ReadPanelByIdWithMembers(int panelId)
+    {
+        return _dbContext.Panels
+            .Include(p => p.DrawResult)
+            .ThenInclude(dr => dr.SelectedMembers)
+            .ThenInclude(m => m.MemberProfile)
+            .ThenInclude(mp => mp.SelectedCriteria)
+            .Include(p => p.DrawResult)
+            .ThenInclude(dr => dr.ReserveMembers)
+            .ThenInclude(m => m.MemberProfile)
+            .ThenInclude(mp => mp.SelectedCriteria)
+            .Include(p => p.DrawResult)
+            .ThenInclude(dr => dr.NotSelectedMembers)
+            .SingleOrDefault(p => p.Id == panelId);
+    }
+
+    public Panel ReadPanelByIdWithRecommendations(int panelId)
+    {
+        return _dbContext.Panels
+            .Include(r => r.Meetings)
+            .ThenInclude(m => m.Recommendations)
+            .ThenInclude(r => r.UserVotes)
+            .SingleOrDefault(p => p.Id == panelId);
+    }
+
+
+    public void CreatePanel(Panel panel)
+    {
+        _dbContext.Panels.Add(panel);
+        _dbContext.SaveChanges();
+    }
+
+    public void UpdatePanel(Panel panel)
+    {
+        _dbContext.Update(panel);
+        _dbContext.SaveChanges();
+    }
+
+    public void DeletePanel(Panel panel)
+    {
+        _dbContext.Panels.Remove(panel);
+    }
+
+    public IEnumerable<RecruitmentBucket> ReadTargetBucketsByPanel(Panel panel)
+    {
+        var panelWithBuckets = _dbContext.Panels
+            .Include(p => p.RecruitmentBuckets)
+            .FirstOrDefault(p => p.Id == panel.Id);
+        return panelWithBuckets?.RecruitmentBuckets.ToList();
+    }
+
+
+    public Recommendation ReadRecommendationById(int recommendationId)
+    {
+        var recommendations = _dbContext.Recommendations.Include(r => r.UserVotes);
+        return recommendations.SingleOrDefault(r => r.Id == recommendationId);
+    }
+
+    public Recommendation ReadRecommendationWithVotersById(int recommendationId)
+    {
+        return _dbContext.Recommendations
+            .Include(r => r.UserVotes)
+            .ThenInclude(uv => uv.Voter)
+            .ThenInclude(v => v.MemberProfile)
+            .SingleOrDefault(r => r.Id == recommendationId);
+    }
+
+    public void UpdateRecommendation(Recommendation recommendation)
+    {
+        _dbContext.Recommendations.Update(recommendation);
+        _dbContext.SaveChanges();
+    }
+
+    public bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation)
+    {
+        return _dbContext.UserVotes
+            .Any(uv => uv.Voter == member && uv.Recommendation == recommendation);
+    }
+
+    public void CreateVoteToRecommendation(UserVote userVote)
+    {
+        // Voeg de stem toe aan de database
+        _dbContext.UserVotes.Add(userVote);
+        _dbContext.SaveChanges();
+    }
+
+    public void DeleteVoteFromRecommendation(ApplicationUser member, Recommendation recommendation)
+    {
+        // Controleer eerst of de aanbeveling bestaat
+        if (recommendation == null)
+        {
+            throw new ArgumentException($"Aanbeveling bestaat niet.");
+        }
+
+        // Zoek de stem van de gebruiker
+        var userVote = _dbContext.UserVotes
+            .FirstOrDefault(uv => uv.Voter == member && uv.Recommendation == recommendation);
+
+        // Als er geen stem is, kan er niets worden teruggetrokken
+        if (userVote == null)
+        {
+            throw new InvalidOperationException("Gebruiker heeft niet gestemd op deze aanbeveling.");
+        }
+
+        // Verwijder de stem
+        _dbContext.UserVotes.Remove(userVote);
+
+        // Verlaag de stemteller in de aanbeveling (voorkom negatieve stemmen)
+        if (recommendation.Votes > 0)
+        {
+            recommendation.Votes--;
+        }
+
+        _dbContext.SaveChanges();
+    }
+
+    public IEnumerable<int> ReadVotedRecommendationsByUser(string userId)
+    {
+        return _dbContext.UserVotes
+            .Where(uv => uv.Voter.Id == userId)
+            .Select(uv => uv.Recommendation.Id)
+            .ToList();
+    }
+
+    public void UpdateCriteria(Criteria criteria)
+    {
+        _dbContext.Update(criteria);
+        _dbContext.SaveChanges();
+    }
+
+    public IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId)
+    {
+        var panel = _dbContext.Panels
+            .Include(p => p.Criteria)
+            .ThenInclude(c => c.SubCriteria)
+            .FirstOrDefault(p => p.Id == panelId);
+
+        if (panel == null)
+            return [];
+
+        return panel.Criteria
+            .Where(c => c.Name != "Geslacht" && c.Name != "Leeftijd")
+            .ToList();
+    }
+
+    public IEnumerable<Criteria> ReadCriteriaAndSubcriteriaWithPanelId(int panelId)
+    {
+        var panel = _dbContext.Panels
+            .Include(p => p.Criteria)
+            .ThenInclude(c => c.SubCriteria)
+            .FirstOrDefault(p => p.Id == panelId);
+
+        return panel?.Criteria
+            .ToList();
+    }
+
+    public IEnumerable<Panel> ReadAllPanels()
+    {
+        return _dbContext.Panels.ToList();
+    }
+}

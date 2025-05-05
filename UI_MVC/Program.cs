@@ -1,14 +1,16 @@
 using AspNetCoreLiveMonitoring.Extensions;
-using CitizenPanel.BL;
-using CitizenPanel.BL.Domain.Panel;
 using CitizenPanel.BL.Domain.Tenancy;
-using CitizenPanel.BL.Domain.User;
-using CitizenPanel.BL.QuestionnaireModule;
-using CitizenPanel.BL.Registration;
-using CitizenPanel.DAL;
+using CitizenPanel.BL.Domain.Users;
+using CitizenPanel.BL.Draws;
+using CitizenPanel.BL.Panels;
+using CitizenPanel.BL.QuestionnaireModules;
+using CitizenPanel.BL.Registrations;
+using CitizenPanel.BL.Users;
 using CitizenPanel.DAL.Data;
-using CitizenPanel.DAL.QuestionnaireModule;
-using CitizenPanel.DAL.Registration;
+using CitizenPanel.DAL.Draws;
+using CitizenPanel.DAL.Panels;
+using CitizenPanel.DAL.QuestionnaireModules;
+using CitizenPanel.DAL.Users;
 using CitizenPanel.UI.MVC;
 using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
@@ -30,7 +32,6 @@ builder.Services.AddDbContext<PanelDbContext>(options =>
 // Add Repositories and Managers
 builder.Services.AddScoped<IDrawRepository, DrawRepository>();
 builder.Services.AddScoped<IPanelRepository, PanelRepository>();
-builder.Services.AddScoped<IRegistrationRepository, RegistrationRepository>();
 builder.Services.AddScoped<IQuestionnaireModuleRepository, QuestionnaireModuleRepository>();
 builder.Services.AddScoped<IDrawManager, DrawManager>();
 builder.Services.AddScoped<IPanelManager, PanelManager>();

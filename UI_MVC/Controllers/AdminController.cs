@@ -1,5 +1,5 @@
-﻿using CitizenPanel.BL.Domain.QuestionnaireModule;
-using CitizenPanel.BL.QuestionnaireModule;
+﻿using CitizenPanel.BL.Domain.QuestionnaireModules;
+using CitizenPanel.BL.QuestionnaireModules;
 using CitizenPanel.UI.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
