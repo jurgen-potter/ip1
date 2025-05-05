@@ -226,7 +226,7 @@ public class DrawManager(IDrawRepository drawRepository) : IDrawManager
         {
             if (depth == criteriaList.Count)
             {
-                int count = (int)Math.Round(totalToDraw * accumulatedPct);
+                int count = (int)Math.Ceiling((double)(totalToDraw * accumulatedPct));
                 if (count > 0)
                 {
                     buckets.Add(new RecruitmentBucket
