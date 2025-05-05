@@ -8,7 +8,7 @@ public interface IDrawManager
 {
     public IEnumerable<Invitation> AddInvitations(int amount, List<Criteria> criteria, Panel panel);
     public Invitation GetInvitationWithCode(string code);
-    public IEnumerable<Invitation> GetAllInvitations();
+    public IEnumerable<Invitation> GetAllInvitationsByPanelId(int panelId);
     public Invitation ChangeInvitation(Invitation invitation);
 
     public Criteria GetCriteria(int criteriaId);

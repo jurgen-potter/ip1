@@ -156,9 +156,9 @@ public class DrawManager : IDrawManager
         return _drawRepository.ReadInvitationWithCode(code);
     }
 
-    public IEnumerable<Invitation> GetAllInvitations()
+    public IEnumerable<Invitation> GetAllInvitationsByPanelId(int panelId)
     {
-        return _drawRepository.ReadAllInvitations();
+        return _drawRepository.ReadAllInvitationsByPanelId(panelId);
     }
 
     public Invitation ChangeInvitation(Invitation invitation)

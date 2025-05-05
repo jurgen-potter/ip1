@@ -46,6 +46,10 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\TryOutInvitationQRCode\Index.cshtml" />
+    </ItemGroup>
+
     <Target Name="FrontendBuild" AfterTargets="Publish">
         <Exec Command="npm install" WorkingDirectory="$(ProjectDir)" />
         <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)" />

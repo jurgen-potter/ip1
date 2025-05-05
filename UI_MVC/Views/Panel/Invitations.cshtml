@@ -1,13 +1,10 @@
-
-@using CitizenPanel.BL.Domain.Draw
-@model IEnumerable<CitizenPanel.BL.Domain.Draw.Invitation>
+@model System.Collections.Generic.IEnumerable<CitizenPanel.BL.Domain.Draw.Invitation>
 
 @{
-    ViewBag.Title = "QRCodeTryOut";
-    Layout = "_Layout";
+    ViewBag.Title = "title";
 }
 
-<h2>QRCode try-out</h2>
+<h2>Qr-codes</h2>
 <table>
     <tr>
         <td>
@@ -29,7 +26,7 @@
             QRCode
         </td>
     </tr>
-    @foreach (Invitation invitation in Model)
+    @foreach (var invitation in Model)
     {
         <tr>
             <td>

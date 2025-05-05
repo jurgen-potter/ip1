@@ -225,4 +225,11 @@ public class PanelController : Controller
         
         return RedirectToAction("UserPanel", new { returnUrl = "/" });
     }
+
+    [Authorize]
+    public IActionResult Invitations(int panelId)
+    {
+        var invitations = _drawManager.GetAllInvitationsByPanelId(panelId);
+        return View(invitations);
+    }
 }
