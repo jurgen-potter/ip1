@@ -1,4 +1,5 @@
 using CitizenPanel.BL;
+using CitizenPanel.BL.Domain.Panel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
@@ -49,6 +50,7 @@ public class RegistrationController(
 
         ViewBag.PanelId = panelId;
         ViewBag.DrawStatus = panel.DrawStatus;
+        ViewBag.PanelName = panel.Name;
 
         return View(vm);
     }
@@ -88,34 +90,43 @@ public class RegistrationController(
     [HttpGet]
     public IActionResult DrawResults(int panelId)
     {
-        var selectedSubject = TempData["SelectedSubject"] as string;
-        var selectedMessage = TempData["SelectedMessage"] as string;
-        var reserveSubject = TempData["ReserveSubject"] as string;
-        var reserveMessage = TempData["ReserveMessage"] as string;
-        var notSelectedSubject = TempData["NotSelectedSubject"] as string;
-        var notSelectedMessage = TempData["NotSelectedMessage"] as string;
+        var selectedSubject = TempData["SelectedSubject"] as string ?? "Test";
+        var selectedMessage = TempData["SelectedMessage"] as string ?? "Test";
+        var reserveSubject = TempData["ReserveSubject"] as string ?? "Test";
+        var reserveMessage = TempData["ReserveMessage"] as string ?? "Test";
+        var notSelectedSubject = TempData["NotSelectedSubject"] as string ?? "Test";
+        var notSelectedMessage = TempData["NotSelectedMessage"] as string ?? "Test";
 
         var panel = panelManager.GetPanelByIdWithMembers(panelId);
 
         var dr = panel.DrawResult;
 
-
-        foreach (var selected in dr.SelectedMembers)
+        if (selectedSubject != "Test")
         {
-            mailSender.SendEmailAsync(selected.Email, selectedSubject, selectedMessage.Replace(Environment.NewLine, "<br />"));
+            foreach (var selected in dr.SelectedMembers)
+            {
+                mailSender.SendEmailAsync(selected.Email, selectedSubject,
+                    selectedMessage.Replace(Environment.NewLine, "<br />"));
+            }
+
+            foreach (var reserve in dr.ReserveMembers)
+            {
+                mailSender.SendEmailAsync(reserve.Email, reserveSubject,
+                    reserveMessage.Replace(Environment.NewLine, "<br />"));
+            }
+
+            if (dr.NotSelectedMembers.Count > 0)
+            {
+                foreach (var notSelected in dr.NotSelectedMembers)
+                {
+                    mailSender.SendEmailAsync(notSelected.Email, notSelectedSubject,
+                        notSelectedMessage.Replace(Environment.NewLine, "<br />"));
+                    drawManager.RemoveInvitationByEmail(notSelected.Email);
+                }
+            }
         }
 
-        foreach (var reserve in dr.ReserveMembers)
-        {
-            mailSender.SendEmailAsync(reserve.Email, reserveSubject, reserveMessage.Replace(Environment.NewLine, "<br />"));
-        }
-
-        foreach (var notSelected in dr.NotSelectedMembers)
-        {
-            mailSender.SendEmailAsync(notSelected.Email, notSelectedSubject, notSelectedMessage.Replace(Environment.NewLine, "<br />"));
-            drawManager.RemoveInvitationByEmail(notSelected.Email);
-        }
-
+        ViewBag.PanelName = panel.Name;
         ViewBag.PanelId = panelId;
         ViewBag.DrawStatus = panel.DrawStatus;
         return View(dr);

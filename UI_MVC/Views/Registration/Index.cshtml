@@ -3,12 +3,13 @@
 @model ResultViewModel
 @{
     ViewData["Title"] = "Registratie-overzicht";
-    var panelId = ViewBag.PanelId ?? 1;
+    var panelId = ViewBag.PanelId;
+    var panelName = ViewBag.PanelName;
     var drawStatus = ViewBag.DrawStatus != null ? (DrawStatus)ViewBag.DrawStatus : DrawStatus.FirstPhaseActive;
     var hasSufficientRegistrations = ViewBag.HasSufficientRegistrations ?? false;
 }
 
-<h2>Registratie-overzicht voor panel @panelId</h2>
+<h2>Registratie-overzicht voor panel: @panelName</h2>
 
 <div class="row mb-4">
     <div class="col-md-6">

@@ -4,11 +4,12 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Lotingsresultaten";
-    var panelId = ViewBag.PanelId ?? 1;
+    var panelId = ViewBag.PanelId;
+    var panelName = ViewBag.PanelName;
     var drawStatus = (DrawStatus)ViewBag.DrawStatus;
 }
 
-<h2>Lotingsresultaten voor panel @panelId</h2>
+<h2>Lotingsresultaten voor panel: @panelName</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
