@@ -14,19 +14,11 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .SingleOrDefault(p => p.Id == panelId);
     }
 
-    public Panel ReadPanelByIdWithMembers(int panelId)
+    public Panel ReadInvitationsOfPanelById(int panelId)
     {
         return dbContext.Panels
+            .Include(p => p.Invitations) 
             .Include(p => p.DrawResult)
-            .ThenInclude(dr => dr.SelectedMembers)
-            .ThenInclude(m => m.MemberProfile)
-            .ThenInclude(mp => mp.SelectedCriteria)
-            .Include(p => p.DrawResult)
-            .ThenInclude(dr => dr.ReserveMembers)
-            .ThenInclude(m => m.MemberProfile)
-            .ThenInclude(mp => mp.SelectedCriteria)
-            .Include(p => p.DrawResult)
-            .ThenInclude(dr => dr.NotSelectedMembers)
             .SingleOrDefault(p => p.Id == panelId);
     }
 

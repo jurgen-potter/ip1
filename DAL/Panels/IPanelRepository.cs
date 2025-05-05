@@ -7,7 +7,7 @@ namespace CitizenPanel.DAL.Panels;
 public interface IPanelRepository
 {
     Panel ReadPanelById(int panelId);
-    Panel ReadPanelByIdWithMembers(int panelId);
+    Panel ReadInvitationsOfPanelById(int panelId);
     void CreatePanel(Panel panel);
     void UpdatePanel(Panel panel);
     void DeletePanel(Panel panel);

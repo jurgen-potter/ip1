@@ -82,24 +82,10 @@ public class MemberManager(
         return memberRepository.UpdateOrganizationAnswersAsync(userId, questionnaireId, answers);
     }
 
-    public IEnumerable<ApplicationUser> GetMembersOfPanelWithCriteria(int panelId)
+    public IEnumerable<Invitation> GetInvitationsByPanelId(int panelId)
     {
-        return memberRepository.ReadMembersOfPanelWithCriteria(panelId);
+        return memberRepository.ReadInvitationsByPanelId(panelId);
     }
 
-    /*public IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId)
-    {
-        return _memberRepository.ReadMembersByPanelId(panelId);
-    }
-
-    public IEnumerable<ApplicationUser> GetMembersByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge)
-    {
-        return _memberRepository.ReadMembersByPanelIdGenderAndAgeRange(panelId, gender, minAge, maxAge);
-    }
-
-    public int GetMemberCountByPanelIdGenderAndAgeRange(int panelId, Gender gender, int minAge, int maxAge)
-    {
-        return _memberRepository.ReadMemberCountByPanelIdGenderAndAgeRange(panelId, gender, minAge, maxAge);
-    }*/
     
 }

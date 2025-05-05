@@ -6,7 +6,7 @@ namespace CitizenPanel.BL.Registrations;
 
 public interface IRegistrationManager
 {
-    IEnumerable<RecruitmentBucket> AssignActualRegistrationsToBuckets(List<RecruitmentBucket> buckets, List<ApplicationUser> users);
+    List<RecruitmentBucket> AssignActualRegistrationsToBuckets(List<RecruitmentBucket> buckets, List<Invitation> registeredInvitations);
     void StartFinalDraw(Panel panel);
 
 }

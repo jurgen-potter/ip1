@@ -1,4 +1,5 @@
-﻿using CitizenPanel.BL.Domain.QuestionnaireModules;
+﻿using CitizenPanel.BL.Domain.Draws;
+using CitizenPanel.BL.Domain.QuestionnaireModules;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.DAL.Data;
 using Microsoft.EntityFrameworkCore;
@@ -66,14 +67,10 @@ public class MemberRepository(PanelDbContext dbContext) : IMemberRepository
         await dbContext.SaveChangesAsync();
     }
 
-    public IEnumerable<ApplicationUser> ReadMembersOfPanelWithCriteria(int panelId)
+    public IEnumerable<Invitation> ReadInvitationsByPanelId(int panelId)
     {
-        return dbContext.ApplicationUsers
-            .Include(u => u.MemberProfile)
-            .ThenInclude(mp => mp.SelectedCriteria)
-            .Include(u => u.MemberProfile)
-            .ThenInclude(mp => mp.Panels)
-            .Where(u => u.MemberProfile != null && u.MemberProfile.Panels.Any(p => p.Id == panelId))
+        return dbContext.Invitations
+            .Where(inv => inv.PanelId == panelId)
             .ToList();
     }
 
