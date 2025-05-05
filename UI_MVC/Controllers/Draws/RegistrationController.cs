@@ -99,6 +99,20 @@ public class RegistrationController(
 
         var panel = panelManager.GetPanelByIdWithInvitations(panelId);
 
+        var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
+        var criteriaNamesLookup = new Dictionary<int, string>();
+        foreach(var criterion in criteria)
+        {
+            foreach(var subcriterion in criterion.SubCriteria)
+            {
+                if (!criteriaNamesLookup.ContainsKey(subcriterion.Id))
+                {
+                    criteriaNamesLookup[subcriterion.Id] = subcriterion.Name;
+                }
+            }
+        }
+        ViewBag.CriteriaNames = criteriaNamesLookup;
+        
         var dr = panel.DrawResult;
 
         if (selectedSubject != "Test")

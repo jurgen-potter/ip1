@@ -172,6 +172,187 @@ public class DataSeeder(PanelDbContext panelDbContext)
         paul?.MemberProfile.Panels.Add(panel3);
         //paul?.MemberProfile.Panels.Add(panel3);
         
+        
+
+        var members = new List<ApplicationUser>
+        {
+new ApplicationUser
+            {
+                Email = "kate@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    FirstName = "Kate",
+                    Gender = Gender.Female,
+                    Age = 65,
+                    Town = "Antwerpen",
+                    Panels = new List<Panel> { panel1 },
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "rozie@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    FirstName = "Rozie",
+                    Gender = Gender.Female,
+                    Age = 77,
+                    Town = "Antwerpen",
+                    Panels = new List<Panel> { panel1 },
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit9,subCrit10
+                    }
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "rozalinda@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    FirstName = "Rozalinda",
+                    Gender = Gender.Female,
+                    Age = 69,
+                    Town = "Antwerpen",
+                    Panels = new List<Panel> { panel1 },
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "alice2@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    FirstName = "Alice",
+                    Gender = Gender.Female,
+                    Age = 73,
+                    Town = "Antwerpen",
+                    Panels = new List<Panel> { panel1 },
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria>()
+                    {
+                        subCrit8,subCrit10
+                    }
+                }
+            },
+            new ApplicationUser
+            {
+            Email = "emma3@example.com",
+            UserType = UserType.Member,
+            MemberProfile = new MemberProfile
+            {
+                FirstName = "Emma",
+                Gender = Gender.Female,
+                Age = 24,
+                Town = "Antwerpen",
+                Panels = new List<Panel> { panel1 },
+                TenantId = "antwerpen",
+                SelectedCriteria = new List<SubCriteria>()
+                {
+                    subCrit8,subCrit10
+                }
+            }
+        }
+        };
+        
+        var userVotesRec1 = new List<UserVote>
+        {
+            new UserVote
+            {
+                Voter = members[0],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[1],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[2],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[3],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[4],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            }
+        };
+
+        var userVotesRec2 = new List<UserVote>
+        {
+            new UserVote
+            {
+                Voter = members[0],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[1],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[2],
+                Recommended = false,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[3],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            }
+        };
+
+        var rec1 = panel1.Meetings.FirstOrDefault().Recommendations.FirstOrDefault();
+        rec1.UserVotes = userVotesRec1;
+        rec1.Votes = userVotesRec1.Count();
+        
+        var rec2 = panel1.Meetings.FirstOrDefault().Recommendations.LastOrDefault();
+        rec2.UserVotes = userVotesRec2;
+        rec2.Votes = userVotesRec2.Count();
+        
+        panelDbContext.AddRange(members);
+    }
+
+    private void SeedInvitations()
+    {
+        
         // Create initial list with members for Panel 1 and Panel 2
         var invitations = new List<Invitation>
         {
@@ -215,7 +396,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             },
             new Invitation()
             {
-                Email = "sophie@example.com",
+                Email = "sophie2@example.com",
                 Gender = Gender.Female,
                 Age = 26,
                 Town = "Antwerpen",
@@ -647,7 +828,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             },
             new Invitation()
             {
-                Email = "els@example.com",
+                Email = "els2@example.com",
                 Gender = Gender.Female,
                 Age = 26,
                 Town = "Antwerpen",
@@ -831,187 +1012,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
             }
             
         };
-
-        var members = new List<ApplicationUser>
-        {
-new ApplicationUser
-            {
-                Email = "kate@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Kate",
-                    Gender = Gender.Female,
-                    Age = 65,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "rozie@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Rozie",
-                    Gender = Gender.Female,
-                    Age = 77,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "rozalinda@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Rozalinda",
-                    Gender = Gender.Female,
-                    Age = 69,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-                Email = "alice2@example.com",
-                UserType = UserType.Member,
-                MemberProfile = new MemberProfile
-                {
-                    FirstName = "Alice",
-                    Gender = Gender.Female,
-                    Age = 73,
-                    Town = "Antwerpen",
-                    Panels = new List<Panel> { panel1 },
-                    TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
-                }
-            },
-            new ApplicationUser
-            {
-            Email = "emma3@example.com",
-            UserType = UserType.Member,
-            MemberProfile = new MemberProfile
-            {
-                FirstName = "Emma",
-                Gender = Gender.Female,
-                Age = 24,
-                Town = "Antwerpen",
-                Panels = new List<Panel> { panel1 },
-                TenantId = "antwerpen",
-                SelectedCriteria = new List<SubCriteria>()
-                {
-                    subCrit8,subCrit10
-                }
-            }
-        }
-        };
-        
-        var userVotesRec1 = new List<UserVote>
-        {
-            new UserVote
-            {
-                Voter = members[0],
-                Recommended = false,
-                VotedAt = DateTime.UtcNow,
-                TenantId = "antwerpen"
-            },
-            new UserVote
-            {
-                Voter = members[1],
-                Recommended = true,
-                VotedAt = DateTime.UtcNow,
-                TenantId = "antwerpen"
-            },
-            new UserVote
-            {
-                Voter = members[2],
-                Recommended = true,
-                VotedAt = DateTime.UtcNow,
-                TenantId = "antwerpen"
-            },
-            new UserVote
-            {
-                Voter = members[3],
-                Recommended = false,
-                VotedAt = DateTime.UtcNow,
-                TenantId = "antwerpen"
-            },
-            new UserVote
-            {
-                Voter = members[4],
-                Recommended = false,
-                VotedAt = DateTime.UtcNow,
-                TenantId = "antwerpen"
-            }
-        };
-
-        var userVotesRec2 = new List<UserVote>
-        {
-            new UserVote
-            {
-                Voter = members[0],
-                Recommended = false,
-                VotedAt = DateTime.UtcNow,
-                TenantId = "antwerpen"
-            },
-            new UserVote
-            {
-                Voter = members[1],
-                Recommended = true,
-                VotedAt = DateTime.UtcNow,
-                TenantId = "antwerpen"
-            },
-            new UserVote
-            {
-                Voter = members[2],
-                Recommended = false,
-                VotedAt = DateTime.UtcNow,
-                TenantId = "antwerpen"
-            },
-            new UserVote
-            {
-                Voter = members[3],
-                Recommended = true,
-                VotedAt = DateTime.UtcNow,
-                TenantId = "antwerpen"
-            }
-        };
-
-        var rec1 = panel1.Meetings.FirstOrDefault().Recommendations.FirstOrDefault();
-        rec1.UserVotes = userVotesRec1;
-        rec1.Votes = userVotesRec1.Count();
-        
-        var rec2 = panel1.Meetings.FirstOrDefault().Recommendations.LastOrDefault();
-        rec2.UserVotes = userVotesRec2;
-        rec2.Votes = userVotesRec2.Count();
-        
-        panelDbContext.Invitations.AddRange(invitations);
-        
-        panelDbContext.AddRange(members);
-    }
-
-    private void SeedInvitations()
-    {
         //invitations
         var invitation1 = new Invitation
         {
@@ -1082,6 +1082,7 @@ new ApplicationUser
             TenantId = "antwerpen"
         };
         panelDbContext.Invitations.AddRange(invitation1, invitation2, invitation3, invitation4, invitation5);
+        panelDbContext.Invitations.AddRange(invitations);
     }
 
     private void SeedQuestionnaires()
