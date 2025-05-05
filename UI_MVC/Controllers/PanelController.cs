@@ -82,52 +82,10 @@ public class PanelController : Controller
 
         return View(model);
     }
-
-    [HttpPost]
-    [Authorize]
-    public IActionResult CreatePanelFromResult(ResultViewModel resultViewModel)
-    {
-        if (!User.Identity.IsAuthenticated)
-        {
-            TempData["ResultViewModel"] = JsonConvert.SerializeObject(resultViewModel);
-            return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = Url.Action("RestorePanelData", "Panel") });
-        }
-        
-        if (!User.IsInRole("Organization") && !User.IsInRole("Admin"))
-        {
-            return Forbid();
-        }
-        
-        CreatePanelViewModel model = new CreatePanelViewModel()
-        {
-            Result = resultViewModel
-        };
-        return View("CreatePanel", model);
-    }
-    
-    [HttpGet]
-    [Authorize(Roles = "Organization, Admin")]
-    public IActionResult RestorePanelData()
-    {
-        if (!TempData.ContainsKey("ResultViewModel"))
-        {
-            return RedirectToAction("Index", "Recruitment");
-        }
-
-        var resultModelJson = TempData["ResultViewModel"] as string;
-        var resultViewModel = JsonConvert.DeserializeObject<ResultViewModel>(resultModelJson);
-
-        var model = new CreatePanelViewModel()
-        {
-            Result = resultViewModel
-        };
-
-        return View("CreatePanel", model);
-    }
     
     [HttpPost]
     [Authorize(Roles = "Organization, Admin")]
-    public async Task<IActionResult> CreatePanel(CreatePanelViewModel model)
+    public IActionResult CreatePanel(CreatePanelViewModel model)
     {
         if(!ModelState.IsValid)
             return View(model);
@@ -150,9 +108,7 @@ public class PanelController : Controller
             }
         }
         
-        var organization = await _userManager.GetUserWithProfilesAndPanelsAsync(User);
-        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria, organization.OrganizationProfile,model.Result.TotalAvailablePotentialPanelmembers);
-        await _userManager.UpdateAsync(organization);
+        Panel newPanel = _panelManager.AddPanel(model.Name, model.Description, criteria, model.Result.TotalAvailablePotentialPanelmembers);
         var invitations = _drawManager.AddInvitations(model.Result.ReservePotPanelmembers, criteria, newPanel);
         newPanel.Invitations = invitations.ToList();
         _panelManager.ChangePanel(newPanel);
