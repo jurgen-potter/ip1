@@ -1013,9 +1013,9 @@ new ApplicationUser
             
         };
         //invitations
-        var invitation1 = new Invitation
+        var invitation1 = new Invitation()
         {
-            //TenantId = "antwerpen",
+            Email = "invi1@example.com",
             Age = 30,
             Code = "blLy-Tvxl-1TXG-nYg3-CBtD",
             Gender = Gender.Female,
@@ -1028,7 +1028,7 @@ new ApplicationUser
 
         var invitation2 = new Invitation
         {
-            //TenantId = "antwerpen",
+            Email = "invi2@example.com",
             Age = 20,
             Code = "tDK6-KFhD-ipIi-tQjz-m6cZ",
             Gender = Gender.Male,
@@ -1041,7 +1041,7 @@ new ApplicationUser
 
         var invitation3 = new Invitation
         {
-            //TenantId = "antwerpen",
+            Email = "invi3@example.com",
             Age = 40,
             Code = "Iga7-FHyw-yVfo-8wvN-Bxa8",
             Gender = Gender.Male,
@@ -1054,7 +1054,7 @@ new ApplicationUser
 
         var invitation4 = new Invitation
         {
-            //TenantId = "antwerpen",
+            Email = "invi4@example.com",
             Age = 40,
             Code = "FIcV-zyXs-reXO-I6dh-rMCB",
             Gender = Gender.Female,
@@ -1067,7 +1067,6 @@ new ApplicationUser
 
         var invitation5 = new Invitation
         {
-            //TenantId = "antwerpen",
             Age = 25,
             Code = "HEMf-Xu0L-1ETh-urZJ-26s9",
             Gender = Gender.Male,
