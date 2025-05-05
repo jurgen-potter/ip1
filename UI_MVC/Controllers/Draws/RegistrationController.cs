@@ -122,13 +122,13 @@ public class RegistrationController(
                 mailSender.SendEmailAsync(selected.Email, selectedSubject,
                     selectedMessage.Replace(Environment.NewLine, "<br />"));
             }
-
+        
             foreach (var reserve in dr.ReserveInvitations)
             {
                 mailSender.SendEmailAsync(reserve.Email, reserveSubject,
                     reserveMessage.Replace(Environment.NewLine, "<br />"));
             }
-
+        
             if (dr.NotSelectedInvitations.Count > 0)
             {
                 foreach (var notSelected in dr.NotSelectedInvitations)

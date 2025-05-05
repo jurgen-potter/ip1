@@ -1,15 +1,11 @@
 ﻿@model CitizenPanel.BL.Domain.Draws.DrawResult
-@using CitizenPanel.BL.Domain.Draws
 @using CitizenPanel.BL.Domain.Users;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Lotingsresultaten";
     var panelId = ViewBag.PanelId;
     var panelName = ViewBag.PanelName;
-    var drawStatus = (DrawStatus)ViewBag.DrawStatus;
-    
     var criteriaNamesLookup = ViewBag.CriteriaNames as Dictionary<int, string> ?? new Dictionary<int, string>();
-
 }
 
 <h2>Lotingsresultaten voor panel: @panelName</h2>
@@ -40,7 +36,6 @@
     </div>
 </div>
 
-@* --- GEWIJZIGD: Loop over SelectedInvitations en ReserveInvitations --- *@
 @foreach (var group in new[]
           {
               new { Title = "Geselecteerde deelnemers", Invitations = Model.SelectedInvitations },
@@ -58,6 +53,7 @@
                         <th>Naam</th>
                         <th>Geslacht</th>
                         <th>Leeftijd</th>
+                        <th>Stad</th>
                         <th>Categorie</th>
                     </tr>
                     </thead>
@@ -90,9 +86,7 @@
                             ageGroupDisplay = "60+";
                         }
 
-
-                        // Criteria ophalen via lookup
-                        var criteriaDisplayList = new List<string> { genderDisplay, ageGroupDisplay }; // Start met basis demo info
+                        var criteriaDisplayList = new List<string> { genderDisplay, ageGroupDisplay }; 
                         if (invitation.SelectedCriteria != null)
                         {
                             foreach (var criteriaId in invitation.SelectedCriteria)
@@ -104,7 +98,6 @@
                             }
                         }
 
-                        // Verwijder dubbele items (bv. als gender/leeftijd ook als los criterium is opgeslagen)
                         var distinctCriteria = criteriaDisplayList.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
                         var categoryDisplay = string.Join(" × ", distinctCriteria);
 
