@@ -81,7 +81,7 @@ public class DrawManager : IDrawManager
             };
 
             string code = GenerateCode();
-            string qrCodePlace = $"https://whimp-24.ew.r.appspot.com/MemberRegister/RegisterMember?code={code}";
+            string qrCodePlace = $"http://whimp24.duckdns.org/MemberRegister/RegisterMember?code={code}";
 
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
             PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
@@ -317,7 +317,12 @@ public class DrawManager : IDrawManager
     {
         return _drawRepository.DeleteInvitation(invitationId);
     }
-    
+
+    public bool RemoveInvitationByEmail(string email)
+    {
+        return _drawRepository.DeleteInvitationByEmail(email);
+    }
+
     public IEnumerable<Criteria> GetInitialCriteria()
     {
         var criteriaList = new List<Criteria>()

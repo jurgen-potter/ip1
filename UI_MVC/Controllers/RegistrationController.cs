@@ -1,4 +1,4 @@
-﻿using CitizenPanel.BL;
+using CitizenPanel.BL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
@@ -113,6 +113,7 @@ public class RegistrationController(
         foreach (var notSelected in dr.NotSelectedMembers)
         {
             mailSender.SendEmailAsync(notSelected.Email, notSelectedSubject, notSelectedMessage.Replace(Environment.NewLine, "<br />"));
+            drawManager.RemoveInvitationByEmail(notSelected.Email);
         }
 
         ViewBag.PanelId = panelId;
