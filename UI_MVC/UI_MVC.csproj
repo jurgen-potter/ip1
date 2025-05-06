@@ -32,7 +32,7 @@
     <ItemGroup>
       <TypeScriptCompile Include="wwwroot\js\account\login.ts" />
       <TypeScriptCompile Include="wwwroot\js\admin\editQuestionnaire.ts" />
-      <TypeScriptCompile Include="wwwroot\js\dashboard\Timeline.ts" />
+      <TypeScriptCompile Include="wwwroot\js\dashboard\timeline.ts" />
       <TypeScriptCompile Include="wwwroot\js\recommendation\votersModalLoader.ts" />
       <TypeScriptCompile Include="wwwroot\js\recommendation\endVote.ts" />
       <TypeScriptCompile Include="wwwroot\js\recommendation\vote.ts" />
