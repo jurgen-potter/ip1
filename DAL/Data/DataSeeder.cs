@@ -1020,7 +1020,7 @@ new ApplicationUser
             Code = "blLy-Tvxl-1TXG-nYg3-CBtD",
             Gender = Gender.Female,
             PanelId = 1,
-            Town = "2140",
+            Town = "Antwerpen",
             QRCodeString =
                 "",
             TenantId = "antwerpen"
@@ -1033,7 +1033,7 @@ new ApplicationUser
             Code = "tDK6-KFhD-ipIi-tQjz-m6cZ",
             Gender = Gender.Male,
             PanelId = 1,
-            Town = "2100",
+            Town = "Antwerpen",
             QRCodeString =
                 "",
             TenantId = "antwerpen"
@@ -1046,7 +1046,7 @@ new ApplicationUser
             Code = "Iga7-FHyw-yVfo-8wvN-Bxa8",
             Gender = Gender.Male,
             PanelId = 1,
-            Town = "2110",
+            Town = "Antwerpen",
             QRCodeString =
                 "",
             TenantId = "antwerpen"
@@ -1059,7 +1059,7 @@ new ApplicationUser
             Code = "FIcV-zyXs-reXO-I6dh-rMCB",
             Gender = Gender.Female,
             PanelId = 2,
-            Town = "2105",
+            Town = "Antwerpen",
             QRCodeString =
                 "",
             TenantId = "antwerpen"
