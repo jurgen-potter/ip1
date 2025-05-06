@@ -1,4 +1,5 @@
 @using CitizenPanel.BL.Domain.Users
+@using Microsoft.IdentityModel.Tokens
 @model System.Collections.Generic.IEnumerable<CitizenPanel.BL.Domain.Draws.Invitation>
 
 @{
@@ -6,14 +7,14 @@
 }
 
 <h2>Qr-codes</h2>
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-    @foreach(var invitation in Model)
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    @foreach (var invitation in Model.Where(i => !i.IsRegistered))
     {
         <div class="col d-flex">
             <div class="card h-100 w-100">
                 <div class="card-body d-flex flex-column">
                     <p class="card-text flex-grow-1">Geslacht: @invitation.Gender.ToDutch()</p>
-                    <p class="card-text flex-grow-1">Leeftijd: 
+                    <p class="card-text flex-grow-1">Leeftijd:
                         @if (invitation.Age == 18)
                         {
                             @($"18-25")
@@ -36,7 +37,16 @@
                         }
                     </p>
                     <p class="card-text flex-grow-1">Code: @invitation.Code</p>
-                    <img src="data:image/png;base64,@invitation.QRCodeString" style="width: 150px; height: 150px;"/>
+                    <p class="card-text flex-grow-1">
+                        @if (@invitation.QRCodeString.IsNullOrEmpty())
+                        {
+                            <strong>@($"Deze invitation heeft geen QR-code meer")</strong>
+                        }
+                        else
+                        {
+                            <img src="data:image/png;base64,@invitation.QRCodeString" style="width: 150px; height: 150px;"/>
+                        }
+                    </p>
                 </div>
             </div>
         </div>
