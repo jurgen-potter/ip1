@@ -167,9 +167,9 @@ public class DataSeeder(PanelDbContext panelDbContext)
         var paul = panelDbContext.ApplicationUsers
             .Include(u => u.MemberProfile)
             .SingleOrDefault(u => u.UserName == "paul@example.com");
-        panel3.Members.Add(paul?.MemberProfile);
+        panel1.Members.Add(paul?.MemberProfile);
         //panel3.Members.Add(paul?.MemberProfile);
-        paul?.MemberProfile.Panels.Add(panel3);
+        paul?.MemberProfile.Panels.Add(panel1);
         //paul?.MemberProfile.Panels.Add(panel3);
         
         
