@@ -82,9 +82,9 @@ public class MemberManager(
         return memberRepository.UpdateOrganizationAnswersAsync(userId, questionnaireId, answers);
     }
 
-    public IEnumerable<Invitation> GetInvitationsByPanelId(int panelId)
+    public IEnumerable<Invitation> GetRegisteredInvitationsByPanelId(int panelId)
     {
-        return memberRepository.ReadInvitationsByPanelId(panelId);
+        return memberRepository.ReadRegisteredInvitationsByPanelId(panelId);
     }
 
     

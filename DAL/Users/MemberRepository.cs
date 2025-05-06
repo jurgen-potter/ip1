@@ -67,10 +67,11 @@ public class MemberRepository(PanelDbContext dbContext) : IMemberRepository
         await dbContext.SaveChangesAsync();
     }
 
-    public IEnumerable<Invitation> ReadInvitationsByPanelId(int panelId)
+    public IEnumerable<Invitation> ReadRegisteredInvitationsByPanelId(int panelId)
     {
         return dbContext.Invitations
             .Where(inv => inv.PanelId == panelId)
+            .Where(inv => inv.IsRegistered == true)
             .ToList();
     }
 

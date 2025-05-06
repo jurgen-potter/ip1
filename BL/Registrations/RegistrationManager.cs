@@ -180,7 +180,7 @@ public class RegistrationManager : IRegistrationManager
         LoadCriteriaCache(panel.Id);
 
         // Ophalen van alle geregistreerde uitnodigingen voor dit panel
-        var registeredInvitations = _memberManager.GetInvitationsByPanelId(panel.Id).ToList();
+        var registeredInvitations = _memberManager.GetRegisteredInvitationsByPanelId(panel.Id).ToList();
         
         // Map invitations to eligible buckets
         var invitationsByBucket = MapInvitationsToEligibleBuckets(recruitmentPlan.Buckets, registeredInvitations);

@@ -11,6 +11,6 @@ public interface IMemberRepository
     ApplicationUser ReadOrganizationWithAnswers(string organizationId);
     void UpdateMember(ApplicationUser member);
     void DeleteMember(ApplicationUser member);
-    IEnumerable<Invitation>ReadInvitationsByPanelId(int panelId);
+    IEnumerable<Invitation>ReadRegisteredInvitationsByPanelId(int panelId);
     Task UpdateOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers);
 }

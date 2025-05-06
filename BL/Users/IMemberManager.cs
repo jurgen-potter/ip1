@@ -15,7 +15,7 @@ public interface IMemberManager
     void ChangeMember(ApplicationUser member);
     void RemoveMember(ApplicationUser member);
 
-    public IEnumerable<Invitation> GetInvitationsByPanelId(int panelId);
+    public IEnumerable<Invitation> GetRegisteredInvitationsByPanelId(int panelId);
 
 
     /*// Specialized queries for the RegistrationManager

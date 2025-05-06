@@ -19,7 +19,7 @@ public class RegistrationController(
     public IActionResult Index(int panelId)
     {
         var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
-        var users = memberManager.GetInvitationsByPanelId(panelId).ToList();
+        var users = memberManager.GetRegisteredInvitationsByPanelId(panelId).ToList();
         var panel = panelManager.GetPanelById(panelId);
         var result = drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
 
