@@ -1,8 +1,164 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welkom bij BurgerPanels</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Pas de Tailwind configuratie toe (normaal in tailwind.config.js)
+        // Dit is nodig voor de CDN versie om custom kleuren etc. te gebruiken.
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'text-black': '#080708',
+                        'brand-black': '#080708', // Voor de donkere header achtergrond
+                        'brand-cadet-gray': '#A5B5BF',
+                        'brand-ash-gray': '#ABC8C7', // Nieuwe hero achtergrond
+                        'brand-celadon': '#B8E2C8',
+                        'brand-celadon-light': '#BFF0D4',
+                        'primary': '#A5B5BF',      // Cadet Grijs
+                        'primary-hover': '#8E9FAA', // Iets donkerder voor hover
+                        'secondary': '#ABC8C7',    // Ash Grijs
+                        'secondary-hover': '#97B3B2',// Iets donkerder voor hover
+                        'accent': '#B8E2C8',       // Celadon
+                        'accent-hover': '#A3CFAF',  // Iets donkerder voor hover
+                        'background-page': '#FFFFFF', // Witte achtergrond voor de pagina
+                        'surface': '#FFFFFF', // Wit voor kaarten, modals etc.
+                        'header-text': '#FFFFFF', // Witte tekst voor op donkere header
+                        'header-text-hover': '#E0E0E0', // Iets gedempter wit voor hover in header
+                        'header-nav-item-bg-hover': 'rgba(255, 255, 255, 0.1)', // Subtiele hover achtergrond voor nav items
+                    },
+                    fontFamily: {
+                        sans: ['Bahnschrift', 'Segoe UI', 'Calibri', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        /* Globale stijlen */
+        body {
+            font-family: theme('fontFamily.sans');
+            color: theme('colors.text-black'); /* Standaard tekstkleur zwart voor content */
+            background-color: theme('colors.background-page');
+        }
 
-<div class="text-center">
-    <h1 class="display-4">Welkom</h1>
-    <p>Leer meer over BurgerPanels op onze website!</p>
+        /* Specifieke stijlen voor de hero sectie */
+        .hero-section {
+            min-height: 60vh; /* Zorgt voor voldoende hoogte, pas aan naar wens */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<header class="bg-brand-black shadow-md sticky top-0 z-50">
+    <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex-shrink-0">
+                <a href="/" class="text-header-text font-bold text-2xl">
+                    BurgerPanels
+                </a>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-1">
+                <a href="/" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                <a href="/Recruitment/Index" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover px-3 py-2 rounded-md text-sm font-medium">Demografische data</a>
+                <a href="/Questionnaire/Index/1" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover px-3 py-2 rounded-md text-sm font-medium">Verkenningsmodule</a>
+                <a href="/Questionnaire/Index/2" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover px-3 py-2 rounded-md text-sm font-medium">Procesbepaling</a>
+                <a href="/MemberRegister/Index" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover px-3 py-2 rounded-md text-sm font-medium">Code Registreren</a>
+                <a href="/Panel/UserPanel" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-3"> <a href="/Identity/Account/Register" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover px-3 py-2 rounded-md text-sm font-medium">Registreer organisatie</a>
+                <a href="/Identity/Account/Login" class="bg-primary hover:bg-primary-hover text-white font-semibold py-2 px-3 rounded-md text-sm transition-colors duration-150">
+                    Aanmelden
+                </a>
+
+            </div>
+
+            <div class="md:hidden flex items-center">
+                <button type="button" id="mobile-menu-button" class="text-header-text-hover hover:text-header-text focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="md:hidden hidden" id="mobile-menu-dropdown">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <a href="/" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover block px-3 py-2 rounded-md text-base font-medium">Home</a>
+            <a href="/Recruitment/Index" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover block px-3 py-2 rounded-md text-base font-medium">Demografische data</a>
+            <a href="/Questionnaire/Index/1" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover block px-3 py-2 rounded-md text-base font-medium">Verkenningsmodule</a>
+            <a href="/Questionnaire/Index/2" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover block px-3 py-2 rounded-md text-base font-medium">Procesbepaling</a>
+            <a href="/MemberRegister/Index" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover block px-3 py-2 rounded-md text-base font-medium">Code Registreren</a>
+            <a href="/Panel/UserPanel" class="text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover block px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
+        </div>
+        <div class="pt-4 pb-3 border-t border-gray-700">
+            <div class="px-2 space-y-1">
+                <a href="/Identity/Account/Register" class="block px-3 py-2 rounded-md text-base font-medium text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover">Registreer organisatie</a>
+                <a href="/Identity/Account/Login" class="block px-3 py-2 rounded-md text-base font-medium text-header-text-hover hover:text-header-text hover:bg-header-nav-item-bg-hover">Aanmelden</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="hero-section bg-brand-ash-gray flex items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto py-16 sm:py-24">
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-text-black leading-tight mb-6">
+            Welkom
+        </h1>
+        <p class="text-lg sm:text-xl text-text-black text-opacity-75 max-w-2xl mx-auto">
+            Leer meer over BurgerPanels op onze website! Ontdek, deel en creëer.
+        </p>
+        <div class="mt-10">
+            <a href="#" class="bg-accent hover:bg-accent-hover text-text-black font-bold py-3 px-8 rounded-lg text-lg transition-colors duration-150 shadow-lg">
+                Ontdek Panels
+            </a>
+        </div>
+    </div>
 </div>
+
+<main class="container mx-auto p-4 sm:p-6 lg:p-8 flex-grow">
+    <h2 class="text-3xl font-semibold text-text-black mb-10 text-center">Wat is een burgerpanel?</h2>
+    <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-surface p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <h3 class="text-2xl font-semibold text-text-black mb-4">Kiezen voor een burgerpanel</h3>
+            <p class="text-text-black text-opacity-80 mb-6">Zet zelf de stap om jouw organisatie aan de hand van een panel te engageren.</p>
+            <a href="#" class="inline-block bg-primary text-white font-semibold py-2 px-5 rounded-lg hover:bg-primary-hover transition-colors duration-150">
+                Meer informatie &rarr;
+            </a>
+        </div>
+        <div class="bg-surface p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <h3 class="text-2xl font-semibold text-text-black mb-4">Beginnen aan een burgerpanel?</h3>
+            <p class="text-text-black text-opacity-80 mb-6">Kijk hier voor een eerste wegwijzer en informatie om een participatiepanel te beginnen.</p>
+            <a href="#" class="inline-block bg-primary text-white font-semibold py-2 px-5 rounded-lg hover:bg-primary-hover transition-colors duration-150">
+                Startgids &rarr;
+            </a>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-brand-cadet-gray text-header-text py-10 text-center">
+    <p class="text-sm">&copy; 2024 BurgerPanels. Alle rechten voorbehouden.</p>
+</footer>
+
+<script>
+    // Basic JavaScript voor mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
+
+    if (mobileMenuButton && mobileMenuDropdown) {
+        mobileMenuButton.addEventListener('click', () => {
+            const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+            mobileMenuButton.setAttribute('aria-expanded', !expanded);
+            mobileMenuDropdown.classList.toggle('hidden');
+        });
+    }
+</script>
+
+</body>
+</html>
