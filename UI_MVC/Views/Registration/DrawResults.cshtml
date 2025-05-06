@@ -51,8 +51,6 @@
                     <thead>
                     <tr>
                         <th>Naam</th>
-                        <th>Geslacht</th>
-                        <th>Leeftijd</th>
                         <th>Stad</th>
                         <th>Categorie</th>
                     </tr>
@@ -84,7 +82,7 @@
                         else
                         {
                             ageGroupDisplay = "60+";
-                        }
+                        }   
 
                         var criteriaDisplayList = new List<string> { genderDisplay, ageGroupDisplay }; 
                         if (invitation.SelectedCriteria != null)
@@ -103,8 +101,6 @@
 
                         <tr>
                             <td>@identifierDisplay</td>
-                            <td>@genderDisplay</td>
-                            <td>@invitation.Age</td>
                             <td>@townDisplay</td>
                             <td>@categoryDisplay</td>
                         </tr>
