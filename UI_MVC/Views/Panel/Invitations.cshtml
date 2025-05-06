@@ -6,7 +6,7 @@
     ViewBag.Title = "title";
 }
 
-<h2>Qr-codes</h2>
+<h2>Uitnodigingen</h2>
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
     @foreach (var invitation in Model.Where(i => !i.IsRegistered))
     {
