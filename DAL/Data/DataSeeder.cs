@@ -1088,7 +1088,8 @@ new ApplicationUser
     {
         var questionnaire = new Questionnaire
         {
-            Title = "Verkenningsmodule"
+            Title = "Verkenningsmodule",
+            Subtitle = "Is een panel voor u?"
         };
         var question1 = new Question
         {
@@ -1189,7 +1190,8 @@ new ApplicationUser
         
         var questionnaire2 = new Questionnaire
         {
-            Title = "Procesbepalingsmodule"
+            Title = "Procesbepalingsmodule",
+            Subtitle = "Hoe wilt u uw panel aanpakken?"
         };
         var question4 = new Question
         {
