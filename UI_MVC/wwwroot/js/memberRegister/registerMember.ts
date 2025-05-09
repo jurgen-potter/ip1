@@ -8,14 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalElement = document.getElementById('confirmationModal');
     if (!modalElement) return;
 
-    const confirmationModal = new bootstrap.Modal(modalElement);
-
-    confirmationModal.show();
+    // Show the Tailwind modal
+    modalElement.classList.remove('hidden');
 
     const confirmButton = document.getElementById('confirmParticipation');
     if (confirmButton) {
         confirmButton.addEventListener('click', () => {
-            confirmationModal.hide();
+            // Hide the Tailwind modal
+            modalElement.classList.add('hidden');
         });
     }
 });

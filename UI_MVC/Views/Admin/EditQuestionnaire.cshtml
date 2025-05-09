@@ -7,13 +7,65 @@
 }
 
 @section Styles {
-    <link href="~/dist/css/admin/editQuestionnaire.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        /* Smooth transition for collapse/expand */
+        .question-body {
+            overflow: hidden;
+            transition: height 0.3s ease-out;
+            will-change: height;
+        }
+        
+        .question-body.hidden {
+            height: 0 !important;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+            border-width: 0;
+        }
+        
+        /* Drag and drop styling */
+        .dragged {
+            opacity: 0.5;
+            background-color: #f3f4f6;
+            border: 1px dashed #A5B5BF;
+        }
+        
+        .over {
+            border: 2px dashed #A5B5BF;
+            background-color: #f8fafc;
+        }
+        
+        .drag-handle {
+            cursor: move;
+            user-select: none;
+            display: inline-block;
+            color: #6B7280;
+        }
+        
+        .drag-handle:hover {
+            color: #111827;
+        }
+        
+        /* Make sure the list items have proper spacing for drag and drop */
+        .question-item {
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+        
+        .answer-item {
+            margin-bottom: 0.5rem;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.375rem;
+            background-color: #F9FAFB;
+        }
+    </style>
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="mb-0">Bewerk @Model.Title</h2>
-    <button type="button" class="btn btn-outline-primary btn-sm" id="toggle-all-btn">
+<div class="flex justify-between items-center mb-3">
+    <h2 class="mb-0 text-2xl font-bold">Bewerk @Model.Title</h2>
+    <button type="button" class="px-3 py-1 text-sm border border-primary text-primary hover:bg-primary hover:text-white rounded-lg transition-colors duration-150" id="toggle-all-btn">
         Alles invouwen
     </button>
 </div>
@@ -21,121 +73,112 @@
 <form asp-action="EditQuestionnaire" method="post">
     <input type="hidden" id="questionnaire-id" asp-for="Id" value="@Model.Id"/>
     <input type="hidden" asp-for="Title" value="@Model.Title"/>
-    <span asp-validation-for="@Model.Questions" class="text-danger small"></span>
+    <span asp-validation-for="@Model.Questions" class="text-red-500 text-sm"></span>
 
-    <ul id="questions-list">
+    <ul id="questions-list" class="space-y-3 list-none p-0">
         @for (int i = 0; i < Model.Questions.Count; i++)
         {
-            <li class="card mb-3 question-item">
+            <li class="bg-white rounded-lg shadow-md overflow-hidden question-item">
                 <input asp-for="@Model.Questions[@i].Id" type="hidden" value="@Model.Questions[@i].Id"
                        class="question-id"/>
                 <input asp-for="@Model.Questions[@i].ToDelete" type="hidden" class="question-delete"/>
-                <div class="card-header d-flex align-items-start">
-                    <div class="fs-5 me-3">
+                <div class="px-4 py-3 bg-gray-50 border-b flex items-start">
+                    <div class="text-xl mr-3">
                         <span class="drag-handle">&#x2630;</span>
                     </div>
-                    <div class="flex-grow-1">
-                        <label class="form-label fw-bold question-number">Vraag @(i + 1)</label>
-                        <div class="d-flex align-items-start gap-2">
-                            <div class="flex-grow-1 w-100">
-                                <div class="flex-grow-1">
+                    <div class="flex-grow">
+                        <label class="block text-sm font-bold mb-1 question-number">Vraag @(i + 1)</label>
+                        <div class="flex items-start gap-2">
+                            <div class="flex-grow w-full">
+                                <div class="flex-grow">
                                     <input asp-for="@Model.Questions[@i].Description"
-                                           class="form-control mb-0 question-description"/>
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary mb-0 question-description"/>
                                     <span asp-validation-for="@Model.Questions[@i].Description"
-                                          class="text-danger small"></span>
+                                          class="text-red-500 text-sm"></span>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
+                            <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg ml-2 remove-question-btn">
                                 <i class="bi bi-trash"></i>
                             </button>
                             @if (!isDiscover)
                             {
-                                <div class="col-auto">
-                                    <div class="form-check">
+                                <div class="ml-auto">
+                                    <div class="flex items-center">
                                         <input type="hidden" class="detail-value"/>
                                         <input asp-for="@Model.Questions[@i].IsDetail"
-                                               class="form-check-input detail-check" type="checkbox"/>
-                                        <label class="form-check-label">Panel detail</label>
+                                               class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary detail-check" type="checkbox"/>
+                                        <label class="ml-2 text-sm text-gray-700">Panel detail</label>
                                     </div>
                                 </div>
                             }
                         </div>
                     </div>
-                    <button class="btn btn-sm expand-btn ms-2 mt-1" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#question-body-@i" aria-expanded="true" aria-controls="question-body-@i">
+                    <button class="ml-2 p-1 text-sm expand-btn" type="button" 
+                            data-tw-toggle="collapse"
+                            data-tw-target="#question-body-@i">
                         <i class="bi bi-chevron-up"></i>
                     </button>
                 </div>
-                <div class="collapse show question-body" id="question-body-@i">
-                    <div class="card-body">
-                        @*<label class="form-label fw-bold">Weging</label>
-                        <input asp-for="@Model.Questions[@i].Weight" type="range" min="1" max="10"
-                               class="form-range mb-2 question-weight"/>
-                        <div class="d-flex justify-content-between px-1 text-muted small">
-                            @for (int val = 1; val <= 10; val++)
-                            {
-                                <span>@val</span>
-                            }
-                        </div>*@
-
-                        <label class="form-label fw-bold">Antwoorden</label>
-                        <span asp-validation-for="@Model.Questions[@i].Answers" class="text-danger small"></span>
-                        <ul id="answers-list-@i">
+                <div class="question-body" id="question-body-@i">
+                    <div class="p-4">
+                        <label class="block text-sm font-bold mb-2">Antwoorden</label>
+                        <span asp-validation-for="@Model.Questions[@i].Answers" class="text-red-500 text-sm"></span>
+                        <ul id="answers-list-@i" class="space-y-2 list-none p-0">
                             @for (int j = 0; j < Model.Questions[i].Answers.Count; j++)
                             {
-                                <li class="row answer-item mb-2 align-items-center p-2">
+                                <li class="flex flex-wrap items-center p-2 answer-item">
                                     <input asp-for="@Model.Questions[@i].Answers[@j].Id" type="hidden" class="answer-id"
                                            value="@Model.Questions[@i].Answers[@j].Id"/>
                                     <input asp-for="@Model.Questions[@i].Answers[@j].ToDelete" type="hidden"
                                            class="answer-delete"/>
-                                    <div class="col-auto fs-5 p-0">
+                                    <div class="text-xl p-0">
                                         <span class="drag-handle">&#x2630;</span>
                                     </div>
 
-                                    <div class="col">
-                                        <div class="form-floating mb-2">
+                                    <div class="flex-grow px-2">
+                                        <div class="mb-2 relative">
                                             <input asp-for="@Model.Questions[@i].Answers[@j].Description"
                                                    id="Description-@i-@j"
-                                                   class="form-control answer-description"
+                                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary answer-description"
                                                    placeholder="Beschrijving" />
-                                            <label for="Description-@i-@j">Beschrijving</label>
+                                            <label for="Description-@i-@j" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Beschrijving</label>
                                         </div>
                                         <span asp-validation-for="@Model.Questions[@i].Answers[@j].Description"
-                                              class="text-danger small d-block mb-2"></span>
+                                              class="text-red-500 text-sm block mb-2"></span>
 
-                                        <div class="form-floating mb-2">
+                                        <div class="mb-2 relative">
                                             <input asp-for="@Model.Questions[@i].Answers[@j].Advice"
                                                    id="Advice-@i-@j"
-                                                   class="form-control answer-advice"
+                                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary answer-advice"
                                                    placeholder="Aanbeveling" />
-                                            <label for="Advice-@i-@j" class="advice-label">Aanbeveling</label>
+                                            <label for="Advice-@i-@j" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1 advice-label">Aanbeveling</label>
                                         </div>
                                         <span asp-validation-for="@Model.Questions[@i].Answers[@j].Advice"
-                                              class="text-danger small d-block"></span>
+                                              class="text-red-500 text-sm block"></span>
                                     </div>
                                     
-                                    <div class="col-auto">
-                                        <button type="button" class="btn btn-danger btn-sm remove-answer-btn">
+                                    <div class="ml-2">
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg remove-answer-btn">
                                             Verwijder
                                         </button>
                                     </div>
                                     @if (isDiscover)
                                     {
-                                        <div class="col-auto">
-                                            <div class="form-check">
+                                        <div class="ml-2">
+                                            <div class="flex items-center">
                                                 <input type="hidden" value="@Model.Questions[@i].Answers[@j].IsCritical"
                                                        class="critical-value"/>
                                                 <input asp-for="@Model.Questions[@i].Answers[@j].IsCritical"
-                                                       class="form-check-input critical-check" type="checkbox"/>
-                                                <label class="form-check-label">Breekpunt</label>
+                                                       class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary critical-check" type="checkbox"/>
+                                                <label class="ml-2 text-sm text-gray-700">Breekpunt</label>
                                             </div>
                                         </div>
                                     }
                                 </li>
                             }
                         </ul>
-                        <button type="button" class="btn btn-sm btn-secondary add-answer-btn" question-index="@i">Voeg
-                            antwoordoptie toe
+                        <button type="button" class="mt-2 bg-secondary hover:bg-secondary-hover text-white px-3 py-1 rounded-lg text-sm add-answer-btn" question-index="@i">
+                            Voeg antwoordoptie toe
                         </button>
                     </div>
                 </div>
@@ -143,12 +186,194 @@
         }
     </ul>
 
-    <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary">Opslaan</button>
-        <button type="button" class="btn btn-secondary" id="add-question-btn">Voeg vraag toe</button>
+    <div class="flex gap-2 mt-4">
+        <button type="submit" class="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg transition-colors duration-150">Opslaan</button>
+        <button type="button" class="bg-secondary hover:bg-secondary-hover text-white px-4 py-2 rounded-lg transition-colors duration-150" id="add-question-btn">Voeg vraag toe</button>
     </div>
 </form>
 
 @section Scripts {
     <script defer src="@Url.Content("~/dist/js/admin/editQuestionnaire.js")"></script>
+    <script>
+        // Initialize expand/collapse buttons on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize allCollapsed variable if not already set
+            if (typeof window.allCollapsed === 'undefined') {
+                window.allCollapsed = false;
+            }
+            
+            // Track animation state to prevent interruptions
+            const animatingElements = new Set();
+            
+            // Initialize all question bodies with their natural height
+            document.querySelectorAll('.question-body').forEach(function(body) {
+                if (!body.classList.contains('hidden')) {
+                    body.style.height = 'auto';
+                } else {
+                    body.style.height = '0';
+                }
+            });
+            
+            // Function to handle smooth toggle
+            function smoothToggle(targetEl) {
+                // Prevent animation conflicts
+                if (animatingElements.has(targetEl.id)) {
+                    return;
+                }
+                
+                // Mark this element as animating
+                animatingElements.add(targetEl.id);
+                
+                if (targetEl.classList.contains('hidden')) {
+                    // EXPAND
+                    console.log('Expanding:', targetEl.id);
+                    
+                    // 1. Remove hidden class and set initial height
+                    targetEl.classList.remove('hidden');
+                    targetEl.style.height = '0';
+                    
+                    // 2. Force browser to acknowledge the initial state
+                    void targetEl.offsetHeight;
+                    
+                    // 3. Set final height to trigger animation
+                    const height = targetEl.scrollHeight;
+                    targetEl.style.height = height + 'px';
+                    
+                    // 4. After animation completes, set to auto and clear animation state
+                    setTimeout(function() {
+                        targetEl.style.height = 'auto';
+                        animatingElements.delete(targetEl.id);
+                        console.log('Expand complete:', targetEl.id);
+                    }, 350); // Slightly longer than transition duration
+                } else {
+                    // COLLAPSE
+                    console.log('Collapsing:', targetEl.id);
+                    
+                    // 1. Set explicit height based on current content
+                    const height = targetEl.scrollHeight;
+                    targetEl.style.height = height + 'px';
+                    
+                    // 2. Force browser to acknowledge the initial state
+                    void targetEl.offsetHeight;
+                    
+                    // 3. Set height to zero to trigger animation
+                    targetEl.style.height = '0';
+                    
+                    // 4. After animation completes, add hidden class and clear animation state
+                    setTimeout(function() {
+                        targetEl.classList.add('hidden');
+                        animatingElements.delete(targetEl.id);
+                        console.log('Collapse complete:', targetEl.id);
+                    }, 350); // Slightly longer than transition duration
+                }
+            }
+            
+            // Make the smooth toggle function globally available
+            window.smoothToggle = smoothToggle;
+            
+            // Add direct click handlers to all expand buttons to ensure they work
+            document.querySelectorAll('.expand-btn').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    // Toggle the icon
+                    const icon = btn.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('bi-chevron-up');
+                        icon.classList.toggle('bi-chevron-down');
+                    }
+                    
+                    // Get target and toggle it
+                    const targetId = btn.getAttribute('data-tw-target')?.replace('#', '');
+                    if (targetId) {
+                        const targetEl = document.getElementById(targetId);
+                        if (targetEl) {
+                            smoothToggle(targetEl);
+                        }
+                    }
+                    
+                    // Prevent default to avoid conflicts
+                    e.preventDefault();
+                    e.stopPropagation();
+                }, true);
+            });
+            
+            // Override the toggleArrow function in editQuestionnaire.js
+            if (typeof toggleArrow === 'function') {
+                window.toggleArrow = function(button) {
+                    const icon = button.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('bi-chevron-up');
+                        icon.classList.toggle('bi-chevron-down');
+                    }
+                };
+            }
+            
+            // Override the toggleExpandAll function in editQuestionnaire.js
+            if (typeof toggleExpandAll === 'function') {
+                window.toggleExpandAll = function(button) {
+                    const isCollapsing = !window.allCollapsed;
+                    
+                    document.querySelectorAll('.question-body').forEach(function(body) {
+                        if (isCollapsing) {
+                            // If not already hidden, collapse it
+                            if (!body.classList.contains('hidden')) {
+                                smoothToggle(body);
+                            }
+                        } else {
+                            // If hidden, expand it
+                            if (body.classList.contains('hidden')) {
+                                smoothToggle(body);
+                            }
+                        }
+                    });
+                    
+                    window.allCollapsed = !window.allCollapsed;
+                    button.innerHTML = window.allCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
+                    
+                    document.querySelectorAll('.expand-btn').forEach(function(b) {
+                        const icon = b.querySelector('i');
+                        if (!icon) return;
+                        icon.classList.toggle('bi-chevron-up', !window.allCollapsed);
+                        icon.classList.toggle('bi-chevron-down', window.allCollapsed);
+                    });
+                };
+            }
+            
+            // Directly wire up the toggle-all-btn to ensure it works
+            const toggleAllBtn = document.getElementById('toggle-all-btn');
+            if (toggleAllBtn) {
+                toggleAllBtn.addEventListener('click', function() {
+                    if (typeof window.toggleExpandAll === 'function') {
+                        window.toggleExpandAll(this);
+                    } else {
+                        // Fallback if toggleExpandAll isn't defined
+                        const isCollapsing = !window.allCollapsed;
+                        
+                        document.querySelectorAll('.question-body').forEach(function(body) {
+                            if (isCollapsing) {
+                                // If not already hidden, collapse it
+                                if (!body.classList.contains('hidden')) {
+                                    smoothToggle(body);
+                                }
+                            } else {
+                                // If hidden, expand it
+                                if (body.classList.contains('hidden')) {
+                                    smoothToggle(body);
+                                }
+                            }
+                        });
+                        
+                        window.allCollapsed = !window.allCollapsed;
+                        this.innerHTML = window.allCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
+                        
+                        document.querySelectorAll('.expand-btn').forEach(function(b) {
+                            const icon = b.querySelector('i');
+                            if (!icon) return;
+                            icon.classList.toggle('bi-chevron-up', !window.allCollapsed);
+                            icon.classList.toggle('bi-chevron-down', window.allCollapsed);
+                        });
+                    }
+                });
+            }
+        });
+    </script>
 }

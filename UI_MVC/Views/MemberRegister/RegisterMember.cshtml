@@ -6,13 +6,13 @@
     ViewBag.Title = "Aanmelden";
 }
 
-<h2>Vul uw gegevens in</h2>
-<div asp-validation-summary="All" class="text-danger"></div>
+<h2 class="text-2xl font-bold mb-4">Vul uw gegevens in</h2>
+<div asp-validation-summary="All" class="text-red-500"></div>
 <form asp-controller="MemberRegister" asp-action="RegisterMember" asp-route-code="@Model.Code" method="post">
-    <div>
-        <label>Email:</label>
-        <input asp-for="Email" type="email" class="form-control">
-        <span asp-validation-for="Email" class="text-danger"></span>
+    <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Email:</label>
+        <input asp-for="Email" type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+        <span asp-validation-for="Email" class="text-red-500 text-sm"></span>
     </div>
 
 
@@ -20,9 +20,9 @@
     {
         @foreach (var criteriaPair in Model.CriteriaList.Select((criteria, i) => new { criteria, i }))
         {
-            <div class="mb-3">
-                <label>@criteriaPair.criteria.Name</label>
-                <div class="btn-group" role="group">
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2">@criteriaPair.criteria.Name</label>
+                <div class="flex flex-wrap gap-2">
                     @if (criteriaPair.criteria.SubCriteria != null && criteriaPair.criteria.SubCriteria.Any())
                     {
                         @foreach (var subCriteria in criteriaPair.criteria.SubCriteria)
@@ -30,8 +30,8 @@
                             bool isChecked = Model.SelectedCriteria != null
                                              && Model.SelectedCriteria.Count > criteriaPair.i
                                              && Model.SelectedCriteria[criteriaPair.i] == subCriteria.Id;
-                            <label class="btn btn-secondary">
-                                <input type="radio" name="SelectedCriteria[@criteriaPair.i]" value="@subCriteria.Id" @(isChecked ? "checked" : "")/>
+                            <label class="inline-flex items-center px-4 py-2 border border-secondary text-secondary hover:bg-secondary hover:text-white rounded-lg cursor-pointer">
+                                <input type="radio" name="SelectedCriteria[@criteriaPair.i]" value="@subCriteria.Id" @(isChecked ? "checked" : "") class="mr-2"/>
                                 @subCriteria.Name
                             </label>
                         }
@@ -53,26 +53,23 @@
     }
 
     <input type="hidden" asp-for="@Model.Code">
-    <button type="submit" class="btn btn-primary">Aanmelden</button>
+    <button type="submit" class="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg transition-colors duration-150">Aanmelden</button>
 </form>
 
 
 <!-- Confirmation Modal -->
-<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true"
-    data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmationModalLabel">Bevestiging</h5>
-            </div>
-            <div class="modal-body">
-                <p>Weet u zeker dat u wilt meedoen?</p>
-            </div>
-            <div class="modal-footer">
-                <a href="@Url.Action("Index", "Home")" class="btn btn-danger">Ik wil niet meedoen</a>
-                <input id="isConfirmed" type="hidden" asp-for="@Model.IsConfirmed"/>
-                <button id="confirmParticipation" type="button" class="btn btn-success">Ik wil meedoen</button>
-            </div>
+<div id="confirmationModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center hidden" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden max-w-md w-full mx-4">
+        <div class="border-b px-4 py-3">
+            <h5 class="text-lg font-bold" id="confirmationModalLabel">Bevestiging</h5>
+        </div>
+        <div class="p-4">
+            <p>Weet u zeker dat u wilt meedoen?</p>
+        </div>
+        <div class="border-t px-4 py-3 flex justify-end gap-2">
+            <a href="@Url.Action("Index", "Home")" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-150">Ik wil niet meedoen</a>
+            <input id="isConfirmed" type="hidden" asp-for="@Model.IsConfirmed"/>
+            <button id="confirmParticipation" type="button" class="bg-accent hover:bg-accent-hover text-text-black px-4 py-2 rounded-lg transition-colors duration-150">Ik wil meedoen</button>
         </div>
     </div>
 </div>

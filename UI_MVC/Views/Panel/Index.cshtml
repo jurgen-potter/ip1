@@ -13,21 +13,29 @@
 
 <link rel="stylesheet" href="~/dist/css/panel/dashboard.css" asp-append-version="true"/>
 
-<div class="container-fluid p-4" data-panel-id="@Model.PanelId">
+<div class="container mx-auto p-4" data-panel-id="@Model.PanelId">
 
-    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-        <h1 class="h3 mb-0">@Model.Name</h1>
+    <div class="flex justify-between items-center border-b pb-3 mb-4">
+        <h1 class="text-xl font-semibold mb-0">@Model.Name</h1>
         @if (User.IsInRole("Organization"))
         {
-            <div class="d-flex gap-2">
-                <a asp-controller="Registration" asp-action="Index" asp-route-panelId="@Model.PanelId" class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-eye me-1"></i> Aanmeldingen Bekijken
+            <div class="flex gap-2">
+                <a asp-controller="Registration" asp-action="Index" asp-route-panelId="@Model.PanelId" class="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg> Aanmeldingen Bekijken
                 </a>
-                <a asp-controller="Panel" asp-action="Invitations" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
-                    <i class="bi bi-eye me-1"></i> Uitnodigingen bekijken
+                <a asp-controller="Panel" asp-action="Invitations" asp-route-panelId="@Model.PanelId" class="inline-flex items-center px-3 py-1 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg> Uitnodigingen bekijken
                 </a>
-                <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
-                    <i class="bi bi-pencil-square me-1"></i> Voeg panellid toe
+                <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true" asp-route-panelId="@Model.PanelId" class="inline-flex items-center px-3 py-1 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg> Voeg panellid toe
                 </a>
                 @* <a asp-action="Edit" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm"> *@
                 @*     <i class="bi bi-pencil-square me-1"></i> Edit Panel *@
@@ -36,16 +44,18 @@
         }
     </div>
 
-    <div class="row g-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-4">
 
-        <div class="col-lg-3 col-md-4">
-            <aside class="timeline-sidebar bg-light p-3 rounded border h-100">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="h6 fw-bold text-uppercase text-muted">Tijdlijn</h3>
+        <div class="md:col-span-1 lg:col-span-3">
+            <aside class="timeline-sidebar bg-gray-50 p-3 rounded border h-full">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xs font-bold uppercase text-gray-500">Tijdlijn</h3>
                     @if (User.IsInRole("Organization"))
                     {
-                        <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createMeetingModal">
-                            <i class="bi bi-plus-lg"></i> Nieuw
+                        <button class="inline-flex items-center px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md" data-bs-toggle="modal" data-bs-target="#createMeetingModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg> Nieuw
                         </button>
                     }
                 </div>
@@ -63,74 +73,90 @@
             </aside>
         </div>
 
-        <div class="col-lg-9 col-md-8">
-            <main class="main-content d-flex flex-column gap-4">
+        <div class="md:col-span-3 lg:col-span-9">
+            <main class="flex flex-col gap-4">
 
-                <section class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Beschrijving</h5>
-                        <p class="card-text">@Model.Description</p>
+                <section class="bg-white rounded-lg shadow-sm">
+                    <div class="p-4">
+                        <h5 class="text-lg font-medium mb-3">Beschrijving</h5>
+                        <p class="text-gray-700">@Model.Description</p>
                     </div>
                 </section>
 
-                <section class="card shadow-sm">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Aanbevelingen</h5>
-                        <a class="btn btn-primary btn-sm" asp-route-panelId="@Model.PanelId" asp-controller="Recommendation" asp-action="Index">
-                            Aanbevelingen bekijken <i class="bi bi-bar-chart-line ms-1"></i>
+                <section class="bg-white rounded-lg shadow-sm">
+                    <div class="bg-white p-4 flex justify-between items-center border-b">
+                        <h5 class="text-lg font-medium mb-0">Aanbevelingen</h5>
+                        <a class="inline-flex items-center px-3 py-1 bg-accent hover:bg-accent-hover text-text-black text-sm font-medium rounded-md" asp-route-panelId="@Model.PanelId" asp-controller="Recommendation" asp-action="Index">
+                            Aanbevelingen bekijken 
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
                         </a>
                     </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            @foreach (var meeting in Model.Meetings)
-                            {
-                                @foreach (var rec in meeting.Recommendations)
+                    <div class="p-4">
+                        @if (Model.Meetings.SelectMany(m => m.Recommendations).Any())
+                        {
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @foreach (var meeting in Model.Meetings.Where(m => m.Recommendations.Any()))
                                 {
-                                    <div class="col-md-6">
-                                        <div class="border p-3 rounded bg-light h-100 d-flex flex-column">
-                                            <h6 class="fw-semibold">@rec.Title</h6>
-                                            <p class="small flex-grow-1">@rec.Description</p>
-                                        </div>
+                                    <div class="col-span-1 md:col-span-2 mt-2 mb-1 first:mt-0">
+                                        <h6 class="text-sm font-semibold text-gray-500">
+                                            @meeting.Date.ToString("dd MMMM yyyy") - @meeting.Title
+                                        </h6>
                                     </div>
+                                    
+                                    @foreach (var rec in meeting.Recommendations)
+                                    {
+                                        <div class="col-span-1">
+                                            <div class="border p-4 rounded-lg bg-gray-50 h-full flex flex-col shadow-sm hover:shadow-md transition-shadow duration-200">
+                                                <h6 class="font-semibold text-primary mb-2">@rec.Title</h6>
+                                                <p class="text-sm flex-grow text-gray-700">@rec.Description</p>
+                                            </div>
+                                        </div>
+                                    }
                                 }
-                            }
-                        </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-gray-500 text-center py-4">Er zijn nog geen aanbevelingen toegevoegd.</p>
+                        }
                     </div>
                 </section>
             </main>
         </div>
     </div>
+</div>
 
-    <div class="modal fade" id="createMeetingModal" tabindex="-1" aria-labelledby="createMeetingModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createMeetingModalLabel">Nieuwe Meeting Toevoegen</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="createMeetingForm" novalidate>
-                        <div class="mb-3">
-                            <label for="meetingTitle" class="form-label">Titel</label>
-                            <input type="text" class="form-control" id="meetingTitle" name="Title" required>
-                            <div id="errorTitle" class="text-danger small mt-1 d-none"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="meetingDate" class="form-label">Datum</label>
-                            <input type="date" class="form-control" id="meetingDate" name="Date" required>
-                            <div id="errorDate" class="text-danger small mt-1 d-none"></div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="submit" form="createMeetingForm" class="btn btn-primary" id="saveMeetingBtn">Opslaan</button>
-                </div>
+<!-- Modal should be a direct child of the body, moved outside the container -->
+<div class="modal fade" id="createMeetingModal" tabindex="-1" aria-labelledby="createMeetingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createMeetingModalLabel">Nieuwe Meeting Toevoegen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createMeetingForm" novalidate>
+                    <div class="mb-3">
+                        <label for="meetingTitle" class="block text-sm font-medium text-gray-700 mb-1">Titel</label>
+                        <input type="text" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50" id="meetingTitle" name="Title" required>
+                        <div id="errorTitle" class="text-red-600 text-sm mt-1 hidden"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="meetingDate" class="block text-sm font-medium text-gray-700 mb-1">Datum</label>
+                        <input type="date" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50" id="meetingDate" name="Date" required>
+                        <div id="errorDate" class="text-red-600 text-sm mt-1 hidden"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300" data-bs-dismiss="modal">Annuleren</button>
+                <button type="submit" form="createMeetingForm" class="px-4 py-2 bg-accent hover:bg-accent-hover text-text-black rounded-md" id="saveMeetingBtn">Opslaan</button>
             </div>
         </div>
     </div>
 </div>
-
 
 @section Scripts {
     <script src="~/dist/js/dashboard/timeline.js" asp-append-version="true"></script>

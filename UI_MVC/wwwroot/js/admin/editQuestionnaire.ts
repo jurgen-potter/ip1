@@ -124,11 +124,11 @@ function toggleAdviceOnAnswer(answer: HTMLLIElement, detailCheck: HTMLInputEleme
     const advice = answer.querySelector('.answer-advice') as HTMLInputElement;
     const label = answer.querySelector('.advice-label') as HTMLLabelElement;
     if (detailCheck.checked) {
-        advice.classList.add('d-none');
-        label.classList.add('d-none');
+        advice.classList.add('hidden');
+        label.classList.add('hidden');
     } else {
-        advice.classList.remove('d-none');
-        label.classList.remove('d-none');
+        advice.classList.remove('hidden');
+        label.classList.remove('hidden');
     }
 }
 
@@ -142,14 +142,28 @@ function toggleArrow(button: HTMLButtonElement): void {
 // Expand/collapse all questions
 function toggleExpandAll(button: HTMLButtonElement): void {
     const collapseQuestions = document.querySelectorAll<HTMLDivElement>('.question-body');
-    collapseQuestions.forEach(c => {
-        const bsCollapse = (window as any).bootstrap.Collapse.getOrCreateInstance(c);
-        if (allCollapsed) {
-            bsCollapse.show();
-        } else {
-            bsCollapse.hide();
-        }
-    });
+    
+    // Use smoothToggle if available, otherwise fall back to direct class toggling
+    if ((window as any).smoothToggle && typeof (window as any).smoothToggle === 'function') {
+        collapseQuestions.forEach(c => {
+            if (allCollapsed) {
+                // Expand
+                if (c.classList.contains('hidden')) {
+                    (window as any).smoothToggle(c);
+                }
+            } else {
+                // Collapse
+                if (!c.classList.contains('hidden')) {
+                    (window as any).smoothToggle(c);
+                }
+            }
+        });
+    } else {
+        // Fall back to direct class toggling if smoothToggle is not available
+        collapseQuestions.forEach(c => {
+            c.classList.toggle('hidden', allCollapsed);
+        });
+    }
 
     allCollapsed = !allCollapsed;
     button.innerHTML = allCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
@@ -190,62 +204,48 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
     const isDetailHtml = isDiscover
         ? ""
         : `
-        <div class="col-auto">
-            <div class="form-check">
+        <div class="ml-auto">
+            <div class="flex items-center">
                 <input type="hidden" value="false" class="detail-value" />
-                <input name="Questions[${questionIndex}].IsDetail" class="form-check-input detail-check" type="checkbox" />
-                <label class="form-check-label">Panel Detail</label>
+                <input name="Questions[${questionIndex}].IsDetail" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary detail-check" type="checkbox" />
+                <label class="ml-2 text-sm text-gray-700">Panel Detail</label>
             </div>
         </div>`;
     
     const newQuestion = document.createElement("li");
-    newQuestion.classList.add("card", "mb-3", "question-item");
+    newQuestion.classList.add("bg-white", "rounded-lg", "shadow-md", "overflow-hidden", "question-item");
     newQuestion.innerHTML = `
             <input name="Questions[${questionIndex}].Id" type="hidden" class="question-id" value="0" />
             <input name="Questions[${questionIndex}].ToDelete" type="hidden" class="question-delete" value="false" />
-            <div class="card-header d-flex align-items-start">
-                <div class="fs-5 me-3">
+            <div class="px-4 py-3 bg-gray-50 border-b flex items-start">
+                <div class="text-xl mr-3">
                     <span class="drag-handle">&#x2630;</span>
                 </div>
-                <div class="flex-grow-1">
-                    <label class="form-label fw-bold question-number">Vraag ${questionIndex + 1}</label>
-                    <div class="d-flex align-items-start gap-2">
-                        <div class="flex-grow-1 w-100">
-                            <div class="flex-grow-1">
-                                <input name="Questions[${questionIndex}].Description" class="form-control mb-0 question-description"/>
-                                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Description" data-valmsg-replace="true"></span>
+                <div class="flex-grow">
+                    <label class="block text-sm font-bold mb-1 question-number">Vraag ${questionIndex + 1}</label>
+                    <div class="flex items-start gap-2">
+                        <div class="flex-grow w-full">
+                            <div class="flex-grow">
+                                <input name="Questions[${questionIndex}].Description" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary mb-0 question-description"/>
+                                <span class="text-red-500 text-sm field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Description" data-valmsg-replace="true"></span>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
+                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg ml-2 remove-question-btn">
                             <i class="bi bi-trash"></i>
                         </button>
                         ${isDetailHtml}
                     </div>
                 </div>
-                <button class="btn btn-sm expand-btn ms-2 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#question-body-${questionIndex}" aria-expanded="true" aria-controls="question-body-@i">
+                <button class="ml-2 p-1 text-sm expand-btn" type="button" data-tw-toggle="collapse" data-tw-target="#question-body-${questionIndex}">
                     <i class="bi bi-chevron-up"></i>
                 </button>
             </div>
-            <div class="collapse show question-body" id="question-body-${questionIndex}">
-                <div class="card-body">
-<!--                    <label class="form-label fw-bold">Weging</label>
-                    <input name="Questions[${questionIndex}].Weight" type="range" min="1" max="10" class="form-range mb-2 question-weight" value="1"/>
-                    <div class="d-flex justify-content-between px-1 text-muted small">
-                        <span>1</span>
-                        <span>2</span>
-                        <span>3</span>
-                        <span>4</span>
-                        <span>5</span>
-                        <span>6</span>
-                        <span>7</span>
-                        <span>8</span>
-                        <span>9</span>
-                        <span>10</span>
-                    </div>-->
-                    <label class="form-label fw-bold">Antwoorden</label>
-                    <ul id="answers-list-${questionIndex}">
+            <div class="question-body" id="question-body-${questionIndex}">
+                <div class="p-4">
+                    <label class="block text-sm font-bold mb-2">Antwoorden</label>
+                    <ul id="answers-list-${questionIndex}" class="space-y-2 list-none p-0">
                     </ul>
-                    <button type="button" class="btn btn-sm btn-secondary add-answer-btn" question-index=${questionIndex}>Voeg antwoordoptie toe</button>
+                    <button type="button" class="mt-2 bg-secondary hover:bg-secondary-hover text-white px-3 py-1 rounded-lg text-sm add-answer-btn" question-index=${questionIndex}>Voeg antwoordoptie toe</button>
                 </div>
             </div>
         `;
@@ -256,37 +256,37 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
 function generateAnswerHtml(questionIndex: string | number, answerIndex: number): HTMLLIElement {
     const isCriticalHtml = isDiscover
         ? `
-        <div class="col-auto">
-            <div class="form-check">
+        <div class="ml-2">
+            <div class="flex items-center">
                 <input type="hidden" value="false" class="critical-value" />
-                <input name="Questions[${questionIndex}].Answers[${answerIndex}].IsCritical" class="form-check-input critical-check" type="checkbox" />
-                <label class="form-check-label">Breekpunt</label>
+                <input name="Questions[${questionIndex}].Answers[${answerIndex}].IsCritical" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary critical-check" type="checkbox" />
+                <label class="ml-2 text-sm text-gray-700">Breekpunt</label>
             </div>
         </div>`
         : "";
     
     const newAnswer = document.createElement("li");
-    newAnswer.classList.add("row", "answer-item", "mb-2", "align-items-center", "p-2");
+    newAnswer.classList.add("flex", "flex-wrap", "items-center", "p-2", "answer-item");
     newAnswer.innerHTML = `
             <input name="Questions[${questionIndex}].Answers[${answerIndex}].Id" type="hidden" class="answer-id" value="0" />
             <input name="Questions[${questionIndex}].Answers[${answerIndex}].ToDelete" type="hidden" class="answer-delete" value="false" />
-            <div class="col-auto fs-5 p-0">
+            <div class="text-xl p-0">
                 <span class="drag-handle">&#x2630</span>
             </div>
-            <div class="col">
-                <div class="form-floating mb-2">
-                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].Description" id="Description-@i-@j" class="form-control answer-description" />
-                    <label for="Description-${questionIndex}-${answerIndex}">Beschrijving</label>
+            <div class="flex-grow px-2">
+                <div class="mb-2 relative">
+                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].Description" id="Description-${questionIndex}-${answerIndex}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary answer-description" placeholder="Beschrijving" />
+                    <label for="Description-${questionIndex}-${answerIndex}" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Beschrijving</label>
                 </div>
-                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Description" data-valmsg-replace="true"></span>
-                <div class="form-floating mb-2">
-                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].Advice" id="Advice-@i-@j" class="form-control answer-advice" />
-                    <label for="Advice-${questionIndex}-${answerIndex}" class="advice-label">Aanbeveling</label>
+                <span class="text-red-500 text-sm block mb-2 field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Description" data-valmsg-replace="true"></span>
+                <div class="mb-2 relative">
+                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].Advice" id="Advice-${questionIndex}-${answerIndex}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary answer-advice" placeholder="Aanbeveling" />
+                    <label for="Advice-${questionIndex}-${answerIndex}" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1 advice-label">Aanbeveling</label>
                 </div>
-                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Advice" data-valmsg-replace="true"></span>
+                <span class="text-red-500 text-sm block field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Advice" data-valmsg-replace="true"></span>
             </div>
-            <div class="col-auto">
-                <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
+            <div class="ml-2">
+                <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg remove-answer-btn">Verwijder</button>
             </div>
             ${isCriticalHtml}
         `;
@@ -297,7 +297,7 @@ function generateAnswerHtml(questionIndex: string | number, answerIndex: number)
 function removeQuestion(question: HTMLLIElement): void {
     const toDeleteInput = question.querySelector('.question-delete') as HTMLInputElement;
     toDeleteInput.value = "true";
-    question.classList.add('d-none');
+    question.classList.add('hidden');
     updateQuestionIndices();
 }
 
@@ -305,14 +305,14 @@ function removeQuestion(question: HTMLLIElement): void {
 function removeAnswer(answer: HTMLLIElement): void {
     const toDeleteInput = answer.querySelector('.answer-delete') as HTMLInputElement;
     toDeleteInput.value = "true";
-    answer.classList.add('d-none');
+    answer.classList.add('hidden');
     const answersList = answer.closest("ul")!;
     updateAnswerIndices(answersList);
 }
 
 // Add drag and drop event handlers for a question
 function addQuestionDnDHandlers(question: HTMLLIElement): void {
-    const handle = question.querySelector('.card-header .drag-handle') as HTMLDivElement;
+    const handle = question.querySelector('.card-header .drag-handle, .drag-handle') as HTMLDivElement;
     question.draggable = false;
 
     handle.addEventListener('mousedown', (e) => {
@@ -340,11 +340,13 @@ function addAnswerDnDHandlers(answer: HTMLLIElement): void {
     const handle = answer.querySelector('.drag-handle') as HTMLDivElement;
     answer.draggable = false;
 
-    handle.addEventListener('mousedown', () => {
+    handle.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
         answer.draggable = true;
     });
 
-    handle.addEventListener('mouseup', () => {
+    handle.addEventListener('mouseup', (e) => {
+        e.stopPropagation();
         answer.draggable = false;
     });
 
@@ -427,6 +429,37 @@ function handleDrop(this: HTMLElement, e: DragEvent): boolean {
         } else if (dragType === "question") {
             addQuestionHandlers(droppedElem);
             updateQuestionIndices();
+            
+            // Make sure expand/collapse functionality works after drag
+            const expandBtn = droppedElem.querySelector('.expand-btn') as HTMLButtonElement;
+            if (expandBtn) {
+                // Remove existing listeners to prevent duplicates
+                const newBtn = expandBtn.cloneNode(true) as HTMLButtonElement;
+                if (expandBtn.parentNode) {
+                    expandBtn.parentNode.replaceChild(newBtn, expandBtn);
+                }
+                
+                // Add event listener again
+                newBtn.addEventListener('click', function() {
+                    // If smoothToggle is available, use it
+                    const targetId = newBtn.getAttribute('data-tw-target')?.replace('#', '');
+                    if (targetId) {
+                        const targetEl = document.getElementById(targetId);
+                        if (targetEl && (window as any).smoothToggle) {
+                            // Toggle icon
+                            const icon = newBtn.querySelector('i');
+                            if (icon) {
+                                icon.classList.toggle('bi-chevron-up');
+                                icon.classList.toggle('bi-chevron-down');
+                            }
+                            (window as any).smoothToggle(targetEl);
+                        } else {
+                            // Fallback to toggleArrow
+                            toggleArrow(newBtn);
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -477,11 +510,54 @@ function updateQuestionIndices(): void {
 
     questions.forEach((question, index) => {
         const collapseBody = question.querySelector('.question-body') as HTMLDivElement;
-        collapseBody.id = `question-body-${index}`;
+        const oldId = collapseBody.id;
+        const newId = `question-body-${index}`;
+        
+        // Update ID and preserve collapse state
+        const wasHidden = collapseBody.classList.contains('hidden');
+        collapseBody.id = newId;
 
         const expandButton = question.querySelector('.expand-btn') as HTMLButtonElement;
-        expandButton.setAttribute('data-bs-target', `#question-body-${index}`);
-        expandButton.setAttribute('aria-controls', `question-body-${index}`);
+        expandButton.setAttribute('data-tw-target', `#${newId}`);
+        
+        // Ensure the expand button has the correct icon
+        const icon = expandButton.querySelector('i');
+        if (icon) {
+            if (wasHidden) {
+                icon.classList.remove('bi-chevron-up');
+                icon.classList.add('bi-chevron-down');
+            } else {
+                icon.classList.remove('bi-chevron-down');
+                icon.classList.add('bi-chevron-up');
+            }
+        }
+        
+        // Make sure the expand button works after reordering
+        const newBtn = expandButton.cloneNode(true) as HTMLButtonElement;
+        if (expandButton.parentNode) {
+            expandButton.parentNode.replaceChild(newBtn, expandButton);
+        }
+        
+        // Add event listener again
+        newBtn.addEventListener('click', function() {
+            // If smoothToggle is available, use it
+            if ((window as any).smoothToggle) {
+                // Toggle icon
+                const icon = newBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.toggle('bi-chevron-up');
+                    icon.classList.toggle('bi-chevron-down');
+                }
+                
+                const targetEl = document.getElementById(newId);
+                if (targetEl) {
+                    (window as any).smoothToggle(targetEl);
+                }
+            } else {
+                // Fallback to toggleArrow
+                toggleArrow(newBtn);
+            }
+        });
 
         const questionId = question.querySelector('.question-id') as HTMLInputElement;
         questionId.name = `Questions[${index}].Id`;
@@ -503,9 +579,6 @@ function updateQuestionIndices(): void {
             detailCheck.checked = isDetailValue.toLowerCase() === "true";
             toggleAdviceOnQuestion(question);
         }
-        
-        /*const weightInput = question.querySelector('.question-weight') as HTMLInputElement;
-        weightInput.name = `Questions[${index}].Weight`;*/
 
         const addAnswerBtn = question.querySelector('.add-answer-btn') as HTMLButtonElement;
         addAnswerBtn.setAttribute('question-index', `${index}`);

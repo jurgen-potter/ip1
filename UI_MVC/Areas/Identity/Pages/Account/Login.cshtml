@@ -5,58 +5,104 @@
     ViewData["Title"] = "Aanmelden";
 }
 
-<h1>@ViewData["Title"]</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <h2>Selecteer een methode om mee in te loggen</h2>
-            <div class="btn-group w-100">
-                <button type="button" id="accountBtn" class="btn btn-lg btn-outline-primary login-type-btn"
-                        data-type="Account">Aanmelden met account
-                </button>
-                <button type="button" id="codeBtn" class="btn btn-lg btn-outline-primary login-type-btn"
-                        data-type="Code">Aanmelden met code
-                </button>
-            </div>
-            <input type="hidden" id="selectedLogin" value="@(TempData["SelectedLoginType"] ?? "Account")"/>
-            <hr/>
+<style>
+    .login-container {
+        position: relative;
+    }
 
-            <div id="accountFields">
+    .login-container .login-card {
+        transition: min-height 0.3s ease;
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        overflow: hidden;
+        }
+
+    .login-container .form-container {
+        position: relative;
+    }
+
+    .login-container #accountFields,
+    .login-container #codeFields {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        transform: translateY(20px);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .login-container #accountFields.active,
+    .login-container #codeFields.active {
+        position: relative;
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .login-container .form-hidden {
+        display: none !important;
+    }
+</style>
+
+<div class="flex justify-center items-center min-h-[70vh] login-container">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8 login-card" style="min-height: 550px;">
+        <!-- Fixed top section that won't move -->
+        <h1 class="text-2xl font-bold mb-6 text-center">@ViewData["Title"]</h1>
+
+        <h2 class="text-xl font-semibold mb-4 text-center">Selecteer een methode om mee in te loggen</h2>
+        <div class="flex w-full mb-4">
+            <button type="button" id="accountBtn" class="flex-1 px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-white rounded-l-lg transition-colors duration-150 login-type-btn"
+                    data-type="Account">Aanmelden met account
+            </button>
+            <button type="button" id="codeBtn" class="flex-1 px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-white rounded-r-lg transition-colors duration-150 login-type-btn"
+                    data-type="Code">Aanmelden met code
+            </button>
+        </div>
+        <input type="hidden" id="selectedLogin" value="@(TempData["SelectedLoginType"] ?? "Account")"/>
+        <hr class="my-4 border-gray-200"/>
+
+        <!-- Form container with dynamic height -->
+        <div class="form-container">
+            <div id="accountFields" class="@(TempData["SelectedLoginType"]?.ToString() == "Code" ? "form-hidden" : "active")">
                 <form id="login" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                    <div class="form-floating mb-3">
-                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true"
+                    <div asp-validation-summary="ModelOnly" class="text-red-500" role="alert"></div>
+                    <div class="mb-4">
+                        <label asp-for="Input.Email" class="block text-sm font-medium mb-1">Email</label>
+                        <input asp-for="Input.Email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" autocomplete="username" aria-required="true"
                                placeholder="name@example.com"/>
-                        <label asp-for="Input.Email" class="form-label">Email</label>
                         <span asp-validation-for="Input.Email"
-                              class="text-danger @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "d-none" : "")"></span>
+                              class="text-red-500 text-sm @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "form-hidden" : "")"></span>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input asp-for="Input.Password" class="form-control" autocomplete="current-password"
+                    <div class="mb-4">
+                        <label asp-for="Input.Password" class="block text-sm font-medium mb-1">Wachtwoord</label>
+                        <input asp-for="Input.Password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" autocomplete="current-password"
                                aria-required="true" placeholder="password"/>
-                        <label asp-for="Input.Password" class="form-label">Wachtwoord</label>
                         <span asp-validation-for="Input.Password"
-                              class="text-danger @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "d-none" : "")"></span>
+                              class="text-red-500 text-sm @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "form-hidden" : "")"></span>
                     </div>
-                    <div class="checkbox mb-3">
-                        <label asp-for="Input.RememberMe" class="form-label">
-                            <input class="form-check-input" asp-for="Input.RememberMe"/>
-                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                    <div class="mb-4">
+                        <label asp-for="Input.RememberMe" class="inline-flex items-center">
+                            <input class="mr-2" asp-for="Input.RememberMe"/>
+                            <span>@Html.DisplayNameFor(m => m.Input.RememberMe)</span>
                         </label>
                     </div>
                     <div>
-                        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Aanmelden</button>
+                        <button id="login-submit" type="submit" class="w-full bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg transition-colors duration-150">Aanmelden</button>
                     </div>
-                    <div>
+                    <div class="mt-4 space-y-2">
                         <p>
-                            <a id="forgot-password" asp-page="./ForgotPassword">Wachtwoord vergeten?</a>
+                            <a id="forgot-password" asp-page="./ForgotPassword" class="text-primary hover:underline">Wachtwoord vergeten?</a>
                         </p>
                         <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registreer als nieuwe
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-primary hover:underline">Registreer als nieuwe
                                 organisatie</a>
                         </p>
                         <p>
-                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Verzend bevestigingsmail
+                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="text-primary hover:underline">Verzend bevestigingsmail
                                 opnieuw</a>
                         </p>
                     </div>
@@ -64,25 +110,25 @@
                 </form>
             </div>
 
-            <div id="codeFields">
+            <div id="codeFields" class="@(TempData["SelectedLoginType"]?.ToString() == "Code" ? "active" : "form-hidden")">
                 <form id="codeForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                    <div class="form-floating mb-3">
-                        <input asp-for="Input.Code" class="form-control" aria-required="true" placeholder="Code">
-                        <label asp-for="Input.Code">Code</label>
+                    <div asp-validation-summary="ModelOnly" class="text-red-500" role="alert"></div>
+                    <div class="mb-4">
+                        <label asp-for="Input.Code" class="block text-sm font-medium mb-1">Code</label>
+                        <input asp-for="Input.Code" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" aria-required="true" placeholder="Code">
                         <span asp-validation-for="Input.Code"
-                              class="text-danger @(TempData["SelectedLoginType"]?.ToString() == "Account" ? "d-none" : "")"></span>
+                              class="text-red-500 text-sm @(TempData["SelectedLoginType"]?.ToString() == "Account" ? "form-hidden" : "")"></span>
                     </div>
                     <input type="hidden" name="Input.LoginType" value="Code"/>
-                    <button id="codeSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Aanmelden</button>
-                    <div>
+                    <button id="codeSubmit" type="submit" class="w-full bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg transition-colors duration-150">Aanmelden</button>
+                    <div class="mt-4">
                         <p>
-                            <a asp-controller="MemberRegister" asp-action="Index">Code nog niet geregistreerd?</a>
+                            <a asp-controller="MemberRegister" asp-action="Index" class="text-primary hover:underline">Code nog niet geregistreerd?</a>
                         </p>
                     </div>
                 </form>
             </div>
-        </section>
+        </div>
     </div>
 </div>
 

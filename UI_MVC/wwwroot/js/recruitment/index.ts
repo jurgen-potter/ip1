@@ -1,6 +1,14 @@
-﻿let allCriteriaCollapsed: boolean = false;
+let allCriteriaCollapsed: boolean = false;
 const MAX_CRITERIA = 5;
 const MAX_SUBCRITERIA = 5;
+
+// Interface for Tailwind Collapse functionality
+interface TailwindCollapse {
+    show(): void;
+    hide(): void;
+    toggle(): void;
+}
+
 window.addEventListener('DOMContentLoaded', () => {
     editCriteriaInit();
     initSubcriteriaSums();
@@ -28,8 +36,6 @@ function editCriteriaInit(): void {
 
     updateCriteriaLimitUI(); // <- nieuw: direct checken bij init
 }
-
-
 
 // ----------------------
 // Criteria handlers
@@ -77,12 +83,28 @@ function cToggleArrow(btn: HTMLButtonElement | null): void {
     const icon = btn.querySelector('i');
     icon?.classList.toggle('bi-chevron-up');
     icon?.classList.toggle('bi-chevron-down');
+    
+    // Get the target element ID
+    const targetId = btn.getAttribute('data-tw-target')?.replace('#', '');
+    if (!targetId) return;
+    
+    // Toggle the target element's hidden class directly
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+        // Use the smoothToggle function if available, otherwise fall back to direct toggle
+        if ((window as any).smoothToggle && typeof (window as any).smoothToggle === 'function') {
+            (window as any).smoothToggle(targetEl);
+        } else {
+            targetEl.classList.toggle('hidden');
+        }
+    }
 }
 
 function cToggleExpandAll(btn: HTMLButtonElement | null): void {
+    // This will be overridden by the inline script in the Cshtml
+    // But we'll keep a basic implementation here as fallback
     document.querySelectorAll<HTMLDivElement>('.criteria-body').forEach((body) => {
-        const collapse = (window as any).bootstrap.Collapse.getOrCreateInstance(body);
-        allCriteriaCollapsed ? collapse.show() : collapse.hide();
+        body.classList.toggle('hidden', allCriteriaCollapsed);
     });
 
     allCriteriaCollapsed = !allCriteriaCollapsed;
@@ -116,7 +138,6 @@ function addCriteria(): void {
 
     updateCriteriaLimitUI();
 }
-
 
 function removeCriteria(criteria: HTMLLIElement): void {
     criteria.remove();
@@ -155,43 +176,42 @@ function removeSubCriteria(sub: HTMLLIElement): void {
 // HTML Generators
 function generateCriteriaHtml(ci: number): HTMLLIElement {
     const li = document.createElement('li');
-    li.className = 'card mb-3 criteria-item';
+    li.className = 'bg-white rounded-lg shadow-md overflow-hidden criteria-item';
     li.innerHTML = `
     <input name="Criteria[${ci}].Id" type="hidden" class="criteria-id" value="0" />
-    <div class="card-header d-flex align-items-start">
-      <div class="flex-grow-1">
-        <label class="form-label fw-bold criteria-number">Criteria</label>
-        <div class="d-flex align-items-center w-100">
+    <div class="px-4 py-3 bg-gray-50 border-b flex items-start">
+      <div class="flex-grow">
+        <label class="block text-sm font-bold mb-1 criteria-number">Criteria</label>
+        <div class="flex items-center w-full">
           <input name="Criteria[${ci}].Name"
-                 class="form-control mb-0 criteria-description"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary mb-0 criteria-description"
                  placeholder="Criteria omschrijving" />
           <button type="button"
-                  class="btn btn-danger btn-sm ms-2 remove-criteria-btn">
+                  class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg ml-2 remove-criteria-btn">
             <i class="bi bi-trash"></i>
           </button>
         </div>
       </div>
-      <button class="btn btn-sm expand-btn ms-2"
-              data-bs-toggle="collapse"
-              aria-expanded="true"
-              aria-controls="criteria-body-@i"
-              data-bs-target="#criteria-body-${ci}">
+      <button class="ml-2 p-1 text-sm expand-btn"
+              type="button"
+              data-tw-toggle="collapse"
+              data-tw-target="#criteria-body-${ci}">
         <i class="bi bi-chevron-up"></i>
       </button>
     </div>
-    <div class="collapse show criteria-body" id="criteria-body-${ci}">
-      <div class="card-body">
-        <label class="form-label fw-bold">Subcriteria</label>
-        <ul id="subcriterias-list-${ci}" class="list-unstyled"></ul>
-        <div class="d-flex justify-content-between align-items-center mt-2">
+    <div class="criteria-body" id="criteria-body-${ci}">
+      <div class="p-4">
+        <label class="block text-sm font-bold mb-2">Subcriteria</label>
+        <ul id="subcriterias-list-${ci}" class="space-y-2 list-none p-0"></ul>
+        <div class="flex justify-between items-center mt-2">
           <button type="button"
-                  class="btn btn-sm btn-secondary add-subcriteria-btn"
+                  class="bg-secondary hover:bg-secondary-hover text-white px-3 py-1 rounded-lg text-sm add-subcriteria-btn"
                   criteria-index="${ci}">
             Voeg een subcriteria toe
           </button>
-          <div class="subcriteria-total mt-2 text-end small">
+          <div class="text-sm">
             Totaal: <span class="subcriteria-sum">0</span>%
-            <span class="text-danger subcriteria-warning" style="display:none;">
+            <span class="text-red-500 subcriteria-warning" style="display:none;">
               (moet 100%)
             </span>
           </div>
@@ -204,27 +224,27 @@ function generateCriteriaHtml(ci: number): HTMLLIElement {
 
 function generateSubCriteriaHtml(ci: string, sci: number): HTMLLIElement {
     const li = document.createElement('li');
-    li.className = 'row subcriteria-item mb-2 align-items-center p-2';
+    li.className = 'flex flex-wrap items-center p-2 subcriteria-item';
     li.innerHTML = `
     <input name="Criteria[${ci}].SubCriteria.Index" value="${sci}"
-           type="hidden" class="subcriteria-id"" />
-    <div class="col">
+           type="hidden" class="subcriteria-id" />
+    <div class="flex-grow">
       <input name="Criteria[${ci}].SubCriteria[${sci}].Name"
-             class="form-control subcriteria-description"
+             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary subcriteria-description"
              placeholder="Subcriteria omschrijving" />  
     </div>
-    <div class="col-auto">
-      <div class="input-group">
+    <div class="ml-2">
+      <div class="flex items-center">
         <input name="Criteria[${ci}].SubCriteria[${sci}].Percentage"
                type="number" min="0" max="100"
-               class="form-control subcriteria-percentage"
+               class="w-20 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-primary focus:border-primary subcriteria-percentage"
                value="0" />
-        <span class="input-group-text">%</span>
+        <span class="inline-flex items-center px-3 py-2 rounded-r-lg border border-l-0 border-gray-300 bg-gray-50">%</span>
       </div>
     </div>
-    <div class="col-auto">
+    <div class="ml-2">
       <button type="button"
-              class="btn btn-danger btn-sm remove-subcriteria-btn">
+              class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg remove-subcriteria-btn">
         Verwijder
       </button>
     </div>
@@ -263,8 +283,6 @@ function initSubcriteriaSums(): void {
     });
 
     validateAll();
-
-    
 }
 
 function updateCriteriaLimitUI(): void {
@@ -293,4 +311,4 @@ function validateAll() {
         .every(item => Number(item.querySelector<HTMLSpanElement>('.subcriteria-sum')!.textContent) === 100);
 
     calculateBtn.disabled = !allValid;
-}
+} 

@@ -2,49 +2,89 @@
     loginInit();
 });
 
+type LoginType = "Account" | "Code";
+
 function loginInit(): void {
     const selectedLogin = document.getElementById("selectedLogin") as HTMLInputElement;
-    let selectedType = selectedLogin.value;
-    let selectedBtn = document.getElementById("accountBtn") as HTMLButtonElement;
-    if (selectedType !== "Account") {
-        selectedType = "Code";
-        selectedBtn = document.getElementById("codeBtn") as HTMLButtonElement;
-    }
+    const raw = selectedLogin.value;
+    const selectedType: LoginType = raw === "Code" ? "Code" : "Account";
 
-    selectedBtn.classList.add("active");
-    showCorrectFields(selectedType);
-    setEventListener();
-}
-
-function showCorrectFields(selectedType: string): void {
     const accountFields = document.getElementById("accountFields") as HTMLDivElement;
     const codeFields = document.getElementById("codeFields") as HTMLDivElement;
-    const selectedLogin = document.getElementById("selectedLogin") as HTMLInputElement;
-
-    if (accountFields && codeFields && selectedLogin) {
-        if (selectedType === "Account") {
-            codeFields.classList.add("d-none");
-            accountFields.classList.remove("d-none");
-            selectedLogin.value = "PanelMember";
-        } else {
-            codeFields.classList.remove("d-none");
-            accountFields.classList.add("d-none");
-            selectedLogin.value = "Organization";
-        }
+    
+    if (selectedType === "Account") {
+        accountFields.classList.add("active");
+    } else {
+        codeFields.classList.add("active");
     }
+
+    highlightButton(selectedType);
+    showCorrectFields(selectedType);
+    adjustFormContainerHeight(selectedType);
+    setEventListener();
+    
+    // Add resize listener to handle window size changes
+    window.addEventListener('resize', () => {
+        adjustFormContainerHeight(selectedType);
+    });
 }
 
 function setEventListener(): void {
-    const loginTypeButtons = document.querySelectorAll<HTMLButtonElement>(".login-type-btn");
+    document.querySelectorAll<HTMLButtonElement>(".login-type-btn")
+        .forEach(button => {
+            button.addEventListener("click", () => {
+                const dt = button.getAttribute("data-type") as LoginType;
+                (document.getElementById("selectedLogin") as HTMLInputElement).value = dt;
 
-    loginTypeButtons.forEach(button => {
-        button.addEventListener("click", function (this: Element) {
-            loginTypeButtons.forEach(btn => btn.classList.remove("active"));
-
-            this.classList.add("active");
-            const selectedType = this.getAttribute("data-type") ?? "Account";
-
-            showCorrectFields(selectedType);
+                highlightButton(dt);
+                showCorrectFields(dt);
+                requestAnimationFrame(() => {
+                    adjustFormContainerHeight(dt);
+                });
+            });
         });
+}
+
+function highlightButton(selectedType: LoginType): void {
+    const accountBtn = document.getElementById("accountBtn") as HTMLButtonElement;
+    const codeBtn    = document.getElementById("codeBtn")    as HTMLButtonElement;
+
+    // reset both
+    [accountBtn, codeBtn].forEach(btn => {
+        btn.classList.remove("bg-primary", "text-white");
+        btn.classList.add("text-primary");
     });
+
+    // highlight the one that's active
+    const activeBtn = selectedType === "Account" ? accountBtn : codeBtn;
+    activeBtn.classList.add("bg-primary", "text-white");
+    activeBtn.classList.remove("text-primary");
+}
+
+function showCorrectFields(selectedType: LoginType): void {
+    const accountFields = document.getElementById("accountFields") as HTMLDivElement;
+    const codeFields    = document.getElementById("codeFields")    as HTMLDivElement;
+
+    const isAccount = selectedType === "Account";
+
+    // Account panel
+    accountFields.classList.toggle("form-hidden",  !isAccount);
+    accountFields.classList.toggle("active",   isAccount);
+
+    // Code panel
+    codeFields.classList.toggle("form-hidden",  isAccount);
+    codeFields.classList.toggle("active",  !isAccount);
+}
+
+function adjustFormContainerHeight(selectedType: LoginType): void {
+    const loginCard = document.querySelector(".login-card") as HTMLDivElement;
+    const activeForm = document.querySelector(`#${selectedType.toLowerCase()}Fields`) as HTMLDivElement;
+    
+    if (loginCard && activeForm) {
+        const topSectionHeight = activeForm.offsetTop;
+        const formHeight = activeForm.offsetHeight;
+        const padding = 32;
+        const totalHeight = topSectionHeight + formHeight + padding;
+        loginCard.style.minHeight = `${totalHeight}px`;
+    }
 }

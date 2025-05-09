@@ -5,40 +5,43 @@
     ViewBag.Title = "Panel maken";
 }
 
-<h2>Begin met uw panel te maken</h2>
-<form asp-controller="Panel" asp-action="CreatePanel" method="post">
-    <div>
-        <label>Naam van uw panel:</label>
-        <input asp-for="Name" type="text" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label>Beschrijving van uw panel:</label>
-        <textarea rows="5" asp-for="Description" type="number" class="form-control">Geef hier uw beschrijving</textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold mb-6">Begin met uw panel te maken</h2>
     
-    <div>
-        @if (Model.Result.Criteria != null)
-        {
-            @for (int i = 0; i < Model.Result.Criteria.Count; i++)
-            {
-                <input type="hidden" asp-for="Result.Criteria[i].Name"/>
+    <form asp-controller="Panel" asp-action="CreatePanel" method="post" class="space-y-6">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Naam van uw panel:</label>
+            <input asp-for="Name" type="text" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50" />
+            <span asp-validation-for="Name" class="text-red-600 text-sm"></span>
+        </div>
 
-                @for (int j = 0; j < Model.Result.Criteria[i].SubCriteria.Count; j++)
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Beschrijving van uw panel:</label>
+            <textarea rows="5" asp-for="Description" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">Geef hier uw beschrijving</textarea>
+            <span asp-validation-for="Description" class="text-red-600 text-sm"></span>
+        </div>
+        
+        <div>
+            @if (Model.Result.Criteria != null)
+            {
+                @for (int i = 0; i < Model.Result.Criteria.Count; i++)
                 {
-                    <input type="hidden" asp-for="Result.Criteria[i].SubCriteria[j].Name"/>
-                    <input type="hidden" asp-for="Result.Criteria[i].SubCriteria[j].Percentage"/>
+                    <input type="hidden" asp-for="Result.Criteria[i].Name"/>
+
+                    @for (int j = 0; j < Model.Result.Criteria[i].SubCriteria.Count; j++)
+                    {
+                        <input type="hidden" asp-for="Result.Criteria[i].SubCriteria[j].Name"/>
+                        <input type="hidden" asp-for="Result.Criteria[i].SubCriteria[j].Percentage"/>
+                    }
                 }
             }
-        }
-        <input type="hidden" asp-for="@Model.Result.TotalAvailablePotentialPanelmembers"/>
-        <input type="hidden" asp-for="@Model.Result.TotalNeededPanelmembers"/>
-        <input type="hidden" asp-for="@Model.Result.ReservePotPanelmembers"/>
-    </div>
-    
-    <div>
-        <button type="submit" class="btn btn-primary">Maak uw panel</button>
-    </div>
-</form>
+            <input type="hidden" asp-for="@Model.Result.TotalAvailablePotentialPanelmembers"/>
+            <input type="hidden" asp-for="@Model.Result.TotalNeededPanelmembers"/>
+            <input type="hidden" asp-for="@Model.Result.ReservePotPanelmembers"/>
+        </div>
+        
+        <div>
+            <button type="submit" class="px-4 py-2 bg-primary hover:bg-primary-hover text-white font-medium rounded-md transition-colors duration-150">Maak uw panel</button>
+        </div>
+    </form>
+</div>

@@ -5,23 +5,23 @@
     ViewBag.Title = @Model.Questionnaire.Title;
 }
 
-<div class="container my-4">
-    <h2 class="mb-4">@Model.Questionnaire.Subtitle</h2>
+<div class="my-4">
+    <h2 class="mb-4 text-2xl font-bold">@Model.Questionnaire.Subtitle</h2>
 
     <form asp-action="Result" method="post">
         <input type="hidden" name="questionnaireId" value="@Model.QuestionnaireId"/>
         @foreach (var question in Model.Questionnaire.Questions)
         {
-            <div class="card mb-4">
-                <div class="card-header"><strong>Vraag @question.Position</strong></div>
-                <div class="card-body">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-4">
+                <div class="px-4 py-3 bg-gray-50 border-b"><strong>Vraag @question.Position</strong></div>
+                <div class="p-4">
                     <p class="mb-3">@question.Description</p>
                     @foreach (var answer in question.Answers.OrderBy(a => a.Position))
                     {
                         var isChecked = Model.SelectedAnswerIds.Contains(answer.Id);
-                        <div class="form-check mb-2">
+                        <div class="flex items-center mb-2">
                             <input
-                                class="form-check-input"
+                                class="mr-2 h-4 w-4 border-gray-300 text-primary focus:ring-primary"
                                 type="radio"
                                 name="Answers[@question.Id]"
                                 value="@answer.Id"
@@ -30,7 +30,7 @@
                                 required />
 
                             <label
-                                class="form-check-label"
+                                class="text-sm font-medium text-gray-700"
                                 for="@($"q{question.Id}_a{answer.Id}")">
                                 @answer.Description
                             </label>
@@ -40,9 +40,9 @@
             </div>
         }
 
-        <div class="d-flex justify-content-start mt-4 gap-2">
-            <button type="submit" class="btn btn-success mt-3">Verzenden</button>
-            <button type="submit" formaction="@Url.Action("PrepareSave")" formnovalidate class="btn btn-success mt-3">Opslaan</button>
+        <div class="flex justify-start mt-4 gap-2">
+            <button type="submit" class="bg-accent hover:bg-accent-hover text-text-black px-4 py-2 rounded-lg transition-colors duration-150">Verzenden</button>
+            <button type="submit" formaction="@Url.Action("PrepareSave")" formnovalidate class="bg-accent hover:bg-accent-hover text-text-black px-4 py-2 rounded-lg transition-colors duration-150">Opslaan</button>
         </div>
     </form>
 </div>

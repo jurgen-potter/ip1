@@ -5,15 +5,19 @@
     ViewBag.Title = "Platformbeheer";
 }
 
-<h2>Platformbeheer</h2>
+<h2 class="text-2xl font-bold mb-6">Platformbeheer</h2>
 
-<a asp-page="/Account/RegisterAdmin" asp-area="Identity" class="btn btn-primary">
-    Voeg nieuwe admin toe
-</a>
-
-@foreach (var questionnaire in @Model.Questionnaires)
-{
-    <a asp-controller="Admin" asp-action="EditQuestionnaire" asp-route-questionnaireId="@questionnaire.Id" class="btn btn-primary">
-        Bewerk vragenlijst @questionnaire.Title
+<div class="space-y-4">
+    <a asp-page="/Account/RegisterAdmin" asp-area="Identity" class="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg transition-colors duration-150 inline-block">
+        Voeg nieuwe admin toe
     </a>
-}
+
+    <div class="flex flex-col space-y-2 mt-4">
+        @foreach (var questionnaire in @Model.Questionnaires)
+        {
+            <a asp-controller="Admin" asp-action="EditQuestionnaire" asp-route-questionnaireId="@questionnaire.Id" class="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg transition-colors duration-150 inline-block">
+                Bewerk vragenlijst @questionnaire.Title
+            </a>
+        }
+    </div>
+</div>
