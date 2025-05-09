@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using CitizenPanel.BL.Domain.Users;
 
-namespace CitizenPanel.BL.Domain.QuestionnaireModules;
+namespace CitizenPanel.BL.Domain.Questionnaires;
 
 public class Answer
 {

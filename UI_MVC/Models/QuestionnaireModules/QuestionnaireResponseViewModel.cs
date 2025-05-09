@@ -1,4 +1,4 @@
-using CitizenPanel.BL.Domain.QuestionnaireModules;
+using CitizenPanel.BL.Domain.Questionnaires;
 
 namespace CitizenPanel.UI.MVC.Models.QuestionnaireModules;
 

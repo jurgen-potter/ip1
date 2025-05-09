@@ -1,7 +1,8 @@
-﻿using CitizenPanel.BL.Domain.Validation;
+﻿using CitizenPanel.BL.Domain.Questionnaires;
+using CitizenPanel.BL.Domain.Validation;
 using System.ComponentModel.DataAnnotations;
 
-namespace CitizenPanel.BL.Domain.QuestionnaireModules;
+namespace CitizenPanel.BL.Domain.Questionnaires;
 
 public class Question
 {

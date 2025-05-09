@@ -1,6 +1,5 @@
-﻿using CitizenPanel.BL.Domain.QuestionnaireModules;
-using CitizenPanel.BL.QuestionnaireModules;
-using CitizenPanel.UI.MVC.Models;
+﻿using CitizenPanel.BL.Domain.Questionnaires;
+using CitizenPanel.BL.Questionnaires;
 using CitizenPanel.UI.MVC.Models.QuestionnaireModules;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CitizenPanel.UI.MVC.Controllers.Users;
 
 [Authorize(Roles = "Admin")]
-public class AdminController(IQuestionnaireModuleManager questionnaireModuleManager) : Controller
+public class AdminController(IQuestionnaireManager questionnaireModuleManager) : Controller
 {
     [HttpGet]
     [Authorize(Roles = "Admin")]
@@ -181,7 +180,7 @@ public class AdminController(IQuestionnaireModuleManager questionnaireModuleMana
 
         questionnaire.Questions = updatedQuestions;
 
-        questionnaireModuleManager.ChangeQuestionnaire(questionnaire);
+        questionnaireModuleManager.EditQuestionnaire(questionnaire);
 
         return RedirectToAction(nameof(Index));
     }

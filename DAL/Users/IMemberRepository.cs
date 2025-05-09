@@ -1,5 +1,4 @@
-﻿using CitizenPanel.BL.Domain.Draws;
-using CitizenPanel.BL.Domain.QuestionnaireModules;
+﻿using CitizenPanel.BL.Domain.Questionnaires;
 using CitizenPanel.BL.Domain.Users;
 
 namespace CitizenPanel.DAL.Users;

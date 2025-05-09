@@ -1,8 +1,7 @@
-using CitizenPanel.BL.Domain.QuestionnaireModules;
+using CitizenPanel.BL.Domain.Questionnaires;
 using CitizenPanel.BL.Domain.Users;
-using CitizenPanel.BL.QuestionnaireModules;
+using CitizenPanel.BL.Questionnaires;
 using CitizenPanel.BL.Users;
-using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.QuestionnaireModules;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +11,7 @@ using Newtonsoft.Json;
 namespace CitizenPanel.UI.MVC.Controllers.QuestionnaireModules;
 
 public class QuestionnaireController(
-    IQuestionnaireModuleManager questionnaireModuleManager,
+    IQuestionnaireManager questionnaireModuleManager,
     IMemberManager memberManager,
     UserManager<ApplicationUser> userManager) : Controller
 {

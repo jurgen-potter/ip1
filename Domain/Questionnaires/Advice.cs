@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CitizenPanel.BL.Domain.QuestionnaireModules;
+namespace CitizenPanel.BL.Domain.Questionnaires;
 
 public class Advice
 {

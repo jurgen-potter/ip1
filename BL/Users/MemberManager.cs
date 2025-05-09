@@ -1,11 +1,6 @@
-using CitizenPanel.BL.Domain.Draws;
-using CitizenPanel.BL.Domain.Panels;
-using CitizenPanel.BL.Domain.QuestionnaireModules;
+using CitizenPanel.BL.Domain.Questionnaires;
 using CitizenPanel.BL.Domain.Users;
-using CitizenPanel.BL.Draws;
-using CitizenPanel.BL.Panels;
 using CitizenPanel.DAL.Users;
-using Microsoft.AspNetCore.Identity;
 
 namespace CitizenPanel.BL.Users;
 
