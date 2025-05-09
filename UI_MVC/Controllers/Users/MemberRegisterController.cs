@@ -14,10 +14,10 @@ namespace CitizenPanel.UI.MVC.Controllers.Users;
 public class MemberRegisterController(
     IDrawManager drawManager,
     IEmailSender emailSender,
-    IMemberManager memberManager,
+    IUserProfileManager userProfileManager,
     IPanelManager panelManager) : Controller
 {
-    private readonly IMemberManager _memberManager = memberManager;
+    private readonly IUserProfileManager _userProfileManager = userProfileManager;
 
     [HttpGet]
     [AllowAnonymous]

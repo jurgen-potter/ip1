@@ -3,6 +3,7 @@ using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
+using CitizenPanel.BL.Users;
 using CitizenPanel.BL.Utilities;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Models;
@@ -17,7 +18,7 @@ namespace CitizenPanel.UI.MVC.Controllers.Panels;
 public class PanelController(
     IPanelManager panelManager,
     IDrawManager drawManager,
-    ApplicationUserManager userManager,
+    IUserProfileManager userProfileManager,
     IUtilityManager utilityManager) : Controller
 {
     [HttpGet]
@@ -110,9 +111,9 @@ public class PanelController(
     }
     
     [Authorize]
-    public async Task<IActionResult> UserPanel(string returnUrl)
+    public IActionResult UserPanel(string returnUrl)
     {
-        var user = await userManager.GetUserWithProfilesAndPanelsAsync(User);
+        var user = userProfileManager.GetUserByPrincipalWithProfileAndPanels(User);
 
         if (user is null)
         {

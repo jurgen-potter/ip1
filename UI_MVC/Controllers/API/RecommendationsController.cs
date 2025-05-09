@@ -14,13 +14,13 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 [Authorize]
 public class RecommendationsController(
     IPanelManager panelManager,
-    IMemberManager memberManager) : ControllerBase
+    IUserProfileManager userProfileManager) : ControllerBase
 {
     [HttpPost("vote")]
     public IActionResult Vote([FromBody] VoteDto voteDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var member = memberManager.GetMemberById(userId);
+        var member = userProfileManager.GetUserById(userId);
         if (string.IsNullOrEmpty(userId) || member.UserType != UserType.Member)
         {
             return Unauthorized();
@@ -47,7 +47,7 @@ public class RecommendationsController(
     public IActionResult RemoveVote([FromBody] VoteDto voteDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var member = memberManager.GetMemberById(userId);
+        var member = userProfileManager.GetUserById(userId);
         if (string.IsNullOrEmpty(userId))
         {
             return Unauthorized();

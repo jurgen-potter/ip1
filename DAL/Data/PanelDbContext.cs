@@ -32,7 +32,6 @@ public class PanelDbContext(
     public DbSet<Questionnaire> Questionnaires { get; set; }
     public DbSet<Question> Questions { get; set; }
     public DbSet<Answer> Answers { get; set; }
-    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<MemberProfile> MemberProfiles { get; set; }
     public DbSet<OrganizationProfile> OrganizationProfiles { get; set; }
     

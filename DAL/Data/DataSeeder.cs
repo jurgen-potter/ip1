@@ -158,13 +158,13 @@ public class DataSeeder(PanelDbContext panelDbContext)
         };
         panelDbContext.Panels.Add(panel3);
         
-        var antwerpen = panelDbContext.ApplicationUsers
+        var antwerpen = panelDbContext.Users
             .Include(u => u.OrganizationProfile)
             .SingleOrDefault(u => u.UserName == "antwerpen@example.com");
-        var brussel = panelDbContext.ApplicationUsers
+        var brussel = panelDbContext.Users
             .Include(u => u.OrganizationProfile)
             .SingleOrDefault(u => u.UserName == "brussel@example.com");
-        var paul = panelDbContext.ApplicationUsers
+        var paul = panelDbContext.Users
             .Include(u => u.MemberProfile)
             .SingleOrDefault(u => u.UserName == "paul@example.com");
         panel1.Members.Add(paul?.MemberProfile);

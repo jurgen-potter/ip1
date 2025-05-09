@@ -12,16 +12,16 @@ namespace CitizenPanel.UI.MVC.Controllers.QuestionnaireModules;
 
 public class QuestionnaireController(
     IQuestionnaireManager questionnaireModuleManager,
-    IMemberManager memberManager,
+    IUserProfileManager userProfileManager,
     UserManager<ApplicationUser> userManager) : Controller
 {
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> Index(int questionnaireId)
+    public IActionResult Index(int questionnaireId)
     {
         var questionnaire = questionnaireModuleManager.GetQuestionnaireById(questionnaireId);
         var userId = userManager.GetUserId(User);
-        var organization = memberManager.GetOrganizationByIdWithAnswers(userId);
+        var organization = userProfileManager.GetOrganizationByIdWithProfileAndAnswers(userId);
         List<int> selectedAnswerIds = new();
 
         if (User.IsInRole("Organization") && organization?.OrganizationProfile?.Answers != null)
@@ -85,7 +85,7 @@ public class QuestionnaireController(
         }
         
         var user = await userManager.GetUserAsync(User);
-        await memberManager.ChangeOrganizationAnswersAsync(user.Id, model.QuestionnaireId, answers);
+        await userProfileManager.EditOrganizationAnswersAsync(user.Id, model.QuestionnaireId, answers);
         return RedirectToAction(nameof(Index), new { questionnaireId = model.QuestionnaireId });
     }
 }

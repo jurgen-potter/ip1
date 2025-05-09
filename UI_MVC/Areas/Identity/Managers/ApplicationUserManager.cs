@@ -45,35 +45,4 @@ public class ApplicationUserManager : UserManager<ApplicationUser>
 
         return await CreateAsync(user, password);
     }
-    
-    private IQueryable<ApplicationUser> GetUserWithProfilesBase()
-    {
-        return _context.Users
-            .Include(u => u.MemberProfile)
-            .Include(u => u.OrganizationProfile)
-            .IgnoreQueryFilters();
-    }
-
-    public async Task<ApplicationUser> GetUserWithProfilesByIdAsync(string userId)
-    {
-        var user = await GetUserWithProfilesBase()
-            .SingleOrDefaultAsync(u => u.Id == userId);
-        return user;
-    }
-    
-    public async Task<ApplicationUser> GetUserWithProfilesAndPanelsAsync(ClaimsPrincipal userPrincipal)
-    {
-        var userId = GetUserId(userPrincipal);
-        var user = await GetUserWithProfilesBase()
-            .Include(u => u.MemberProfile.Panels)
-            .SingleOrDefaultAsync(u => u.Id == userId);
-        return user;
-    }
-    
-    public async Task<ApplicationUser> GetUserWithProfilesAsync(ClaimsPrincipal userPrincipal)
-    {
-        var userId = GetUserId(userPrincipal);
-        var user = await GetUserWithProfilesByIdAsync(userId);
-        return user;
-    }
 }

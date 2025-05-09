@@ -5,16 +5,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CitizenPanel.DAL.Users;
 
-public class MemberRepository(PanelDbContext dbContext) : IMemberRepository
+public class UserProfileRepository(PanelDbContext dbContext) : IUserProfileRepository
 {
     public ApplicationUser ReadUserById(string userId)
     {
-        return dbContext.ApplicationUsers.Find(userId);
+        return dbContext.Users.Find(userId);
     }
     
-    public ApplicationUser ReadOrganizationByIdWithAnswers(string organizationId)
+    public ApplicationUser ReadUserByIdWithProfile(string userId)
     {
-        return dbContext.ApplicationUsers
+        return dbContext.Users
+            .Include(u => u.MemberProfile)
+            .Include(u => u.OrganizationProfile)
+            .IgnoreQueryFilters()
+            .SingleOrDefault(u => u.Id == userId);
+    }
+    
+    public ApplicationUser ReadUserByIdWithProfileAndPanels(string userId)
+    {
+        return dbContext.Users
+            .Include(u => u.MemberProfile)
+            .ThenInclude(m => m.Panels)
+            .Include(u => u.OrganizationProfile)
+            .IgnoreQueryFilters()
+            .SingleOrDefault(u => u.Id == userId);
+    }
+    
+    public ApplicationUser ReadOrganizationByIdWithProfileAndAnswers(string organizationId)
+    {
+        return dbContext.Users
             .Include(aU => aU.OrganizationProfile)
             .ThenInclude(op => op.Answers)
             .SingleOrDefault(au => au.Id == organizationId);
@@ -22,7 +41,7 @@ public class MemberRepository(PanelDbContext dbContext) : IMemberRepository
     
     public async Task UpdateOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
     {
-        var user = ReadOrganizationByIdWithAnswers(userId);
+        var user = ReadOrganizationByIdWithProfileAndAnswers(userId);
         
         var answersToRemove = user.OrganizationProfile.Answers
             .Where( a => a.Question != null && a.Question.Questionnaire?.Id == questionnaireId)

@@ -3,13 +3,15 @@ using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using System.Security.Claims;
 using CitizenPanel.BL.Draws;
+using CitizenPanel.BL.Users;
 
 namespace CitizenPanel.UI.MVC.Middleware;
 
 public class TenantMiddleware(
     TenantContext tenantContext,
     ApplicationUserManager userManager,
-    IDrawManager drawManager) : IMiddleware
+    IDrawManager drawManager,
+    IUserProfileManager userProfileManager) : IMiddleware
 {
     private const string InvitationSessionKey = "CurrentInvitationContext";
 
@@ -20,7 +22,7 @@ public class TenantMiddleware(
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!string.IsNullOrEmpty(userId))
             {
-                var user = await userManager.GetUserWithProfilesByIdAsync(userId);
+                var user = userProfileManager.GetUserByIdWithProfile(userId);
                 string tenantId = ResolveTenantFromUser(user);
                 
                 if (!string.IsNullOrEmpty(tenantId))

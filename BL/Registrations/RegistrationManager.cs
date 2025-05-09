@@ -12,10 +12,10 @@ namespace CitizenPanel.BL.Registrations;
 public class RegistrationManager(
     IPanelManager panelManager,
     IDrawManager drawManager,
-    IMemberManager memberManager,
+    IUserProfileManager userProfileManager,
     IUtilityManager utilityManager) : IRegistrationManager
 {
-    private readonly IMemberManager _memberManager = memberManager;
+    private readonly IUserProfileManager _userProfileManager = userProfileManager;
     
     private const string GenderMaleCriterion = "Man";
     private const string GenderFemaleCriterion = "Vrouw";
