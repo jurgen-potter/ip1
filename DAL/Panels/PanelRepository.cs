@@ -24,6 +24,14 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
         return dbContext.Panels.Find(panelId);
     }
 
+    public Panel ReadPanelByIdWithMembers(int panelId)
+    {
+        return dbContext.Panels
+            .Include(p => p.Members)
+            .ThenInclude(m => m.ApplicationUser)
+            .SingleOrDefault(p => p.Id == panelId);
+    }
+
     public Panel ReadPanelByIdWithInvitations(int panelId)
     {
         return dbContext.Panels

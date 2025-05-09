@@ -17,8 +17,6 @@ public class MemberRegisterController(
     IUserProfileManager userProfileManager,
     IPanelManager panelManager) : Controller
 {
-    private readonly IUserProfileManager _userProfileManager = userProfileManager;
-
     [HttpGet]
     [AllowAnonymous]
     public IActionResult Index()

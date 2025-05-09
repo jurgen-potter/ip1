@@ -25,7 +25,12 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         return repository.ReadPanelById(panelId);
     }
-    
+
+    public Panel GetPanelByIdWithMembers(int panelId)
+    {
+        return repository.ReadPanelByIdWithMembers(panelId);
+    }
+
     public Panel GetPanelByIdWithInvitations(int panelId)
     {
         return repository.ReadPanelByIdWithInvitations(panelId);

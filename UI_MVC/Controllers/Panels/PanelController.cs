@@ -183,4 +183,12 @@ public class PanelController(
         var invitations = drawManager.GetAllInvitationsByPanelId(panelId);
         return View(invitations);
     }
+
+    [Authorize(Roles = "Organization")]
+    public IActionResult SeeMembers(int panelId)
+    {
+        var panel = panelManager.GetPanelByIdWithMembers(panelId);
+        var users = panel.Members;
+        return View(panel);
+    }
 }
