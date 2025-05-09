@@ -50,7 +50,7 @@ public class RegistrationManager(
     private void LoadCriteriaCache(int panelId)
     {
         _criteriaNameCache.Clear();
-        var allCriteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
+        var allCriteria = panelManager.GetCriteriaByPanelIdWithSubcriteria(panelId);
         
         foreach (var criterion in allCriteria)
         {
@@ -165,14 +165,14 @@ public class RegistrationManager(
     // Voor de StartFinalDraw methode zou je dezelfde aanpak moeten gebruiken
     public void StartFinalDraw(Panel panel)
     {
-        var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panel.Id);
+        var criteria = panelManager.GetCriteriaByPanelIdWithSubcriteria(panel.Id);
         var recruitmentPlan = utilityManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
 
         // Load criteria names to cache
         LoadCriteriaCache(panel.Id);
 
         // Ophalen van alle geregistreerde uitnodigingen voor dit panel
-        var registeredInvitations = panelManager.GetRegisteredInvitationsByPanelId(panel.Id).ToList();
+        var registeredInvitations = drawManager.GetRegisteredInvitationsByPanelId(panel.Id).ToList();
         
         // Map invitations to eligible buckets
         var invitationsByBucket = MapInvitationsToEligibleBuckets(recruitmentPlan.Buckets, registeredInvitations);
@@ -198,7 +198,7 @@ public class RegistrationManager(
             TenantId = panel.TenantId
         };
 
-        panelManager.ChangePanel(panel);
+        panelManager.EditPanel(panel);
     }
     
     private Dictionary<RecruitmentBucket, List<Invitation>> MapInvitationsToEligibleBuckets(

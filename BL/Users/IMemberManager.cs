@@ -1,5 +1,6 @@
 using CitizenPanel.BL.Domain.Questionnaires;
 using CitizenPanel.BL.Domain.Users;
+using Microsoft.AspNetCore.Identity;
 
 namespace CitizenPanel.BL.Users;
 

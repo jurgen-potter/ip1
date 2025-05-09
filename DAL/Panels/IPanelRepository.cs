@@ -6,26 +6,23 @@ namespace CitizenPanel.DAL.Panels;
 
 public interface IPanelRepository
 {
-    Panel ReadPanelById(int panelId);
-    Panel ReadInvitationsOfPanelById(int panelId);
-    IEnumerable<Invitation>ReadRegisteredInvitationsByPanelId(int panelId);
-
     void CreatePanel(Panel panel);
+    IEnumerable<Panel> ReadAllPanels(); // wordt al gefilterd op tenant
+    Panel ReadPanelById(int panelId);
+    Panel ReadPanelByIdWithInvitations(int panelId);
+    Panel ReadPanelByIdWithRecommendations(int panelId);
+    Panel ReadPanelByIdWithRecommendationsAndVotes(int panelId);
     void UpdatePanel(Panel panel);
     void DeletePanel(Panel panel);
-    public IEnumerable<RecruitmentBucket> ReadTargetBucketsByPanel(Panel panel);
-    Panel ReadPanelByIdWithRecommendations(int panelId);
-    Recommendation ReadRecommendationById(int recommendationId);
-    public Recommendation ReadRecommendationWithVotersById(int recommendationId);
-    public void UpdateRecommendation(Recommendation recommendation);
     
-    bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation);
-    void CreateVoteToRecommendation(UserVote userVote);
-    void DeleteVoteFromRecommendation(ApplicationUser member, Recommendation recommendation);
+    Recommendation ReadRecommendationByIdWithVotes(int recommendationId);
+    Recommendation ReadRecommendationByIdWithVoters(int recommendationId);
+    void UpdateRecommendation(Recommendation recommendation);
     
-    IEnumerable<int> ReadVotedRecommendationsByUser(string userId);
-    void UpdateCriteria(Criteria criteria);
+    void CreateUserVote(UserVote userVote);
+    void DeleteUserVote(ApplicationUser member, Recommendation recommendation);
+    bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation);
+
     IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId);
-    IEnumerable<Criteria> ReadCriteriaAndSubcriteriaWithPanelId(int panelId);
-    IEnumerable<Panel> ReadAllPanels();
+    IEnumerable<Criteria> ReadCriteriaByPanelIdWithSubcriteria(int panelId);
 }

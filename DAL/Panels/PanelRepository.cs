@@ -8,13 +8,23 @@ namespace CitizenPanel.DAL.Panels;
 
 public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
 {
-    public Panel ReadPanelById(int panelId)
+    public void CreatePanel(Panel panel)
     {
-        return dbContext.Panels
-            .SingleOrDefault(p => p.Id == panelId);
+        dbContext.Panels.Add(panel);
+        dbContext.SaveChanges();
     }
 
-    public Panel ReadInvitationsOfPanelById(int panelId)
+    public IEnumerable<Panel> ReadAllPanels()
+    {
+        return dbContext.Panels.ToList();
+    }
+
+    public Panel ReadPanelById(int panelId)
+    {
+        return dbContext.Panels.Find(panelId);
+    }
+
+    public Panel ReadPanelByIdWithInvitations(int panelId)
     {
         return dbContext.Panels
             .Include(p => p.Invitations) 
@@ -22,15 +32,15 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .SingleOrDefault(p => p.Id == panelId);
     }
     
-    public IEnumerable<Invitation> ReadRegisteredInvitationsByPanelId(int panelId)
+    public Panel ReadPanelByIdWithRecommendations(int panelId)
     {
-        return dbContext.Invitations
-            .Where(inv => inv.PanelId == panelId)
-            .Where(inv => inv.IsRegistered == true)
-            .ToList();
+        return dbContext.Panels
+            .Include(r => r.Meetings)
+            .ThenInclude(m => m.Recommendations)
+            .SingleOrDefault(p => p.Id == panelId);
     }
 
-    public Panel ReadPanelByIdWithRecommendations(int panelId)
+    public Panel ReadPanelByIdWithRecommendationsAndVotes(int panelId)
     {
         return dbContext.Panels
             .Include(r => r.Meetings)
@@ -38,14 +48,7 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .ThenInclude(r => r.UserVotes)
             .SingleOrDefault(p => p.Id == panelId);
     }
-
-
-    public void CreatePanel(Panel panel)
-    {
-        dbContext.Panels.Add(panel);
-        dbContext.SaveChanges();
-    }
-
+    
     public void UpdatePanel(Panel panel)
     {
         dbContext.Update(panel);
@@ -57,22 +60,15 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
         dbContext.Panels.Remove(panel);
     }
 
-    public IEnumerable<RecruitmentBucket> ReadTargetBucketsByPanel(Panel panel)
+    
+    public Recommendation ReadRecommendationByIdWithVotes(int recommendationId)
     {
-        var panelWithBuckets = dbContext.Panels
-            .Include(p => p.RecruitmentBuckets)
-            .FirstOrDefault(p => p.Id == panel.Id);
-        return panelWithBuckets?.RecruitmentBuckets.ToList();
+        return dbContext.Recommendations
+            .Include(r => r.UserVotes)
+            .SingleOrDefault(r => r.Id == recommendationId);
     }
 
-
-    public Recommendation ReadRecommendationById(int recommendationId)
-    {
-        var recommendations = dbContext.Recommendations.Include(r => r.UserVotes);
-        return recommendations.SingleOrDefault(r => r.Id == recommendationId);
-    }
-
-    public Recommendation ReadRecommendationWithVotersById(int recommendationId)
+    public Recommendation ReadRecommendationByIdWithVoters(int recommendationId)
     {
         return dbContext.Recommendations
             .Include(r => r.UserVotes)
@@ -86,64 +82,39 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
         dbContext.Recommendations.Update(recommendation);
         dbContext.SaveChanges();
     }
-
-    public bool HasUserVotedForRecommendation(ApplicationUser member, Recommendation recommendation)
+    
+    public void CreateUserVote(UserVote userVote)
     {
-        return dbContext.UserVotes
-            .Any(uv => uv.Voter == member && uv.Recommendation == recommendation);
-    }
-
-    public void CreateVoteToRecommendation(UserVote userVote)
-    {
-        // Voeg de stem toe aan de database
         dbContext.UserVotes.Add(userVote);
         dbContext.SaveChanges();
     }
 
-    public void DeleteVoteFromRecommendation(ApplicationUser member, Recommendation recommendation)
+    public void DeleteUserVote(ApplicationUser member, Recommendation recommendation)
     {
-        // Controleer eerst of de aanbeveling bestaat
         if (recommendation == null)
         {
             throw new ArgumentException($"Aanbeveling bestaat niet.");
         }
 
-        // Zoek de stem van de gebruiker
         var userVote = dbContext.UserVotes
-            .FirstOrDefault(uv => uv.Voter == member && uv.Recommendation == recommendation);
+            .SingleOrDefault(uv => uv.Voter == member && uv.Recommendation == recommendation);
 
-        // Als er geen stem is, kan er niets worden teruggetrokken
         if (userVote == null)
         {
             throw new InvalidOperationException("Gebruiker heeft niet gestemd op deze aanbeveling.");
         }
 
-        // Verwijder de stem
         dbContext.UserVotes.Remove(userVote);
-
-        // Verlaag de stemteller in de aanbeveling (voorkom negatieve stemmen)
-        if (recommendation.Votes > 0)
-        {
-            recommendation.Votes--;
-        }
-
+        
         dbContext.SaveChanges();
     }
-
-    public IEnumerable<int> ReadVotedRecommendationsByUser(string userId)
+    
+    public bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation)
     {
         return dbContext.UserVotes
-            .Where(uv => uv.Voter.Id == userId)
-            .Select(uv => uv.Recommendation.Id)
-            .ToList();
+            .Any(uv => uv.Voter == member && uv.Recommendation == recommendation);
     }
-
-    public void UpdateCriteria(Criteria criteria)
-    {
-        dbContext.Update(criteria);
-        dbContext.SaveChanges();
-    }
-
+    
     public IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId)
     {
         var panel = dbContext.Panels
@@ -159,7 +130,7 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .ToList();
     }
 
-    public IEnumerable<Criteria> ReadCriteriaAndSubcriteriaWithPanelId(int panelId)
+    public IEnumerable<Criteria> ReadCriteriaByPanelIdWithSubcriteria(int panelId)
     {
         var panel = dbContext.Panels
             .Include(p => p.Criteria)
@@ -168,10 +139,5 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
 
         return panel?.Criteria
             .ToList();
-    }
-
-    public IEnumerable<Panel> ReadAllPanels()
-    {
-        return dbContext.Panels.ToList();
     }
 }

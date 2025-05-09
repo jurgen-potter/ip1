@@ -16,20 +16,6 @@ public class RecommendationsController(
     IPanelManager panelManager,
     IMemberManager memberManager) : ControllerBase
 {
-    
-    [HttpGet("votes")]
-    public IActionResult GetUserVotes()
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(userId))
-        {
-            return Unauthorized();
-        }
-
-        var votedRecommendation = panelManager.GetVotedRecommendationsByUser(userId);
-        return Ok(votedRecommendation);
-    }
-
     [HttpPost("vote")]
     public IActionResult Vote([FromBody] VoteDto voteDto)
     {
@@ -40,20 +26,19 @@ public class RecommendationsController(
             return Unauthorized();
         }
 
-        var recommendation = panelManager.GetRecommendationById(voteDto.Id);
+        var recommendation = panelManager.GetRecommendationByIdWithVotes(voteDto.Id);
         if (recommendation == null)
         {
             return NotFound();
         }
 
-        var hasVoted = panelManager.HasUserVotedForRecommendation(member, recommendation);
+        var hasVoted = panelManager.DoesUserVoteExist(member, recommendation);
         if (hasVoted)
         {
             return BadRequest(new { message = "U heeft al gestemd op deze aanbeveling" });
         }
 
-        panelManager.AddVoteToRecommendation(member, recommendation, voteDto.Recommended);
-        recommendation = panelManager.GetRecommendationById(voteDto.Id);
+        panelManager.AddUserVote(member, recommendation, voteDto.Recommended);
 
         return Ok(new { id = recommendation.Id, votes = recommendation.Votes });
     }
@@ -68,20 +53,20 @@ public class RecommendationsController(
             return Unauthorized();
         }
 
-        var recommendation = panelManager.GetRecommendationById(voteDto.Id);
+        var recommendation = panelManager.GetRecommendationByIdWithVotes(voteDto.Id);
         if (recommendation == null)
         {
             return NotFound();
         }
 
-        var hasVoted = panelManager.HasUserVotedForRecommendation(member, recommendation);
+        var hasVoted = panelManager.DoesUserVoteExist(member, recommendation);
         if (!hasVoted)
         {
             return BadRequest(new { message = "U heeft niet gestemd op deze aanbeveling" });
         }
 
-        panelManager.RemoveVoteFromRecommendation(member, recommendation);
-        recommendation = panelManager.GetRecommendationById(voteDto.Id);
+        panelManager.RemoveUserVote(member, recommendation);
+        recommendation = panelManager.GetRecommendationByIdWithVotes(voteDto.Id);
 
         return Ok(new { id = recommendation.Id, votes = recommendation.Votes });
     }

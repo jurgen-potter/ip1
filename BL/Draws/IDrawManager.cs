@@ -9,6 +9,7 @@ public interface IDrawManager
     Invitation AddInvitation(string code, string qrCodeString, int panelId, Gender gender, int age);
     Invitation GetInvitationByCode(string code);
     IEnumerable<Invitation> GetAllInvitationsByPanelId(int panelId);
+    IEnumerable<Invitation> GetRegisteredInvitationsByPanelId(int panelId);
     bool EditInvitation(Invitation invitation);
     bool RemoveInvitation(int invitationId);
     bool RemoveInvitationByEmail(string email);

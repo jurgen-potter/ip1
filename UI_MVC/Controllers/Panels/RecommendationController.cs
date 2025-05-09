@@ -12,7 +12,7 @@ public class RecommendationController(
     [HttpGet]
     public IActionResult Index(int panelId)
     {
-        var panel = panelManager.GetPanelByIdWithRecommendations(panelId);
+        var panel = panelManager.GetPanelByIdWithRecommendationsAndVotes(panelId);
         var meetings = panel.Meetings;
         return View(meetings);
     }
@@ -21,7 +21,7 @@ public class RecommendationController(
     [Authorize(Roles = "Organization")] 
     public IActionResult GetVoters(int recommendationId)
     {
-        var recommendation = panelManager.GetRecommendationWithVoters(recommendationId);
+        var recommendation = panelManager.GetRecommendationByIdWithVoters(recommendationId);
 
         var votes = recommendation?.UserVotes ?? Enumerable.Empty<UserVote>();
         return PartialView("_VotersList", votes);
@@ -31,12 +31,12 @@ public class RecommendationController(
     [Authorize(Roles = "Organization")]
     public IActionResult StopVoting(int id)
     {
-        var recommendation = panelManager.GetRecommendationById(id);
+        var recommendation = panelManager.GetRecommendationByIdWithVotes(id);
         if (recommendation == null)
             return NotFound();
 
         recommendation.IsVotable = false;
-        panelManager.ChangeRecommendation(recommendation);
+        panelManager.EditRecommendation(recommendation);
         
         return Ok();
     }

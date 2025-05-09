@@ -22,15 +22,11 @@ public class MemberRepository(PanelDbContext dbContext) : IMemberRepository
     
     public async Task UpdateOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
     {
-        var user = await dbContext.Users
-            .Include(u => u.OrganizationProfile)
-            .ThenInclude(op => op.Answers)
-            .FirstOrDefaultAsync(u => u.Id == userId);
+        var user = ReadOrganizationByIdWithAnswers(userId);
         
-        // Clear current answers
         var answersToRemove = user.OrganizationProfile.Answers
             .Where( a => a.Question != null && a.Question.Questionnaire?.Id == questionnaireId)
-            .ToList(); // Materialize the query to avoid modifying collection during iteration
+            .ToList();
 
         foreach (var answer in answersToRemove)
         {
@@ -38,7 +34,6 @@ public class MemberRepository(PanelDbContext dbContext) : IMemberRepository
         }
         await dbContext.SaveChangesAsync();
 
-        // Add new answers
         foreach (var answer in answers)
         {
             user.OrganizationProfile.Answers.Add(answer);

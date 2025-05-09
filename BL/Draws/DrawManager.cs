@@ -6,7 +6,7 @@ using QRCoder;
 
 namespace CitizenPanel.BL.Draws;
 
-public class DrawManager(IDrawRepository drawRepository) : IDrawManager
+public class DrawManager(IDrawRepository repository) : IDrawManager
 {
     public Invitation AddInvitation(string code, string qrCodeString, int panelId, Gender gender, int age)
     {
@@ -18,33 +18,38 @@ public class DrawManager(IDrawRepository drawRepository) : IDrawManager
             Gender = gender,
             Age = age
         };
-        drawRepository.CreateInvitation(invitation);
+        repository.CreateInvitation(invitation);
         return invitation;
     }
     
     public Invitation GetInvitationByCode(string code)
     {
-        return drawRepository.ReadInvitationByCode(code);
+        return repository.ReadInvitationByCode(code);
     }
 
     public IEnumerable<Invitation> GetAllInvitationsByPanelId(int panelId)
     {
-        return drawRepository.ReadInvitationsByPanelId(panelId);
+        return repository.ReadInvitationsByPanelId(panelId);
+    }
+    
+    public IEnumerable<Invitation> GetRegisteredInvitationsByPanelId(int panelId)
+    {
+        return repository.ReadRegisteredInvitationsByPanelId(panelId);
     }
 
     public bool EditInvitation(Invitation invitation)
     {
-        return drawRepository.UpdateInvitation(invitation);
+        return repository.UpdateInvitation(invitation);
     }
     
     public bool RemoveInvitation(int invitationId)
     {
-        return drawRepository.DeleteInvitation(invitationId);
+        return repository.DeleteInvitation(invitationId);
     }
 
     public bool RemoveInvitationByEmail(string email)
     {
-        return drawRepository.DeleteInvitationByEmail(email);
+        return repository.DeleteInvitationByEmail(email);
     }
 
     public Criteria AddCriteria(string name, List<SubCriteria> subCriteria)
@@ -54,7 +59,7 @@ public class DrawManager(IDrawRepository drawRepository) : IDrawManager
             Name = name,
             SubCriteria = subCriteria
         };
-        drawRepository.CreateCriteria(criteria);
+        repository.CreateCriteria(criteria);
         return criteria;
     }
 
@@ -65,12 +70,12 @@ public class DrawManager(IDrawRepository drawRepository) : IDrawManager
             Name = name,
             Percentage = percentage
         };
-        drawRepository.CreateSubCriteria(subCriteria);
+        repository.CreateSubCriteria(subCriteria);
         return subCriteria;
     }
     
     public SubCriteria GetSubCriteria(int subCriteriaId)
     {
-        return drawRepository.ReadSubCriteriaById(subCriteriaId);
+        return repository.ReadSubCriteriaById(subCriteriaId);
     }
 }

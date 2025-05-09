@@ -36,17 +36,7 @@
             if (id) updateButton(form, votes[id]);
         });
     };
-
-    // Haal bij het laden van de pagina de lijst met reeds uitgebrachte stemmen op van de server
-    fetch('/api/Recommendations/votes')
-        .then(res => res.ok ? res.json() : Promise.reject()) //bij fout gaat naar de catch
-        .then((ids: string[]) => {
-            // Zet voor elk ontvangen id de stemstatus op true
-            ids.forEach(id => votes[id] = true);
-            // Werk de knoppen bij volgens de opgehaalde data
-            updateAllButtons();
-        });
-
+    
     // Voeg submit-handler toe aan elk stem-formulier
     voteForms.forEach(form => {
         form.querySelectorAll('button').forEach(form2 => {

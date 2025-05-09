@@ -22,6 +22,14 @@ public class DrawRepository(PanelDbContext dbContext) : IDrawRepository
         return dbContext.Invitations.Where(i => i.PanelId == panelId);
     }
 
+    public IEnumerable<Invitation> ReadRegisteredInvitationsByPanelId(int panelId)
+    {
+        return dbContext.Invitations
+            .Where(inv => inv.PanelId == panelId)
+            .Where(inv => inv.IsRegistered == true)
+            .ToList();
+    }
+    
     public bool UpdateInvitation(Invitation invitation)
     {
         dbContext.Invitations.Update(invitation);
@@ -64,5 +72,4 @@ public class DrawRepository(PanelDbContext dbContext) : IDrawRepository
     {
         return dbContext.SubCriteria.Find(subCriteriaId);
     }
-
 }

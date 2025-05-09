@@ -19,8 +19,8 @@ public class RegistrationController(
     [HttpGet]
     public IActionResult Index(int panelId)
     {
-        var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
-        var users = panelManager.GetRegisteredInvitationsByPanelId(panelId).ToList();
+        var criteria = panelManager.GetCriteriaByPanelIdWithSubcriteria(panelId);
+        var users = drawManager.GetRegisteredInvitationsByPanelId(panelId).ToList();
         var panel = panelManager.GetPanelById(panelId);
         var result = utilityManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
 
@@ -100,7 +100,7 @@ public class RegistrationController(
 
         var panel = panelManager.GetPanelByIdWithInvitations(panelId);
 
-        var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
+        var criteria = panelManager.GetCriteriaByPanelIdWithSubcriteria(panelId);
         var criteriaNamesLookup = new Dictionary<int, string>();
         foreach(var criterion in criteria)
         {

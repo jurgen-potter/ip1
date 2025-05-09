@@ -4,15 +4,16 @@ namespace CitizenPanel.DAL.Draws;
 
 public interface IDrawRepository
 {
-    public void CreateInvitation(Invitation invitation);
-    public Invitation ReadInvitationByCode(string code);
-    public IEnumerable<Invitation> ReadInvitationsByPanelId(int panelId);
-    public bool UpdateInvitation(Invitation invitation);
-    public bool DeleteInvitation(int invitationId);
-    public bool DeleteInvitationByEmail(string email);
+    void CreateInvitation(Invitation invitation);
+    Invitation ReadInvitationByCode(string code);
+    IEnumerable<Invitation> ReadInvitationsByPanelId(int panelId);
+    IEnumerable<Invitation> ReadRegisteredInvitationsByPanelId(int panelId);
+    bool UpdateInvitation(Invitation invitation);
+    bool DeleteInvitation(int invitationId);
+    bool DeleteInvitationByEmail(string email);
     
-    public void CreateCriteria(Criteria criteria);
+    void CreateCriteria(Criteria criteria);
     
-    public void CreateSubCriteria(SubCriteria subCriteria);
-    public SubCriteria ReadSubCriteriaById(int subCriteriaId);
+    void CreateSubCriteria(SubCriteria subCriteria);
+    SubCriteria ReadSubCriteriaById(int subCriteriaId);
 }
