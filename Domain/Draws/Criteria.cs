@@ -18,5 +18,4 @@ public class SubCriteria : ITenanted
     public string Name { get; set; } // Bijvoorbeeld "OV", "Fiets"
     public double Percentage { get; set; }
     public string TenantId { get; set; }
-    public int Count { get; set; }
 }

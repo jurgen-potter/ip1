@@ -16,7 +16,7 @@ public class QuestionnaireRepository(PanelDbContext dbContext) : IQuestionnaireR
     
     public IEnumerable<Questionnaire> ReadAllQuestionnaires()
     {
-        return dbContext.Questionnaires;
+        return dbContext.Questionnaires.ToList();
     }
 
     public bool UpdateQuestionnaire(Questionnaire questionnaire)

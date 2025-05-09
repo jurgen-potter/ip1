@@ -6,7 +6,9 @@ using System.Security.Claims;
 
 namespace CitizenPanel.BL.Users;
 
-public class UserProfileManager(IUserProfileRepository userProfileRepository, UserManager<ApplicationUser> userManager) : IUserProfileManager
+public class UserProfileManager(
+    IUserProfileRepository userProfileRepository,
+    UserManager<ApplicationUser> userManager) : IUserProfileManager
 {
     public ApplicationUser GetUserById(string memberId)
     {

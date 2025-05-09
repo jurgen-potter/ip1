@@ -12,11 +12,8 @@ namespace CitizenPanel.BL.Registrations;
 public class RegistrationManager(
     IPanelManager panelManager,
     IDrawManager drawManager,
-    IUserProfileManager userProfileManager,
     IUtilityManager utilityManager) : IRegistrationManager
 {
-    private readonly IUserProfileManager _userProfileManager = userProfileManager;
-    
     private const string GenderMaleCriterion = "Man";
     private const string GenderFemaleCriterion = "Vrouw";
     
@@ -24,7 +21,6 @@ public class RegistrationManager(
 
     public List<RecruitmentBucket> AssignActualRegistrationsToBuckets(List<RecruitmentBucket> buckets, List<Invitation> invitations)
     {
-        // Als er invitations zijn, haal alle criteria op voor het panel van de eerste invitation
         if (invitations.Any())
         {
             int panelId = invitations.First().PanelId;
@@ -66,18 +62,15 @@ public class RegistrationManager(
 
     private bool DoesInvitationMatchBucket(Invitation invitation, RecruitmentBucket bucket)
     {
-        // Check Gender
         bool requiresMale = bucket.SubCriteriaNames.Any(s => s.Equals(GenderMaleCriterion, StringComparison.OrdinalIgnoreCase));
         bool requiresFemale = bucket.SubCriteriaNames.Any(s => s.Equals(GenderFemaleCriterion, StringComparison.OrdinalIgnoreCase));
         
         if (requiresMale && invitation.Gender != Gender.Male) return false;
         if (requiresFemale && invitation.Gender != Gender.Female) return false;
 
-        // Check Age
         string requiredAgeGroup = bucket.SubCriteriaNames.FirstOrDefault(IsAgeGroup);
         if (requiredAgeGroup != null && !IsInAgeGroup(invitation.Age, requiredAgeGroup)) return false;
 
-        // Check Other Criteria
         var otherCriteria = bucket.SubCriteriaNames
             .Where(s => !s.Equals(GenderMaleCriterion, StringComparison.OrdinalIgnoreCase) &&
                         !s.Equals(GenderFemaleCriterion, StringComparison.OrdinalIgnoreCase) &&
@@ -87,12 +80,10 @@ public class RegistrationManager(
         if (otherCriteria.Any())
         {
             if (invitation.SelectedCriteria == null || !invitation.SelectedCriteria.Any())
-                return false; // No criteria selected, can't match
+                return false;
 
-            // Get names from the ID's using our cache
             var invitationCriteriaNames = GetCriteriaNames(invitation.SelectedCriteria);
             
-            // Check if all required criteria are matched
             foreach (var requiredCriterion in otherCriteria)
             {
                 bool matchFound = false;
@@ -115,7 +106,6 @@ public class RegistrationManager(
         return true;
     }
 
-    // Helper om criteria namen op te halen uit de cache
     private IEnumerable<string> GetCriteriaNames(List<int> criteriaIds)
     {
         if (criteriaIds == null) 
@@ -162,28 +152,21 @@ public class RegistrationManager(
         return false;
     }
 
-    // Voor de StartFinalDraw methode zou je dezelfde aanpak moeten gebruiken
     public void StartFinalDraw(Panel panel)
     {
         var criteria = panelManager.GetCriteriaByPanelIdWithSubcriteria(panel.Id);
         var recruitmentPlan = utilityManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
 
-        // Load criteria names to cache
         LoadCriteriaCache(panel.Id);
 
-        // Ophalen van alle geregistreerde uitnodigingen voor dit panel
         var registeredInvitations = drawManager.GetRegisteredInvitationsByPanelId(panel.Id).ToList();
         
-        // Map invitations to eligible buckets
         var invitationsByBucket = MapInvitationsToEligibleBuckets(recruitmentPlan.Buckets, registeredInvitations);
 
-        // Update bucket actual counts
         UpdateBucketActualCounts(recruitmentPlan.Buckets, invitationsByBucket);
 
-        // Perform the selection
         var drawSelectionResult = PerformSelection(recruitmentPlan, invitationsByBucket);
 
-        // Update panel draw status and results
         panel.DrawStatus = DrawStatus.Complete;
         panel.DrawResult = new DrawResult
         {
@@ -291,7 +274,6 @@ public class RegistrationManager(
         };
     }
     
-    // Internal helper class to return selections from PerformSelection
     private class DrawSelectionInternalResult
     {
         public List<Invitation> SelectedInvitations { get; set; }

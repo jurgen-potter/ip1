@@ -59,7 +59,6 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
     {
         dbContext.Panels.Remove(panel);
     }
-
     
     public Recommendation ReadRecommendationByIdWithVotes(int recommendationId)
     {

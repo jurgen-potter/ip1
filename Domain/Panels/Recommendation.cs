@@ -16,15 +16,4 @@ public class Recommendation : ITenanted
     public ICollection<UserVote> UserVotes { get; set; }
     [Required]
     public string TenantId { get; set; }
-
-    public Recommendation(string title, string description, int votes)
-    {
-        Title = title;
-        Description = description;
-        Votes = votes;
-    }
-    public Recommendation()
-    {
-        UserVotes = new List<UserVote>();
-    }
 }

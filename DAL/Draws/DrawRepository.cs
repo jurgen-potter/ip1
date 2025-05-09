@@ -14,12 +14,15 @@ public class DrawRepository(PanelDbContext dbContext) : IDrawRepository
 
     public Invitation ReadInvitationByCode(string code)
     {
-        return dbContext.Invitations.SingleOrDefault(i => i.Code == code);
+        return dbContext.Invitations
+            .SingleOrDefault(i => i.Code == code);
     }
 
     public IEnumerable<Invitation> ReadInvitationsByPanelId(int panelId)
     {
-        return dbContext.Invitations.Where(i => i.PanelId == panelId);
+        return dbContext.Invitations
+            .Where(i => i.PanelId == panelId)
+            .ToList();
     }
 
     public IEnumerable<Invitation> ReadRegisteredInvitationsByPanelId(int panelId)
