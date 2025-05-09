@@ -12,6 +12,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 public class MembersController(IPanelManager panelManager) : ControllerBase
 {
     [HttpGet("{id}")]
+    [Authorize(Roles = "Organization")]
     public IActionResult Get(int id)
     {
         var panel = panelManager.GetPanelByIdWithMembers(id);

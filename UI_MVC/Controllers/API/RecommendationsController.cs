@@ -17,6 +17,7 @@ public class RecommendationsController(
     IUserProfileManager userProfileManager) : ControllerBase
 {
     [HttpPost("vote")]
+    [Authorize]
     public IActionResult Vote([FromBody] VoteDto voteDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -44,6 +45,7 @@ public class RecommendationsController(
     }
 
     [HttpPost("remove-vote")]
+    [Authorize]
     public IActionResult RemoveVote([FromBody] VoteDto voteDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
