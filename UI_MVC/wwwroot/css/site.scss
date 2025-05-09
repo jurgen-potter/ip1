@@ -1,0 +1,346 @@
+﻿@use "sass:color"; // Importeer de sass:color module
+
+
+$rose-quartz: #B0A1BA;
+$cadet-gray: #A5B5BF;
+$ash-gray: #ABC8C7;
+$celadon-medium: #B8E2C8;
+$celadon-light: #BFF0D4;
+
+// Toewijzing aan Thema Kleuren
+$primary-color: $rose-quartz;
+$secondary-color: $cadet-gray;
+$accent-color: $celadon-medium;
+$background-color-light: $ash-gray;
+$highlight-light: $celadon-light;
+
+// Extra functionele kleuren (kunnen uit je palet komen of specifiek zijn)
+$success-color: $celadon-medium; // Gebruik een kleur uit je palet voor succes
+$danger-color: #dc3545;    // Standaard rood voor gevaar/verwijderen
+$warning-color: #ffc107;   // Standaard geel voor waarschuwing
+$info-color: #0dcaf0;      // Standaard cyaan voor info
+
+// Standaard Kleuren
+$light-gray-generic: #f0f2f5;
+$dark-gray-text: #333333;
+$white: #ffffff;
+$black: #000000;
+
+// Typografie
+$font-family-base: 'Bahnschrift', 'Segoe UI', 'Calibri', 'Roboto', 'Arial', sans-serif;
+$font-size-base: 1rem;
+$line-height-base: 1.6;
+
+// Afstanden
+$spacing-unit: 1rem;
+$padding-base: $spacing-unit;
+$margin-base: $spacing-unit;
+
+// Randen
+$border-radius-base: 0.3rem;
+$border-color: color.adjust($ash-gray, $lightness: -15%);
+
+// -----------------------------------------------------------------------------
+// 2. MIXINS
+// -----------------------------------------------------------------------------
+
+// Mixin voor gevulde knoppen
+@mixin button-variant($bg, $col, $border-col) {
+  background-color: $bg;
+  color: $col;
+  border: 1px solid $border-col;
+  padding: ($padding-base * 0.6) ($padding-base * 1.2);
+  border-radius: $border-radius-base;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: 600;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: color.adjust($bg, $lightness: -8%);
+    border-color: color.adjust($border-col, $lightness: -8%);
+    // Als de tekstkleur $white is, hoeft deze meestal niet te veranderen bij hover op een donkere knop
+    // Als de tekstkleur een andere is, wil je die misschien ook aanpassen:
+    // color: if($col == $white, $white, color.adjust($col, $lightness: -8%));
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem color.scale($bg, $alpha: -50%);
+  }
+}
+
+// Mixin voor outline knoppen
+@mixin button-outline-variant($col, $border-col: $col) {
+  background-color: transparent;
+  color: $col;
+  border: 1px solid $border-col;
+  padding: ($padding-base * 0.6) ($padding-base * 1.2);
+  border-radius: $border-radius-base;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: 600;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: $col; // Achtergrond wordt de kleur van de tekst/rand
+    color: $white; // Tekst wordt wit (of een andere contrastkleur)
+    border-color: $col;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem color.scale($col, $alpha: -50%);
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+// 3. ALGEMENE STIJLEN / RESETS
+// -----------------------------------------------------------------------------
+
+body {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $dark-gray-text;
+  background-color: $white;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: $dark-gray-text;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+
+  &:hover {
+    color: color.adjust($primary-color, $lightness: 25%);
+    text-decoration: none;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-base;
+  font-weight: 600;
+  color: $dark-gray-text;
+}
+
+// -----------------------------------------------------------------------------
+// 4. COMPONENT STIJLEN (Voorbeeld voor Identity Pagina's & Knoppen)
+// -----------------------------------------------------------------------------
+
+// Basis knopstijl (wordt vaak gebruikt voor .btn-secondary of als fallback)
+.btn {
+  @include button-variant($secondary-color, $white, $secondary-color); // Standaard gevulde knop
+  margin-right: $margin-base * 0.5; // Ruimte tussen knoppen
+  margin-bottom: $margin-base * 0.5; // Ruimte onder knoppen (voor als ze wrappen)
+
+  &:last-child { // Geen rechter marge voor de laatste knop in een groep
+    margin-right: 0;
+  }
+
+  // Varianten
+  &.btn-primary {
+    @include button-variant($primary-color, $white, $primary-color);
+  }
+
+  &.btn-accent {
+    @include button-variant($accent-color, $dark-gray-text, $accent-color);
+  }
+
+  &.btn-success {
+    @include button-variant($success-color, $white, $success-color);
+  }
+
+  &.btn-danger {
+    @include button-variant($danger-color, $white, $danger-color);
+  }
+
+  &.btn-warning {
+    @include button-variant($warning-color, $dark-gray-text, $warning-color);
+  }
+
+  &.btn-info {
+    @include button-variant($info-color, $white, $info-color);
+  }
+
+  // Outline varianten
+  // Je kunt ook een algemene .btn-outline klasse maken en dan specifieke kleurvarianten
+  &.btn-outline-secondary {
+    @include button-outline-variant($secondary-color);
+  }
+  &.btn-outline-primary {
+    @include button-outline-variant($primary-color);
+  }
+  // Voeg hier meer outline varianten toe indien nodig
+  // &.btn-outline-success {
+  //   @include button-outline-variant($success-color);
+  // }
+}
+
+
+// Stijlen voor een generieke container voor Identity pagina's
+.identity-container {
+  max-width: 480px;
+  margin: ($margin-base * 2.5) auto;
+  padding: ($padding-base * 2) ($padding-base * 2.5);
+  background-color: $background-color-light;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-base * 2.5;
+  box-shadow: 0 5px 15px rgba($black, 0.08);
+
+  h2 {
+    color: color.adjust($primary-color, $lightness: -15%);
+    margin-top: 0;
+    margin-bottom: $margin-base * 2;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .form-group {
+    margin-bottom: $margin-base * 1.25;
+
+    label {
+      display: block;
+      margin-bottom: $margin-base * 0.6;
+      font-weight: 500;
+      color: $dark-gray-text;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: $padding-base * 0.9;
+      border: 1px solid $border-color;
+      border-radius: $border-radius-base;
+      box-sizing: border-box;
+      background-color: $white;
+      color: $dark-gray-text;
+      font-family: $font-family-base;
+      font-size: $font-size-base * 0.95;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+        box-shadow: 0 0 0 0.2rem color.scale($primary-color, $alpha: -75%);
+      }
+    }
+  }
+
+  // Knoppen binnen identity-container kunnen de globale .btn stijlen gebruiken
+  // Als je specifieke overrides nodig hebt voor knoppen ALLEEN binnen .identity-container,
+  // kun je ze hier nesten:
+  // .btn {
+  //   width: 100%;
+  //   margin-bottom: $margin-base * 0.75;
+  // }
+
+  .links {
+    margin-top: $margin-base * 1.75;
+    text-align: center;
+    font-size: $font-size-base * 0.85;
+
+    a {
+      margin: 0 ($margin-base * 0.5);
+      color: $secondary-color;
+
+      &:hover {
+        color: color.adjust($secondary-color, $lightness: 25%);
+      }
+    }
+  }
+}
+
+// Kaartcomponent
+.card {
+  background-color: $white;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-base * 1.5;
+  margin-bottom: $margin-base * 1.5;
+  box-shadow: 0 2px 8px rgba($black, 0.06);
+
+  .card-header {
+    padding: ($padding-base * 0.9) ($padding-base * 1.5);
+    margin-bottom: 0;
+    background-color: $highlight-light;
+    border-bottom: 1px solid $border-color;
+    font-size: $font-size-base * 1.15;
+    font-weight: 600;
+    border-top-left-radius: $border-radius-base * 1.5;
+    border-top-right-radius: $border-radius-base * 1.5;
+  }
+
+  .card-body {
+    padding: $padding-base * 1.5;
+  }
+
+  .card-footer {
+    padding: ($padding-base * 0.9) ($padding-base * 1.5);
+    background-color: $highlight-light;
+    border-top: 1px solid $border-color;
+    border-bottom-left-radius: $border-radius-base * 1.5;
+    border-bottom-right-radius: $border-radius-base * 1.5;
+    font-size: $font-size-base * 0.9;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 5. UTILITY KLASSEN
+// -----------------------------------------------------------------------------
+.text-center {
+  text-align: center !important;
+}
+
+.d-block {
+  display: block !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+$spaceamounts: (0, 1, 2, 3, 4, 5);
+
+@each $space in $spaceamounts {
+  .m-#{$space} { margin: ($spacing-unit * $space * 0.25) !important; }
+  .mt-#{$space} { margin-top: ($spacing-unit * $space * 0.25) !important; }
+  .mr-#{$space} { margin-right: ($spacing-unit * $space * 0.25) !important; }
+  .mb-#{$space} { margin-bottom: ($spacing-unit * $space * 0.25) !important; }
+  .ml-#{$space} { margin-left: ($spacing-unit * $space * 0.25) !important; }
+  .mx-#{$space} {
+    margin-left: ($spacing-unit * $space * 0.25) !important;
+    margin-right: ($spacing-unit * $space * 0.25) !important;
+  }
+  .my-#{$space} {
+    margin-top: ($spacing-unit * $space * 0.25) !important;
+    margin-bottom: ($spacing-unit * $space * 0.25) !important;
+  }
+
+  .p-#{$space} { padding: ($spacing-unit * $space * 0.25) !important; }
+  .pt-#{$space} { padding-top: ($spacing-unit * $space * 0.25) !important; }
+  .pr-#{$space} { padding-right: ($spacing-unit * $space * 0.25) !important; }
+  .pb-#{$space} { padding-bottom: ($spacing-unit * $space * 0.25) !important; }
+  .pl-#{$space} { padding-left: ($spacing-unit * $space * 0.25) !important; }
+  .px-#{$space} {
+    padding-left: ($spacing-unit * $space * 0.25) !important;
+    padding-right: ($spacing-unit * $space * 0.25) !important;
+  }
+  .py-#{$space} {
+    padding-top: ($spacing-unit * $space * 0.25) !important;
+    padding-bottom: ($spacing-unit * $space * 0.25) !important;
+  }
+}
+

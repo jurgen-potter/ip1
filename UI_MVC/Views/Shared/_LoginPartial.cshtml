@@ -5,25 +5,27 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<ul class="navbar-nav">
+<div class="flex items-center space-x-4">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hallo @UserManager.GetUserName(User)!</a>
-    </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Uitloggen</button>
-        </form>
-    </li>
+    <a id="manage" class="text-header-text hover:text-header-text-hover" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+        Hallo @UserManager.GetUserName(User)!
+    </a>
+    <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+        <button id="logout" type="submit" class="text-header-text hover:text-header-text-hover px-4 py-2 rounded-lg transition-colors duration-150">
+            Uitloggen
+        </button>
+    </form>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Registreer als organisatie</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Aanmelden</a>
-    </li>
+    <a class="text-header-text hover:text-header-text-hover px-4 py-2 rounded-lg transition-colors duration-150" 
+       id="register" asp-area="Identity" asp-page="/Account/Register">
+        Registreer als organisatie
+    </a>
+    <a class="bg-primary hover:bg-primary-hover text-header-text px-4 py-2 rounded-lg transition-colors duration-150" 
+       id="login" asp-area="Identity" asp-page="/Account/Login">
+        Aanmelden
+    </a>
 }
-</ul>
+</div>

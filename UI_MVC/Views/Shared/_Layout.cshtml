@@ -1,0 +1,166 @@
+﻿@using CitizenPanel.BL.Domain.Users
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - Panello</title>
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'text-black': '#080708',
+                        'brand-black': '#080708',
+                        'brand-cadet-gray': '#A5B5BF',
+                        'brand-ash-gray': '#ABC8C7',
+                        'brand-celadon': '#B8E2C8',
+                        'brand-celadon-light': '#BFF0D4',
+                        'primary': '#A5B5BF',
+                        'primary-hover': '#8E9FAA',
+                        'secondary': '#ABC8C7',
+                        'secondary-hover': '#97B3B2',
+                        'accent': '#B8E2C8',
+                        'accent-hover': '#A3CFAF',
+                        'background-page': '#FFFFFF',
+                        'surface': '#FFFFFF',
+                        'header-text': '#FFFFFF',
+                        'header-text-hover': '#E0E0E0',
+                        'header-nav-item-bg-hover': 'rgba(255, 255, 255, 0.1)',
+                    },
+                    fontFamily: {
+                        sans: ['Bahnschrift', 'Segoe UI', 'Calibri', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <style>
+        .nav-link {
+            color: white !important;
+        }
+        .nav-link:hover {
+            color: #E0E0E0 !important;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="min-h-screen flex flex-col bg-background-page text-text-black font-sans">
+    <header class="bg-brand-black shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="text-header-text font-bold text-2xl pl-0">
+                        Panello
+                    </a>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-4">
+                    <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="nav-link">Demografische data invullen</a>
+                    <a asp-area="" asp-route-questionnaireId="1" asp-controller="Questionnaire" asp-action="Index" class="nav-link">Verkenningsmodule</a>
+                    <a asp-area="" asp-route-questionnaireId="2" asp-controller="Questionnaire" asp-action="Index" class="nav-link">Procesbepalingsmodule</a>
+                    <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="nav-link">Code Registreren</a>
+                    @if (User.IsInRole("Member") || User.IsInRole("Organization"))
+                    {
+                        <a asp-area="" asp-controller="Panel" asp-action="UserPanel" class="nav-link">Dashboard</a>
+                    }
+                    @if (User.IsInRole("Organization"))
+                    {
+                        <a asp-area="" asp-controller="Organization" asp-action="Index" class="nav-link">Organisatie overzicht</a>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-area="" asp-controller="Admin" asp-action="Index" class="nav-link">Admin Dashboard</a>
+                    }
+                </div>
+
+                <div class="hidden md:block">
+                    <partial name="_LoginPartial"/>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button type="button" id="mobile-menu-button" class="text-header-text hover:text-header-text-hover focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                        <span class="sr-only">Open hoofdmenu</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="md:hidden hidden" id="mobile-menu-dropdown">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link block">Home</a>
+                <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="nav-link block">Demografische data invullen</a>
+                <a asp-area="" asp-route-questionnaireId="1" asp-controller="Questionnaire" asp-action="Index" class="nav-link block">Verkenningsmodule</a>
+                <a asp-area="" asp-route-questionnaireId="2" asp-controller="Questionnaire" asp-action="Index" class="nav-link block">Procesbepalingsmodule</a>
+                <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="nav-link block">Code Registreren</a>
+                @if (User.IsInRole("Member") || User.IsInRole("Organization"))
+                {
+                    <a asp-area="" asp-controller="Panel" asp-action="UserPanel" class="nav-link block">Dashboard</a>
+                }
+                @if (User.IsInRole("Organization"))
+                {
+                    <a asp-area="" asp-controller="Organization" asp-action="Index" class="nav-link block">Organisatie overzicht</a>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-area="" asp-controller="Admin" asp-action="Index" class="nav-link block">Admin Dashboard</a>
+                }
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-700">
+                <partial name="_LoginPartial"/>
+            </div>
+        </div>
+    </header>
+
+    <main role="main" class="flex-grow">
+        @if (ViewData["Title"]?.ToString() == "Home")
+        {
+            @RenderBody()
+        }
+        else
+        {
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                @RenderBody()
+            </div>
+        }
+    </main>
+
+    <footer class="bg-brand-cadet-gray text-header-text py-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            &copy; @DateTime.Now.Year - BurgerPanels - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="hover:text-header-text-hover underline">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
+
+        if (mobileMenuButton && mobileMenuDropdown) {
+            mobileMenuButton.addEventListener('click', () => {
+                const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+                mobileMenuButton.setAttribute('aria-expanded', !expanded);
+                mobileMenuDropdown.classList.toggle('hidden');
+            });
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

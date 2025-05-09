@@ -1,0 +1,107 @@
+/* Base styles for all pages */
+body {
+    background-color: #FFFFFF;
+    color: #080708;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    padding: 0;
+}
+
+/* Card styling */
+.card {
+    @apply bg-surface rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300;
+}
+
+/* Form styling */
+.form-group {
+    @apply mb-4;
+}
+
+.form-label {
+    @apply block text-sm font-medium text-text-black mb-1;
+}
+
+.form-control {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary;
+}
+
+/* Button styling */
+.btn {
+    @apply px-4 py-2 rounded-lg transition-colors duration-150;
+}
+
+.btn-primary {
+    @apply bg-primary hover:bg-primary-hover text-header-text;
+}
+
+.btn-secondary {
+    @apply bg-secondary hover:bg-secondary-hover text-header-text;
+}
+
+.btn-accent {
+    @apply bg-accent hover:bg-accent-hover text-text-black;
+}
+
+/* Table styling */
+.table {
+    @apply w-full border-collapse;
+}
+
+.table th {
+    @apply px-4 py-2 text-left bg-brand-cadet-gray text-header-text;
+}
+
+.table td {
+    @apply px-4 py-2 border-b border-gray-200;
+}
+
+/* Container styling */
+.page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Section styling */
+.section {
+    @apply py-8;
+}
+
+.section-title {
+    @apply text-2xl font-bold mb-6 text-text-black;
+}
+
+/* Alert/Message styling */
+.alert {
+    @apply p-4 rounded-lg mb-4;
+}
+
+.alert-success {
+    @apply bg-brand-celadon text-text-black;
+}
+
+.alert-error {
+    @apply bg-red-100 text-red-700;
+}
+
+/* Navigation styling */
+.nav-link {
+    @apply text-white hover:text-header-text-hover px-3 py-2 rounded-md transition-colors duration-150 hover:bg-header-nav-item-bg-hover;
+}
+
+/* List styling */
+.list-group {
+    @apply divide-y divide-gray-200;
+}
+
+.list-group-item {
+    @apply py-4;
+}
+
+/* Grid layout */
+.grid-container {
+    @apply grid gap-6 md:grid-cols-2 lg:grid-cols-3;
+} 
