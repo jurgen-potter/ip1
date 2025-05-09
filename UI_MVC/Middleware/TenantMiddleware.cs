@@ -63,7 +63,7 @@ public class TenantMiddleware(
         string invitationCode = context.Request.Query["code"].ToString();
         if (!string.IsNullOrEmpty(invitationCode))
         {
-            var invitation = drawManager.GetInvitationWithCode(invitationCode);
+            var invitation = drawManager.GetInvitationByCode(invitationCode);
             if (invitation != null && !string.IsNullOrEmpty(invitation.TenantId))
             {
                 return invitation.TenantId;

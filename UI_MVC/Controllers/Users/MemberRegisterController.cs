@@ -52,7 +52,7 @@ public class MemberRegisterController(
     [AllowAnonymous]
     public IActionResult RegisterMember(string code)
     {
-        Invitation invitation = drawManager.GetInvitationWithCode(code);
+        Invitation invitation = drawManager.GetInvitationByCode(code);
         
         if (invitation == null)
             return RedirectToAction("InvalidCode", "MemberRegister");
@@ -118,11 +118,11 @@ public class MemberRegisterController(
             return View(newMember);
         }
         
-        Invitation invitation = drawManager.GetInvitationWithCode(newMember.Code);
+        Invitation invitation = drawManager.GetInvitationByCode(newMember.Code);
         invitation.SelectedCriteria = newMember.SelectedCriteria;
         invitation.IsRegistered = true;
         invitation.Email = newMember.Email;
-        drawManager.ChangeInvitation(invitation);
+        drawManager.EditInvitation(invitation);
 
         TempData["Email"] = newMember.Email;
         return RedirectToAction("RegistrationConfirmed");

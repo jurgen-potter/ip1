@@ -150,7 +150,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             }
             else
             {
-                Invitation invitation = _drawManager.GetInvitationWithCode(Input.Code);
+                Invitation invitation = _drawManager.GetInvitationByCode(Input.Code);
                 if (invitation is not null && invitation.IsRegistered)
                 {
                     if (invitation.IsDrawn)

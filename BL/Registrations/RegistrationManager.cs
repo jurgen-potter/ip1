@@ -4,31 +4,23 @@ using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Users;
+using CitizenPanel.BL.Utilities;
 
 
 namespace CitizenPanel.BL.Registrations;
 
-public class RegistrationManager : IRegistrationManager
+public class RegistrationManager(
+    IPanelManager panelManager,
+    IDrawManager drawManager,
+    IMemberManager memberManager,
+    IUtilityManager utilityManager) : IRegistrationManager
 {
-    private readonly IPanelManager _panelManager;
-    private readonly IDrawManager _drawManager;
-    private readonly IMemberManager _memberManager;
+    private readonly IMemberManager _memberManager = memberManager;
     
     private const string GenderMaleCriterion = "Man";
     private const string GenderFemaleCriterion = "Vrouw";
     
-    private Dictionary<int, string> _criteriaNameCache;
-
-    public RegistrationManager(
-        IPanelManager panelManager,
-        IDrawManager drawManager,
-        IMemberManager memberManager)
-    {
-        _panelManager = panelManager;
-        _drawManager = drawManager;
-        _memberManager = memberManager;
-        _criteriaNameCache = new Dictionary<int, string>();
-    }
+    private Dictionary<int, string> _criteriaNameCache = new();
 
     public List<RecruitmentBucket> AssignActualRegistrationsToBuckets(List<RecruitmentBucket> buckets, List<Invitation> invitations)
     {
@@ -58,7 +50,7 @@ public class RegistrationManager : IRegistrationManager
     private void LoadCriteriaCache(int panelId)
     {
         _criteriaNameCache.Clear();
-        var allCriteria = _panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
+        var allCriteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
         
         foreach (var criterion in allCriteria)
         {
@@ -173,14 +165,14 @@ public class RegistrationManager : IRegistrationManager
     // Voor de StartFinalDraw methode zou je dezelfde aanpak moeten gebruiken
     public void StartFinalDraw(Panel panel)
     {
-        var criteria = _panelManager.GetCriteriaAndSubcriteriaWithPanelId(panel.Id);
-        var recruitmentPlan = _drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
+        var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panel.Id);
+        var recruitmentPlan = utilityManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
 
         // Load criteria names to cache
         LoadCriteriaCache(panel.Id);
 
         // Ophalen van alle geregistreerde uitnodigingen voor dit panel
-        var registeredInvitations = _panelManager.GetRegisteredInvitationsByPanelId(panel.Id).ToList();
+        var registeredInvitations = panelManager.GetRegisteredInvitationsByPanelId(panel.Id).ToList();
         
         // Map invitations to eligible buckets
         var invitationsByBucket = MapInvitationsToEligibleBuckets(recruitmentPlan.Buckets, registeredInvitations);
@@ -206,7 +198,7 @@ public class RegistrationManager : IRegistrationManager
             TenantId = panel.TenantId
         };
 
-        _panelManager.ChangePanel(panel);
+        panelManager.ChangePanel(panel);
     }
     
     private Dictionary<RecruitmentBucket, List<Invitation>> MapInvitationsToEligibleBuckets(

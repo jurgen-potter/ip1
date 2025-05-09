@@ -1,6 +1,5 @@
 ﻿using CitizenPanel.BL.Domain.Draws;
-using CitizenPanel.BL.Draws;
-using CitizenPanel.UI.MVC.Models;
+using CitizenPanel.BL.Utilities;
 using CitizenPanel.UI.MVC.Models.Draws;
 using CitizenPanel.UI.MVC.Models.Panels;
 using Microsoft.AspNetCore.Authorization;
@@ -9,13 +8,13 @@ using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers.Draws;
 
-public class RecruitmentController(IDrawManager drawManager) : Controller
+public class RecruitmentController(IUtilityManager utilityManager) : Controller
 {
     [HttpGet]
     [AllowAnonymous]
     public IActionResult Index(int panelId)
     {
-        var criteriaList = drawManager.GetInitialCriteria();
+        var criteriaList = utilityManager.GetInitialCriteria();
 
         var model = new RecruitmentCriteriaViewModel
         {
@@ -86,7 +85,7 @@ public class RecruitmentController(IDrawManager drawManager) : Controller
 
             criteria.Add(cr);
         }
-        var result = drawManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, criteria);
+        var result = utilityManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, criteria);
 
         var resultModel = new ResultViewModel()
         {

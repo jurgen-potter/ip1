@@ -2,6 +2,7 @@ using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Registrations;
 using CitizenPanel.BL.Users;
+using CitizenPanel.BL.Utilities;
 using CitizenPanel.UI.MVC.Models.Draws;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,8 @@ public class RegistrationController(
     IRegistrationManager registrationManager,
     IEmailSender mailSender,
     IPanelManager panelManager,
-    IDrawManager drawManager) : Controller
+    IDrawManager drawManager,
+    IUtilityManager utilityManager) : Controller
 {
     [HttpGet]
     public IActionResult Index(int panelId)
@@ -20,7 +22,7 @@ public class RegistrationController(
         var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
         var users = panelManager.GetRegisteredInvitationsByPanelId(panelId).ToList();
         var panel = panelManager.GetPanelById(panelId);
-        var result = drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
+        var result = utilityManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
 
         var bucketsWithActuals = registrationManager.AssignActualRegistrationsToBuckets(result.Buckets, users);
 

@@ -3,6 +3,7 @@ using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
+using CitizenPanel.BL.Utilities;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.DTO;
@@ -16,7 +17,8 @@ namespace CitizenPanel.UI.MVC.Controllers.Panels;
 public class PanelController(
     IPanelManager panelManager,
     IDrawManager drawManager,
-    ApplicationUserManager userManager) : Controller
+    ApplicationUserManager userManager,
+    IUtilityManager utilityManager) : Controller
 {
     [HttpGet]
     [Authorize]
@@ -101,7 +103,7 @@ public class PanelController(
         }
         
         Panel newPanel = panelManager.AddPanel(model.Name, model.Description, criteria, model.Result.TotalAvailablePotentialPanelmembers);
-        var invitations = drawManager.AddInvitations(model.Result.ReservePotPanelmembers, criteria, newPanel);
+        var invitations = utilityManager.GenerateInvitations(model.Result.ReservePotPanelmembers, criteria, newPanel);
         newPanel.Invitations = invitations.ToList();
         panelManager.ChangePanel(newPanel);
         return RedirectToAction("Index","Panel",new { id = newPanel.Id });
