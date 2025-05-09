@@ -11,6 +11,7 @@ public interface IPanelManager
 
     public Panel GetPanelById(int panelId);
     Panel GetPanelByIdWithInvitations(int panelId);
+    public IEnumerable<Invitation> GetRegisteredInvitationsByPanelId(int panelId);
 
     public void ChangePanel(Panel panel);
     public void RemovePanel(Panel panel);
@@ -32,4 +33,5 @@ public interface IPanelManager
     IEnumerable<Criteria> GetCriteriaAndSubcriteriaWithPanelId(int panelId);
     public void ChangeRecommendation(Recommendation recommendation);
     public IEnumerable<Panel> GetAllPanels();
+
 }

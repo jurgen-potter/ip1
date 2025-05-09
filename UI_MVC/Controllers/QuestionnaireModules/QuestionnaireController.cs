@@ -20,9 +20,9 @@ public class QuestionnaireController(
     [AllowAnonymous]
     public async Task<IActionResult> Index(int questionnaireId)
     {
-        var questionnaire = questionnaireModuleManager.GetQuestionnaire(questionnaireId);
+        var questionnaire = questionnaireModuleManager.GetQuestionnaireById(questionnaireId);
         var userId = userManager.GetUserId(User);
-        var organization = memberManager.GetOrganizationWithAnswers(userId);
+        var organization = memberManager.GetOrganizationByIdWithAnswers(userId);
         List<int> selectedAnswerIds = new();
 
         if (User.IsInRole("Organization") && organization?.OrganizationProfile?.Answers != null)
@@ -46,12 +46,12 @@ public class QuestionnaireController(
     [AllowAnonymous]
     public IActionResult Result(QuestionnaireResponseViewModel model)
     {
-        model.Questionnaire = questionnaireModuleManager.GetQuestionnaire(model.QuestionnaireId);
+        model.Questionnaire = questionnaireModuleManager.GetQuestionnaireById(model.QuestionnaireId);
         
         var answers = new List<Answer>();
         foreach (var answer in model.Answers)
         {
-            answers.Add(questionnaireModuleManager.GetAnswer(answer.Value));
+            answers.Add(questionnaireModuleManager.GetAnswerById(answer.Value));
         }
 
         model.IsCritical = answers.Any(a => a.IsCritical);
@@ -66,7 +66,6 @@ public class QuestionnaireController(
         if (!ModelState.IsValid)
             return View("Index", model);
 
-        // Store form data temporarily (you may serialize if needed)
         TempData["FormData"] = JsonConvert.SerializeObject(model);
 
         return RedirectToAction("Save");
@@ -83,8 +82,9 @@ public class QuestionnaireController(
         var answers = new List<Answer>();
         foreach (var answer in model.Answers)
         {
-            answers.Add(questionnaireModuleManager.GetAnswer(answer.Value));
+            answers.Add(questionnaireModuleManager.GetAnswerById(answer.Value));
         }
+        
         var user = await userManager.GetUserAsync(User);
         await memberManager.ChangeOrganizationAnswersAsync(user.Id, model.QuestionnaireId, answers);
         return RedirectToAction(nameof(Index), new { questionnaireId = model.QuestionnaireId });

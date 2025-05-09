@@ -5,12 +5,12 @@ namespace CitizenPanel.BL.QuestionnaireModules;
 
 public class QuestionnaireModuleManager(IQuestionnaireModuleRepository repository) : IQuestionnaireModuleManager
 {
-    public Questionnaire GetQuestionnaire(int questionnaireId)
+    public Questionnaire GetQuestionnaireById(int questionnaireId)
     {
         return repository.ReadQuestionnaire(questionnaireId);
     }
 
-    public bool EditQuestionnaire(Questionnaire questionnaire)
+    public bool ChangeQuestionnaire(Questionnaire questionnaire)
     {
         return repository.UpdateQuestionnaire(questionnaire);
     }
@@ -20,7 +20,7 @@ public class QuestionnaireModuleManager(IQuestionnaireModuleRepository repositor
         return repository.ReadAllQuestionnaires();
     }
 
-    public Answer GetAnswer(int answerId)
+    public Answer GetAnswerById(int answerId)
     {
         return repository.ReadAnswer(answerId);
     }

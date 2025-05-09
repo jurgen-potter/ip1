@@ -4,11 +4,11 @@ namespace CitizenPanel.BL.QuestionnaireModules;
 
 public interface IQuestionnaireModuleManager
 {
-    Questionnaire GetQuestionnaire(int questionnaireId);
+    Questionnaire GetQuestionnaireById(int questionnaireId);
     
-    bool EditQuestionnaire(Questionnaire questionnaire);
+    bool ChangeQuestionnaire(Questionnaire questionnaire);
     
     IEnumerable<Questionnaire> GetAllQuestionnaires();
     
-    Answer GetAnswer(int answerId);
+    Answer GetAnswerById(int answerId);
 }

@@ -12,14 +12,13 @@ public class RegistrationController(
     IRegistrationManager registrationManager,
     IEmailSender mailSender,
     IPanelManager panelManager,
-    IDrawManager drawManager,
-    IMemberManager memberManager) : Controller
+    IDrawManager drawManager) : Controller
 {
     [HttpGet]
     public IActionResult Index(int panelId)
     {
         var criteria = panelManager.GetCriteriaAndSubcriteriaWithPanelId(panelId);
-        var users = memberManager.GetRegisteredInvitationsByPanelId(panelId).ToList();
+        var users = panelManager.GetRegisteredInvitationsByPanelId(panelId).ToList();
         var panel = panelManager.GetPanelById(panelId);
         var result = drawManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
 

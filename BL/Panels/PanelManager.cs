@@ -21,6 +21,12 @@ public class PanelManager(
     {
         return repository.ReadInvitationsOfPanelById(panelId);
     }
+    
+    public IEnumerable<Invitation> GetRegisteredInvitationsByPanelId(int panelId)
+    {
+        return repository.ReadRegisteredInvitationsByPanelId(panelId);
+    }
+    
     public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totAvPotMem)
     {
         Panel newPanel = new Panel()

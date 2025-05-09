@@ -32,7 +32,7 @@ public class AdminController(IQuestionnaireModuleManager questionnaireModuleMana
     [Authorize(Roles = "Admin")]
     public IActionResult EditQuestionnaire(int questionnaireId)
     {
-        Questionnaire questionnaire = questionnaireModuleManager.GetQuestionnaire(questionnaireId);
+        Questionnaire questionnaire = questionnaireModuleManager.GetQuestionnaireById(questionnaireId);
 
         EditQuestionnaireViewModel model = new EditQuestionnaireViewModel
         {
@@ -101,7 +101,7 @@ public class AdminController(IQuestionnaireModuleManager questionnaireModuleMana
             return View(model);
         }
         
-        var questionnaire = questionnaireModuleManager.GetQuestionnaire(model.Id);
+        var questionnaire = questionnaireModuleManager.GetQuestionnaireById(model.Id);
         if (questionnaire == null)
         {
             return NotFound();
@@ -181,7 +181,7 @@ public class AdminController(IQuestionnaireModuleManager questionnaireModuleMana
 
         questionnaire.Questions = updatedQuestions;
 
-        questionnaireModuleManager.EditQuestionnaire(questionnaire);
+        questionnaireModuleManager.ChangeQuestionnaire(questionnaire);
 
         return RedirectToAction(nameof(Index));
     }
