@@ -4,8 +4,7 @@ namespace CitizenPanel.DAL.Panels;
 
 public interface IMeetingRepository
 {
-    Meeting ReadMeetingByIdWithRecommendations(int id);
-    Meeting ReadMeetingById(int id);
     void CreateMeeting(Meeting meeting);
-    void UpdateMeeting(Meeting meeting);
+    Meeting ReadMeetingByIdWithRecommendations(int id);
+    bool UpdateMeeting(Meeting meeting);
 }

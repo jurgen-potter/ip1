@@ -5,16 +5,6 @@ namespace CitizenPanel.BL.Panels;
 
 public class MeetingManager(IMeetingRepository repository) : IMeetingManager
 {
-    public Meeting GetMeetingByIdWithRecommendations(int id)
-    {
-       return repository.ReadMeetingByIdWithRecommendations(id);
-    }
-
-    public Meeting GetMeetingById(int id)
-    {
-        return repository.ReadMeetingById(id);
-    }
-
     public Meeting AddMeeting(string title, DateOnly date, int panelId)
     {
         var meeting = new Meeting()
@@ -23,13 +13,18 @@ public class MeetingManager(IMeetingRepository repository) : IMeetingManager
             Title = title,
             Date = date
         };
-       repository.CreateMeeting(meeting);
-       return meeting;
+        repository.CreateMeeting(meeting);
+        return meeting;
+    }
+    
+    public Meeting GetMeetingByIdWithRecommendations(int id)
+    {
+       return repository.ReadMeetingByIdWithRecommendations(id);
     }
 
-    public void EditMeeting(Meeting meeting)
+    public bool EditMeeting(Meeting meeting)
     {
-        repository.UpdateMeeting(meeting);
+        return repository.UpdateMeeting(meeting);
     }
 
 }
