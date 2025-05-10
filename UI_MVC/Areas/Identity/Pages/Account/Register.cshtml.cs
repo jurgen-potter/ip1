@@ -78,6 +78,11 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            [Required(ErrorMessage = "Organisatienaam is verplicht.")]
+            [Display(Name = "Organisatienaam")]
+            [MaxLength(25, ErrorMessage = "Organisatienaam mag niet langer zijn dan 25 tekens.")]
+            public string Name { get; set; }
+            
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -133,7 +138,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 IdentityResult result;
                 if (IsStaff == "false")
                 {
-                    result = await _userManager.CreateWithTenantAsync(user, Input.Password, generateNewTenantId: true);
+                    result = await _userManager.CreateWithTenantAsync(user, Input.Password, newTenantName: Input.Name);
                 }
                 else
                 {

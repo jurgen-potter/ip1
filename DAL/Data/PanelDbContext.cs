@@ -34,6 +34,7 @@ public class PanelDbContext(
     public DbSet<Answer> Answers { get; set; }
     public DbSet<MemberProfile> MemberProfiles { get; set; }
     public DbSet<OrganizationProfile> OrganizationProfiles { get; set; }
+    public DbSet<Tenant> Tenants { get; set; }
     
     public string TenantId => tenantContext.GetCurrentTenantId();
 
@@ -68,6 +69,9 @@ public class PanelDbContext(
         
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<Tenant>()
+            .HasKey(t => t.Id);
+        
         modelBuilder.Entity<ApplicationUser>()
             .HasOne(u => u.MemberProfile)
             .WithOne(m => m.ApplicationUser)
