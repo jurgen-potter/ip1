@@ -11,7 +11,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" href="~/dist/css/panel/dashboard.css" asp-append-version="true"/>
+<link href="@Url.Content("~/dist/css/panel/dashboard.css")" rel="stylesheet" asp-append-version="true"/>
 
 <div class="container-fluid p-4" data-panel-id="@Model.PanelId">
 
@@ -28,6 +28,9 @@
                 </a>
                 <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
                     <i class="bi bi-pencil-square me-1"></i> Voeg panellid toe
+                </a>
+                <a asp-controller="Panel" asp-action="SeeMembers" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
+                    <i class="bi bi-eye me-1"></i> Panelleden bekijken
                 </a>
                 @* <a asp-action="Edit" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm"> *@
                 @*     <i class="bi bi-pencil-square me-1"></i> Edit Panel *@
@@ -133,5 +136,5 @@
 
 
 @section Scripts {
-    <script src="~/dist/js/dashboard/timeline.js" asp-append-version="true"></script>
+    <script defer src="@Url.Content("~/dist/js/dashboard/timeline.js")" asp-append-version="true"></script>
 }

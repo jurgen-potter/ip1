@@ -171,12 +171,11 @@ public class DataSeeder(PanelDbContext panelDbContext)
         //panel3.Members.Add(paul?.MemberProfile);
         paul?.MemberProfile.Panels.Add(panel1);
         //paul?.MemberProfile.Panels.Add(panel3);
-        
-        
+
 
         var members = new List<ApplicationUser>
         {
-new ApplicationUser
+            new ApplicationUser
             {
                 Email = "kate@example.com",
                 UserType = UserType.Member,
@@ -184,14 +183,11 @@ new ApplicationUser
                 {
                     FirstName = "Kate",
                     Gender = Gender.Female,
-                    Age = 65,
+                    BirthDate = new DateOnly(1960, 8, 14),
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
+                    SelectedCriteria = new List<SubCriteria> { subCrit9, subCrit10 }
                 }
             },
             new ApplicationUser
@@ -202,14 +198,11 @@ new ApplicationUser
                 {
                     FirstName = "Rozie",
                     Gender = Gender.Female,
-                    Age = 77,
+                    BirthDate = new DateOnly(1947, 2, 23),
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit9,subCrit10
-                    }
+                    SelectedCriteria = new List<SubCriteria> { subCrit9, subCrit10 }
                 }
             },
             new ApplicationUser
@@ -220,14 +213,11 @@ new ApplicationUser
                 {
                     FirstName = "Rozalinda",
                     Gender = Gender.Female,
-                    Age = 69,
+                    BirthDate = new DateOnly(1955, 11, 5),
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
+                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
                 }
             },
             new ApplicationUser
@@ -238,35 +228,30 @@ new ApplicationUser
                 {
                     FirstName = "Alice",
                     Gender = Gender.Female,
-                    Age = 73,
+                    BirthDate = new DateOnly(1951, 6, 30),
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria>()
-                    {
-                        subCrit8,subCrit10
-                    }
+                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
                 }
             },
             new ApplicationUser
             {
-            Email = "emma3@example.com",
-            UserType = UserType.Member,
-            MemberProfile = new MemberProfile
-            {
-                FirstName = "Emma",
-                Gender = Gender.Female,
-                Age = 24,
-                Town = "Antwerpen",
-                Panels = new List<Panel> { panel1 },
-                TenantId = "antwerpen",
-                SelectedCriteria = new List<SubCriteria>()
+                Email = "emma3@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
                 {
-                    subCrit8,subCrit10
+                    FirstName = "Emma",
+                    Gender = Gender.Female,
+                    BirthDate = new DateOnly(2001, 3, 18),
+                    Town = "Antwerpen",
+                    Panels = new List<Panel> { panel1 },
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
                 }
             }
-        }
         };
+
         
         var userVotesRec1 = new List<UserVote>
         {

@@ -9,6 +9,7 @@ public interface IPanelRepository
     void CreatePanel(Panel panel);
     IEnumerable<Panel> ReadAllPanels(); // wordt al gefilterd op tenant
     Panel ReadPanelById(int panelId);
+    Panel ReadPanelByIdWithMembers(int panelId);
     Panel ReadPanelByIdWithInvitations(int panelId);
     Panel ReadPanelByIdWithRecommendations(int panelId);
     Panel ReadPanelByIdWithRecommendationsAndVotes(int panelId);

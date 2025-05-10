@@ -9,6 +9,7 @@ public interface IPanelManager
     Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totAvPotMem);
     IEnumerable<Panel> GetAllPanels(); // wordt al gefilterd op tenant
     Panel GetPanelById(int panelId);
+    Panel GetPanelByIdWithMembers(int panelId);
     Panel GetPanelByIdWithInvitations(int panelId);
     Panel GetPanelByIdWithRecommendations(int panelId);
     Panel GetPanelByIdWithRecommendationsAndVotes(int panelId);
@@ -25,5 +26,4 @@ public interface IPanelManager
 
     IEnumerable<Criteria> GetExtraCriteriaByPanelId(int panelId);
     IEnumerable<Criteria> GetCriteriaByPanelIdWithSubcriteria(int panelId);
-
 }

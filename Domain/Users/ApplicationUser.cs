@@ -22,7 +22,6 @@ public class MemberProfile : ITenanted
     public string FirstName { get; set; } 
     public string LastName { get; set; }
     public Gender Gender { get; set; }
-    public int Age { get; set; }
     public DateOnly BirthDate { get; set; }
     public string Town { get; set; }
     public ICollection<Panel> Panels { get; set; } = new List<Panel>();

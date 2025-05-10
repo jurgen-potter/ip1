@@ -219,6 +219,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     {
                         FirstName = Input.FirstName,
                         LastName = Input.LastName,
+                        BirthDate = Input.BirthDate,
                         Panels = new List<Panel> { panel }
                     };
                 }
