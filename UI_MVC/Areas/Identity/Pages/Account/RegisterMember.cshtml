@@ -49,6 +49,13 @@
                 <label asp-for="Input.ConfirmPassword"></label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.BirthDate" type="date" class="form-control" autocomplete="birthdate"
+                       aria-required="true" value="@DateTime.Now.ToString("yyyy-MM-dd")"/>
+                <label asp-for="Input.BirthDate"></label>
+                <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
+            </div>
+            
             @if (Model.IsStaff == "false")
             {
                 <div class="form-floating mb-3">
@@ -56,12 +63,6 @@
                            value="@Model.Input.Gender.ToDutch()" readonly/>
                     <input type="hidden" asp-for="Input.Gender" value="@Model.Input.Gender"/>
                     <label asp-for="Input.Gender"></label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.BirthDate" type="date" class="form-control" autocomplete="birthdate"
-                           aria-required="true" value="@DateTime.Now.ToString("yyyy-MM-dd")"/>
-                    <label asp-for="Input.BirthDate"></label>
-                    <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <input asp-for="Input.Town" class="form-control" autocomplete="town" aria-required="true"

@@ -22,7 +22,7 @@ public class MembersController(IPanelManager panelManager) : ControllerBase
         {
             users.Add(new MemberProfileDto
             {
-                Age = panelMember.Age,
+                Age = DateTime.Today.AddYears(-panelMember.BirthDate.Year).Year,
                 Email = panelMember.ApplicationUser.Email,
                 Gender = panelMember.Gender.ToDutch()
             });
