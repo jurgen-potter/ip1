@@ -86,7 +86,7 @@
                 <section class="bg-white rounded-lg shadow-sm">
                     <div class="bg-white p-4 flex justify-between items-center border-b">
                         <h5 class="text-lg font-medium mb-0">Aanbevelingen</h5>
-                        <a class="inline-flex items-center px-3 py-1 bg-accent hover:bg-accent-hover text-text-black text-sm font-medium rounded-md" asp-route-panelId="@Model.PanelId" asp-controller="Recommendation" asp-action="Index">
+                        <a class="inline-flex items-center px-3 py-1 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-md" asp-route-panelId="@Model.PanelId" asp-controller="Recommendation" asp-action="Index">
                             Aanbevelingen bekijken 
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -94,65 +94,51 @@
                         </a>
                     </div>
                     <div class="p-4">
-                        @if (Model.Meetings.SelectMany(m => m.Recommendations).Any())
-                        {
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                @foreach (var meeting in Model.Meetings.Where(m => m.Recommendations.Any()))
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            @foreach (var meeting in Model.Meetings)
+                            {
+                                @foreach (var rec in meeting.Recommendations)
                                 {
-                                    <div class="col-span-1 md:col-span-2 mt-2 mb-1 first:mt-0">
-                                        <h6 class="text-sm font-semibold text-gray-500">
-                                            @meeting.Date.ToString("dd MMMM yyyy") - @meeting.Title
-                                        </h6>
-                                    </div>
-                                    
-                                    @foreach (var rec in meeting.Recommendations)
-                                    {
-                                        <div class="col-span-1">
-                                            <div class="border p-4 rounded-lg bg-gray-50 h-full flex flex-col shadow-sm hover:shadow-md transition-shadow duration-200">
-                                                <h6 class="font-semibold text-primary mb-2">@rec.Title</h6>
-                                                <p class="text-sm flex-grow text-gray-700">@rec.Description</p>
-                                            </div>
+                                    <div class="col-span-1">
+                                        <div class="border p-3 rounded bg-gray-50 h-full flex flex-col">
+                                            <h6 class="font-semibold">@rec.Title</h6>
+                                            <p class="text-sm flex-grow">@rec.Description</p>
                                         </div>
-                                    }
+                                    </div>
                                 }
-                            </div>
-                        }
-                        else
-                        {
-                            <p class="text-gray-500 text-center py-4">Er zijn nog geen aanbevelingen toegevoegd.</p>
-                        }
+                            }
+                        </div>
                     </div>
                 </section>
             </main>
         </div>
     </div>
-</div>
 
-<!-- Modal should be a direct child of the body, moved outside the container -->
-<div class="modal fade" id="createMeetingModal" tabindex="-1" aria-labelledby="createMeetingModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createMeetingModalLabel">Nieuwe Meeting Toevoegen</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="createMeetingForm" novalidate>
-                    <div class="mb-3">
-                        <label for="meetingTitle" class="block text-sm font-medium text-gray-700 mb-1">Titel</label>
-                        <input type="text" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50" id="meetingTitle" name="Title" required>
-                        <div id="errorTitle" class="text-red-600 text-sm mt-1 hidden"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="meetingDate" class="block text-sm font-medium text-gray-700 mb-1">Datum</label>
-                        <input type="date" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50" id="meetingDate" name="Date" required>
-                        <div id="errorDate" class="text-red-600 text-sm mt-1 hidden"></div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300" data-bs-dismiss="modal">Annuleren</button>
-                <button type="submit" form="createMeetingForm" class="px-4 py-2 bg-accent hover:bg-accent-hover text-text-black rounded-md" id="saveMeetingBtn">Opslaan</button>
+    <div class="modal fade" id="createMeetingModal" tabindex="-1" aria-labelledby="createMeetingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createMeetingModalLabel">Nieuwe Meeting Toevoegen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createMeetingForm" novalidate>
+                        <div class="mb-3">
+                            <label for="meetingTitle" class="block text-sm font-medium text-gray-700 mb-1">Titel</label>
+                            <input type="text" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50" id="meetingTitle" name="Title" required>
+                            <div id="errorTitle" class="text-red-600 text-sm mt-1 hidden"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="meetingDate" class="block text-sm font-medium text-gray-700 mb-1">Datum</label>
+                            <input type="date" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50" id="meetingDate" name="Date" required>
+                            <div id="errorDate" class="text-red-600 text-sm mt-1 hidden"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300" data-bs-dismiss="modal">Annuleren</button>
+                    <button type="submit" form="createMeetingForm" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover" id="saveMeetingBtn">Opslaan</button>
+                </div>
             </div>
         </div>
     </div>
