@@ -76,7 +76,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public class InputModel
+        public class InputModel : IValidatableObject
         {
             [Required(ErrorMessage = "Voornaam is verplicht.")]
             [Display(Name = "Voornaam")]
@@ -116,6 +116,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             [Display(Name = "Geslacht")]
             public Gender Gender { get; set; }
             
+            [Required]
             [Display(Name = "Geboortedatum")]
             public DateOnly BirthDate { get; set; }
             
@@ -125,6 +126,18 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             public List<CriteriaViewModel> CriteriaList { get; set; } = new List<CriteriaViewModel>();
             
             public List<int> SelectedCriteria { get; set; }
+            
+            public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+            {
+                List<ValidationResult> errors = new List<ValidationResult>();
+                if (BirthDate >= DateOnly.FromDateTime(DateTime.Now).AddYears(-16))
+                {
+                    errors.Add(new ValidationResult("Verjaardag moet ouder dan 16 jaar zijn.", new string[] { "BirthDate" }));
+                }
+
+                return errors;
+
+            }
         }
         
         [BindProperty]
