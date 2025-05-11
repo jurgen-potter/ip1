@@ -1,82 +1,81 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-
 @model CitizenPanel.UI.MVC.Models.RegisterViewModel
 
 @{
-    ViewBag.Title = "Aanmelden";
+    ViewBag.Title = "Vul uw gegevens in";
 }
 @section Styles {
     <link rel="stylesheet" href="~/dist/clientapp/assets/index.css">
 }
 
-<h2 class="text-2xl font-bold mb-4">Vul uw gegevens in</h2>
-<div asp-validation-summary="All" class="text-red-500"></div>
-<form asp-controller="MemberRegister" asp-action="RegisterMember" asp-route-code="@Model.Code" method="post">
-    <div class="mb-4">
-        <label class="block text-sm font-medium mb-1">Email:</label>
-        <input asp-for="Email" type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
-        <span asp-validation-for="Email" class="text-red-500 text-sm"></span>
-    </div>
-
-
-    @if (Model?.CriteriaList != null && Model.CriteriaList.Any())
-    {
-        @foreach (var criteriaPair in Model.CriteriaList.Select((criteria, i) => new { criteria, i }))
-        {
-            <div class="mb-4">
-                <label class="block text-sm font-medium mb-2">@criteriaPair.criteria.Name</label>
-                <div class="flex flex-wrap gap-2">
-                    @if (criteriaPair.criteria.SubCriteria != null && criteriaPair.criteria.SubCriteria.Any())
-                    {
-                        @foreach (var subCriteria in criteriaPair.criteria.SubCriteria)
-                        {
-                            bool isChecked = Model.SelectedCriteria != null
-                                             && Model.SelectedCriteria.Count > criteriaPair.i
-                                             && Model.SelectedCriteria[criteriaPair.i] == subCriteria.Id;
-                            <label class="inline-flex items-center px-4 py-2 border border-secondary text-secondary hover:bg-secondary hover:text-white rounded-lg cursor-pointer">
-                                <input type="radio" name="SelectedCriteria[@criteriaPair.i]" value="@subCriteria.Id" @(isChecked ? "checked" : "") class="mr-2"/>
-                                @subCriteria.Name
-                            </label>
-                        }
-                    }
-                </div>
+<div class="auth-page-wrapper">
+    <div class="auth-card-container">
+        <h2 class="auth-page-title">@ViewBag.Title</h2>
+        <div asp-validation-summary="ModelOnly" class="auth-validation-summary mb-4" role="alert"></div>
+        <form asp-controller="MemberRegister" asp-action="RegisterMember" asp-route-code="@Model.Code" method="post">
+            <div class="member-reg-form-group">
+                <label asp-for="Email" class="auth-form-label">Email:</label>
+                <input asp-for="Email" type="email" class="auth-input-field">
+                <span asp-validation-for="Email" class="auth-validation-message"></span>
             </div>
-        }
-    }
 
-    @for (int i = 0; i < Model?.CriteriaList?.Count; i++)
-    {
-        <input type="hidden" asp-for="CriteriaList[i].Name"/>
+            @if (Model?.CriteriaList != null && Model.CriteriaList.Any())
+            {
+                @foreach (var criteriaPair in Model.CriteriaList.Select((criteria, i) => new { criteria, i }))
+                {
+                    <div class="member-reg-form-group">
+                        <label class="member-reg-criteria-group-label">@criteriaPair.criteria.Name</label>
+                        <div class="member-reg-criteria-options-wrapper">
+                            @if (criteriaPair.criteria.SubCriteria != null && criteriaPair.criteria.SubCriteria.Any())
+                            {
+                                @foreach (var subCriteria in criteriaPair.criteria.SubCriteria)
+                                {
+                                    bool isChecked = Model.SelectedCriteria != null
+                                                     && Model.SelectedCriteria.Count > criteriaPair.i
+                                                     && Model.SelectedCriteria[criteriaPair.i] == subCriteria.Id;
+                                    <label class="member-reg-criteria-option-label @(isChecked ? "is-checked" : "")">
+                                        <input type="radio" name="SelectedCriteria[@criteriaPair.i]" value="@subCriteria.Id" @(isChecked ? "checked" : "") class="mr-2"/>
+                                        @subCriteria.Name
+                                    </label>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            }
 
-        @for (int j = 0; j < Model.CriteriaList[i].SubCriteria.Count; j++)
-        {
-            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Id"/>
-            <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Name"/>
-        }
-    }
-
-    <input type="hidden" asp-for="@Model.Code">
-    <button type="submit" class="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg transition-colors duration-150">Aanmelden</button>
-</form>
-
-
-<!-- Confirmation Modal -->
-<div id="confirmationModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center hidden" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-    <div class="bg-white rounded-lg shadow-xl overflow-hidden max-w-md w-full mx-4">
-        <div class="border-b px-4 py-3">
-            <h5 class="text-lg font-bold" id="confirmationModalLabel">Bevestiging</h5>
-        </div>
-        <div class="p-4">
-            <p>Weet u zeker dat u wilt meedoen?</p>
-        </div>
-        <div class="border-t px-4 py-3 flex justify-end gap-2">
-            <a href="@Url.Action("Index", "Home")" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-150">Ik wil niet meedoen</a>
-            <input id="isConfirmed" type="hidden" asp-for="@Model.IsConfirmed"/>
-            <button id="confirmParticipation" type="button" class="bg-accent hover:bg-accent-hover text-text-black px-4 py-2 rounded-lg transition-colors duration-150">Ik wil meedoen</button>
-        </div>
+            @* Verborgen velden voor model binding *@
+            @for (int i = 0; i < Model?.CriteriaList?.Count; i++)
+            {
+                <input type="hidden" asp-for="CriteriaList[i].Name"/>
+                @for (int j = 0; j < Model.CriteriaList[i].SubCriteria.Count; j++)
+                {
+                    <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Id"/>
+                    <input type="hidden" asp-for="CriteriaList[i].SubCriteria[j].Name"/>
+                }
+            }
+            <input type="hidden" asp-for="@Model.Code">
+            
+            <button type="submit" class="auth-submit-button mt-6">Aanmelden</button>
+        </form>
     </div>
 </div>
 
+<div id="confirmationModal" class="member-reg-modal-overlay hidden" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="member-reg-modal-dialog">
+        <div class="member-reg-modal-header">
+            <h5 class="member-reg-modal-title" id="confirmationModalLabel">Bevestiging</h5>
+        </div>
+        <div class="member-reg-modal-body">
+            <p>Weet u zeker dat u wilt meedoen?</p>
+        </div>
+        <div class="member-reg-modal-footer">
+            <a href="@Url.Action("Index", "Home")" class="member-reg-modal-button-cancel">Ik wil niet meedoen</a>
+            <input id="isConfirmed" type="hidden" asp-for="@Model.IsConfirmed"/>
+            <button id="confirmParticipation" type="button" class="member-reg-modal-button-confirm">Ik wil meedoen</button>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script type="module" src="~/dist/clientapp/assets/index.js"></script>

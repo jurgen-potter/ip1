@@ -1,0 +1,140 @@
+﻿.meeting-detail-page-container {
+  @apply container mx-auto py-6 px-4 sm:px-6 lg:px-8;
+}
+
+.meeting-detail-page-header {
+  @apply flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-300 pb-4 mb-6;
+}
+
+.meeting-detail-back-link-wrapper {
+  @apply mb-3 sm:mb-0;
+}
+
+.meeting-detail-back-link {
+  @apply btn btn-outline-secondary mb-2 text-xs py-1 px-2; /* btn-sm vervangen door Tailwind utilities */
+  i { @apply mr-1; }
+}
+
+.meeting-detail-title {
+  @apply text-2xl sm:text-3xl font-semibold text-gray-800;
+}
+
+.meeting-content-card {
+  @apply bg-white rounded-lg shadow-lg border border-gray-200 mb-6;
+}
+
+.meeting-card-header {
+  @apply bg-gray-100 p-4 sm:p-5 flex justify-between items-center border-b border-gray-300 rounded-t-lg;
+  h5 {
+    @apply text-lg sm:text-xl font-semibold text-gray-700 mb-0;
+  }
+  .btn {
+    @apply text-sm py-2 px-3;
+  }
+}
+
+.meeting-card-body {
+  @apply p-4 sm:p-6;
+}
+
+.meeting-recommendations-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6;
+}
+
+.meeting-recommendation-item {
+  @apply bg-gray-50 border border-gray-200 p-4 rounded-lg h-full flex flex-col;
+  h5 {
+    @apply font-semibold text-gray-800 mb-1;
+  }
+  p {
+    @apply text-gray-700 text-sm;
+  }
+}
+
+.meeting-documents-add-button {
+  @apply btn btn-outline-primary mt-4;
+  i { @apply mr-2; }
+}
+
+.meeting-empty-state-text {
+  @apply text-gray-500 italic;
+}
+
+
+.recommendation-form-card-container {
+  @apply w-full max-w-2xl bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10 overflow-hidden;
+}
+
+.recommendation-form-actions {
+  @apply mt-8 flex flex-col sm:flex-row items-center gap-3;
+  .btn {
+    @apply w-full sm:w-auto;
+  }
+}
+.recommendations-page-container { /* Algemene container voor de "Aanbevelingen" overzichtspagina */
+  @apply container mx-auto py-8 px-4;
+}
+
+.recommendations-page-main-title { /* Voor de H1 "Aanbevelingen" */
+  @apply text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center;
+}
+
+.recommendation-meeting-group { /* Wrapper voor elke meeting en diens aanbevelingen */
+  @apply mb-10; /* Ruimte tussen meeting groepen */
+}
+
+.recommendation-meeting-title { /* Voor de H2 van elke meeting titel */
+  @apply text-2xl font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-300;
+}
+
+.recommendations-list-grid { /* Grid voor de aanbevelingskaarten per meeting */
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6; /* Responsive grid */
+}
+
+.recommendation-card { 
+  @apply bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col h-full
+  transition-all duration-300 ease-in-out hover:shadow-xl;
+}
+
+.recommendation-card-body {
+  @apply p-5 flex flex-col flex-grow; 
+}
+
+.recommendation-card-title {
+  @apply text-lg font-semibold text-gray-800 mb-2;
+  .anonymous-label { 
+    @apply text-sm font-normal text-gray-500 ml-2;
+  }
+}
+
+.recommendation-card-text {
+  @apply text-gray-700 text-sm leading-relaxed flex-grow mb-3; /* flex-grow om ruimte te vullen */
+}
+
+.recommendation-card-status { /* Voor statusberichten zoals "Stemmen is afgelopen" */
+  @apply text-sm font-semibold mb-3;
+  &.ended { @apply text-red-600; }
+  &.balanced { @apply text-green-600; } /* Gebruik een van je success/brand kleuren */
+}
+
+.recommendation-card-vote-info { /* Container voor steminformatie */
+  @apply text-xs text-gray-600 mb-3;
+  ul { @apply list-none p-0 mt-1; }
+  li p { @apply mb-0; }
+  .vote-count-for { @apply text-green-500 font-medium; }
+  .vote-count-against { @apply text-red-500 font-medium; }
+}
+
+.recommendation-card-actions { /* Footer voor de knoppen */
+  @apply mt-auto pt-4 border-t border-gray-200 flex flex-wrap justify-start gap-2; /* mt-auto duwt naar beneden */
+  .btn { /* Kleinere knoppen voor in de kaart */
+    @apply text-xs py-1 px-2 sm:py-1.5 sm:px-3;
+  }
+}
+
+.recommendation-vote-forms { /* Container voor de stemknoppen voor gebruikers */
+  @apply mt-auto pt-4 border-t border-gray-200 flex flex-col sm:flex-row gap-2;
+  form { @apply w-full sm:w-auto; }
+  .btn { @apply w-full; } /* Knoppen volledige breedte in hun form */
+}
+

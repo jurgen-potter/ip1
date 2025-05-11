@@ -4,21 +4,24 @@
 @{
     ViewBag.Title = "Panel maken";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css">
+}
 
-<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-semibold mb-6">Begin met uw panel te maken</h2>
+<div class="panel-create-container">
+    <h2 class="panel-create-title">Begin met uw panel te maken</h2>
     
-    <form asp-controller="Panel" asp-action="CreatePanel" method="post" class="space-y-6">
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Naam van uw panel:</label>
-            <input asp-for="Name" type="text" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50" />
-            <span asp-validation-for="Name" class="text-red-600 text-sm"></span>
+    <form asp-controller="Panel" asp-action="CreatePanel" method="post" class="panel-create-form">
+        <div class="panel-form-group">
+            <label asp-for="Name" class="panel-form-label">Naam van uw panel:</label>
+            <input asp-for="Name" type="text" class="panel-form-input" />
+            <span asp-validation-for="Name" class="panel-form-validation-message"></span>
         </div>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Beschrijving van uw panel:</label>
-            <textarea rows="5" asp-for="Description" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">Geef hier uw beschrijving</textarea>
-            <span asp-validation-for="Description" class="text-red-600 text-sm"></span>
+        <div class="panel-form-group">
+            <label asp-for="Description" class="panel-form-label">Beschrijving van uw panel:</label>
+            <textarea rows="5" asp-for="Description" class="panel-form-textarea">Geef hier uw beschrijving</textarea>
+            <span asp-validation-for="Description" class="panel-form-validation-message"></span>
         </div>
         
         <div>
@@ -41,7 +44,7 @@
         </div>
         
         <div>
-            <button type="submit" class="px-4 py-2 bg-primary hover:bg-primary-hover text-white font-medium rounded-md transition-colors duration-150">Maak uw panel</button>
+            <button type="submit" class="panel-form-submit-button">Maak uw panel</button>
         </div>
     </form>
 </div>

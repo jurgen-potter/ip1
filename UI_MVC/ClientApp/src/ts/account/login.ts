@@ -30,7 +30,7 @@ function loginInit(): void {
 }
 
 function setEventListener(): void {
-    document.querySelectorAll<HTMLButtonElement>(".login-type-btn")
+    document.querySelectorAll<HTMLButtonElement>(".login-type-button")
         .forEach(button => {
             button.addEventListener("click", () => {
                 const dt = button.getAttribute("data-type") as LoginType;
@@ -77,7 +77,7 @@ function showCorrectFields(selectedType: LoginType): void {
 }
 
 function adjustFormContainerHeight(selectedType: LoginType): void {
-    const loginCard = document.querySelector(".login-card") as HTMLDivElement;
+    const loginCard = document.querySelector(".login-card-container") as HTMLDivElement;
     const activeForm = document.querySelector(`#${selectedType.toLowerCase()}Fields`) as HTMLDivElement;
     
     if (loginCard && activeForm) {

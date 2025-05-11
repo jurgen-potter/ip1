@@ -1,42 +1,50 @@
 ﻿@model CitizenPanel.UI.MVC.Models.Panels.AddRecommendationViewModel
 
 @{
-ViewData["Title"] = "Aanbeveling Toevoegen";
+    ViewData["Title"] = "Aanbeveling Toevoegen";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true"/>
 }
 
-<h1>Aanbeveling Toevoegen</h1>
-<form asp-action="AddRecommendation" method="post">
-    <input type="hidden" asp-for="MeetingId" />
-    <input type="hidden" asp-for="PanelId" />
+<div class="auth-page-wrapper">
+    <div class="recommendation-form-card-container"> 
+        <h1 class="auth-page-title">@ViewData["Title"]</h1>
+        <form asp-action="AddRecommendation" method="post">
+            <div asp-validation-summary="ModelOnly" class="auth-validation-summary" role="alert"></div>
+            <input type="hidden" asp-for="MeetingId" />
+            <input type="hidden" asp-for="PanelId" />
 
-    <div class="mt-4 mb-2">
-        <div class="form-group">
-            <label asp-for="Title">Titel</label>
-            <input asp-for="Title" class="form-control"/>
-            <span asp-validation-for="Title" class="text-danger"></span>
-        </div>
-    </div>
+            <div class="auth-form-group">
+                <label asp-for="Title" class="auth-form-label">Titel</label>
+                <input asp-for="Title" class="auth-input-field"/>
+                <span asp-validation-for="Title" class="auth-validation-message"></span>
+            </div>
 
-    <div class="form-group">
-        <label asp-for="Description">Beschrijving</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+            <div class="auth-form-group">
+                <label asp-for="Description" class="auth-form-label">Beschrijving</label>
+                <textarea asp-for="Description" class="auth-input-field"></textarea>
+                <span asp-validation-for="Description" class="auth-validation-message"></span>
+            </div>
 
-    <div class="form-group">
-        <label asp-for="NeededVotes">Hoevel stemmen zijn er minstens nodig?</label>
-        <input type="number" asp-for="NeededVotes" class="form-control"></input>
-        <span asp-validation-for="NeededVotes" class="text-danger"></span>
-    </div>
+            <div class="auth-form-group">
+                <label asp-for="NeededVotes" class="auth-form-label">Hoeveel stemmen zijn er minstens nodig?</label>
+                <input type="number" asp-for="NeededVotes" class="auth-input-field"/>
+                <span asp-validation-for="NeededVotes" class="auth-validation-message"></span>
+            </div>
 
-    <div class="form-group">
-        <label asp-for="IsAnonymous">Wilt u dat deze stemming anoniem is?</label>
-        <input type="checkbox" asp-for="IsAnonymous" class="form-check"></input>
-        <span asp-validation-for="IsAnonymous" class="text-danger"></span>
-    </div>
+            <div class="auth-form-group">
+                <label class="auth-checkbox-label">
+                    <input type="checkbox" asp-for="IsAnonymous" class="auth-checkbox-input"/>
+                    <span>Wilt u dat deze stemming anoniem is?</span>
+                </label>
+                <span asp-validation-for="IsAnonymous" class="auth-validation-message"></span>
+            </div>
 
-    <div class="mt-4 mb-2">
-        <button type="submit" class="btn btn-primary">Voeg Toe</button>
-        <a asp-action="Details" asp-route-id="@Model.MeetingId" asp-route-panelId="@Model.PanelId" class="btn btn-secondary">Terug</a>
+            <div class="recommendation-form-actions">
+                <button type="submit" class="btn btn-primary">Voeg Toe</button>
+                <a asp-action="Details" asp-controller="Meeting" asp-route-id="@Model.MeetingId" asp-route-panelId="@Model.PanelId" class="btn btn-secondary">Terug</a>
+            </div>
+        </form>
     </div>
-</form>
+</div>

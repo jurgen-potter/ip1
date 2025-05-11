@@ -1,45 +1,88 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Get references to modal elements with null checks
+    const votersModal = document.getElementById('votersModal');
 
-    const votersModalElement = document.getElementById('votersModal');
+    // Only proceed if the modal exists on the page
+    if (!votersModal) {
+        console.log('Modal not found, skipping voters modal setup');
+        return;
+    }
 
-    if (votersModalElement) {
+    const votersModalBody = document.getElementById('votersModalBody');
+    const votersModalTitle = votersModal.querySelector('.custom-modal-title');
 
-        const modalTitleElement = votersModalElement.querySelector<HTMLElement>('.modal-title');
-        const modalBodyElement = votersModalElement.querySelector<HTMLElement>('.modal-body');
+    // Make sure we have all required elements
+    if (!votersModalBody || !votersModalTitle) {
+        console.error('Required modal elements not found');
+        return;
+    }
 
-        if (!modalTitleElement || !modalBodyElement) { //null check vr typescript
-            console.error('modellTitleElement of modalBodyElement niet gevonden');
-            return;
-        }
+    // Set up event listeners for the "Bekijk Stemmers" buttons
+    const viewVotersButtons = document.querySelectorAll('.btn-show-voters');
 
-        votersModalElement.addEventListener('show.bs.modal', async (event) => {
- 
-            const potentialTarget = (event as Event & { relatedTarget?: Element | null }).relatedTarget;
+    if (viewVotersButtons.length === 0) {
+        console.log('No voter buttons found, skipping setup');
+        return;
+    }
 
-           
-            if (potentialTarget instanceof HTMLButtonElement && potentialTarget.dataset.recommendationId) {
-                const triggerButton = potentialTarget;
+    viewVotersButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            // Safely get data attributes
+            const recommendationId = button.getAttribute('data-recommendation-id');
+            const recommendationTitle = button.getAttribute('data-recommendation-title') || 'Stemmers Details';
 
-                const recommendationId = triggerButton.dataset.recommendationId;
-                const recommendationTitle = triggerButton.dataset.recommendationTitle || 'Stemmers Details';
+            if (!recommendationId) {
+                console.error('No recommendation ID found');
+                return;
+            }
 
-                modalTitleElement.textContent = `Stemming voor aanbeveling: ${recommendationTitle}`;
-                
+            // Update modal title
+            votersModalTitle.textContent = `Stemming voor aanbeveling: ${recommendationTitle}`;
+
+            // Show loading message
+            votersModalBody.innerHTML = '<p class="text-gray-500">Laden...</p>';
+
+            // Open the modal
+            votersModal.classList.add('is-open');
+            document.body.classList.add('overflow-hidden');
+
+            // Fetch voters data
+            try {
                 const url = `/Recommendation/GetVoters?recommendationId=${recommendationId}`;
-                try {
-                    // Probeer de stemmers op te halen via een fetch-aanroep
-                    const response = await fetch(url);
-                    if (!response.ok) {
-                        throw new Error(`Serverfout: ${response.status} ${response.statusText}`);
-                    }
-                    // Zet de HTML-inhoud van het modal-body element op basis van de response
-                    modalBodyElement.innerHTML = await response.text();
-                } catch (error) {
-                    console.error('Fout bij ophalen/weergeven stemmers:', error);
-                    let userMessage = 'Kon de lijst met stemmers niet laden.';
-                    modalBodyElement.innerHTML = `<div class="alert alert-danger m-3">${userMessage}</div>`; //laat error msg zien
+                console.log('Fetching voters from:', url); // Debug logging
+
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`Serverfout: ${response.status} ${response.statusText}`);
                 }
-            } 
-        }); 
-    } 
+
+                // Update modal body with fetched HTML
+                const responseText = await response.text();
+                votersModalBody.innerHTML = responseText;
+
+            } catch (error) {
+                console.error('Fout bij ophalen/weergeven stemmers:', error);
+                votersModalBody.innerHTML = '<div class="alert alert-danger m-3">Kon de lijst met stemmers niet laden.</div>';
+            }
+        });
+    });
+
+    // Set up close functionality for the modal
+    const closeButtons = votersModal.querySelectorAll('[data-modal-close="votersModal"]');
+
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            votersModal.classList.remove('is-open');
+            document.body.classList.remove('overflow-hidden');
+        });
+    });
+
+    // Close modal when clicking on the overlay
+    votersModal.addEventListener('click', (event) => {
+        if (event.target === votersModal) {
+            votersModal.classList.remove('is-open');
+            document.body.classList.remove('overflow-hidden');
+        }
+    });
 });

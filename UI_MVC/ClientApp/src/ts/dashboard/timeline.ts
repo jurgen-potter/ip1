@@ -1,7 +1,8 @@
-﻿interface Meeting {
+﻿// Interfaces blijven hetzelfde
+interface Meeting {
     id: number;
     title: string;
-    date: string;
+    date: string; // Verwacht ISO date string (YYYY-MM-DDTHH:mm:ss)
 }
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -13,92 +14,120 @@ interface MeetingFormElement extends HTMLFormElement {
     elements: FormElements;
 }
 
+// DOM Elements voor de custom modal
+let createMeetingModal: HTMLElement | null;
+let openCreateMeetingModalBtn: HTMLButtonElement | null;
+let closeCreateMeetingModalBtn: HTMLButtonElement | null;
+let cancelCreateMeetingBtn: HTMLButtonElement | null;
+let createMeetingForm: MeetingFormElement | null;
+
 //Initialize timeline functionality when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
 
-
 //Main initialization function for timeline features
 async function init(): Promise<void> {
-    // Get panel ID from DOM
     const panelEl = document.body.querySelector<HTMLElement>('[data-panel-id]');
     const panelId = panelEl?.dataset.panelId ?? '';
 
-    // Set up timeline item click handling
-    setupTimelineItemClicks(panelId);
+    // Initialize modal elements
+    createMeetingModal = document.getElementById('createMeetingModal');
+    openCreateMeetingModalBtn = document.getElementById('openCreateMeetingModalBtn') as HTMLButtonElement;
+    closeCreateMeetingModalBtn = document.getElementById('closeCreateMeetingModalBtn') as HTMLButtonElement;
+    cancelCreateMeetingBtn = document.getElementById('cancelCreateMeetingBtn') as HTMLButtonElement;
+    createMeetingForm = document.getElementById('createMeetingForm') as MeetingFormElement | null;
 
-    // Initialize form and modal listeners
-    setupForm(panelId);
-    setupModalListeners();
+    setupTimelineItemClicks(panelId);
+    setupCustomModalListeners();
+
+    if (createMeetingForm) {
+        setupForm(panelId, createMeetingForm);
+    }
 }
 
 //Set up click handling for timeline items
 function setupTimelineItemClicks(panelId: string): void {
     document.body.addEventListener('click', (e) => {
-        // Delegate clicks on .timeline-item
         const target = (e.target as HTMLElement).closest('.timeline-item') as HTMLElement | null;
         if (!target) return;
 
-        e.preventDefault();
+        e.preventDefault(); // Voorkom standaardgedrag als het een link zou zijn
 
         const meetingId = target.dataset.meetingId;
-        if (!meetingId) return;
+        if (!meetingId) {
+            console.error('Meeting ID not found on timeline item.', target);
+            return;
+        }
 
-        // Navigate to meeting details with appropriate parameters
-        const params = new URLSearchParams({
-            id: meetingId,
-            panelId,
-        });
-
+        const params = new URLSearchParams({ id: meetingId, panelId });
         window.location.href = `/Meeting/Details?${params.toString()}`;
     });
 }
 
-//Set up modal event listeners
-function setupModalListeners(): void {
-    const modal = document.getElementById('createMeetingModal');
+// --- Custom Modal Logic ---
+function openModal(modal: HTMLElement | null): void {
     if (!modal) return;
-    modal.addEventListener('hidden.bs.modal', () => {
-        resetForm();
-    });
+    modal.classList.add('is-open');
+    document.body.classList.add('overflow-hidden');
 }
 
-//Reset form to initial state voor validatie te resetten
+function closeModal(modal: HTMLElement | null): void {
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    document.body.classList.remove('overflow-hidden');
+    resetForm();
+}
+
+function setupCustomModalListeners(): void {
+    if (openCreateMeetingModalBtn && createMeetingModal) {
+        openCreateMeetingModalBtn.addEventListener('click', () => {
+            openModal(createMeetingModal);
+        });
+    }
+    if (closeCreateMeetingModalBtn && createMeetingModal) {
+        closeCreateMeetingModalBtn.addEventListener('click', () => {
+            closeModal(createMeetingModal);
+        });
+    }
+    if (cancelCreateMeetingBtn && createMeetingModal) {
+        cancelCreateMeetingBtn.addEventListener('click', () => {
+            closeModal(createMeetingModal);
+        });
+    }
+    if (createMeetingModal) {
+        createMeetingModal.addEventListener('click', (event) => {
+            if (event.target === createMeetingModal) {
+                closeModal(createMeetingModal);
+            }
+        });
+    }
+}
+
+//Reset form to initial state
 function resetForm(): void {
-    const form = document.getElementById('createMeetingForm') as MeetingFormElement | null;
-    if (!form) return;
-
-    // Reset validation state
-    form.classList.remove('was-validated');
-
-    // Clear error messages
+    if (!createMeetingForm) return;
+    createMeetingForm.classList.remove('was-validated');
     const errorElements = {
         title: document.getElementById('errorTitle'),
         date: document.getElementById('errorDate')
     };
-
-    errorElements.title?.classList.add('d-none');
-    errorElements.date?.classList.add('d-none');
-
-    // Reset all form fields
-    form.reset();
-
-    // Set default date to tomorrow
-    const dateInput = form.elements.Date;
-    dateInput.value = getTomorrowDateString();
-
-    // Clear validation visual states
-    form.querySelectorAll('input').forEach(input => {
+    errorElements.title?.classList.add('hidden');
+    errorElements.date?.classList.add('hidden');
+    createMeetingForm.reset();
+    const dateInput = createMeetingForm.elements.Date;
+    if (dateInput) {
+        dateInput.value = getTomorrowDateString();
+    }
+    createMeetingForm.querySelectorAll('input').forEach(input => {
         input.classList.remove('is-invalid', 'is-valid');
     });
 }
 
-//Get tomorrow's date as ISO string (YYYY-MM-DD) voor deftig te displayen.
+//Get tomorrow's date as ISO string (YYYY-MM-DD)
 function getTomorrowDateString(): string {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-
     return tomorrow.toISOString().slice(0, 10);
 }
 
@@ -110,9 +139,7 @@ function getTodayAtMidnight(): Date {
 }
 
 //Set up the meeting creation form
-function setupForm(panelId: string): void {
-    const form = document.getElementById('createMeetingForm') as MeetingFormElement | null;
-    if (!form) return;
+function setupForm(panelId: string, form: MeetingFormElement): void {
     const elements = {
         saveBtn: document.getElementById('saveMeetingBtn') as HTMLButtonElement,
         dateInput: form.elements.Date,
@@ -120,12 +147,11 @@ function setupForm(panelId: string): void {
         errorTitle: document.getElementById('errorTitle'),
         errorDate: document.getElementById('errorDate')
     };
-    // Initialize date input
     const today = getTodayAtMidnight();
-    initializeDateInput(elements.dateInput, elements.errorDate, today);
-    // Clear validation errors when inputs change
+    if (elements.dateInput) {
+        initializeDateInput(elements.dateInput, elements.errorDate, today);
+    }
     setupInputListeners(elements);
-    // Handle form submission
     form.addEventListener('submit', (e) => handleFormSubmit(e, form, elements, panelId));
 }
 
@@ -140,7 +166,6 @@ function initializeDateInput(
     dateInput.addEventListener('change', () => {
         validateDateInput(dateInput, errorDateElement, today);
     });
-    // Validate on initial load
     validateDateInput(dateInput, errorDateElement, today);
 }
 
@@ -152,14 +177,18 @@ function setupInputListeners(elements: {
     errorDate: HTMLElement | null;
 }): void {
     const { titleInput, dateInput, errorTitle, errorDate } = elements;
-    titleInput.addEventListener('input', () => {
-        errorTitle?.classList.add('d-none');
-        titleInput.classList.remove('is-invalid');
-    });
-    dateInput.addEventListener('input', () => {
-        errorDate?.classList.add('d-none');
-        dateInput.classList.remove('is-invalid');
-    });
+    if (titleInput) {
+        titleInput.addEventListener('input', () => {
+            errorTitle?.classList.add('hidden');
+            titleInput.classList.remove('is-invalid');
+        });
+    }
+    if (dateInput) {
+        dateInput.addEventListener('input', () => {
+            errorDate?.classList.add('hidden');
+            dateInput.classList.remove('is-invalid');
+        });
+    }
 }
 
 //Handle form submission for creating a meeting
@@ -178,95 +207,86 @@ async function handleFormSubmit(
     e.preventDefault();
     const { saveBtn, dateInput, titleInput, errorTitle, errorDate } = elements;
 
-    // Reset error messages and validation states
-    errorTitle?.classList.add('d-none');
-    errorDate?.classList.add('d-none');
-    titleInput.classList.remove('is-invalid', 'is-valid');
-    dateInput.classList.remove('is-invalid', 'is-valid');
+    errorTitle?.classList.add('hidden');
+    errorDate?.classList.add('hidden');
+    if (titleInput) titleInput.classList.remove('is-invalid', 'is-valid');
+    if (dateInput) dateInput.classList.remove('is-invalid', 'is-valid');
 
-    // Perform client-side validation
     if (!validateForm(titleInput, dateInput, errorTitle, errorDate)) {
         form.classList.add('was-validated');
         return;
     }
 
-    // Show loading state
     setButtonLoadingState(saveBtn, true);
 
     try {
-        // Submit form data
         const result = await submitFormData(form, panelId);
-
-        if (result.success) {
-            // Handle successful submission
+        if (result.success && result.meeting) { // Controleer ook of result.meeting bestaat
             addToTimeline(result.meeting);
-            resetForm();
-            closeModal();
+            closeModal(createMeetingModal);
         } else {
-            // Handle validation errors from server
-            handleServerValidationErrors(result.errors, elements);
+            handleServerValidationErrors(result.errors || "Er is een onbekende fout opgetreden.", elements);
         }
     } catch (err) {
         console.error('Error submitting form:', err);
+        showError(errorTitle, "Fout bij het opslaan van de meeting."); // Algemene foutmelding
     } finally {
-        // Reset button state
         setButtonLoadingState(saveBtn, false);
     }
 }
 
 //Validate form inputs
 function validateForm(
-    titleInput: HTMLInputElement,
-    dateInput: HTMLInputElement,
+    titleInput: HTMLInputElement | null,
+    dateInput: HTMLInputElement | null,
     errorTitle: HTMLElement | null,
     errorDate: HTMLElement | null
 ): boolean {
     let isValid = true;
     const today = getTodayAtMidnight();
 
-    // Validate title
-    if (!titleInput.value.trim()) {
+    if (!titleInput || !titleInput.value.trim()) {
         showError(errorTitle, 'Vul een titel in');
-        titleInput.classList.add('is-invalid');
+        titleInput?.classList.add('is-invalid');
         isValid = false;
     } else {
         titleInput.classList.add('is-valid');
     }
 
-    // Validate date - only add validation classes if there's an actual issue
-    const selectedDate = new Date(dateInput.value);
-    selectedDate.setHours(0, 0, 0, 0);
-
-    if (!dateInput.value) {
+    if (!dateInput || !dateInput.value) {
         showError(errorDate, 'Selecteer een datum');
-        dateInput.classList.add('is-invalid');
+        dateInput?.classList.add('is-invalid');
         isValid = false;
-    } else if (selectedDate < today) {
-        showError(errorDate, 'De datum mag niet in het verleden liggen');
-        dateInput.classList.add('is-invalid');
-        isValid = false;
-    } else if (isValid) { // Only mark as valid if the entire form is valid so far
-        dateInput.classList.add('is-valid');
+    } else {
+        const selectedDate = new Date(dateInput.value);
+        selectedDate.setHours(0, 0, 0, 0);
+        if (selectedDate < today) {
+            showError(errorDate, 'De datum mag niet in het verleden liggen');
+            dateInput.classList.add('is-invalid');
+            isValid = false;
+        } else if (isValid) {
+            dateInput.classList.add('is-valid');
+        }
     }
-
     return isValid;
 }
 
 //Show an error message in the specified element
 function showError(errorElement: HTMLElement | null, message: string): void {
     if (!errorElement) return;
-
-    errorElement.classList.remove('d-none');
+    errorElement.classList.remove('hidden');
     errorElement.textContent = message;
 }
 
 //Set button loading state
-function setButtonLoadingState(button: HTMLButtonElement, isLoading: boolean): void {
+function setButtonLoadingState(button: HTMLButtonElement | null, isLoading: boolean): void {
+    if (!button) return;
     button.disabled = isLoading;
-
     if (isLoading) {
+        // Voor een Tailwind spinner zou je HTML moeten toevoegen of een CSS spinner gebruiken.
+        // Dit is een simpele tekstuele indicatie.
         button.innerHTML = `
-      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      <span class="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></span>
       Opslaan...
     `;
     } else {
@@ -277,23 +297,17 @@ function setButtonLoadingState(button: HTMLButtonElement, isLoading: boolean): v
 //Submit form data to server
 async function submitFormData(form: HTMLFormElement, panelId: string): Promise<any> {
     const data = new FormData(form);
-    data.set('panelId', panelId);
-
-    const response = await fetch('/Meeting/Create', {
+    data.set('panelId', panelId); // Zorg ervoor dat panelId correct wordt meegestuurd
+    const response = await fetch('/Meeting/Create', { // Controleer of dit het juiste endpoint is
         method: 'POST',
         body: data
     });
-
+    if (!response.ok) {
+        // Probeer de error body te lezen als die er is
+        const errorData = await response.json().catch(() => ({ errors: "Serverfout: " + response.statusText }));
+        return { success: false, errors: errorData.errors || errorData.message || "Serverfout" };
+    }
     return await response.json();
-}
-
-//Close the modal programmatically
-function closeModal(): void {
-    const modal = document.getElementById('createMeetingModal');
-    if (!modal) return;
-
-    const modalInstance = bootstrap.Modal.getInstance(modal);
-    modalInstance?.hide();
 }
 
 //Handle validation errors returned from server
@@ -307,39 +321,34 @@ function handleServerValidationErrors(
     }
 ): void {
     const { titleInput, dateInput, errorTitle, errorDate } = elements;
-
     if (!errors) return;
 
-    // First clear any previous validation states to avoid cross-field effects
-    titleInput.classList.remove('is-invalid', 'is-valid');
-    dateInput.classList.remove('is-invalid', 'is-valid');
-    errorTitle?.classList.add('d-none');
-    errorDate?.classList.add('d-none');
+    if (titleInput) titleInput.classList.remove('is-invalid', 'is-valid');
+    if (dateInput) dateInput.classList.remove('is-invalid', 'is-valid');
+    errorTitle?.classList.add('hidden');
+    errorDate?.classList.add('hidden');
 
-    // Handle ModelState errors (object)
     if (typeof errors === 'object') {
-        if (errors.Title) {
+        if (errors.Title && titleInput) {
             showError(errorTitle, Array.isArray(errors.Title) ? errors.Title[0] : errors.Title);
             titleInput.classList.add('is-invalid');
         }
-
-        if (errors.Date) {
+        if (errors.Date && dateInput) {
             showError(errorDate, Array.isArray(errors.Date) ? errors.Date[0] : errors.Date);
             dateInput.classList.add('is-invalid');
         }
-    }
-    // Handle string errors
-    else if (typeof errors === 'string') {
-        if (errors.includes('date') || errors.includes('datum')) {
+    } else if (typeof errors === 'string') {
+        // Probeer de foutmelding op het meest relevante veld te tonen
+        if ((errors.toLowerCase().includes('date') || errors.toLowerCase().includes('datum')) && dateInput) {
             showError(errorDate, errors);
             dateInput.classList.add('is-invalid');
-        } else {
-            // Show generic error on title field as default
+        } else if (titleInput) { // Default naar titelveld als het niet duidelijk is
             showError(errorTitle, errors);
             titleInput.classList.add('is-invalid');
+        } else { // Of toon een algemene fout als geen van beide velden beschikbaar is
+            alert("Serverfout: " + errors);
         }
     }
-
     console.error('Form validation failed:', errors);
 }
 
@@ -351,24 +360,18 @@ function validateDateInput(
 ): boolean {
     const selectedDate = new Date(dateInput.value);
     selectedDate.setHours(0, 0, 0, 0);
-
     if (selectedDate < today) {
         const errorMessage = 'De datum mag niet in het verleden liggen';
-
-        // Apply invalid state
         dateInput.classList.add('is-invalid');
         dateInput.classList.remove('is-valid');
         dateInput.setCustomValidity(errorMessage);
-
-        // Show error message
         showError(errorDateElement, errorMessage);
         return false;
     } else {
-        // Clear validation states
         dateInput.classList.remove('is-invalid');
         dateInput.classList.add('is-valid');
         dateInput.setCustomValidity('');
-        errorDateElement?.classList.add('d-none');
+        errorDateElement?.classList.add('hidden');
         return true;
     }
 }
@@ -376,41 +379,51 @@ function validateDateInput(
 //Add a new meeting to the timeline UI
 function addToTimeline(meeting: Meeting): void {
     const container = document.querySelector<HTMLElement>('.timeline-line');
-    if (!container) return;
+    if (!container) {
+        console.error("Timeline container (.timeline-line) not found.");
+        return;
+    }
+    if (!meeting || typeof meeting.date !== 'string' || typeof meeting.title !== 'string') {
+        console.error("Invalid meeting data received:", meeting);
+        return;
+    }
 
-    // Parse the date string from the server
-    const meetingDate = new Date(meeting.date);
+    const meetingDate = new Date(meeting.date); 
+    if (isNaN(meetingDate.getTime())) {
+        console.error("Invalid date format for meeting:", meeting.date);
+        return;
+    }
+    const noMeetingsMessage = document.getElementById('noMeetingsMessage');
+    if (noMeetingsMessage) {
+        noMeetingsMessage.style.display = 'none'; 
+    }
 
-    // Format the date for display using Dutch locale
     const formattedDate = meetingDate.toLocaleDateString('nl-NL', {
         day: '2-digit',
         month: 'short',
     });
 
-    // Create the new timeline item element
     const newTimelineItem = createTimelineItem(meeting, formattedDate);
-
-    // Insert at the correct chronological position
     insertTimelineItemInOrder(container, newTimelineItem, meetingDate);
 
-    // Remove animation class after it plays
-    setTimeout(() => newTimelineItem.classList.remove('timeline-item-new'), 600);
+    newTimelineItem.classList.add('timeline-item-new'); 
+    setTimeout(() => {
+        newTimelineItem.classList.remove('timeline-item-new');
+    }, 600); 
 }
 
 //Create a timeline item element
 function createTimelineItem(meeting: Meeting, formattedDate: string): HTMLElement {
     const el = document.createElement('div');
-    el.className = 'timeline-item timeline-item-new';
+    el.className = 'timeline-item'; // Start zonder 'timeline-item-new'
     el.dataset.meetingId = String(meeting.id);
-    el.dataset.date = meeting.date;  // Store ISO date for sorting
-
+    el.dataset.date = meeting.date;
     el.innerHTML = `
     <div class="timeline-box">
       <div class="date">${formattedDate}</div>
       <h4 class="title">${meeting.title || 'Meeting'}</h4>
     </div>
   `;
-
     return el;
 }
 
@@ -421,22 +434,19 @@ function insertTimelineItemInOrder(
     newItemDate: Date
 ): void {
     const existingItems = Array.from(container.children) as HTMLElement[];
-
-    // Find index of first item that's later than new item
-    const insertIndex = existingItems.findIndex(item => {
-        const itemDateStr = item.dataset.date;
-        if (!itemDateStr) {
-            return false;
+    let inserted = false;
+    for (let i = 0; i < existingItems.length; i++) {
+        const itemDateStr = existingItems[i].dataset.date;
+        if (itemDateStr) {
+            const itemDate = new Date(itemDateStr);
+            if (newItemDate < itemDate) {
+                container.insertBefore(newItem, existingItems[i]);
+                inserted = true;
+                break;
+            }
         }
-
-        const itemDate = new Date(itemDateStr);
-        return newItemDate < itemDate;
-    });
-
-    // Insert at found index, or append if no later items found
-    if (insertIndex >= 0) {
-        container.insertBefore(newItem, existingItems[insertIndex]);
-    } else {
+    }
+    if (!inserted) {
         container.append(newItem);
     }
 }

@@ -5,18 +5,22 @@
 @{
     ViewBag.Title = "Uitnodigingen";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true"/>
+}
 
-<div class="container mx-auto px-4">
-    <h2 class="text-2xl font-semibold mb-6">Uitnodigingen</h2>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        @foreach (var invitation in Model.Where(i => !i.IsRegistered))
-        {
-            <div class="flex">
-                <div class="bg-white rounded-lg shadow-md overflow-hidden w-full">
-                    <div class="p-4 flex flex-col h-full">
-                        <p class="mb-2 flex-grow">Geslacht: @invitation.Gender.ToDutch()</p>
-                        <p class="mb-2 flex-grow">Leeftijd:
+<div class="invitations-container">
+    <h2 class="invitations-title">@ViewBag.Title</h2>
+
+    @if (Model != null && Model.Any(i => !i.IsRegistered))
+    {
+        <div class="invitations-grid">
+            @foreach (var invitation in Model.Where(i => !i.IsRegistered))
+            {
+                <div class="invitation-card">
+                    <div class="invitation-card-content">
+                        <p class="flex-grow">Geslacht: @invitation.Gender.ToDutch()</p>
+                        <p class="flex-grow">Leeftijd:
                             @if (invitation.Age == 18)
                             {
                                 @($"18-25")
@@ -35,23 +39,33 @@
                             }
                             else if (invitation.Age == 61)
                             {
-                                @($"61")
+                                @($"61+")
+                            }
+                            else
+                            {
+                                @($"{invitation.Age}")
                             }
                         </p>
-                        <p class="mb-2 flex-grow">Code: @invitation.Code</p>
-                        <div class="flex-grow">
-                            @if (@invitation.QRCodeString.IsNullOrEmpty())
+                        <p class="flex-grow">Code: @invitation.Code</p>
+                        <div class="flex-grow mt-auto pt-2">
+                            @if (invitation.QRCodeString.IsNullOrEmpty())
                             {
                                 <strong class="text-red-600">@($"Deze invitation heeft geen QR-code meer")</strong>
                             }
                             else
                             {
-                                <img src="data:image/png;base64,@invitation.QRCodeString" class="w-[150px] h-[150px]"/>
+                                <img src="data:image/png;base64,@invitation.QRCodeString" alt="QR Code voor uitnodiging @invitation.Code"/>
                             }
                         </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-10">
+            <p class="text-xl text-gray-500">Er zijn momenteel geen openstaande uitnodigingen.</p>
+        </div>
+    }
 </div>

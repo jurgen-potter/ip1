@@ -2,109 +2,65 @@
 @model CitizenPanel.UI.MVC.Areas.Identity.Pages.Account.LoginModel
 
 @{
-    ViewData["Title"] = "Aanmelden";
+ViewData["Title"] = "Aanmelden";
 }
 @section Styles {
-    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css">
+<link rel="stylesheet" href="~/dist/clientapp/assets/index.css"> 
 }
-<style>
-    .login-container {
-        position: relative;
-    }
 
-    .login-container .login-card {
-        transition: min-height 0.3s ease;
-        position: absolute;
-        top: 100px;
-        left: 50%;
-        transform: translateX(-50%);
-        overflow: hidden;
-        }
+<div class="login-page-wrapper">
+    <div class="login-card-container">
+        <h1 class="login-title">@ViewData["Title"]</h1>
 
-    .login-container .form-container {
-        position: relative;
-    }
-
-    .login-container #accountFields,
-    .login-container #codeFields {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        transform: translateY(20px);
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .login-container #accountFields.active,
-    .login-container #codeFields.active {
-        position: relative;
-        transform: translateY(0);
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .login-container .form-hidden {
-        display: none !important;
-    }
-</style>
-
-<div class="flex justify-center items-center min-h-[70vh] login-container">
-    <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8 login-card" style="min-height: 550px;">
-        <!-- Fixed top section that won't move -->
-        <h1 class="text-2xl font-bold mb-6 text-center">@ViewData["Title"]</h1>
-
-        <h2 class="text-xl font-semibold mb-4 text-center">Selecteer een methode om mee in te loggen</h2>
-        <div class="flex w-full mb-4">
-            <button type="button" id="accountBtn" class="flex-1 px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-white rounded-l-lg transition-colors duration-150 login-type-btn"
+        <h2 class="login-subtitle">Selecteer een methode om mee in te loggen</h2>
+        <div class="login-type-selector">
+            <button type="button" id="accountBtn" class="login-type-button"
                     data-type="Account">Aanmelden met account
             </button>
-            <button type="button" id="codeBtn" class="flex-1 px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-white rounded-r-lg transition-colors duration-150 login-type-btn"
+            <button type="button" id="codeBtn" class="login-type-button"
                     data-type="Code">Aanmelden met code
             </button>
         </div>
         <input type="hidden" id="selectedLogin" value="@(TempData["SelectedLoginType"] ?? "Account")"/>
-        <hr class="my-4 border-gray-200"/>
+        <hr class="login-divider"/>
 
-        <!-- Form container with dynamic height -->
-        <div class="form-container">
-            <div id="accountFields" class="@(TempData["SelectedLoginType"]?.ToString() == "Code" ? "form-hidden" : "active")">
+        <div class="login-form-fields-container">
+            <div id="accountFields" class="login-form-panel @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "form-hidden" : "active")">
                 <form id="login" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-red-500" role="alert"></div>
+                    <div asp-validation-summary="ModelOnly" class="login-validation-summary" role="alert"></div>
                     <div class="mb-4">
-                        <label asp-for="Input.Email" class="block text-sm font-medium mb-1">Email</label>
-                        <input asp-for="Input.Email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" autocomplete="username" aria-required="true"
+                        <label asp-for="Input.Email" class="login-form-label">Email</label>
+                        <input asp-for="Input.Email" class="login-input-field" autocomplete="username" aria-required="true"
                                placeholder="name@example.com"/>
                         <span asp-validation-for="Input.Email"
-                              class="text-red-500 text-sm @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "form-hidden" : "")"></span>
+                              class="login-validation-message @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "form-hidden" : "")"></span>
                     </div>
                     <div class="mb-4">
-                        <label asp-for="Input.Password" class="block text-sm font-medium mb-1">Wachtwoord</label>
-                        <input asp-for="Input.Password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" autocomplete="current-password"
+                        <label asp-for="Input.Password" class="login-form-label">Wachtwoord</label>
+                        <input asp-for="Input.Password" class="login-input-field" autocomplete="current-password"
                                aria-required="true" placeholder="password"/>
                         <span asp-validation-for="Input.Password"
-                              class="text-red-500 text-sm @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "form-hidden" : "")"></span>
+                              class="login-validation-message @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "form-hidden" : "")"></span>
                     </div>
                     <div class="mb-4">
-                        <label asp-for="Input.RememberMe" class="inline-flex items-center">
-                            <input class="mr-2" asp-for="Input.RememberMe"/>
+                        <label asp-for="Input.RememberMe" class="login-checkbox-label">
+                            <input asp-for="Input.RememberMe"/>
                             <span>@Html.DisplayNameFor(m => m.Input.RememberMe)</span>
                         </label>
                     </div>
                     <div>
-                        <button id="login-submit" type="submit" class="w-full bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg transition-colors duration-150">Aanmelden</button>
+                        <button id="login-submit" type="submit" class="login-submit-button">Aanmelden</button>
                     </div>
-                    <div class="mt-4 space-y-2">
+                    <div class="login-links-section">
                         <p>
-                            <a id="forgot-password" asp-page="./ForgotPassword" class="text-primary hover:underline">Wachtwoord vergeten?</a>
+                            <a id="forgot-password" asp-page="./ForgotPassword">Wachtwoord vergeten?</a>
                         </p>
                         <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-primary hover:underline">Registreer als nieuwe
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registreer als nieuwe
                                 organisatie</a>
                         </p>
                         <p>
-                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="text-primary hover:underline">Verzend bevestigingsmail
+                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Verzend bevestigingsmail
                                 opnieuw</a>
                         </p>
                     </div>
@@ -112,20 +68,20 @@
                 </form>
             </div>
 
-            <div id="codeFields" class="@(TempData["SelectedLoginType"]?.ToString() == "Code" ? "active" : "form-hidden")">
+            <div id="codeFields" class="login-form-panel @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "active" : "form-hidden")">
                 <form id="codeForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-red-500" role="alert"></div>
+                    <div asp-validation-summary="ModelOnly" class="login-validation-summary" role="alert"></div>
                     <div class="mb-4">
-                        <label asp-for="Input.Code" class="block text-sm font-medium mb-1">Code</label>
-                        <input asp-for="Input.Code" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" aria-required="true" placeholder="Code">
+                        <label asp-for="Input.Code" class="login-form-label">Code</label>
+                        <input asp-for="Input.Code" class="login-input-field" aria-required="true" placeholder="Code">
                         <span asp-validation-for="Input.Code"
-                              class="text-red-500 text-sm @(TempData["SelectedLoginType"]?.ToString() == "Account" ? "form-hidden" : "")"></span>
+                              class="login-validation-message @(TempData["SelectedLoginType"]?.ToString() == "Account" ? "form-hidden" : "")"></span>
                     </div>
                     <input type="hidden" name="Input.LoginType" value="Code"/>
-                    <button id="codeSubmit" type="submit" class="w-full bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg transition-colors duration-150">Aanmelden</button>
-                    <div class="mt-4">
+                    <button id="codeSubmit" type="submit" class="login-submit-button">Aanmelden</button>
+                    <div class="login-links-section">
                         <p>
-                            <a asp-controller="MemberRegister" asp-action="Index" class="text-primary hover:underline">Code nog niet geregistreerd?</a>
+                            <a asp-controller="MemberRegister" asp-action="Index">Code nog niet geregistreerd?</a>
                         </p>
                     </div>
                 </form>
@@ -135,5 +91,5 @@
 </div>
 
 @section Scripts {
-    <script type="module" src="~/dist/clientapp/assets/index.js"></script>
+<script type="module" src="~/dist/clientapp/assets/index.js"></script>
 }

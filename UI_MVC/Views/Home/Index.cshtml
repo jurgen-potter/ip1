@@ -1,49 +1,40 @@
 ﻿@{
     ViewData["Title"] = "Home";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css">
+}
 
-<style>
-    .hero-section {
-        min-height: 60vh;
-        margin-top: 0;
-        padding-top: 0;
-    }
-    body {
-        margin: 0;
-        padding: 0;
-    }
-</style>
-
-<div class="hero-section bg-brand-ash-gray flex items-center justify-center text-center px-4 sm:px-6 lg:px-8">
-    <div class="max-w-3xl mx-auto py-16 sm:py-24">
-        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-text-black leading-tight mb-6">
+<div class="home-hero-section">
+    <div class="home-hero-content">
+        <h1 class="home-hero-title">
             Welkom
         </h1>
-        <p class="text-lg sm:text-xl text-text-black text-opacity-75 max-w-2xl mx-auto">
+        <p class="home-hero-subtitle">
             Leer meer over BurgerPanels op onze website! Ontdek, deel en creëer.
         </p>
-        <div class="mt-10">
-            <a href="#" class="bg-accent hover:bg-accent-hover text-text-black font-bold py-3 px-8 rounded-lg text-lg transition-colors duration-150 shadow-lg">
+        <div class="home-hero-button-container">
+            <a href="#" class="home-hero-button">
                 Ontdek Panels
             </a>
         </div>
     </div>
 </div>
 
-<div class="container mx-auto p-4 sm:p-6 lg:p-8">
-    <h2 class="text-3xl font-semibold text-text-black mb-10 text-center">Wat is een burgerpanel?</h2>
-    <div class="grid md:grid-cols-2 gap-8">
-        <div class="bg-surface p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-            <h3 class="text-2xl font-semibold text-text-black mb-4">Kiezen voor een burgerpanel</h3>
-            <p class="text-text-black text-opacity-80 mb-6">Zet zelf de stap om jouw organisatie aan de hand van een panel te engageren.</p>
-            <a href="#" class="inline-block bg-primary text-white font-semibold py-2 px-5 rounded-lg hover:bg-primary-hover transition-colors duration-150">
+<div class="home-info-section">
+    <h2 class="home-info-title">Wat is een burgerpanel?</h2>
+    <div class="home-info-grid">
+        <div class="home-info-card">
+            <h3 class="home-info-card-title">Kiezen voor een burgerpanel</h3>
+            <p class="home-info-card-text">Zet zelf de stap om jouw organisatie aan de hand van een panel te engageren.</p>
+            <a href="#" class="home-info-card-button">
                 Meer informatie &rarr;
             </a>
         </div>
-        <div class="bg-surface p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-            <h3 class="text-2xl font-semibold text-text-black mb-4">Beginnen aan een burgerpanel?</h3>
-            <p class="text-text-black text-opacity-80 mb-6">Kijk hier voor een eerste wegwijzer en informatie om een participatiepanel te beginnen.</p>
-            <a href="#" class="inline-block bg-primary text-white font-semibold py-2 px-5 rounded-lg hover:bg-primary-hover transition-colors duration-150">
+        <div class="home-info-card">
+            <h3 class="home-info-card-title">Beginnen aan een burgerpanel?</h3>
+            <p class="home-info-card-text">Kijk hier voor een eerste wegwijzer en informatie om een participatiepanel te beginnen.</p>
+            <a href="#" class="home-info-card-button">
                 Startgids &rarr;
             </a>
         </div>

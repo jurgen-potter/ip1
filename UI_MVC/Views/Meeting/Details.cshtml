@@ -3,73 +3,70 @@
 @using System.Globalization
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
-CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
-}
-@{
+    CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
+    CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
     ViewBag.Title = $"Meeting {Model.MeetingDate.ToString("dd MMMM yyyy")}";
-  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true"/>
 }
 
-<div class="container-fluid p-4">
-    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-        <div>
-            <a href="@Url.Action("Index", "Panel", new { id = Model.PanelId })" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-eye me-1"></i>Terug naar @Model.PanelName
+<div class="meeting-detail-page-container">
+    <div class="meeting-detail-page-header">
+        <div class="meeting-detail-back-link-wrapper">
+            <a href="@Url.Action("Index", "Panel", new { id = Model.PanelId })" class="meeting-detail-back-link">
+                <i class="fas fa-arrow-left"></i>Terug naar @Model.PanelName
             </a>
-            <h1 class="h3 mb-0 mt-2">Bijeenkomst: @Model.MeetingDate.ToString("dd MMMM yyyy")</h1>
+            <h1 class="meeting-detail-title">Bijeenkomst: @Model.MeetingDate.ToString("dd MMMM yyyy")</h1>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Aanbevelingen</h5>
-                    @if (User.IsInRole("Organization"))
-                    {
-                    <a asp-action="AddRecommendation" asp-controller="Meeting"
-                       asp-route-meetingId="@Model.MeetingId"
-                       asp-route-panelId="@Model.PanelId"
-                       class="btn btn-success">Aanbeveling Toevoegen</a>
-                    }
-                </div>
-                <div class="card-body">
-                    @if (Model.Recommendations.Any())
-                    {
-                    <div class="row g-4">
-                        @foreach (var rec in Model.Recommendations)
-                        {
-                        <div class="col-md-6">
-                            <div class="border p-3 rounded bg-light h-100">
-                                <h5 class="fw-semibold">@rec.Title</h5>
-                                <p>@rec.Description</p>
-                            </div>
-                        </div>
-                        }
-                    </div>
-                    }
-                    else
-                    {
-                    <p class="text-muted">Er zijn geen aanbevelingen voor deze meeting.</p>
-                    }
-                </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"> 
+        <div class="meeting-content-card">
+            <div class="meeting-card-header">
+                <h5>Aanbevelingen</h5>
+                @if (User.IsInRole("Organization"))
+                {
+                <a asp-action="AddRecommendation" asp-controller="Meeting"
+                   asp-route-meetingId="@Model.MeetingId"
+                   asp-route-panelId="@Model.PanelId"
+                   class="btn btn-success">
+                    <i class="fas fa-plus"></i> Aanbeveling Toevoegen
+                </a>
+                }
             </div>
-      
-
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">Documenten</h5>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted">Er zijn nog geen documenten toegevoegd voor deze meeting.</p>
-                    @if (User.IsInRole("Organization"))
+            <div class="meeting-card-body">
+                @if (Model.Recommendations != null && Model.Recommendations.Any())
+                {
+                <div class="meeting-recommendations-grid"> 
+                    @foreach (var rec in Model.Recommendations)
                     {
-                        <a href="#" class="btn btn-outline-primary">
-                            <i class="bi bi-plus-circle me-2"></i>Documenten toevoegen
-                        </a>
-                    }
+                    <div class="meeting-recommendation-item">
+                        <h5>@rec.Title</h5>
+                        <p>@rec.Description</p>
                     </div>
+                    }
+                </div>
+                }
+                else
+                {
+                <p class="meeting-empty-state-text">Er zijn geen aanbevelingen voor deze meeting.</p>
+                }
+            </div>
+        </div>
+  
+        <div class="meeting-content-card">
+            <div class="meeting-card-header">
+                <h5>Documenten</h5>
+                @if (User.IsInRole("Organization"))
+                {
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="fas fa-plus-circle"></i> Documenten toevoegen
+                    </a>
+                }
+            </div>
+            <div class="meeting-card-body">
+                <p class="meeting-empty-state-text">Er zijn nog geen documenten toegevoegd voor deze meeting.</p>
             </div>
         </div>
     </div>

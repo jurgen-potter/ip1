@@ -4,39 +4,41 @@
 @{
     ViewData["Title"] = "Kies uw panel";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true"/>
+}
 
-<div class="container mx-auto my-5 px-4">
-    <div class="flex justify-center">
-        <div class="w-full md:w-2/3 lg:w-1/2">
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <div class="bg-primary text-white p-4">
-                    <h2 class="text-xl font-semibold mb-0">Kies uw panel</h2>
+<div class="panel-select-page-wrapper">
+    <div class="panel-select-container">
+        <div class="panel-select-header">
+            <h2>@ViewData["Title"]</h2>
+        </div>
+        <div class="panel-select-body">
+            <p class="panel-select-intro-text">Kies het panel wat u wil openen:</p>
+            
+            @if (Model.Panels != null && Model.Panels.Any())
+            {
+                <div class="panel-select-list">
+                    @foreach (var panel in Model.Panels)
+                    {
+                        <a asp-action="Index" asp-route-id="@panel.Id" class="panel-select-item">
+                            <div class="icon-container">
+                                <i class="fas fa-folder fa-2x"></i>
+                            </div>
+                            <div class="text-container">
+                                <h5>@panel.Name</h5>
+                            </div>
+                            <div class="arrow-container">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </a>
+                    }
                 </div>
-                <div class="p-6">
-                    <p class="text-lg mb-4">Kies het panel wat u wil openen:</p>
-                    
-                    <div class="space-y-2">
-                        @foreach (var panel in Model.Panels)
-                        {
-                            <a asp-action="Index" asp-route-id="@panel.Id" class="flex items-center p-3 border rounded-lg hover:bg-gray-50 transition-colors duration-150">
-                                <div class="mr-3 text-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h5 class="font-medium">@panel.Name</h5>
-                                </div>
-                                <div class="ml-auto text-gray-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </div>
-                            </a>
-                        }
-                    </div>
-                </div>
-            </div>
+            }
+            else
+            {
+                <p class="text-gray-500">Er zijn geen panels beschikbaar om te selecteren.</p>
+            }
         </div>
     </div>
 </div>
