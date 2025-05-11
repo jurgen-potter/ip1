@@ -132,7 +132,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 List<ValidationResult> errors = new List<ValidationResult>();
                 if (BirthDate >= DateOnly.FromDateTime(DateTime.Now).AddYears(-16))
                 {
-                    errors.Add(new ValidationResult("Error: Verjaardag kan niet minder dan 16 jaar geleden zijn!", new string[] { "BirthDate" }));
+                    errors.Add(new ValidationResult("Verjaardag moet ouder dan 16 jaar zijn.", new string[] { "BirthDate" }));
                 }
 
                 return errors;
