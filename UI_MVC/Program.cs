@@ -84,7 +84,7 @@ app.MapRazorPages();
 
 using (IServiceScope scope = app.Services.CreateScope()) {
     PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
-    if (context.CreateDatabase(true)) {
+    if (context.CreateDatabase(false)) {
         
         var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();

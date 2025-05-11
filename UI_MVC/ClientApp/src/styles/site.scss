@@ -1,0 +1,211 @@
+﻿/* index.scss */
+/* Hoofd SCSS-bestand dat door Vite wordt verwerkt. */
+
+// 1. Tailwind Directives
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// 2. Import SCSS Partials
+@import 'variables';
+@import 'base';
+@import 'buttons';
+@import 'cards';
+@import 'forms';
+// Voeg andere partials toe naarmate je project groeit
+
+/* _variables.scss */
+/* Voor SCSS-specifieke variabelen. Minimaliseer dit en gebruik Tailwind's theme. */
+
+/* _base.scss */
+/* Globale stijlen en defaults. */
+
+body {
+  @apply font-sans text-base leading-relaxed text-text-black bg-background-page;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-sans font-semibold text-text-black;
+  /* Voeg hier eventueel Tailwind utility classes toe voor specifieke margins/font sizes per heading */
+}
+
+a {
+  @apply text-text-black no-underline font-medium transition-colors duration-200 ease-in-out;
+  &:hover {
+    @apply text-primary; /* Gebruikt 'primary' uit je tailwind.config.js */
+  }
+}
+
+/* _buttons.scss */
+/* Stijlen voor knoppen. */
+
+.btn {
+  @apply inline-block cursor-pointer select-none text-center no-underline
+  font-semibold align-middle
+  border border-transparent
+  rounded-[0.3rem]
+  py-[0.6rem] px-[1.2rem]
+  transition-all duration-200 ease-in-out;
+
+  &:focus {
+    @apply outline-none ring-4; /* Basis focus, specifieke kleur hieronder */
+  }
+
+  /* Standaard knopstijl (voorheen .btn met $secondary-color) */
+  @apply bg-primary text-white border-primary;
+  &:hover {
+    @apply bg-primary-hover border-primary-hover;
+  }
+  &:focus {
+    @apply ring-primary/50;
+  }
+}
+
+.btn-primary { /* Voorheen $primary-color (rose-quartz), nu gemapt naar 'accent' */
+  @apply bg-accent text-brand-black border-accent;
+  &:hover {
+    @apply bg-accent-hover border-accent-hover;
+  }
+  &:focus {
+    @apply ring-accent/50;
+  }
+}
+
+.btn-accent { /* Zelfde als btn-primary, gebaseerd op oude $accent-color */
+  @apply bg-accent text-brand-black border-accent;
+  &:hover {
+    @apply bg-accent-hover border-accent-hover;
+  }
+  &:focus {
+    @apply ring-accent/50;
+  }
+}
+
+.btn-success { /* Gebruikt 'brand-celadon' (oude $success-color) */
+  @apply bg-brand-celadon text-white border-brand-celadon;
+  &:hover {
+    @apply bg-opacity-80 border-opacity-80; /* Simpel hover effect, pas aan indien nodig */
+  }
+  &:focus {
+    @apply ring-brand-celadon/50;
+  }
+}
+
+.btn-danger { /* Gebruikt 'red-500' en 'red-600' uit config */
+  @apply bg-red-500 text-white border-red-500;
+  &:hover {
+    @apply bg-red-600 border-red-600;
+  }
+  &:focus {
+    @apply ring-red-500/50;
+  }
+}
+
+.btn-warning { /* Gebruikt standaard Tailwind yellow, voeg 'warning: #ffc107' toe aan config voor exacte match */
+  @apply bg-yellow-500 text-brand-black border-yellow-500;
+  &:hover {
+    @apply bg-yellow-600 border-yellow-600;
+  }
+  &:focus {
+    @apply ring-yellow-500/50;
+  }
+}
+
+.btn-info { /* Gebruikt standaard Tailwind sky, voeg 'info: #0dcaf0' toe aan config voor exacte match */
+  @apply bg-sky-500 text-white border-sky-500;
+  &:hover {
+    @apply bg-sky-600 border-sky-600;
+  }
+  &:focus {
+    @apply ring-sky-500/50;
+  }
+}
+
+.btn-outline-secondary { /* Voorheen $secondary-color, nu 'primary' in config */
+  @apply bg-transparent text-primary border-primary;
+  &:hover {
+    @apply bg-primary text-white;
+  }
+  &:focus {
+    @apply ring-primary/50;
+  }
+}
+
+.btn-outline-primary { /* Voorheen $primary-color (rose-quartz), nu gemapt naar 'accent' */
+  @apply bg-transparent text-accent border-accent;
+  &:hover {
+    @apply bg-accent text-brand-black;
+  }
+  &:focus {
+    @apply ring-accent/50;
+  }
+}
+
+/* _cards.scss */
+/* Stijlen voor card componenten. */
+
+.card {
+  @apply bg-surface border border-gray-300 rounded-[0.45rem]
+  mb-6 shadow-lg;
+
+  .card-header {
+    @apply py-[0.9rem] px-6 bg-brand-celadon-light border-b border-gray-300
+    text-lg font-semibold
+    rounded-t-[0.45rem];
+  }
+
+  .card-body {
+    @apply p-6; /* 1.5rem */
+  }
+
+  .card-footer {
+    @apply py-[0.9rem] px-6 bg-brand-celadon-light border-t border-gray-300
+    text-sm
+    rounded-b-[0.45rem];
+  }
+}
+
+/* _forms.scss */
+/* Stijlen voor formulieren, inclusief .identity-container. */
+
+.identity-container {
+  @apply max-w-lg mx-auto my-10 p-8 sm:p-10 bg-brand-ash-gray border border-gray-400
+  rounded-[0.75rem]
+  shadow-xl;
+
+  h2 {
+    @apply text-text-black text-2xl font-bold text-center mt-0 mb-8;
+  }
+
+  .form-group {
+    @apply mb-5; /* 1.25rem */
+
+    label {
+      @apply block mb-[0.6rem] font-medium text-gray-700;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      @apply w-full py-[0.9rem] px-[0.9rem]
+      border-gray-400
+      rounded-[0.3rem]
+      bg-surface text-text-black
+      font-sans text-[0.95rem]
+      focus:border-primary focus:ring-4 focus:ring-primary/25;
+    }
+  }
+
+  .links {
+    @apply mt-7 text-center text-[0.85rem];
+
+    a {
+      @apply mx-2 text-primary;
+      &:hover {
+        @apply text-primary-hover; /* Of een lichtere variant indien gedefinieerd in config */
+      }
+    }
+  }
+}

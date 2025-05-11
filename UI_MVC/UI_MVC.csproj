@@ -44,6 +44,37 @@
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
+      <Content Update="ClientApp\src\styles\css\admin\editQuestionnaire.scss">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="ClientApp\src\styles\css\panel\dashboard.scss">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="ClientApp\src\styles\css\recruitment\index.scss">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\account\login.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\admin\editQuestionnaire.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\dashboard\Timeline.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\memberRegister\registerMember.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\recommendation\endVote.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\recommendation\vote.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\recommendation\votersModalLoader.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\recruitment\index.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\registration\index.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\admin\editQuestionnaire.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\recruitment\index.scss" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\css\" />
+      <Folder Include="wwwroot\dist\js\" />
     </ItemGroup>
     
     <Target Name="FrontendBuild" AfterTargets="Publish">

@@ -1,73 +1,19 @@
 ﻿@using CitizenPanel.BL.Domain.Users
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Panello</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true" />
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'text-black': '#080708',
-                        'brand-black': '#080708',
-                        'brand-cadet-gray': '#A5B5BF',
-                        'brand-ash-gray': '#ABC8C7',
-                        'brand-celadon': '#B8E2C8',
-                        'brand-celadon-light': '#BFF0D4',
-                        'primary': '#A5B5BF',
-                        'primary-hover': '#8E9FAA',
-                        'secondary': '#ABC8C7',
-                        'secondary-hover': '#97B3B2',
-                        'accent': '#B8E2C8',
-                        'accent-hover': '#A3CFAF',
-                        'background-page': '#FFFFFF',
-                        'surface': '#FFFFFF',
-                        'header-text': '#FFFFFF',
-                        'header-text-hover': '#E0E0E0',
-                        'header-nav-item-bg-hover': 'rgba(255, 255, 255, 0.1)',
-                        'red-500': '#EF4444',
-                        'red-600': '#DC2626',
-                        'red-700': '#B91C1C',
-                        'gray-50': '#F9FAFB',
-                        'gray-100': '#F3F4F6',
-                        'gray-200': '#E5E7EB',
-                        'gray-300': '#D1D5DB',
-                        'gray-400': '#9CA3AF',
-                        'gray-500': '#6B7280',
-                        'gray-600': '#4B5563',
-                        'gray-700': '#374151',
-                        'gray-800': '#1F2937',
-                        'gray-900': '#111827',
-                    },
-                    fontFamily: {
-                        sans: ['Bahnschrift', 'Segoe UI', 'Calibri', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <style>
-        .nav-link {
-            color: white !important;
-        }
-        .nav-link:hover {
-            color: #E0E0E0 !important;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-    </style>
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="min-h-screen flex flex-col bg-background-page text-text-black font-sans">
@@ -81,33 +27,38 @@
                 </div>
 
                 <div class="hidden md:flex items-center space-x-4">
-                    <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="nav-link">Demografische data invullen</a>
-                    <a asp-area="" asp-route-questionnaireId="1" asp-controller="Questionnaire" asp-action="Index" class="nav-link">Verkenningsmodule</a>
-                    <a asp-area="" asp-route-questionnaireId="2" asp-controller="Questionnaire" asp-action="Index" class="nav-link">Procesbepalingsmodule</a>
-                    <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="nav-link">Code Registreren</a>
+                    <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="text-header-text hover:text-header-text-hover">Demografische data invullen</a>
+                    <a asp-area="" asp-route-questionnaireId="1" asp-controller="Questionnaire" asp-action="Index" class="text-header-text hover:text-header-text-hover">Verkenningsmodule</a>
+                    <a asp-area="" asp-route-questionnaireId="2" asp-controller="Questionnaire" asp-action="Index" class="text-header-text hover:text-header-text-hover">Procesbepalingsmodule</a>
                     @if (User.IsInRole("Member") || User.IsInRole("Organization"))
                     {
-                        <a asp-area="" asp-controller="Panel" asp-action="UserPanel" class="nav-link">Dashboard</a>
+                        <a asp-area="" asp-controller="Panel" asp-action="UserPanel" class="text-header-text hover:text-header-text-hover">Dashboard</a>
                     }
                     @if (User.IsInRole("Organization"))
                     {
-                        <a asp-area="" asp-controller="Organization" asp-action="Index" class="nav-link">Organisatie overzicht</a>
+                        <a asp-area="" asp-controller="Organization" asp-action="Index" class="text-header-text hover:text-header-text-hover">Organisatie overzicht</a>
                     }
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-area="" asp-controller="Admin" asp-action="Index" class="nav-link">Admin Dashboard</a>
+                        <a asp-area="" asp-controller="Admin" asp-action="Index" class="text-header-text hover:text-header-text-hover">Admin Dashboard</a>
                     }
                 </div>
 
-                <div class="hidden md:block">
-                    <partial name="_LoginPartial"/>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="text-header-text hover:text-header-text-hover">Code Registreren</a>
+                }
+                <div class="flex justify-end">
+                    <div class="hidden md:block">
+                        <partial name="_LoginPartial" />
+                    </div>
                 </div>
-
+                
                 <div class="md:hidden flex items-center">
                     <button type="button" id="mobile-menu-button" class="text-header-text hover:text-header-text-hover focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                         <span class="sr-only">Open hoofdmenu</span>
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
                 </div>
@@ -116,26 +67,29 @@
 
         <div class="md:hidden hidden" id="mobile-menu-dropdown">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link block">Home</a>
-                <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="nav-link block">Demografische data invullen</a>
-                <a asp-area="" asp-route-questionnaireId="1" asp-controller="Questionnaire" asp-action="Index" class="nav-link block">Verkenningsmodule</a>
-                <a asp-area="" asp-route-questionnaireId="2" asp-controller="Questionnaire" asp-action="Index" class="nav-link block">Procesbepalingsmodule</a>
-                <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="nav-link block">Code Registreren</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="text-header-text hover:text-header-text-hover">Home</a>
+                <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="text-header-text hover:text-header-text-hover">Demografische data invullen</a>
+                <a asp-area="" asp-route-questionnaireId="1" asp-controller="Questionnaire" asp-action="Index" class="text-header-text hover:text-header-text-hover">Verkenningsmodule</a>
+                <a asp-area="" asp-route-questionnaireId="2" asp-controller="Questionnaire" asp-action="Index" class="text-header-text hover:text-header-text-hover">Procesbepalingsmodule</a>
                 @if (User.IsInRole("Member") || User.IsInRole("Organization"))
                 {
-                    <a asp-area="" asp-controller="Panel" asp-action="UserPanel" class="nav-link block">Dashboard</a>
+                    <a asp-area="" asp-controller="Panel" asp-action="UserPanel" class="text-header-text hover:text-header-text-hover">Dashboard</a>
                 }
                 @if (User.IsInRole("Organization"))
                 {
-                    <a asp-area="" asp-controller="Organization" asp-action="Index" class="nav-link block">Organisatie overzicht</a>
+                    <a asp-area="" asp-controller="Organization" asp-action="Index" class="text-header-text hover:text-header-text-hover">Organisatie overzicht</a>
                 }
                 @if (User.IsInRole("Admin"))
                 {
-                    <a asp-area="" asp-controller="Admin" asp-action="Index" class="nav-link block">Admin Dashboard</a>
+                    <a asp-area="" asp-controller="Admin" asp-action="Index" class="text-header-text hover:text-header-text-hover">Admin Dashboard</a>
+                }
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="text-header-text hover:text-header-text-hover">Code Registreren</a>
                 }
             </div>
             <div class="pt-4 pb-3 border-t border-gray-700">
-                <partial name="_LoginPartial"/>
+                <partial name="_LoginPartial" />
             </div>
         </div>
     </header>
@@ -159,8 +113,10 @@
         </div>
     </footer>
 
+    <!-- Core JS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/dist/js/tailwind-components.js"></script>
+    
+    <!-- Mobile menu script -->
     <script>
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
@@ -173,7 +129,10 @@
             });
         }
     </script>
-
+    
+    <!-- Vite-built JS bundle -->
+    <script type="module" src="~/dist/clientapp/assets/index.js" asp-append-version="true"></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

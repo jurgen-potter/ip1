@@ -8,7 +8,9 @@
     var drawStatus = ViewBag.DrawStatus != null ? (DrawStatus)ViewBag.DrawStatus : DrawStatus.FirstPhaseActive;
     var hasSufficientRegistrations = ViewBag.HasSufficientRegistrations ?? false;
 }
-
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css">
+}
 <h2>Registratie-overzicht voor panel: @panelName</h2>
 
 <div class="row mb-4">
@@ -61,7 +63,6 @@
 @if (ViewBag.TotalMembers != null)
 {
     <div class="alert alert-info">
-        <h5>Debug Informatie</h5>
         <p>Totaal aantal members: @ViewBag.TotalMembers</p>
         
         @if (ViewBag.MemberDetails != null && ViewBag.MemberDetails.Count > 0)
@@ -150,5 +151,5 @@
 <div id="hasSufficientRegistrations" type="hidden" data-value="@hasSufficientRegistrations"></div>
 
 @section Scripts {
-    <script defer src="~/dist/js/registration/index.js"></script>
+    <script type="module" src="~/dist/clientapp/assets/index.js"></script>
 }

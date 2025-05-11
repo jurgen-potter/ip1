@@ -4,7 +4,9 @@
 @{
     ViewData["Title"] = "Aanmelden";
 }
-
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css">
+}
 <style>
     .login-container {
         position: relative;
@@ -133,6 +135,5 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial"/>
-    <script defer src="@Url.Content("~/dist/js/account/login.js")"></script>
+    <script type="module" src="~/dist/clientapp/assets/index.js"></script>
 }

@@ -5,7 +5,9 @@
 @{
     ViewData["Title"] = "Recommendations";
 }
-
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css">
+}
 <h1>Aanbevelingen</h1>
 <div id="current-user-id" data-user-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)" style="display: none;"></div>
 @foreach (var meeting in Model.Where(m => m.Recommendations.Count() != 0).OrderBy(m => m.Date))
@@ -131,11 +133,5 @@
 
 
 @section Scripts {
-    <script defer src="@Url.Content("~/dist/js/recommendation/vote.js")"></script>
-    
-    @if (User.IsInRole("Organization"))
-    {
-        <script defer src="@Url.Content("~/dist/js/recommendation/votersModalLoader.js")"></script>
-        <script defer src="@Url.Content("~/dist/js/recommendation/endVote.js")"></script>
-    }
+    <script type="module" src="~/dist/clientapp/assets/index.js"></script>
 }

@@ -1,0 +1,50 @@
+﻿.question-body {
+  overflow: hidden;
+  transition: height 0.3s ease-out;
+  will-change: height;
+}
+
+.question-body.hidden {
+  height: 0 !important;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-width: 0;
+}
+
+/* Drag and drop styling */
+.dragged {
+  opacity: 0.5;
+  background-color: #f3f4f6;
+  border: 1px dashed #A5B5BF;
+}
+
+.over {
+  border: 2px dashed #A5B5BF;
+  background-color: #f8fafc;
+}
+
+.drag-handle {
+  cursor: move;
+  user-select: none;
+  display: inline-block;
+  color: #6B7280;
+}
+
+.drag-handle:hover {
+  color: #111827;
+}
+
+/* Make sure the list items have proper spacing for drag and drop */
+.question-item {
+  margin-bottom: 0.75rem;
+  position: relative;
+}
+
+.answer-item {
+  margin-bottom: 0.5rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.375rem;
+  background-color: #F9FAFB;
+}

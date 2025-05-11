@@ -5,6 +5,9 @@
 @{
     ViewBag.Title = "Aanmelden";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css">
+}
 
 <h2 class="text-2xl font-bold mb-4">Vul uw gegevens in</h2>
 <div asp-validation-summary="All" class="text-red-500"></div>
@@ -75,10 +78,6 @@
 </div>
 
 
-@section Scripts
-{
-    @if (!Model.IsConfirmed)
-    {
-        <script defer src="@Url.Content("~/dist/js/memberRegister/registerMember.js")"></script>
-    }
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/index.js"></script>
 }
