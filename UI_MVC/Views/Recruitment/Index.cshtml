@@ -2,16 +2,17 @@
 @model CitizenPanel.UI.MVC.Models.Draws.RecruitmentCriteriaViewModel
 
 @section Styles {
-    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 }
+
 @{
     ViewBag.Title = "Bereken panel";
 }
 
-<div class="flex justify-between items-center mb-3">
-    <h2 class="mb-0 text-2xl font-bold">Wervingscriteria</h2>
-    <button type="button" class="px-3 py-2 text-sm border border-primary text-primary hover:bg-primary hover:text-white rounded-lg transition-colors duration-150" id="toggle-all-btn">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Wervingscriteria</h2>
+    <button type="button" class="btn btn-outline-primary btn-sm" id="toggle-all-btn">
         Alles invouwen
     </button>
 </div>
@@ -19,128 +20,130 @@
 <form asp-action="Calculate" method="post">
     <input asp-for="PanelId" type="hidden"/>
     <div class="mb-3">
-        <label class="block text-sm font-medium mb-1">Aantal inwoners gemeente</label>
-        <input asp-for="TotalAvailablePotentialPanelmembers" type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" required/>
-        <span asp-validation-for="@Model.TotalAvailablePotentialPanelmembers" class="text-red-500 text-sm"></span>
+        <label class="form-label">Aantal inwoners gemeente</label>
+        <input asp-for="TotalAvailablePotentialPanelmembers" type="number" class="form-control" required/>
+        <span asp-validation-for="@Model.TotalAvailablePotentialPanelmembers" class="text-danger small"></span>
     </div>
 
-    <ul id="criterias-list" class="space-y-3 list-none p-0">
+    <ul id="criterias-list" class="list-unstyled">
         @for (int i = 0; i < Model.Criteria.Count; i++)
         {
             if (i == 0 || i == 1)
             {
-                <li class="bg-white rounded-lg shadow-md overflow-hidden criteria-item">
+                <li class="card mb-3 criteria-item">
                     <input asp-for="Criteria[i].Id" type="hidden"/>
-                    <div class="px-4 py-3 bg-gray-50 border-b flex items-start">
-                        <div class="flex-grow w-full">
-                            <label class="block text-sm font-bold mb-1">Criteria</label>
+                    <div class="card-header d-flex align-items-start">
+                        <div class="flex-grow-1 w-100">
+                            <label class="form-label fw-bold">Criteria</label>
 
-                            <div class="flex items-start gap-2">
-                                <div class="flex-grow">
+                            <div class="d-flex align-items-start gap-2">
+                                <div class="flex-grow-1">
                                     <input asp-for="Criteria[i].Name"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary criteria-description" readonly/>
+                                           class="form-control criteria-description" readonly/>
                                 </div>
                             </div>
                         </div>
-                        <button class="ml-2 p-1 text-sm expand-btn"
-                                type="button"
-                                data-tw-toggle="collapse"
-                                data-tw-target="#criteria-body-@i">
+                        <button class="btn btn-sm expand-btn ms-2"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#criteria-body-@i"
+                                type="button">
                             <i class="bi bi-chevron-up"></i>
                         </button>
                     </div>
 
-                    <div class="criteria-body" id="criteria-body-@i">
-                        <div class="p-4">
-                            <label class="block text-sm font-bold mb-2">Subcriteria</label>
-                            <ul id="subcriterias-list-@i" class="space-y-2 list-none p-0">
+                    <div class="collapse show criteria-body" id="criteria-body-@i">
+                        <div class="card-body">
+                            <label class="form-label fw-bold">Subcriteria</label>
+                            <ul id="subcriterias-list-@i" class="list-unstyled">
                                 @for (int j = 0; j < Model.Criteria[i].SubCriteria.Count; j++)
                                 {
-                                    <li class="flex flex-wrap items-center p-2 subcriteria-item">
+                                    <li class="row subcriteria-item mb-2 align-items-center p-2">
                                         <input asp-for="Criteria[i].SubCriteria[j].Id" type="hidden"/>
-                                        <div class="flex-grow">
+                                        <div class="col">
                                             <input asp-for="Criteria[i].SubCriteria[j].Name"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary subcriteria-description" readonly/>
+                                                   class="form-control subcriteria-description" readonly/>
                                         </div>
-                                        <div class="ml-2">
-                                            <div class="flex items-center">
+                                        <div class="col-auto">
+                                            <div class="input-group">
                                                 <input asp-for="Criteria[i].SubCriteria[j].Percentage"
-                                                       class="w-20 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-primary focus:border-primary subcriteria-percentage"
+                                                       class="form-control subcriteria-percentage"
                                                        type="number" min="0" max="100"/>
-                                                <span class="inline-flex items-center px-3 py-2 rounded-r-lg border border-l-0 border-gray-300 bg-gray-50">%</span>
+                                                <span class="input-group-text">%</span>
                                             </div>
                                         </div>
                                     </li>
                                 }
                             </ul>
 
-                            <div class="mt-2 text-right text-sm">
+                            @* <div class="d-flex justify-content-between align-items-center mt-2"> *@
+                            <div class="subcriteria-total mt-2 text-end small">
                                 Totaal: <span class="subcriteria-sum">0</span>%
-                                <span class="text-red-500 subcriteria-warning" style="display:none;">
-                                    (moet 100%)
-                                </span>
+                                <span class="text-danger subcriteria-warning" style="display:none;">
+                                        (moet 100%)
+                                    </span>
                             </div>
+                            @* </div> *@
                         </div>
                     </div>
                 </li>
             }
             else
             {
-                <li class="bg-white rounded-lg shadow-md overflow-hidden criteria-item">
+                <li class="card mb-3 criteria-item">
                     <input asp-for="Criteria[i].Id" type="hidden"/>
-                    <div class="px-4 py-3 bg-gray-50 border-b flex items-start">
-                        <div class="flex-grow w-full">
-                            <label class="block text-sm font-bold mb-1">Criteria</label>
+                    <div class="card-header d-flex align-items-start">
+                        <div class="flex-grow-1 w-100">
+                            <label class="form-label fw-bold">Criteria</label>
 
-                            <div class="flex items-start gap-2">
-                                <div class="flex-grow">
+                            <div class="d-flex align-items-start gap-2">
+                                <div class="flex-grow-1">
                                     <input asp-for="Criteria[i].Name"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary criteria-description"
+                                           class="form-control criteria-description"
                                            placeholder="Criteria omschrijving"/>
                                     <span asp-validation-for="@Model.Criteria[@i].Name"
-                                          class="text-red-500 text-sm"></span>
+                                          class="text-danger small"></span>
                                 </div>
 
-                                <button type="button" class="btn-danger remove-criteria-btn">
+                                <button type="button" class="btn btn-danger btn-sm remove-criteria-btn mt-1">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>
                         </div>
-                        <button class="ml-2 p-1 text-sm expand-btn"
-                                type="button"
-                                data-tw-toggle="collapse"
-                                data-tw-target="#criteria-body-@i">
+                        <button class="btn btn-sm expand-btn ms-2"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#criteria-body-@i"
+                                type="button">
                             <i class="bi bi-chevron-up"></i>
                         </button>
                     </div>
 
-                    <div class="criteria-body" id="criteria-body-@i">
-                        <div class="p-4">
-                            <label class="block text-sm font-bold mb-2">Subcriteria</label>
-                            <ul id="subcriterias-list-@i" class="space-y-2 list-none p-0">
+                    <div class="collapse show criteria-body" id="criteria-body-@i">
+                        <div class="card-body">
+                            <label class="form-label fw-bold">Subcriteria</label>
+                            <ul id="subcriterias-list-@i" class="list-unstyled">
                                 @for (int j = 0; j < Model.Criteria[i].SubCriteria.Count; j++)
                                 {
-                                    <li class="flex flex-wrap items-center p-2 subcriteria-item">
+                                    <li class="row subcriteria-item mb-2 align-items-start p-2">
                                         <input asp-for="Criteria[i].SubCriteria[j].Id"
                                                name="Criteria[@i].SubCriteria.Index"
                                                type="hidden" value="@j"/>
-                                        <div class="flex-grow">
+                                        <div class="col">
                                             <input asp-for="Criteria[i].SubCriteria[j].Name"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary subcriteria-description"
+                                                   class="form-control subcriteria-description"
                                                    placeholder="Subcriteria omschrijving"/>
                                             <span asp-validation-for="@Model.Criteria[@i].SubCriteria[@j].Name"
-                                                  class="text-red-500 text-sm"></span>
+                                                  class="text-danger small"></span>
                                         </div>
-                                        <div class="ml-2">
-                                            <div class="flex items-center">
+                                        <div class="col-auto">
+                                            <div class="input-group">
                                                 <input asp-for="Criteria[i].SubCriteria[j].Percentage"
-                                                       class="w-20 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-primary focus:border-primary subcriteria-percentage"
+                                                       class="form-control subcriteria-percentage"
                                                        type="number" min="0" max="100"/>
-                                                <span class="inline-flex items-center px-3 py-2 rounded-r-lg border border-l-0 border-gray-300 bg-gray-50">%</span>
+                                                <span class="input-group-text">%</span>
                                             </div>
                                         </div>
-                                        <div class="ml-2">
-                                            <button type="button" class="btn-danger remove-subcriteria-btn">
+                                        <div class="col-auto">
+                                            <button type="button" class="btn btn-danger btn-sm remove-subcriteria-btn">
                                                 Verwijder
                                             </button>
                                         </div>
@@ -148,15 +151,15 @@
                                 }
                             </ul>
 
-                            <div class="flex justify-between items-center mt-2">
+                            <div class="d-flex justify-content-between align-items-center mt-2">
                                 <button type="button"
-                                        class="bg-accent hover:bg-accent-hover text-text-black px-3 py-2 rounded-lg text-sm add-subcriteria-btn"
+                                        class="btn btn-sm btn-secondary add-subcriteria-btn"
                                         criteria-index="@i">
                                     Voeg een subcriteria toe
                                 </button>
-                                <div class="text-sm">
+                                <div class="subcriteria-total mt-2 text-end small">
                                     Totaal: <span class="subcriteria-sum">0</span>%
-                                    <span class="text-red-500 subcriteria-warning" style="display:none;">
+                                    <span class="text-danger subcriteria-warning" style="display:none;">
                                         (moet 100%)
                                     </span>
                                 </div>
@@ -168,13 +171,13 @@
         }
     </ul>
 
-    <button type="button" id="add-criteria-btn" class="bg-accent hover:bg-accent-hover text-text-black px-4 py-2 rounded-lg transition-colors duration-150 mb-3">Voeg criteria toe</button>
+    <button type="button" id="add-criteria-btn" class="btn btn-secondary mb-3">Voeg criteria toe</button>
 
-    <div class="flex gap-2">
+    <div class="d-flex gap-2">
         <button
             type="submit"
             formaction="@Url.Action("Calculate")"
-            class="bg-accent hover:bg-accent-hover text-text-black px-4 py-2 rounded-lg transition-colors duration-150"
+            class="btn btn-primary"
             id="calculate-btn">
             Berekenen
         </button>

@@ -1,42 +1,53 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using CitizenPanel.BL.Domain.Draws
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model CitizenPanel.UI.MVC.Models.Draws.ResultViewModel
-
 @{
-    ViewBag.Title = "Berekening Panel";
+    ViewData["Title"] = "Berekening Panel";
+    var panelId = ViewBag.PanelId;
+    var panelName = ViewBag.PanelName;
+    var criteriaNamesLookup = ViewBag.CriteriaNames as Dictionary<int, string> ?? new Dictionary<int, string>();
+}
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true"/>
 }
 
-<div class="container my-4">
-    <h2 class="mb-4 text-primary">Resultaten Panelberekening</h2>
+<div class="reg-overview-container"> 
+    <h2 class="draw-calc-page-title">Resultaten Panelberekening voor: @panelName</h2>
 
-    <div class="alert alert-info">
+    <div class="reg-overview-alert alert-info">
         <strong>@Model.ReservePotPanelmembers</strong> burgers moeten uitgenodigd worden om het benodigde aantal panelleden te bereiken.
     </div>
 
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            Samenvatting
+    <div class="reg-overview-card mb-6"> 
+        <div class="draw-calc-summary-header">
+            <h5>Samenvatting</h5>
         </div>
-        <div class="card-body">
-            <p><strong>Benodigde Panelleden:</strong> <span class="badge bg-secondary">@Model.TotalNeededPanelmembers</span></p>
+        <div class="reg-overview-card-body">
+            <p><strong>Benodigde Panelleden:</strong> <span class="reg-overview-status-badge status-secondary">@Model.TotalNeededPanelmembers</span></p>
         </div>
     </div>
 
-    @foreach(var bucket in Model.Buckets)
+    @if (Model.Buckets != null && Model.Buckets.Any())
     {
-        <div class="card m-2 p-2">
-            <div class="card-body">
-                <h5 class="card-title">
-                    @(string.Join(" × ", bucket.SubCriteriaNames
-                    .Select((sub, idx) => $"{sub} ({bucket.CriteriaNames[idx]})")))  @* bijv. “Mannen (Gender) × Fietsers (Transport)” *@
-                </h5>
-                <p class="card-text">
-                    Nodig: <strong>@bucket.Count</strong>
-                </p>
-            </div>
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Details per Doelgroep:</h3>
+        <div class="draw-calc-bucket-list">
+            @foreach(var bucket in Model.Buckets)
+            {
+                <div class="draw-calc-bucket-card">
+                    <h5 class="draw-calc-bucket-title">
+                        @(string.Join(" × ", bucket.SubCriteriaNames
+                        .Select((sub, idx) => $"{sub} ({bucket.CriteriaNames[idx]})")))
+                    </h5>
+                    <p class="draw-calc-bucket-text">
+                        Nodig: <strong>@bucket.Count</strong>
+                    </p>
+                </div>
+            }
         </div>
     }
 
     <form asp-controller="Recruitment" asp-action="ReadResult" method="post">
+        @* Verborgen velden blijven zoals ze zijn, geen directe styling nodig *@
         @if (Model.Criteria != null)
         {
             @for (int i = 0; i < Model.Criteria.Count; i++)
@@ -54,17 +65,20 @@
         <input type="hidden" name="TotalNeededPanelmembers" value="@Model.TotalNeededPanelmembers"/>
         <input type="hidden" name="ReservePotPanelmembers" value="@Model.ReservePotPanelmembers"/>
 
-        @foreach(var bucket in Model.Buckets)
+        @if (Model.Buckets != null) // Null check voor Buckets
         {
-            @for (int i = 0; i < bucket.CriteriaNames.Count; i++)
+            @foreach(var bucket in Model.Buckets)
             {
-                <input type="hidden" name="Buckets[@(Model.Buckets.IndexOf(bucket))].CriteriaNames[@i]" value="@bucket.CriteriaNames[i]"/>
-                <input type="hidden" name="Buckets[@(Model.Buckets.IndexOf(bucket))].SubCriteriaNames[@i]" value="@bucket.SubCriteriaNames[i]"/>
+                @for (int i = 0; i < bucket.CriteriaNames.Count; i++)
+                {
+                    <input type="hidden" name="Buckets[@(Model.Buckets.IndexOf(bucket))].CriteriaNames[@i]" value="@bucket.CriteriaNames[i]"/>
+                    <input type="hidden" name="Buckets[@(Model.Buckets.IndexOf(bucket))].SubCriteriaNames[@i]" value="@bucket.SubCriteriaNames[i]"/>
+                }
+                <input type="hidden" name="Buckets[@(Model.Buckets.IndexOf(bucket))].Count" value="@bucket.Count"/>
             }
-            <input type="hidden" name="Buckets[@(Model.Buckets.IndexOf(bucket))].Count" value="@bucket.Count"/>
         }
 
-        <div class="d-flex justify-content-start mt-4 gap-2">
+        <div class="draw-calc-actions">
             <button type="submit" class="btn btn-success">Maak uw panel</button>
             <a href="@Url.Action("Index", "Recruitment")" class="btn btn-outline-secondary">Nieuwe berekening</a>
         </div>

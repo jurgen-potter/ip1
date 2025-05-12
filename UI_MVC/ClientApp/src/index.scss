@@ -15,6 +15,12 @@
 @use 'styles/partials/panel';
 @use 'styles/partials/meeting';
 @use 'styles/partials/invitations';
+@use 'styles/partials/vote';
+@use 'styles/partials/registration';
+@use 'styles/partials/mail';
+@use 'styles/partials/userQuestionaire';
+@use 'styles/partials/draw';
+@use 'styles/partials/admin';
 
 @tailwind base;
 @tailwind components;

@@ -1,0 +1,38 @@
+﻿/* Nieuwe, specifieke klassen voor de "Resultaten Panelberekening" pagina */
+
+.draw-calc-page-title { /* Titel van de pagina */
+  @apply text-2xl sm:text-3xl font-bold text-gray-800 mb-6; /* Aangepast van text-primary naar text-gray-800 */
+}
+
+.draw-calc-summary-header { /* Specifieke header voor de "Samenvatting" kaart */
+  @apply bg-primary text-white p-4 border-b border-primary rounded-t-lg;
+  h5 {
+    @apply text-lg font-semibold text-white mb-0;
+  }
+}
+
+.draw-calc-bucket-list { /* Wrapper voor de bucket kaarten */
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-6; /* Responsive grid voor buckets */
+}
+
+.draw-calc-bucket-card { /* Kaart voor elke bucket */
+  @apply bg-white p-4 rounded-lg shadow-md border border-gray-200 flex flex-col;
+}
+
+.draw-calc-bucket-title { /* Titel van de bucket (criteria combinatie) */
+  @apply text-base font-semibold text-gray-700 mb-2;
+}
+
+.draw-calc-bucket-text { /* Tekst "Nodig:" */
+  @apply text-sm text-gray-600;
+  strong {
+    @apply font-bold text-gray-800;
+  }
+}
+
+.draw-calc-actions { /* Container voor de actieknoppen onderaan het formulier */
+  @apply flex flex-col sm:flex-row justify-start mt-8 gap-3;
+  .btn {
+    @apply w-full sm:w-auto; /* Knoppen volledige breedte op mobiel */
+  }
+}

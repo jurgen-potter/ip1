@@ -94,7 +94,7 @@
             })
         })
     });
-    
+
     /*
         // Voeg submit-handler toe aan elk stem-formulier
     voteForms.forEach(form => {
@@ -136,8 +136,8 @@
         });
     });
 
-    
-    
+
+
      */
 
 

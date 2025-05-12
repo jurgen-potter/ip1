@@ -4,45 +4,54 @@
 @{
     ViewBag.Title = @Model.Questionnaire.Title;
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true"/>
+}
 
-<div class="my-4">
-    <h2 class="mb-4 text-2xl font-bold">@Model.Questionnaire.Subtitle</h2>
+<div class="questionnaire-container">
+    <h1 class="questionnaire-main-title">@ViewBag.Title</h1>
+    <h2 class="questionnaire-subtitle">@Model.Questionnaire.Subtitle</h2>
 
     <form asp-action="Result" method="post">
         <input type="hidden" name="questionnaireId" value="@Model.QuestionnaireId"/>
-        @foreach (var question in Model.Questionnaire.Questions)
+        @if (Model.Questionnaire.Questions != null)
         {
-            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-4">
-                <div class="px-4 py-3 bg-gray-50 border-b"><strong>Vraag @question.Position</strong></div>
-                <div class="p-4">
-                    <p class="mb-3">@question.Description</p>
-                    @foreach (var answer in question.Answers.OrderBy(a => a.Position))
-                    {
-                        var isChecked = Model.SelectedAnswerIds.Contains(answer.Id);
-                        <div class="flex items-center mb-2">
-                            <input
-                                class="mr-2 h-4 w-4 border-gray-300 text-primary focus:ring-primary"
-                                type="radio"
-                                name="Answers[@question.Id]"
-                                value="@answer.Id"
-                                id="@($"q{question.Id}_a{answer.Id}")"
-                                @(isChecked ? "checked" : "")
-                                required />
-
-                            <label
-                                class="text-sm font-medium text-gray-700"
-                                for="@($"q{question.Id}_a{answer.Id}")">
-                                @answer.Description
-                            </label>
-                        </div>
-                    }
+            @foreach (var question in Model.Questionnaire.Questions.OrderBy(q => q.Position)) // Order by position
+            {
+                <div class="question-card">
+                    <div class="question-card-header">
+                        <strong>Vraag @question.Position</strong>
+                    </div>
+                    <div class="question-card-body">
+                        <p class="question-description">@question.Description</p>
+                        @if (question.Answers != null)
+                        {
+                            @foreach (var answer in question.Answers.OrderBy(a => a.Position))
+                            {
+                                var isChecked = Model.SelectedAnswerIds.Contains(answer.Id);
+                                var inputId = $"q{question.Id}_a{answer.Id}";
+                                
+                                <label class="question-answer-group" for="@inputId">
+                                    <input
+                                        class="question-answer-radio"
+                                        type="radio"
+                                        name="Answers[@question.Id]"
+                                        value="@answer.Id"
+                                        id="@inputId"
+                                        @(isChecked ? "checked" : "")
+                                        required />
+                                    <span class="question-answer-label">@answer.Description</span>
+                                </label>
+                            }
+                        }
+                    </div>
                 </div>
-            </div>
+            }
         }
 
-        <div class="flex justify-start mt-4 gap-2">
-            <button type="submit" class="bg-accent hover:bg-accent-hover text-text-black px-4 py-2 rounded-lg transition-colors duration-150">Verzenden</button>
-            <button type="submit" formaction="@Url.Action("PrepareSave")" formnovalidate class="bg-accent hover:bg-accent-hover text-text-black px-4 py-2 rounded-lg transition-colors duration-150">Opslaan</button>
+        <div class="questionnaire-actions">
+            <button type="submit" class="btn btn-accent">Verzenden</button>
+            <button type="submit" formaction="@Url.Action("PrepareSave")" formnovalidate class="btn btn-accent">Opslaan</button>
         </div>
     </form>
 </div>
