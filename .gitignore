@@ -9,7 +9,6 @@
 .env
 
 package-lock.json
-package.json
 
 UI_MVC/wwwroot/dist
 
