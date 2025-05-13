@@ -30,16 +30,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <TypeScriptCompile Include="wwwroot\js\account\login.ts" />
-      <TypeScriptCompile Include="wwwroot\js\admin\editQuestionnaire.ts" />
-      <TypeScriptCompile Include="wwwroot\js\dashboard\timeline.ts" />
-      <TypeScriptCompile Include="wwwroot\js\recommendation\votersModalLoader.ts" />
-      <TypeScriptCompile Include="wwwroot\js\recommendation\endVote.ts" />
-      <TypeScriptCompile Include="wwwroot\js\recommendation\vote.ts" />
-      <TypeScriptCompile Include="wwwroot\js\registration\index.ts" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Update="main.js">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -115,11 +105,24 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\LICENSE" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\account\login.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\recommendation\endVote.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\recommendation\vote.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\recommendation\votersModalLoader.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\registration\index.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\pages\_admin.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\pages\_home.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\pages\_panel.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\pages\_recruitment.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\css\admin\editQuestionnaire.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\css\panel\dashboard.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\css\recruitment\index.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\css\site.css" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="wwwroot\css\" />
-      <Folder Include="wwwroot\dist\js\" />
+      <Folder Include="wwwroot\js\" />
     </ItemGroup>
     
     <Target Name="FrontendBuild" AfterTargets="Publish">
