@@ -13,7 +13,7 @@ public class MinCountAttribute : ValidationAttribute
         ErrorMessage = $"At least {_minCount} item(s) required.";
     }
 
-    public override bool IsValid(object? value)
+    public override bool IsValid(object value)
     {
         if (value is IList list)
         {
