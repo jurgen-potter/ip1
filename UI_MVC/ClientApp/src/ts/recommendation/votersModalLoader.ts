@@ -1,17 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    const votersModalElement = document.getElementById('votersModal');
-
+    //let selectedRecommendationId: number | null = null;
+    
+    const votersModalElement = document.getElementById('votersModal') as HTMLElement;
+    const showVotersButtons = document.querySelectorAll('.btn-show-voters');
+    const closeButton = votersModalElement?.querySelector("#closeModal") as HTMLButtonElement;
+    
+    showVotersButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            votersModalElement.classList.remove("hidden");
+        })
+    });
+    
+    closeButton.addEventListener("click", () => {
+        votersModalElement.classList.add("hidden");
+    });
+    
     if (votersModalElement) {
 
-        const modalTitleElement = votersModalElement.querySelector<HTMLElement>('.modal-title');
-        const modalBodyElement = votersModalElement.querySelector<HTMLElement>('.modal-body');
+        const modalTitleElement = votersModalElement.querySelector<HTMLElement>('.member-reg-modal-title');
+        const modalBodyElement = votersModalElement.querySelector<HTMLElement>('.member-reg-modal-body');
 
         if (!modalTitleElement || !modalBodyElement) { //null check vr typescript
-            console.error('modellTitleElement of modalBodyElement niet gevonden');
+            console.error('modalTitleElement of modalBodyElement niet gevonden');
             return;
         }
 
+        
+        
+        /*
         votersModalElement.addEventListener('show.bs.modal', async (event) => {
 
             const potentialTarget = (event as Event & { relatedTarget?: Element | null }).relatedTarget;
@@ -40,6 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     modalBodyElement.innerHTML = `<div class="alert alert-danger m-3">${userMessage}</div>`; //laat error msg zien
                 }
             }
-        });
+        });*/
     }
 });

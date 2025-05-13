@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedRecommendationId: number | null = null;
 
     const confirmationModal = document.getElementById("confirmationModal") as HTMLElement;
-    const stopVotingButton = confirmationModal?.querySelector(".btn-danger") as HTMLButtonElement;
-    const waitButton = confirmationModal?.querySelector(".btn-success") as HTMLButtonElement;
+    const stopVotingButton = confirmationModal?.querySelector("#stopVotingBtn") as HTMLButtonElement;
+    const waitButton = confirmationModal?.querySelector("#cancel-stop-voting") as HTMLButtonElement;
 
     const endVoteButtons = document.querySelectorAll('.btn-stop-voting')
 
@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (recommendationId) {
                 selectedRecommendationId = parseInt(recommendationId);
             }
+            confirmationModal.classList.remove('hidden');
         });
     });
 
@@ -43,15 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const hiddenText = document.getElementById('hiddenText' + selectedRecommendationId);
         hiddenText?.removeAttribute('hidden');
-
-        const modalInstance = bootstrap.Modal.getInstance(confirmationModal);
-        modalInstance?.hide();
+        
+        confirmationModal.classList.add('hidden');
         selectedRecommendationId = null;
     });
 
     waitButton?.addEventListener("click", () => {
-        const modalInstance = bootstrap.Modal.getInstance(confirmationModal);
-        modalInstance?.hide();
+        confirmationModal.classList.add('hidden');
         selectedRecommendationId = null;
     });
 });
