@@ -68,7 +68,7 @@ public class RecommendationsController(
         }
 
         panelManager.RemoveUserVote(member, recommendation);
-        recommendation = panelManager.GetRecommendationByIdWithVotes(voteDto.Id);
+        panelManager.EditRecommendation(recommendation);
 
         return Ok(new { id = recommendation.Id, votes = recommendation.Votes });
     }
