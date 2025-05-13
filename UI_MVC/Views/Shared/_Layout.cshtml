@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Panello</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
     
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -83,7 +83,7 @@
                     <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="mobile-nav-item">Code Registreren</a>
                 }
             </div>
-            <div class="pt-4 pb-3 border-t border-gray-700"> {{-- Deze border kan eventueel ook in een SCSS class --}}
+            <div class="pt-4 pb-3 border-t border-gray-700">
                 <partial name="_LoginPartial" />
             </div>
         </div>

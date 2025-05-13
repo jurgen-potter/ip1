@@ -9,7 +9,7 @@
     var hasSufficientRegistrations = ViewBag.HasSufficientRegistrations ?? false;
 }
 @section Styles {
-    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
 
 <div class="reg-overview-container">
@@ -160,5 +160,5 @@
 <div id="hasSufficientRegistrations" data-value="@hasSufficientRegistrations.ToString().ToLower()" style="display: none;"></div>
 
 @section Scripts {
-    <script type="module" src="~/dist/clientapp/assets/index.js" asp-append-version="true"></script>
+    <script type="module" src="~/dist/clientapp/assets/registration.js" asp-append-version="true"></script>
 }
