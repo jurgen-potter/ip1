@@ -1,6 +1,9 @@
-﻿using CitizenPanel.UI.MVC.Models;
+﻿using CitizenPanel.BL.Domain.Tenancy;
+using CitizenPanel.UI.MVC.Models;
 using System.ComponentModel.DataAnnotations;
 using CitizenPanel.UI.MVC.Models.Draws;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CitizenPanel.UI.MVC.Validation;
 
@@ -31,5 +34,20 @@ public class UniqueCriteriaAttribute : ValidationAttribute
         }
 
         return false;
+    }
+}
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public class RequireTenantAttribute : Attribute, IAuthorizationFilter
+{
+    public void OnAuthorization(AuthorizationFilterContext context)
+    {
+        var tenantContext = context.HttpContext.RequestServices.GetService<TenantContext>();
+        
+        // If no tenant is found in the context, redirect to home page
+        if (tenantContext == null || string.IsNullOrEmpty(tenantContext.Tenant.Id))
+        {
+            context.Result = new RedirectToActionResult("Index", "Home", null);
+        }
     }
 }

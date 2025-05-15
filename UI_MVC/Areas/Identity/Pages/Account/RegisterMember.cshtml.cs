@@ -15,11 +15,15 @@ using Newtonsoft.Json;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Domain.Draws;
 using CitizenPanel.BL.Domain.Panels;
+using CitizenPanel.BL.Domain.Tenancy;
 using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
+using CitizenPanel.BL.Users;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.Draws;
+using CitizenPanel.UI.MVC.Services;
+using System.Security.Claims;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
@@ -33,6 +37,9 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly IDrawManager _drawManager;
         private readonly IPanelManager _panelManager;
+        private readonly TenantContext _tenantContext;
+        private readonly IUserProfileManager _userProfileManager;
+        private readonly ITenantResolver _tenantResolver;
 
         public RegisterMemberModel(
             ApplicationUserManager userManager,
@@ -41,7 +48,10 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             ILogger<RegisterMemberModel> logger,
             IEmailSender emailSender,
             IDrawManager drawManager,
-            IPanelManager panelManager)
+            IPanelManager panelManager,
+            TenantContext tenantContext,
+            IUserProfileManager userProfileManager,
+            ITenantResolver tenantResolver)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -51,6 +61,9 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _drawManager = drawManager;
             _panelManager = panelManager;
+            _tenantContext = tenantContext;
+            _userProfileManager = userProfileManager;
+            _tenantResolver = tenantResolver;
         }
 
         /// <summary>
@@ -186,6 +199,29 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string code = null)
         {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var currentUser = _userProfileManager.GetUserByIdWithProfile(userId);
+                    var tenantId = _tenantResolver.ResolveTenantFromUser(currentUser);
+                    if (!string.IsNullOrEmpty(tenantId))
+                    {
+                        _tenantContext.Tenant = new Tenant { Id = tenantId };
+                    }
+                }
+            }
+            else
+            {
+                var tenantId = _tenantResolver.ResolveTenantFromQuery(HttpContext);
+                
+                if (!string.IsNullOrEmpty(tenantId))
+                {
+                    _tenantContext.Tenant = new Tenant { Id = tenantId };
+                }
+            }
+            
             var returnUrl = Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)

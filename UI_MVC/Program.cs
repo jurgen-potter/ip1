@@ -19,6 +19,7 @@ using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Areas.Identity.Services;
 using CitizenPanel.UI.MVC.Middleware;
+using CitizenPanel.UI.MVC.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,7 @@ builder.Services.AddScoped<IUserProfileManager, UserProfileManager>();
 builder.Services.AddScoped<IUtilityManager, UtilityManager>();
 builder.Services.AddScoped<ITenantManager, TenantManager>();
 builder.Services.AddScoped<ITenantRepository, TenantRepository>();
+builder.Services.AddScoped<ITenantResolver, TenantResolver>();
 builder.Services.AddScoped<UserManager<ApplicationUser>, ApplicationUserManager>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
@@ -123,7 +125,13 @@ app.UseAuthorization();
 app.UseMiddleware<TenantMiddleware>();
 
 app.MapControllerRoute(
-    name: "default",
+    name: "public",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Tenant-specific route
+app.MapControllerRoute(
+    name: "tenant",
+    pattern: "{tenantId}/{controller=Home}/{action=Index}/{id?}",
+    constraints: new { tenantId = @"[a-zA-Z0-9]+" });
 
 app.Run();

@@ -40,13 +40,13 @@ public class ApplicationUserManager : UserManager<ApplicationUser>
     {
         if (user.UserType == UserType.Member && user.MemberProfile != null)
         {
-            user.MemberProfile.TenantId = givenTenantId ?? _tenantContext.GetCurrentTenantId();
+            user.MemberProfile.TenantId = givenTenantId ?? _tenantContext.Tenant.Id;
         }
         else if (user.UserType == UserType.Organization && user.OrganizationProfile != null)
         {
             if (newTenantName is null)
             {
-                user.OrganizationProfile.TenantId = givenTenantId ?? _tenantContext.GetCurrentTenantId();
+                user.OrganizationProfile.TenantId = givenTenantId ?? _tenantContext.Tenant.Id;
             }
             else
             {

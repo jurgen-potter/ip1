@@ -9,12 +9,14 @@ using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.DTO;
 using CitizenPanel.UI.MVC.Models.Panels;
+using CitizenPanel.UI.MVC.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using JsonSerializer=System.Text.Json.JsonSerializer;
 
 namespace CitizenPanel.UI.MVC.Controllers.Panels;
 
+[RequireTenant]
 public class PanelController(
     IPanelManager panelManager,
     IDrawManager drawManager,

@@ -35,8 +35,8 @@ public class PanelDbContext(
     public DbSet<MemberProfile> MemberProfiles { get; set; }
     public DbSet<OrganizationProfile> OrganizationProfiles { get; set; }
     public DbSet<Tenant> Tenants { get; set; }
-    
-    public string TenantId => tenantContext.GetCurrentTenantId();
+
+    public string TenantId => tenantContext.Tenant.Id;
 
     override protected void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
