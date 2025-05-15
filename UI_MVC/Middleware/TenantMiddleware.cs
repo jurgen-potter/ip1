@@ -78,6 +78,11 @@ public class TenantMiddleware(
             }
         }
         
+        else
+        {
+            tenantContext.Tenant = new Tenant { Id = string.Empty };
+        }
+        
         await next(context);
     }
 }
