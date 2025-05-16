@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Users;
@@ -16,8 +17,7 @@ public class RecommendationsController(
     IPanelManager panelManager,
     IMemberManager memberManager) : ControllerBase
 {
-    
-    [HttpGet("votes")]
+    [HttpGet("userVotes")]
     public IActionResult GetUserVotes()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

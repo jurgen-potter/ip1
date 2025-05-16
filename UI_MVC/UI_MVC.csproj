@@ -119,11 +119,6 @@
       <_ContentIncludedByDefault Remove="wwwroot\dist\css\recruitment\index.css" />
       <_ContentIncludedByDefault Remove="wwwroot\dist\css\site.css" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="wwwroot\css\" />
-      <Folder Include="wwwroot\js\" />
-    </ItemGroup>
     
     <Target Name="FrontendBuild" AfterTargets="Publish">
         <Exec Command="npm install" WorkingDirectory="$(ProjectDir)" />

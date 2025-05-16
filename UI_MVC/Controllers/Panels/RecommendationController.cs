@@ -17,9 +17,9 @@ public class RecommendationController(
         return View(meetings);
     }
 
-    [HttpGet]
+    [HttpGet("{recommendationId}")]
     [Authorize(Roles = "Organization")] 
-    public IActionResult GetVoters(int recommendationId)
+    public IActionResult GetVoters(int recommendationId = 1)
     {
         var recommendation = panelManager.GetRecommendationWithVoters(recommendationId);
 

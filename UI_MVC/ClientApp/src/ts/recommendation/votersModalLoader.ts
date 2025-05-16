@@ -1,20 +1,15 @@
+let selectedRecommendationId: number | null = null;
+let selectedRecommendationTitle: string | null = null;
+const votersModalElement = document.getElementById('votersModal') as HTMLElement;
+
 document.addEventListener('DOMContentLoaded', () => {
-    //let selectedRecommendationId: number | null = null;
     
-    const votersModalElement = document.getElementById('votersModal') as HTMLElement;
-    const showVotersButtons = document.querySelectorAll('.btn-show-voters');
+    const showVotersButtons = document.querySelectorAll('.btn-show-voters') as NodeListOf<HTMLButtonElement>;
     const closeButton = votersModalElement?.querySelector("#closeModal") as HTMLButtonElement;
     
-    showVotersButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            votersModalElement.classList.remove("hidden");
-        })
-    });
+    initializeButtons(closeButton, showVotersButtons);
     
-    closeButton.addEventListener("click", () => {
-        votersModalElement.classList.add("hidden");
-    });
-    
+    /*
     if (votersModalElement) {
 
         const modalTitleElement = votersModalElement.querySelector<HTMLElement>('.member-reg-modal-title');
@@ -24,10 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('modalTitleElement of modalBodyElement niet gevonden');
             return;
         }
-
         
-        
-        /*
         votersModalElement.addEventListener('show.bs.modal', async (event) => {
 
             const potentialTarget = (event as Event & { relatedTarget?: Element | null }).relatedTarget;
@@ -56,6 +48,64 @@ document.addEventListener('DOMContentLoaded', () => {
                     modalBodyElement.innerHTML = `<div class="alert alert-danger m-3">${userMessage}</div>`; //laat error msg zien
                 }
             }
-        });*/
-    }
+        });
+    }*/
 });
+
+function initializeButtons(closeButton :HTMLButtonElement,buttons : NodeListOf<HTMLButtonElement>) {
+    buttons.forEach(button => {
+        button.addEventListener("click", () => {
+            const recommendationId = button.getAttribute("data-recommendation-id");
+            const recommendationTitle = button.getAttribute("data-recommendation-title");
+            if (recommendationId !== null){
+                if (recommendationId) {
+                    selectedRecommendationId = parseInt(recommendationId);
+                }
+
+                selectedRecommendationTitle = recommendationTitle ?? 'Stemmers Details';
+                votersModalElement.classList.remove("hidden");
+
+                setText();
+            }
+        })
+    });
+
+    closeButton.addEventListener("click", () => {
+        votersModalElement.classList.add("hidden");
+    });
+}
+
+function setText() {
+    fetch(`/Recommendation/GetVoters/${selectedRecommendationId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    })
+        .then(res => {
+            if (!res.ok) {
+                throw Error(`Received status code ${res.status}.`);
+            }
+            else{
+                setBodyText(res);
+            }
+        })
+        .catch(err => alert(`Something went wrong: ${err}`));
+}
+
+async function setBodyText(response: Response) {
+    const modalTitleElement = votersModalElement.querySelector<HTMLElement>('.member-reg-modal-title') as HTMLElement;
+    const modalBodyElement = votersModalElement.querySelector<HTMLElement>('.member-reg-modal-body') as HTMLElement;
+
+    const recommendationTitle = selectedRecommendationTitle ?? 'Stemmers Details';
+    modalTitleElement.textContent = `Stemming voor aanbeveling: ${recommendationTitle}`;
+    
+    const htmlContent = await response.text();
+    
+    if (htmlContent.trim().length > 0) {
+        modalBodyElement.innerHTML = htmlContent;
+    }
+    else{
+        console.error('Fout bij ophalen/weergeven stemmers');
+        let userMessage = 'Kon de lijst met stemmers niet laden.';
+        modalBodyElement.innerHTML = `<div class="alert alert-danger m-3">${userMessage}</div>`;
+    }
+}
