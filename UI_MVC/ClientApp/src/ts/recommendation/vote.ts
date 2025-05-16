@@ -38,7 +38,7 @@
     };
 
     // Haal bij het laden van de pagina de lijst met reeds uitgebrachte stemmen op van de server
-    fetch('/api/Recommendations/votes')
+    fetch('/api/Recommendations/userVotes')
         .then(res => res.ok ? res.json() : Promise.reject()) //bij fout gaat naar de catch
         .then((ids: string[]) => {
             // Zet voor elk ontvangen id de stemstatus op true

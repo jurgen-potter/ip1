@@ -3,29 +3,37 @@
 
 @if (Model.Any())
 {
-    <ul class="list-group list-group-flush">
-        <p>Voor: </p>
-        @foreach (var uv in Model.Where(uv => uv.Recommended))
-        {
-            var member = uv.Voter;
-            var displayName =
-                !string.IsNullOrEmpty(member.UserName)
-                    ? member.UserName
-                    : member.Email ?? "Onbekende gebruiker";
-            <li class="list-group-item">@displayName</li>
-        }
-        <p>Tegen: </p>
-        @foreach (var uv in Model.Where(uv => !uv.Recommended))
-        {
-            var member = uv.Voter;
-            var displayName =
-                !string.IsNullOrEmpty(member.UserName)
-                    ? member.UserName
-                    : member.Email ?? "Onbekende gebruiker";
-            <li class="list-group-item">@displayName</li>
-        }
+    <div class="flex gap-12">
+        <div class="flex-1">
+            <p class="font-bold mb-2">Voor:</p>
+            <ul class="list-disc list-inside">
+                @foreach (var uv in Model.Where(uv => uv.Recommended))
+                {
+                    var member = uv.Voter;
+                    var displayName =
+                        !string.IsNullOrEmpty(member.UserName)
+                            ? member.UserName
+                            : member.Email ?? "Onbekende gebruiker";
+                    <li>@displayName</li>
+                }
+            </ul>
+        </div>
 
-    </ul>
+        <div class="flex-1">
+            <p class="font-bold mb-2">Tegen:</p>
+            <ul class="list-disc list-inside">
+                @foreach (var uv in Model.Where(uv => !uv.Recommended))
+                {
+                    var member = uv.Voter;
+                    var displayName =
+                        !string.IsNullOrEmpty(member.UserName)
+                            ? member.UserName
+                            : member.Email ?? "Onbekende gebruiker";
+                    <li>@displayName</li>
+                }
+            </ul>
+        </div>
+    </div>
 }
 else
 {
