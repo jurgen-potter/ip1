@@ -124,6 +124,10 @@
       <Folder Include="wwwroot\css\" />
       <Folder Include="wwwroot\js\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Include="wwwroot\Antwerpenbanner.jpg" />
+    </ItemGroup>
     
     <Target Name="FrontendBuild" AfterTargets="Publish">
         <Exec Command="npm install" WorkingDirectory="$(ProjectDir)" />
