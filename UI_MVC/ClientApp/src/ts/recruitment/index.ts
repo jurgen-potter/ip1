@@ -1,23 +1,42 @@
 let allCriteriaCollapsed: boolean = false;
 const MAX_CRITERIA = 5;
 const MAX_SUBCRITERIA = 5;
+
 window.addEventListener('DOMContentLoaded', () => {
     editCriteriaInit();
-    initSubcriteriaSums();
+    initSubcriteriaSums(); // Deze functie roept validateAll aan
+
+    const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement | null;
+    if (toggleAllBtn) {
+        // Bepaal initiële staat voor de knoptekst
+        const firstCriteriaBody = document.querySelector<HTMLDivElement>('.criteria-card-body-wrapper');
+        if (firstCriteriaBody && firstCriteriaBody.classList.contains('is-collapsed')) {
+            allCriteriaCollapsed = true;
+        }
+        toggleAllBtn.textContent = allCriteriaCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
+    }
 });
 
 // ----------------------
 // Initialization
 // ----------------------
 function editCriteriaInit(): void {
-    // Bestaande criteria initialiseren
     document
-        .querySelectorAll<HTMLLIElement>('.criteria-item')
+        .querySelectorAll<HTMLLIElement>('.criteria-item-card') // Gebruik de nieuwe SCSS klasse
         .forEach((item) => {
             addCriteriaHandlers(item);
             item
-                .querySelectorAll<HTMLLIElement>('.subcriteria-item')
+                .querySelectorAll<HTMLLIElement>('.subcriteria-item-row') // Gebruik de nieuwe SCSS klasse
                 .forEach((sub) => addSubCriteriaHandlers(sub));
+
+            // Stel de initiële staat van de pijltjes in
+            const expandBtn = item.querySelector<HTMLButtonElement>('.criteria-expand-button');
+            const criteriaBody = item.querySelector<HTMLDivElement>('.criteria-card-body-wrapper');
+            if (expandBtn && criteriaBody) {
+                const isOpen = !criteriaBody.classList.contains('is-collapsed'); // CSHTML start nu open
+                updateExpandButtonIcon(expandBtn, isOpen);
+                expandBtn.setAttribute('aria-expanded', isOpen.toString());
+            }
         });
 
     const addBtn = document.getElementById('add-criteria-btn') as HTMLButtonElement | null;
@@ -26,33 +45,34 @@ function editCriteriaInit(): void {
     const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement | null;
     toggleAllBtn?.addEventListener('click', () => cToggleExpandAll(toggleAllBtn));
 
-    updateCriteriaLimitUI(); // <- nieuw: direct checken bij init
+    updateCriteriaLimitUI();
 }
-
-
 
 // ----------------------
 // Criteria handlers
 // ----------------------
-function addCriteriaHandlers(criteria: HTMLLIElement): void {
-    // uitklap pijltje
-    const expandBtn = criteria.querySelector<HTMLButtonElement>('.expand-btn');
-    expandBtn?.addEventListener('click', () => cToggleArrow(expandBtn!));
-
-    // verwijder criteria
-    const removeBtn = criteria.querySelector<HTMLButtonElement>('.remove-criteria-btn');
-    removeBtn?.addEventListener('click', () => {
-        removeCriteria(criteria);
-        initSubcriteriaSums();
+function addCriteriaHandlers(criteriaItemCard: HTMLLIElement): void {
+    const expandBtn = criteriaItemCard.querySelector<HTMLButtonElement>('.criteria-expand-button');
+    expandBtn?.addEventListener('click', () => {
+        // De target voor collapse is de .criteria-card-body-wrapper binnen dezelfde .criteria-item-card
+        const targetElement = criteriaItemCard.querySelector<HTMLDivElement>('.criteria-card-body-wrapper');
+        if (targetElement) {
+            toggleCollapse(targetElement, expandBtn);
+        }
     });
 
-    // voeg subcriteria toe
-    const addSubBtn = criteria.querySelector<HTMLButtonElement>('.add-subcriteria-btn');
+    const removeBtn = criteriaItemCard.querySelector<HTMLButtonElement>('.btn-remove-criteria');
+    removeBtn?.addEventListener('click', () => {
+        removeCriteria(criteriaItemCard);
+        // initSubcriteriaSums(); // Wordt in removeCriteria aangeroepen
+    });
+
+    const addSubBtn = criteriaItemCard.querySelector<HTMLButtonElement>('.btn-add-subcriteria');
     addSubBtn?.addEventListener('click', () => {
         const idx = addSubBtn.getAttribute('criteria-index');
         if (idx !== null) {
             addSubCriteria(idx);
-            initSubcriteriaSums();
+            // initSubcriteriaSums(); // Wordt in addSubCriteria aangeroepen
         }
     });
 }
@@ -60,40 +80,58 @@ function addCriteriaHandlers(criteria: HTMLLIElement): void {
 // ----------------------
 // Subcriteria handlers
 // ----------------------
-function addSubCriteriaHandlers(sub: HTMLLIElement): void {
-    // verwijder subcriteria
-    const removeSub = sub.querySelector<HTMLButtonElement>('.remove-subcriteria-btn');
+function addSubCriteriaHandlers(subcriteriaItemRow: HTMLLIElement): void {
+    const removeSub = subcriteriaItemRow.querySelector<HTMLButtonElement>('.btn-remove-subcriteria');
     removeSub?.addEventListener('click', () => {
-        removeSubCriteria(sub);
-        initSubcriteriaSums();
+        removeSubCriteria(subcriteriaItemRow);
+        // initSubcriteriaSums(); // Wordt in removeSubCriteria aangeroepen
+    });
+
+    const percentageInput = subcriteriaItemRow.querySelector<HTMLInputElement>('.subcriteria-percentage');
+    percentageInput?.addEventListener('input', () => {
+        const criteriaCard = subcriteriaItemRow.closest('.criteria-item-card');
+        if (criteriaCard) {
+            updateSumForCriteria(criteriaCard as HTMLLIElement);
+        }
     });
 }
 
 // ----------------------
-// Collapse / Expand
+// Collapse / Expand (Custom Logic)
 // ----------------------
-function cToggleArrow(btn: HTMLButtonElement | null): void {
-    if (!btn) return;
+function toggleCollapse(targetElement: HTMLDivElement, button: HTMLButtonElement): void {
+    const isCurrentlyOpen = !targetElement.classList.contains('is-collapsed');
+    targetElement.classList.toggle('is-collapsed');
+    updateExpandButtonIcon(button, !isCurrentlyOpen);
+    button.setAttribute('aria-expanded', (!isCurrentlyOpen).toString());
+}
+
+function updateExpandButtonIcon(btn: HTMLButtonElement, isOpen: boolean): void {
     const icon = btn.querySelector('i');
-    icon?.classList.toggle('bi-chevron-up');
-    icon?.classList.toggle('bi-chevron-down');
+    if (icon) {
+        icon.classList.remove('fa-chevron-up', 'fa-chevron-down');
+        icon.classList.add(isOpen ? 'fa-chevron-up' : 'fa-chevron-down');
+    }
 }
 
 function cToggleExpandAll(btn: HTMLButtonElement | null): void {
-    document.querySelectorAll<HTMLDivElement>('.criteria-body').forEach((body) => {
-        const collapse = (window as any).bootstrap.Collapse.getOrCreateInstance(body);
-        allCriteriaCollapsed ? collapse.show() : collapse.hide();
-    });
-
     allCriteriaCollapsed = !allCriteriaCollapsed;
-    if (btn) btn.innerHTML = allCriteriaCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
 
-    document.querySelectorAll<HTMLButtonElement>('.expand-btn').forEach((b) => {
-        const icon = b.querySelector('i');
-        if (!icon) return;
-        icon.classList.toggle('bi-chevron-up', !allCriteriaCollapsed);
-        icon.classList.toggle('bi-chevron-down', allCriteriaCollapsed);
+    document.querySelectorAll<HTMLDivElement>('.criteria-card-body-wrapper').forEach((body) => {
+        const expandButton = body.closest('.criteria-item-card')?.querySelector<HTMLButtonElement>('.criteria-expand-button');
+        if (expandButton) {
+            const shouldBeOpen = !allCriteriaCollapsed;
+            if (shouldBeOpen) {
+                body.classList.remove('is-collapsed');
+            } else {
+                body.classList.add('is-collapsed');
+            }
+            updateExpandButtonIcon(expandButton, shouldBeOpen);
+            expandButton.setAttribute('aria-expanded', shouldBeOpen.toString());
+        }
     });
+
+    if (btn) btn.textContent = allCriteriaCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
 }
 
 // ----------------------
@@ -103,95 +141,105 @@ function addCriteria(): void {
     const list = document.getElementById('criterias-list') as HTMLUListElement | null;
     if (!list) return;
 
-    const ci = list.children.length;
+    const ci = list.querySelectorAll('.criteria-item-card').length; // Gebruik nieuwe klasse
     if (ci >= MAX_CRITERIA) {
         updateCriteriaLimitUI();
         return;
     }
 
-    const newLi = generateCriteriaHtml(ci);
+    const newLi = generateCriteriaHtml(ci); // ci is de nieuwe index (0-based)
     list.appendChild(newLi);
     addCriteriaHandlers(newLi);
-    addSubCriteria(ci.toString());
+    addSubCriteria(ci.toString()); // Voegt een eerste subcriteria toe
 
     updateCriteriaLimitUI();
+    // initSubcriteriaSums(); // Wordt aangeroepen via addSubCriteria -> updateSumForCriteria
 }
 
-
-function removeCriteria(criteria: HTMLLIElement): void {
-    criteria.remove();
+function removeCriteria(criteriaItemCard: HTMLLIElement): void {
+    criteriaItemCard.remove();
     updateCriteriaLimitUI();
+    initSubcriteriaSums(); // Herbereken alles na verwijderen van een hoofdcriteria
 }
 
-function addSubCriteria(ci: string): void {
+function addSubCriteria(ci: string): void { // ci is de criteria-index (string)
     const subList = document.getElementById(`subcriterias-list-${ci}`) as HTMLUListElement | null;
     if (!subList) return;
 
-    const sci = subList.children.length;
+    const sci = subList.children.length; // sci is de nieuwe subcriteria-index (0-based)
     if (sci >= MAX_SUBCRITERIA) {
-        updateSubCriteriaButton(ci);
+        updateSubCriteriaButtonState(ci); // Hernoemd
         return;
     }
 
     const newSub = generateSubCriteriaHtml(ci, sci);
     subList.appendChild(newSub);
     addSubCriteriaHandlers(newSub);
-    initSubcriteriaSums();
 
-    updateSubCriteriaButton(ci);
-}
-
-function removeSubCriteria(sub: HTMLLIElement): void {
-    const parent = sub.closest('ul') as HTMLUListElement | null;
-    sub.remove();
-    validateAll();
-
-    if (parent?.id.startsWith('subcriterias-list-')) {
-        const ci = parent.id.replace('subcriterias-list-', '');
-        updateSubCriteriaButton(ci);
+    const criteriaCard = subList.closest('.criteria-item-card');
+    if (criteriaCard) {
+        updateSumForCriteria(criteriaCard as HTMLLIElement);
     }
+    updateSubCriteriaButtonState(ci); // Hernoemd
 }
 
-// HTML Generators
-function generateCriteriaHtml(ci: number): HTMLLIElement {
+function removeSubCriteria(subcriteriaItemRow: HTMLLIElement): void {
+    const parentList = subcriteriaItemRow.closest('ul.subcriteria-list') as HTMLUListElement | null;
+    const criteriaCard = parentList?.closest('.criteria-item-card') as HTMLLIElement | null;
+    const criteriaIndex = criteriaCard?.querySelector<HTMLButtonElement>('.btn-add-subcriteria')?.getAttribute('criteria-index');
+
+    subcriteriaItemRow.remove();
+
+    if (criteriaCard && criteriaIndex) { // Zorg dat criteriaIndex bestaat
+        updateSubCriteriaButtonState(criteriaIndex);
+        updateSumForCriteria(criteriaCard); // Update de som van het parent criteria
+    } else if (criteriaCard) { // Fallback als criteriaIndex niet direct gevonden wordt
+        updateSumForCriteria(criteriaCard);
+    }
+    // validateAllFormInputs(); // Wordt in updateSumForCriteria gedaan
+}
+
+// HTML Generators (Aangepast aan nieuwe klassen en Font Awesome)
+function generateCriteriaHtml(ci: number): HTMLLIElement { // ci is de 0-based index
     const li = document.createElement('li');
-    li.className = 'card mb-3 criteria-item';
+    li.className = 'criteria-item-card';
+    const criteriaBodyId = `criteria-body-${ci}`;
+    // Nieuw toegevoegde criteria zijn altijd bewerkbaar en verwijderbaar
     li.innerHTML = `
     <input name="Criteria[${ci}].Id" type="hidden" class="criteria-id" value="0" />
-    <div class="card-header d-flex align-items-start">
-      <div class="flex-grow-1">
-        <label class="form-label fw-bold criteria-number">Criteria</label>
-        <div class="d-flex align-items-center w-100">
+    <div class="criteria-card-header">
+      <div class="criteria-header-content">
+        <label class="criteria-list-label">Criteria</label>
+        <div class="criteria-header-input-group">
           <input name="Criteria[${ci}].Name"
-                 class="form-control mb-0 criteria-description"
-                 placeholder="Criteria omschrijving" />
-          <button type="button"
-                  class="btn btn-danger btn-sm ms-2 remove-criteria-btn">
-            <i class="bi bi-trash"></i>
+                 class="auth-input-field criteria-description"
+                 placeholder="Criteria omschrijving" required />
+          <button type="button" class="btn btn-danger btn-sm-equivalent btn-remove-criteria">
+            <i class="fas fa-trash"></i>
           </button>
         </div>
+        <span data-valmsg-for="Criteria[${ci}].Name" class="auth-validation-message"></span>
       </div>
-      <button class="btn btn-sm expand-btn ms-2"
-              data-bs-toggle="collapse"
+      <button type="button" class="criteria-expand-button"
+              data-bs-target="#${criteriaBodyId}" 
               aria-expanded="true"
-              aria-controls="criteria-body-@i"
-              data-bs-target="#criteria-body-${ci}">
-        <i class="bi bi-chevron-up"></i>
+              aria-controls="${criteriaBodyId}">
+        <i class="fas fa-chevron-up"></i>
       </button>
     </div>
-    <div class="collapse show criteria-body" id="criteria-body-${ci}">
-      <div class="card-body">
-        <label class="form-label fw-bold">Subcriteria</label>
-        <ul id="subcriterias-list-${ci}" class="list-unstyled"></ul>
-        <div class="d-flex justify-content-between align-items-center mt-2">
+    <div class="criteria-card-body-wrapper" id="${criteriaBodyId}">
+      <div class="criteria-card-body">
+        <label class="subcriteria-list-label">Subcriteria</label>
+        <ul id="subcriterias-list-${ci}" class="subcriteria-list"></ul>
+        <div class="subcriteria-footer">
           <button type="button"
-                  class="btn btn-sm btn-secondary add-subcriteria-btn"
+                  class="btn btn-secondary btn-add-subcriteria"
                   criteria-index="${ci}">
             Voeg een subcriteria toe
           </button>
-          <div class="subcriteria-total mt-2 text-end small">
+          <div class="subcriteria-total-display">
             Totaal: <span class="subcriteria-sum">0</span>%
-            <span class="text-danger subcriteria-warning" style="display:none;">
+            <span class="subcriteria-warning" style="display:none;">
               (moet 100%)
             </span>
           </div>
@@ -202,30 +250,30 @@ function generateCriteriaHtml(ci: number): HTMLLIElement {
     return li;
 }
 
-function generateSubCriteriaHtml(ci: string, sci: number): HTMLLIElement {
+function generateSubCriteriaHtml(ci: string, sci: number): HTMLLIElement { // ci is criteria-index (string), sci is subcriteria-index (number)
     const li = document.createElement('li');
-    li.className = 'row subcriteria-item mb-2 align-items-center p-2';
+    li.className = 'subcriteria-item-row';
     li.innerHTML = `
-    <input name="Criteria[${ci}].SubCriteria.Index" value="${sci}"
-           type="hidden" class="subcriteria-id"" />
-    <div class="col">
+    <input name="Criteria[${ci}].SubCriteria[${sci}].Id" type="hidden" class="subcriteria-id-hidden" value="0" />
+    <input name="Criteria[${ci}].SubCriteria.Index" value="${sci}" type="hidden" />
+    <div class="subcriteria-input-name-wrapper">
       <input name="Criteria[${ci}].SubCriteria[${sci}].Name"
-             class="form-control subcriteria-description"
-             placeholder="Subcriteria omschrijving" />  
+             class="auth-input-field subcriteria-description"
+             placeholder="Subcriteria omschrijving" required />
+      <span data-valmsg-for="Criteria[${ci}].SubCriteria[${sci}].Name" class="auth-validation-message"></span>
     </div>
-    <div class="col-auto">
-      <div class="input-group">
+    <div class="subcriteria-input-percentage-wrapper">
+      <div class="subcriteria-percentage-group">
         <input name="Criteria[${ci}].SubCriteria[${sci}].Percentage"
                type="number" min="0" max="100"
-               class="form-control subcriteria-percentage"
-               value="0" />
-        <span class="input-group-text">%</span>
+               class="subcriteria-percentage-group subcriteria-percentage"
+               value="0" required />
+        <span class="percentage-suffix">%</span>
       </div>
     </div>
-    <div class="col-auto">
-      <button type="button"
-              class="btn btn-danger btn-sm remove-subcriteria-btn">
-        Verwijder
+    <div class="subcriteria-remove-button-wrapper">
+      <button type="button" class="btn btn-danger btn-sm-equivalent btn-remove-subcriteria">
+            <i class="fas fa-trash"></i>
       </button>
     </div>
   `;
@@ -233,64 +281,77 @@ function generateSubCriteriaHtml(ci: string, sci: number): HTMLLIElement {
 }
 
 // ----------------------
-// Live total check
+// Live total check & UI Updates
 // ----------------------
+function updateSumForCriteria(criteriaItemCard: HTMLLIElement): void {
+    const subList = criteriaItemCard.querySelector<HTMLUListElement>('ul.subcriteria-list');
+    if (!subList) return;
+
+    const sumDisplay = criteriaItemCard.querySelector<HTMLSpanElement>('.subcriteria-sum');
+    const warningDisplay = criteriaItemCard.querySelector<HTMLElement>('.subcriteria-warning');
+
+    if (!sumDisplay || !warningDisplay) return;
+
+    const inputs = Array.from(subList.querySelectorAll<HTMLInputElement>('.subcriteria-percentage'));
+    const total = inputs.reduce((acc, input) => acc + Number(input.value), 0);
+    sumDisplay.textContent = String(total);
+    warningDisplay.style.display = (total === 100 || inputs.length === 0) ? 'none' : 'inline';
+    validateAllFormInputs(); // Hernoemd van validateAll
+}
+
 function initSubcriteriaSums(): void {
-    document.querySelectorAll<HTMLLIElement>('.criteria-item').forEach(criteria => {
-        const subList = criteria.querySelector<HTMLUListElement>('[id^="subcriterias-list-"]');
-        if (!subList) return;
-
-        const sumDisplay = criteria.querySelector<HTMLSpanElement>('.subcriteria-sum')!;
-        const warning = criteria.querySelector<HTMLElement>('.subcriteria-warning')!;
-
-        const updateSum = () => {
-            const inputs = Array.from(subList.querySelectorAll<HTMLInputElement>('.subcriteria-percentage'));
-            const total = inputs.reduce((acc, i) => acc + Number(i.value), 0);
-            sumDisplay.textContent = String(total);
-            warning.style.display = (total === 100) ? 'none' : 'inline';
-            validateAll();
-        };
-
-        // delegatie: luister op de parent-lijst
-        subList.addEventListener('input', (ev) => {
-            const tgt = ev.target as HTMLInputElement;
-            if (tgt.classList.contains('subcriteria-percentage')) {
-                updateSum();
-            }
+    document.querySelectorAll<HTMLLIElement>('.criteria-item-card').forEach(criteriaItemCard => {
+        updateSumForCriteria(criteriaItemCard);
+        criteriaItemCard.querySelectorAll<HTMLInputElement>('.subcriteria-percentage').forEach(input => {
+            input.addEventListener('input', () => {
+                updateSumForCriteria(criteriaItemCard);
+            });
         });
-
-        updateSum();
     });
-
-    validateAll();
-
-
+    validateAllFormInputs(); // Hernoemd van validateAll
 }
 
 function updateCriteriaLimitUI(): void {
     const list = document.getElementById('criterias-list') as HTMLUListElement | null;
     const addBtn = document.getElementById('add-criteria-btn') as HTMLButtonElement | null;
+    if (!list || !addBtn) return;
 
-    const count = list?.querySelectorAll('.criteria-item').length ?? 0;
-    const limitReached = count >= MAX_CRITERIA;
-
-    if (addBtn) addBtn.disabled = limitReached;
+    const count = list.querySelectorAll('.criteria-item-card').length;
+    addBtn.disabled = count >= MAX_CRITERIA;
 }
 
-function updateSubCriteriaButton(ci: string): void {
+function updateSubCriteriaButtonState(ci: string): void { // Hernoemd
     const subList = document.getElementById(`subcriterias-list-${ci}`) as HTMLUListElement | null;
-    const addBtn = document.querySelector<HTMLButtonElement>(`.add-subcriteria-btn[criteria-index="${ci}"]`);
+    const addBtn = document.querySelector<HTMLButtonElement>(`.btn-add-subcriteria[criteria-index="${ci}"]`);
     if (!subList || !addBtn) return;
 
     const count = subList.children.length;
     addBtn.disabled = count >= MAX_SUBCRITERIA;
 }
 
-function validateAll() {
-    const calculateBtn = document.getElementById('calculate-btn') as HTMLButtonElement;
-    // check per criteria-item of sum = 100
-    const allValid = Array.from(document.querySelectorAll<HTMLLIElement>('.criteria-item'))
-        .every(item => Number(item.querySelector<HTMLSpanElement>('.subcriteria-sum')!.textContent) === 100);
+function validateAllFormInputs(): void { // Hernoemd
+    const calculateBtn = document.getElementById('calculate-btn') as HTMLButtonElement | null;
+    if (!calculateBtn) return;
 
-    calculateBtn.disabled = !allValid;
+    let allSumsAreValid = true;
+    document.querySelectorAll<HTMLLIElement>('.criteria-item-card').forEach(item => {
+        const inputs = item.querySelectorAll<HTMLInputElement>('.subcriteria-percentage');
+        if (inputs.length > 0) {
+            const sumText = item.querySelector<HTMLSpanElement>('.subcriteria-sum')?.textContent;
+            if (!sumText || Number(sumText) !== 100) {
+                allSumsAreValid = false;
+            }
+        }
+    });
+
+    const allDescriptionsFilled = Array.from(document.querySelectorAll<HTMLInputElement>('input.criteria-description, input.subcriteria-description'))
+        .every(input => {
+            if (input.hasAttribute('readonly')) return true;
+            return input.value.trim() !== '';
+        });
+
+    const totalAvailableInput = document.getElementById('TotalAvailablePotentialPanelmembers') as HTMLInputElement | null;
+    const totalAvailableFilled = totalAvailableInput ? totalAvailableInput.value.trim() !== '' && Number(totalAvailableInput.value) > 0 : false;
+
+    calculateBtn.disabled = !allSumsAreValid || !allDescriptionsFilled || !totalAvailableFilled;
 }
