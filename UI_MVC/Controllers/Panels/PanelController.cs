@@ -5,8 +5,6 @@ using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Users;
 using CitizenPanel.BL.Utilities;
-using CitizenPanel.UI.MVC.Areas.Identity.Managers;
-using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.DTO;
 using CitizenPanel.UI.MVC.Models.Panels;
 using Microsoft.AspNetCore.Authorization;

@@ -5,18 +5,21 @@ using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Questionnaires;
 using CitizenPanel.BL.Registrations;
+using CitizenPanel.BL.Tenancy;
 using CitizenPanel.BL.Users;
 using CitizenPanel.BL.Utilities;
 using CitizenPanel.DAL.Data;
 using CitizenPanel.DAL.Draws;
 using CitizenPanel.DAL.Panels;
 using CitizenPanel.DAL.Questionnaires;
+using CitizenPanel.DAL.Tenancy;
 using CitizenPanel.DAL.Users;
 using CitizenPanel.UI.MVC;
 using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Areas.Identity.Services;
 using CitizenPanel.UI.MVC.Middleware;
+using CitizenPanel.UI.MVC.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +47,9 @@ builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUserProfileManager, UserProfileManager>();
 builder.Services.AddScoped<IUtilityManager, UtilityManager>();
+builder.Services.AddScoped<ITenantManager, TenantManager>();
+builder.Services.AddScoped<ITenantRepository, TenantRepository>();
+builder.Services.AddScoped<ITenantResolver, TenantResolver>();
 builder.Services.AddScoped<UserManager<ApplicationUser>, ApplicationUserManager>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
@@ -74,6 +80,11 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Identity/Account/Login";
     options.LogoutPath = "/Identity/Account/Logout";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
+
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.ConstraintMap.Add("validTenant", typeof(ValidTenantConstraint));
 });
 
 builder.Services
@@ -119,7 +130,12 @@ app.UseAuthorization();
 app.UseMiddleware<TenantMiddleware>();
 
 app.MapControllerRoute(
-    name: "default",
+    name: "tenant",
+    pattern: "{tenantId:validTenant}/{controller=Home}/{action=Index}/{id?}",
+    constraints: new { tenantId = @"^[a-zA-Z0-9_-]+$" });
+
+app.MapControllerRoute(
+    name: "public",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

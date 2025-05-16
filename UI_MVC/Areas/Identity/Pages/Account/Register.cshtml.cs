@@ -4,6 +4,7 @@
 
 using CitizenPanel.BL;
 using CitizenPanel.BL.Domain.Panels;
+using CitizenPanel.BL.Domain.Tenancy;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +23,10 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Panels;
+using CitizenPanel.BL.Users;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
+using CitizenPanel.UI.MVC.Services;
+using System.Security.Claims;
 
 namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
 {
@@ -34,7 +38,9 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly IPanelManager _panelManager;
+        private readonly TenantContext _tenantContext;
+        private readonly IUserProfileManager _userProfileManager;
+        private readonly ITenantResolver _tenantResolver;
 
         public RegisterModel(
             ApplicationUserManager userManager,
@@ -42,7 +48,9 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IPanelManager panelManager)
+            TenantContext tenantContext,
+            IUserProfileManager userProfileManager,
+            ITenantResolver tenantResolver)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -50,7 +58,9 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _panelManager = panelManager;
+            _tenantContext = tenantContext;
+            _userProfileManager = userProfileManager;
+            _tenantResolver = tenantResolver;
         }
 
         /// <summary>
@@ -76,8 +86,23 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public class InputModel
+        public class InputModel : IValidatableObject
         {
+            [Display(Name = "Organisatienaam")]
+            [MaxLength(25, ErrorMessage = "Organisatienaam mag niet langer zijn dan 25 tekens.")]
+            [RegularExpression(@"^[A-Za-z\d ]+$", ErrorMessage = "Organisatienaam mag alleen letters en spaties bevatten.")]
+            public string Name { get; set; }
+            
+            public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+            {
+                if (IsStaff == "false" && string.IsNullOrWhiteSpace(Name))
+                {
+                    yield return new ValidationResult(
+                        "Organisatienaam is verplicht.",
+                        new[] { nameof(Name) });
+                }
+            }
+            
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -105,41 +130,58 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             [Display(Name = "Bevestig wachtwoord")]
             [Compare("Password", ErrorMessage = "De wachtwoorden komen niet overeen.")]
             public string ConfirmPassword { get; set; }
+            
+            public string IsStaff { get; set; }
         }
-        
-        public string IsStaff { get; set; }
         
 
 
         public async Task OnGetAsync(string returnUrl = null, string staff = "false")
         {
             ReturnUrl = returnUrl;
-            IsStaff = staff;
+            Input = new InputModel
+            {
+                IsStaff = staff
+            };
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var currentUser = _userProfileManager.GetUserByIdWithProfile(userId);
+                    var tenant = _tenantResolver.ResolveTenantFromUser(currentUser);
+                    if (tenant is not null)
+                    {
+                        _tenantContext.Tenant = tenant;
+                    }
+                }
+            }
+            
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var user = CreateOrganization();
                 user.UserType = UserType.Organization;
-
-                await _userManager.AddToRoleAsync(user, "Organization");
+                user.OrganizationProfile = new OrganizationProfile();
+                
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 IdentityResult result;
-                if (IsStaff == "false")
+                if (Input.IsStaff == "false")
                 {
-                    result = await _userManager.CreateWithTenantAsync(user, Input.Password, generateNewTenantId: true);
+                    result = await _userManager.CreateWithTenantAsync(user, Input.Password, newTenantName: Input.Name);
                 }
                 else
                 {
-                    user.OrganizationProfile = new OrganizationProfile();
                     result = await _userManager.CreateWithTenantAsync(user, Input.Password);
                 }
+                await _userManager.AddToRoleAsync(user, "Organization");
 
                 if (result.Succeeded)
                 {
