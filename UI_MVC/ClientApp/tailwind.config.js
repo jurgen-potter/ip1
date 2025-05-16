@@ -41,7 +41,7 @@ export default {
                 'gray-900': '#111827',
             },
             fontFamily: {
-                sans: ['Bahnschrift', 'Segoe UI', 'Calibri', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                sans: ['Montserrat', 'Segoe UI', 'Calibri', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
             }
         }
     },
