@@ -90,6 +90,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
         {
             [Display(Name = "Organisatienaam")]
             [MaxLength(25, ErrorMessage = "Organisatienaam mag niet langer zijn dan 25 tekens.")]
+            [RegularExpression(@"^[A-Za-z ]+$", ErrorMessage = "Organisatienaam mag alleen letters en spaties bevatten.")]
             public string Name { get; set; }
             
             public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
