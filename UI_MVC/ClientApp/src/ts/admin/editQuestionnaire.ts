@@ -228,20 +228,6 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
             </div>
             <div class="collapse show question-body" id="question-body-${questionIndex}">
                 <div class="card-body">
-<!--                    <label class="form-label fw-bold">Weging</label>
-                    <input name="Questions[${questionIndex}].Weight" type="range" min="1" max="10" class="form-range mb-2 question-weight" value="1"/>
-                    <div class="d-flex justify-content-between px-1 text-muted small">
-                        <span>1</span>
-                        <span>2</span>
-                        <span>3</span>
-                        <span>4</span>
-                        <span>5</span>
-                        <span>6</span>
-                        <span>7</span>
-                        <span>8</span>
-                        <span>9</span>
-                        <span>10</span>
-                    </div>-->
                     <label class="form-label fw-bold">Antwoorden</label>
                     <ul id="answers-list-${questionIndex}">
                     </ul>
@@ -408,6 +394,7 @@ function handleDragOver(this: HTMLElement, e: DragEvent): boolean {
 // Reset behaviour when dragging another element away from this element
 function handleDragLeave(this: HTMLElement, e: DragEvent): void {
     this.classList.remove('over');
+    e.x;
 }
 
 // Drop the currently dragged element and set add all data to the correct position in the page
@@ -438,6 +425,7 @@ function handleDrop(this: HTMLElement, e: DragEvent): boolean {
 function handleDragEnd(this: HTMLElement, e: DragEvent): void {
     this.draggable = false;
     this.classList.remove('dragged');
+    e.x;
 
     const overClass = dragType === "answer" ? '.answer-item.over' : '.question-item.over';
     document.querySelectorAll<HTMLElement>(overClass).forEach(el => el.classList.remove('over'));
