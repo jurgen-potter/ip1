@@ -17,9 +17,11 @@ using CitizenPanel.UI.MVC.Areas.Identity.DutchLocalization;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Areas.Identity.Services;
 using CitizenPanel.UI.MVC.Middleware;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,8 +61,20 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddErrorDescriber<DutchIdentityErrorDescriber>()
     .AddDefaultTokenProviders();
 
-
 builder.Services.AddLiveMonitoring();
+
+// Configure Redis for session and data protection
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = Environment.GetEnvironmentVariable("REDIS_IP") + ":6379";
+    options.InstanceName = "redisdb";
+});
+
+var redis = ConnectionMultiplexer.Connect(Environment.GetEnvironmentVariable("REDIS_IP") + ":6379");
+builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+
+builder.Services.AddDataProtection()
+    .PersistKeysToStackExchangeRedis(redis, "BurgerPanel-DataProtection-Keys");
 
 builder.Services.AddSession(options =>
 {
@@ -87,7 +101,6 @@ app.MapRazorPages();
 using (IServiceScope scope = app.Services.CreateScope()) {
     PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
     if (context.CreateDatabase(true)) {
-        
         var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
         IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
@@ -101,7 +114,6 @@ using (IServiceScope scope = app.Services.CreateScope()) {
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 app.UseHttpsRedirection();
