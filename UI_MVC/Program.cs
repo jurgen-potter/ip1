@@ -82,6 +82,11 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.ConstraintMap.Add("validTenant", typeof(ValidTenantConstraint));
+});
+
 builder.Services
     .AddTenantContext()
     .AddScoped<TenantMiddleware>();
@@ -124,10 +129,10 @@ app.UseAuthorization();
 
 app.UseMiddleware<TenantMiddleware>();
 
-// Tenant-specific route
 app.MapControllerRoute(
     name: "tenant",
-    pattern: "{tenantId}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{tenantId:validTenant}/{controller=Home}/{action=Index}/{id?}",
+    constraints: new { tenantId = @"^[a-zA-Z0-9_-]+$" });
 
 app.MapControllerRoute(
     name: "public",
