@@ -124,13 +124,13 @@ app.UseAuthorization();
 
 app.UseMiddleware<TenantMiddleware>();
 
-app.MapControllerRoute(
-    name: "public",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
 // Tenant-specific route
 app.MapControllerRoute(
     name: "tenant",
     pattern: "{tenantId}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "public",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
