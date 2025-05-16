@@ -1,6 +1,7 @@
 using CitizenPanel.BL.Domain.Draws;
 using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Questionnaires;
+using CitizenPanel.BL.Domain.Tenancy;
 using CitizenPanel.BL.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
 {
     public void Seed()
     {
+        SeedTenants();
         SeedPanels();
         panelDbContext.SaveChanges();
         panelDbContext.ChangeTracker.Clear();
@@ -21,6 +23,21 @@ public class DataSeeder(PanelDbContext panelDbContext)
         panelDbContext.ChangeTracker.Clear();
     }
 
+    private void SeedTenants()
+    {
+        var tenant1 = new Tenant
+        {
+            Id = "antwerpen",
+            Name = "Antwerpen"
+        };
+        var tenant2 = new Tenant
+        {
+            Id = "brussel",
+            Name = "Brussel"
+        };
+        panelDbContext.Tenants.AddRange(tenant1, tenant2);
+    }
+    
     private void SeedPanels()
     {
         //criteria

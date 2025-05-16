@@ -5,4 +5,5 @@ namespace CitizenPanel.BL.Tenancy;
 public interface ITenantManager
 {
     Tenant AddTenant(string name);
+    Tenant GetTenantById(string name);
 }

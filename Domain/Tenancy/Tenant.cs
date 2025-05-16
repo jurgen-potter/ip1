@@ -21,7 +21,6 @@ public static class TenantExtensions
     public static IServiceCollection AddTenantContext(this IServiceCollection services)
     {
         services.AddScoped<TenantContext>();
-        services.AddTransient<Tenant>(p => p.GetRequiredService<TenantContext>().Tenant);
         return services;
     }
 }

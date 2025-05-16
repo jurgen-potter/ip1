@@ -3,6 +3,7 @@ using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using System.Security.Claims;
 using CitizenPanel.BL.Draws;
+using CitizenPanel.BL.Tenancy;
 using CitizenPanel.BL.Users;
 using CitizenPanel.UI.MVC.Services;
 
@@ -10,10 +11,9 @@ namespace CitizenPanel.UI.MVC.Middleware;
 
 public class TenantMiddleware(
     TenantContext tenantContext,
-    ApplicationUserManager userManager,
-    IDrawManager drawManager,
     IUserProfileManager userProfileManager,
-    ITenantResolver tenantResolver) : IMiddleware
+    ITenantResolver tenantResolver,
+    ITenantManager tenantManager) : IMiddleware
 {
     // List of controllers that don't require a tenant context
     private readonly HashSet<string> _publicControllers = new(StringComparer.OrdinalIgnoreCase)
@@ -36,7 +36,8 @@ public class TenantMiddleware(
         
         if (!string.IsNullOrEmpty(tenantIdFromRoute))
         {
-            tenantContext.Tenant = new Tenant { Id = tenantIdFromRoute };
+            var tenant = tenantManager.GetTenantById(tenantIdFromRoute);
+            tenantContext.Tenant = tenant;
             await next(context);
             return;
         }
@@ -48,13 +49,13 @@ public class TenantMiddleware(
             if (!string.IsNullOrEmpty(userId))
             {
                 var user = userProfileManager.GetUserByIdWithProfile(userId);
-                string tenantId = tenantResolver.ResolveTenantFromUser(user);
+                var tenant = tenantResolver.ResolveTenantFromUser(user);
                 
-                if (!string.IsNullOrEmpty(tenantId))
+                if (tenant is not null)
                 {
-                    if (context.Request.Path.Value != null && !context.Request.Path.Value.StartsWith($"/{tenantId}", StringComparison.OrdinalIgnoreCase))
+                    if (context.Request.Path.Value != null && !context.Request.Path.Value.StartsWith($"/{tenant.Id}", StringComparison.OrdinalIgnoreCase))
                     {
-                        var newPath = $"/{tenantId}{context.Request.Path}{context.Request.QueryString}";
+                        var newPath = $"/{tenant.Id}{context.Request.Path}{context.Request.QueryString}";
                         context.Response.Redirect(newPath, permanent: false);
                         return;
                     }
@@ -66,21 +67,16 @@ public class TenantMiddleware(
         }
         
         // As a last resort, try to get from invitation
-        string tenantIdFromInvitation = tenantResolver.ResolveTenantFromQuery(context);
+        var tenantFromInvitation = tenantResolver.ResolveTenantFromQuery(context);
         
-        if (!string.IsNullOrEmpty(tenantIdFromInvitation))
+        if (tenantFromInvitation is not null)
         {
-            if (context.Request.Path.Value != null && !context.Request.Path.Value.StartsWith($"/{tenantIdFromInvitation}", StringComparison.OrdinalIgnoreCase))
+            if (context.Request.Path.Value != null && !context.Request.Path.Value.StartsWith($"/{tenantFromInvitation}", StringComparison.OrdinalIgnoreCase))
             {
-                var newPath = $"/{tenantIdFromInvitation}{context.Request.Path}{context.Request.QueryString}";
+                var newPath = $"/{tenantFromInvitation}{context.Request.Path}{context.Request.QueryString}";
                 context.Response.Redirect(newPath, permanent: false);
                 return;
             }
-        }
-        
-        else
-        {
-            tenantContext.Tenant = new Tenant { Id = string.Empty };
         }
         
         await next(context);

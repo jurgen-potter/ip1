@@ -25,4 +25,9 @@ public class TenantManager(ITenantRepository repository) : ITenantManager
         repository.CreateTenant(tenant);
         return tenant;
     }
+
+    public Tenant GetTenantById(string id)
+    {
+        return repository.ReadTenantById(id);
+    }
 }

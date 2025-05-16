@@ -205,20 +205,20 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 if (!string.IsNullOrEmpty(userId))
                 {
                     var currentUser = _userProfileManager.GetUserByIdWithProfile(userId);
-                    var tenantId = _tenantResolver.ResolveTenantFromUser(currentUser);
-                    if (!string.IsNullOrEmpty(tenantId))
+                    var tenant = _tenantResolver.ResolveTenantFromUser(currentUser);
+                    if (tenant is not null)
                     {
-                        _tenantContext.Tenant = new Tenant { Id = tenantId };
+                        _tenantContext.Tenant = tenant;
                     }
                 }
             }
             else
             {
-                var tenantId = _tenantResolver.ResolveTenantFromQuery(HttpContext);
+                var tenant = _tenantResolver.ResolveTenantFromQuery(HttpContext);
                 
-                if (!string.IsNullOrEmpty(tenantId))
+                if (tenant is not null)
                 {
-                    _tenantContext.Tenant = new Tenant { Id = tenantId };
+                    _tenantContext.Tenant = tenant;
                 }
             }
             

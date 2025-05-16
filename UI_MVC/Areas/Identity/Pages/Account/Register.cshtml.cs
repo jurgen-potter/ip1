@@ -153,10 +153,10 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 if (!string.IsNullOrEmpty(userId))
                 {
                     var currentUser = _userProfileManager.GetUserByIdWithProfile(userId);
-                    var tenantId = _tenantResolver.ResolveTenantFromUser(currentUser);
-                    if (!string.IsNullOrEmpty(tenantId))
+                    var tenant = _tenantResolver.ResolveTenantFromUser(currentUser);
+                    if (tenant is not null)
                     {
-                        _tenantContext.Tenant = new Tenant { Id = tenantId };
+                        _tenantContext.Tenant = tenant;
                     }
                 }
             }
@@ -167,18 +167,18 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             {
                 var user = CreateOrganization();
                 user.UserType = UserType.Organization;
+                user.OrganizationProfile = new OrganizationProfile();
                 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 IdentityResult result;
                 if (Input.IsStaff == "false")
                 {
-                    result = await _userManager.CreateWithTenantAsync(user, Input.Password);
+                    result = await _userManager.CreateWithTenantAsync(user, Input.Password, newTenantName: Input.Name);
                 }
                 else
                 {
-                    user.OrganizationProfile = new OrganizationProfile();
-                    result = await _userManager.CreateWithTenantAsync(user, Input.Password, newTenantName: Input.Name);
+                    result = await _userManager.CreateWithTenantAsync(user, Input.Password);
                 }
                 await _userManager.AddToRoleAsync(user, "Organization");
 
