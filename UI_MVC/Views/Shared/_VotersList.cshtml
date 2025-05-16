@@ -14,6 +14,7 @@
                     : member.Email ?? "Onbekende gebruiker";
             <li class="list-group-item">@displayName</li>
         }
+        <hr>
         <p>Tegen: </p>
         @foreach (var uv in Model.Where(uv => !uv.Recommended))
         {

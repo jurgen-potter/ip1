@@ -17,7 +17,8 @@ public class RecommendationController(
         return View(meetings);
     }
 
-    [HttpGet("{recommendationId}")]
+    [HttpGet]
+    [Route("Recommendation/GetVoters/{recommendationId}")]
     [Authorize(Roles = "Organization")] 
     public IActionResult GetVoters(int recommendationId = 1)
     {
