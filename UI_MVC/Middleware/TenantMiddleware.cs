@@ -37,8 +37,15 @@ public class TenantMiddleware(
         if (!string.IsNullOrEmpty(tenantIdFromRoute))
         {
             var tenant = tenantManager.GetTenantById(tenantIdFromRoute);
-            tenantContext.Tenant = tenant;
-            await next(context);
+            if (tenant is null)
+            {
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+            }
+            else
+            {
+                tenantContext.Tenant = tenant;
+                await next(context);
+            }
             return;
         }
         
