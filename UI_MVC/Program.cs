@@ -131,7 +131,6 @@ app.MapControllerRoute(
 // Tenant-specific route
 app.MapControllerRoute(
     name: "tenant",
-    pattern: "{tenantId}/{controller=Home}/{action=Index}/{id?}",
-    constraints: new { tenantId = @"[a-zA-Z0-9]+" });
+    pattern: "{tenantId}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
