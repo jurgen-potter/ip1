@@ -261,6 +261,7 @@ public class RegistrationManager : IRegistrationManager
             {
                 if (selectedCount < targetCount && selectedOrReservedInvitationIds.Add(invitation.Code))
                 {
+                    invitation.IsDrawn = true;
                     selectedInvitations.Add(invitation);
                     selectedCount++;
                 }
