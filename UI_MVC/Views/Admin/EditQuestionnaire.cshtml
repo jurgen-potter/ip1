@@ -43,102 +43,89 @@
                                 <span asp-validation-for="@Model.Questions[@i].Description" class="text-danger small"></span>
                                 @if (!isDiscover)
                                 {
-                                    <div class="col-auto">
-                                        <div class="form-check">
-                                            <input type="hidden" class="detail-value"/>
-                                            <input asp-for="@Model.Questions[@i].IsDetail"
-                                                   class="form-check-input detail-check" type="checkbox"/>
-                                            <label class="form-check-label">Panel detail</label>
-                                        </div>
+                                    <div class="ml-4">
+                                        <input type="hidden" class="detail-value"/>
+                                        <input asp-for="@Model.Questions[@i].IsDetail"
+                                               class="form-check-input detail-check" type="checkbox"/>
+                                        <label class="panel-form-label pr-1">Detail?</label>
                                     </div>
                                 }
                             </div>
                         </div>
-                        <button class="btn btn-sm expand-btn ms-2 mt-1" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#question-body-@i" aria-expanded="true" aria-controls="question-body-@i">
-                            <i class="bi bi-chevron-up"></i>
+                        <button type="button" class="criteria-expand-button"
+                                aria-expanded="true"
+                                aria-controls="@questionBodyId">
+                            <i class="fas fa-chevron-up"></i>
                         </button>
                     </div>
-                    <div class="collapse show question-body" id="question-body-@i">
-                        <div class="card-body">
-                            @*<label class="form-label fw-bold">Weging</label>
-                        <input asp-for="@Model.Questions[@i].Weight" type="range" min="1" max="10"
-                               class="form-range mb-2 question-weight"/>
-                        <div class="d-flex justify-content-between px-1 text-muted small">
-                            @for (int val = 1; val <= 10; val++)
-                            {
-                                <span>@val</span>
-                            }
-                        </div>*@
-
-                            <label class="form-label fw-bold">Antwoorden</label>
-                            <span asp-validation-for="@Model.Questions[@i].Answers" class="text-danger small"></span>
-                            <ul id="answers-list-@i">
+                    <div class="criteria-card-body-wrapper" id="@questionBodyId">
+                        <div class="criteria-card-body card-body">
+                            <label class="subcriteria-list-label">Antwoorden</label>
+                            <span asp-validation-for="@Model.Questions[@i].Answers" class="text-danger subcriteria-warning"></span>
+                            <ul id="answers-list-@i" class="subcriteria-list">
                                 @for (int j = 0; j < Model.Questions[i].Answers.Count; j++)
                                 {
-                                    <li class="row answer-item mb-2 align-items-center p-2">
+                                    <li class="subcriteria-item-row">
                                         <input asp-for="@Model.Questions[@i].Answers[@j].Id" type="hidden" class="answer-id"
                                                value="@Model.Questions[@i].Answers[@j].Id"/>
                                         <input asp-for="@Model.Questions[@i].Answers[@j].ToDelete" type="hidden"
                                                class="answer-delete"/>
-                                        <div class="col-auto fs-5 p-0">
-                                            <span class="drag-handle">&#x2630;</span>
-                                        </div>
+                                        <span class="drag-handle">&#x2630;</span>
 
                                         <div class="col">
-                                            <div class="form-floating mb-2">
+                                            <div class="subcriteria-input-name-wrapper">
                                                 <input asp-for="@Model.Questions[@i].Answers[@j].Description"
                                                        id="Description-@i-@j"
-                                                       class="form-control answer-description"
+                                                       class="auth-input-field subcriteria-description"
                                                        placeholder="Beschrijving"/>
                                                 <label for="Description-@i-@j">Beschrijving</label>
                                             </div>
                                             <span asp-validation-for="@Model.Questions[@i].Answers[@j].Description"
-                                                  class="text-danger small d-block mb-2"></span>
+                                                  class="auth-validation-message"></span>
 
-                                            <div class="form-floating mb-2">
+                                            <div class="subcriteria-input-name-wrapper">
                                                 <input asp-for="@Model.Questions[@i].Answers[@j].Advice"
                                                        id="Advice-@i-@j"
-                                                       class="form-control answer-advice"
+                                                       class="auth-input-field subcriteria-description"
                                                        placeholder="Aanbeveling"/>
                                                 <label for="Advice-@i-@j" class="advice-label">Aanbeveling</label>
                                             </div>
                                             <span asp-validation-for="@Model.Questions[@i].Answers[@j].Advice"
-                                                  class="text-danger small d-block"></span>
+                                                  class="auth-validation-message"></span>
                                         </div>
 
-                                        <div class="col-auto">
-                                            <button type="button" class="btn btn-danger btn-sm remove-answer-btn">
+                                        <div class="subcriteria-remove-button-wrapper">
+                                            <button type="button" class="btn btn-danger btn-sm-equivalent btn-remove-subcriteria">
                                                 Verwijder
                                             </button>
                                         </div>
                                         @if (isDiscover)
                                         {
-                                            <div class="col-auto">
-                                                <div class="form-check">
-                                                    <input type="hidden" value="@Model.Questions[@i].Answers[@j].IsCritical"
-                                                           class="critical-value"/>
-                                                    <input asp-for="@Model.Questions[@i].Answers[@j].IsCritical"
-                                                           class="form-check-input critical-check" type="checkbox"/>
-                                                    <label class="form-check-label">Breekpunt</label>
-                                                </div>
+                                            <div class="col-auto form-check">
+                                                <input type="hidden" value="@Model.Questions[@i].Answers[@j].IsCritical"
+                                                       class="critical-value"/>
+                                                <input asp-for="@Model.Questions[@i].Answers[@j].IsCritical"
+                                                       class="form-check-input critical-check" type="checkbox"/>
+                                                <label class="form-check-label">Breekpunt</label>
                                             </div>
                                         }
                                     </li>
                                 }
                             </ul>
-                            <button type="button" class="btn btn-sm btn-secondary add-answer-btn" question-index="@i">Voeg
-                                antwoordoptie toe
-                            </button>
+                            <div class="subcriteria-footer">
+                                <button type="button" class="btn btn-secondary btn-sm-equivalent btn-add-subcriteria" question-index="@i">Voeg
+                                    antwoordoptie toe
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </li>
             }
         </ul>
 
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Opslaan</button>
+        <div class="recruitment-criteria-actions">
             <button type="button" class="btn btn-secondary" id="add-question-btn">Voeg vraag toe</button>
+            <button type="submit" class="btn btn-primary">Opslaan</button>
         </div>
     </form></div>
 
