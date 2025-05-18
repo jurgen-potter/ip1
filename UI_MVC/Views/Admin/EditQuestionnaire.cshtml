@@ -32,9 +32,12 @@
                     <input asp-for="@Model.Questions[@i].Id" type="hidden" value="@Model.Questions[@i].Id" class="question-id"/>
                     <input asp-for="@Model.Questions[@i].ToDelete" type="hidden" class="question-delete"/>
                     <div class="criteria-card-header">
-                        <div class="criteria-header-content">
+                        <div class="fs-5 me-3">
                             <span class="drag-handle">&#x2630;</span>
-                            <label class="criteria-list-label">Vraag @(i + 1)</label>
+                        </div>
+
+                        <div class="criteria-header-content">
+                            <label class="criteria-list-label question-number">Vraag @(i + 1)</label>
                             <div class="criteria-header-input-group">
                                 <input asp-for="@Model.Questions[@i].Description" class="auth-input-field criteria-description"/>
                                 <button type="button" class="btn btn-danger btn-sm-equivalent btn-remove-criteria">
@@ -70,7 +73,9 @@
                                                value="@Model.Questions[@i].Answers[@j].Id"/>
                                         <input asp-for="@Model.Questions[@i].Answers[@j].ToDelete" type="hidden"
                                                class="answer-delete"/>
-                                        <span class="drag-handle">&#x2630;</span>
+                                        <div class="col-auto fs-5 p-0">
+                                            <span class="drag-handle">&#x2630;</span>
+                                        </div>
 
                                         <div class="col">
                                             <div class="subcriteria-input-name-wrapper">
@@ -82,14 +87,13 @@
                                             </div>
                                             <span asp-validation-for="@Model.Questions[@i].Answers[@j].Description"
                                                   class="auth-validation-message"></span>
-
-                                            <div class="subcriteria-input-name-wrapper">
-                                                <input asp-for="@Model.Questions[@i].Answers[@j].Advice"
-                                                       id="Advice-@i-@j"
-                                                       class="auth-input-field subcriteria-description"
-                                                       placeholder="Aanbeveling"/>
-                                                <label for="Advice-@i-@j" class="advice-label">Aanbeveling</label>
-                                            </div>
+                                                <div class="subcriteria-input-name-wrapper">
+                                                    <input asp-for="@Model.Questions[@i].Answers[@j].Advice"
+                                                           id="Advice-@i-@j"
+                                                           class="auth-input-field answer-advice"
+                                                           placeholder="Aanbeveling"/>
+                                                    <label for="Advice-@i-@j" class="advice-label">Aanbeveling</label>
+                                                </div>
                                             <span asp-validation-for="@Model.Questions[@i].Answers[@j].Advice"
                                                   class="auth-validation-message"></span>
                                         </div>

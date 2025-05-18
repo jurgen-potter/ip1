@@ -1,4 +1,4 @@
-let allCriteriaCollapsed: boolean = false;
+let allCollapsed: boolean = false;
 const MAX_CRITERIA = 5;
 const MAX_SUBCRITERIA = 5;
 
@@ -11,9 +11,9 @@ window.addEventListener('DOMContentLoaded', () => {
         // Bepaal initiële staat voor de knoptekst
         const firstCriteriaBody = document.querySelector<HTMLDivElement>('.criteria-card-body-wrapper');
         if (firstCriteriaBody && firstCriteriaBody.classList.contains('is-collapsed')) {
-            allCriteriaCollapsed = true;
+            allCollapsed = true;
         }
-        toggleAllBtn.textContent = allCriteriaCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
+        toggleAllBtn.textContent = allCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
     }
 });
 
@@ -115,12 +115,12 @@ function updateExpandButtonIcon(btn: HTMLButtonElement, isOpen: boolean): void {
 }
 
 function cToggleExpandAll(btn: HTMLButtonElement | null): void {
-    allCriteriaCollapsed = !allCriteriaCollapsed;
+    allCollapsed = !allCollapsed;
 
     document.querySelectorAll<HTMLDivElement>('.criteria-card-body-wrapper').forEach((body) => {
         const expandButton = body.closest('.criteria-item-card')?.querySelector<HTMLButtonElement>('.criteria-expand-button');
         if (expandButton) {
-            const shouldBeOpen = !allCriteriaCollapsed;
+            const shouldBeOpen = !allCollapsed;
             if (shouldBeOpen) {
                 body.classList.remove('is-collapsed');
             } else {
@@ -131,7 +131,7 @@ function cToggleExpandAll(btn: HTMLButtonElement | null): void {
         }
     });
 
-    if (btn) btn.textContent = allCriteriaCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
+    if (btn) btn.textContent = allCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
 }
 
 // ----------------------
