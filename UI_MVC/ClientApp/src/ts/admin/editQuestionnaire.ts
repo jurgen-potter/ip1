@@ -595,8 +595,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 console.log("✅ Unsaved answer removed from DOM");
             }
         }
-
-
     });
     
     document.querySelectorAll('.criteria-item-card').forEach(question => {
@@ -660,6 +658,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
         toggleAllBtn.textContent = allQuestionsCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
     });
+
+    document.getElementById('add-question-btn')?.addEventListener('click', () => {
+        addQuestion();
+    });
+
+    document.querySelectorAll('.btn-add-subcriteria').forEach(button => {
+        button.addEventListener('click', () => {
+            const qIndex = parseInt((button as HTMLElement).getAttribute('question-index')!);
+            addAnswer(qIndex);
+        });
+    });
+
+    initDynamicEvents();
+
 });
 
 function renumberQuestions(): void {
@@ -675,6 +687,77 @@ function renumberQuestions(): void {
     });
 }
 
+function initDynamicEvents(): void {
+    document.querySelectorAll('.btn-remove-criteria').forEach(btn => {
+        btn.removeEventListener('click', handleRemoveQuestion); // remove old to avoid double-bind
+        btn.addEventListener('click', handleRemoveQuestion);
+    });
+
+    document.querySelectorAll('.btn-remove-subcriteria').forEach(btn => {
+        btn.removeEventListener('click', handleRemoveAnswer);
+        btn.addEventListener('click', handleRemoveAnswer);
+    });
+
+    // Re-attach advice toggle
+    document.querySelectorAll('.detail-check').forEach(input => {
+        input.removeEventListener('change', handleDetailToggle);
+        input.addEventListener('change', handleDetailToggle);
+    });
+}
+
+function handleRemoveQuestion(e: Event): void {
+    const button = e.currentTarget as HTMLElement;
+    const question = button.closest(".question-item") as HTMLElement;
+    if (!question) return;
+
+    const questionId = question.querySelector(".question-id") as HTMLInputElement;
+    const questionDelete = question.querySelector(".question-delete") as HTMLInputElement;
+
+    console.log("🔴 Remove question triggered");
+
+    if (questionId?.value && parseInt(questionId.value) > 0) {
+        questionDelete.value = "true";
+        question.style.display = "none";
+        console.log("✅ Question marked for deletion");
+    } else {
+        question.remove();
+        renumberQuestions();
+        console.log("✅ Unsaved question removed from DOM");
+    }
+}
+
+function handleRemoveAnswer(e: Event): void {
+    const button = e.currentTarget as HTMLElement;
+    const answer = button.closest(".answer-item") as HTMLElement;
+    if (!answer) return;
+
+    const answerId = answer.querySelector(".answer-id") as HTMLInputElement;
+    const answerDelete = answer.querySelector(".answer-delete") as HTMLInputElement;
+
+    console.log("🔴 Remove answer triggered");
+
+    if (answerId?.value && parseInt(answerId.value) > 0) {
+        answerDelete.value = "true";
+        answer.style.display = "none";
+        console.log("✅ Answer marked for deletion");
+    } else {
+        answer.remove();
+        console.log("✅ Unsaved answer removed from DOM");
+    }
+}
+
+function handleDetailToggle(e: Event): void {
+    const checkbox = e.currentTarget as HTMLInputElement;
+    const question = checkbox.closest(".question-item");
+    if (!question) return;
+
+    const answers = question.querySelectorAll(".answer-item");
+    answers.forEach(answer => {
+        toggleAdviceOnAnswer(answer as HTMLLIElement, checkbox);
+    });
+}
+
+
 
 function updateExpandIcon(button: HTMLButtonElement, isOpen: boolean): void {
     const icon = button.querySelector('i');
@@ -682,6 +765,8 @@ function updateExpandIcon(button: HTMLButtonElement, isOpen: boolean): void {
     icon.classList.remove('fa-chevron-up', 'fa-chevron-down');
     icon.classList.add(isOpen ? 'fa-chevron-up' : 'fa-chevron-down');
 }
+
+
 
 // Set up all event handlers
 function editQuestionnaireInit(): void {
@@ -718,7 +803,7 @@ function addQuestionHandlers(question: HTMLLIElement): void {
     addAnswerButton.addEventListener("click", () => {
         const questionIndex = addAnswerButton.getAttribute('question-index');
         if (questionIndex !== null) {
-            addAnswer(questionIndex);
+            //addAnswer(questionIndex);
         }
     });
 
@@ -797,22 +882,35 @@ function toggleAdviceOnAnswer(answer: HTMLLIElement, detailCheck: HTMLInputEleme
 
 // Create a new question
 function addQuestion(): void {
-    const questions = document.getElementById(`questions-list`) as HTMLUListElement;
-    const index = questions.children.length;
-    const newQuestion = generateQuestionHtml(index);
-    questions.appendChild(newQuestion);
-    addAnswer(index.toString());
-    addQuestionHandlers(newQuestion);
+    const questionsList = document.getElementById("questions-list");
+    if (!questionsList) return;
+
+    const questionIndex = questionsList.querySelectorAll(".question-item").length;
+
+    const newQuestion = generateQuestionHtml(questionIndex);
+    questionsList.appendChild(newQuestion);
+
+    // Add first answer automatically
+    const answersList = newQuestion.querySelector(`#answers-list-${questionIndex}`);
+    if (answersList) {
+        const firstAnswer = generateAnswerHtml(questionIndex, 0);
+        answersList.appendChild(firstAnswer);
+    }
+
+    renumberQuestions();
+    initDynamicEvents();
 }
 
 // Create a new answer
-function addAnswer(questionIndex: string): void {
-    const answers = document.getElementById(`answers-list-${questionIndex}`) as HTMLUListElement;
-    const index = answers.children.length;
-    const newAnswer = generateAnswerHtml(questionIndex, index);
-    addAnswerHandlers(newAnswer);
-    answers.appendChild(newAnswer);
-    updateQuestionIndices();
+function addAnswer(questionIndex: number): void {
+    const answersList = document.getElementById(`answers-list-${questionIndex}`);
+    if (!answersList) return;
+
+    const answerIndex = answersList.querySelectorAll(".answer-item").length;
+    const newAnswer = generateAnswerHtml(questionIndex, answerIndex);
+    answersList.appendChild(newAnswer);
+
+    initDynamicEvents();
 }
 
 // Generate HTML for a new question given the question index
@@ -820,64 +918,53 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
     const isDetailHtml = isDiscover
         ? ""
         : `
-        <div class="col-auto">
-            <div class="form-check">
-                <input type="hidden" value="false" class="detail-value" />
-                <input name="Questions[${questionIndex}].IsDetail" class="form-check-input detail-check" type="checkbox" />
-                <label class="form-check-label">Panel Detail</label>
-            </div>
+        <div class="ml-4">
+            <input type="hidden" value="false" class="detail-value"/>
+            <input name="Questions[${questionIndex}].IsDetail" class="form-check-input detail-check" type="checkbox"/>
+            <label class="panel-form-label pr-1">Detail?</label>
         </div>`;
 
     const newQuestion = document.createElement("li");
     newQuestion.classList.add("card", "mb-3", "question-item");
     newQuestion.innerHTML = `
-            <input name="Questions[${questionIndex}].Id" type="hidden" class="question-id" value="0" />
-            <input name="Questions[${questionIndex}].ToDelete" type="hidden" class="question-delete" value="false" />
-            <div class="card-header d-flex align-items-start">
-                <div class="fs-5 me-3">
-                    <span class="drag-handle">&#x2630;</span>
-                </div>
-                <div class="flex-grow-1">
-                    <label class="form-label fw-bold question-number">Vraag ${questionIndex + 1}</label>
-                    <div class="d-flex align-items-start gap-2">
-                        <div class="flex-grow-1 w-100">
-                            <div class="flex-grow-1">
-                                <input name="Questions[${questionIndex}].Description" class="form-control mb-0 question-description"/>
-                                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Description" data-valmsg-replace="true"></span>
+                    <input name="Questions[${questionIndex}].Id" type="hidden" class="question-id" value="0"/>
+                    <input name="Questions[${questionIndex}].ToDelete" type="hidden" class="question-delete" value="false"/>
+                    <div class="criteria-card-header">
+                        <div class="fs-5 me-3">
+                            <span class="drag-handle">&#x2630;</span>
+                        </div>
+
+                        <div class="criteria-header-content">
+                            <label class="criteria-list-label question-number">Vraag ${questionIndex + 1}</label>
+                            <div class="criteria-header-input-group">
+                                <div class="flex-grow-1">
+                                    <input name="Questions[${questionIndex}].Description" class="auth-input-field criteria-description"/>
+                                    <span data-valmsg-for="Questions[${questionIndex}].Description" data-valmsg-replace="true" class="text-danger small"></span>
+                                </div>
+                                <button type="button" class="btn btn-danger btn-sm-equivalent btn-remove-criteria">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                ${isDetailHtml}
                             </div>
                         </div>
-                        <button type="button" class="btn btn-danger btn-sm ms-2 remove-question-btn">
-                            <i class="bi bi-trash"></i>
+                        <button type="button" class="criteria-expand-button"
+                                aria-expanded="true"
+                                aria-controls="@questionBodyId">
+                            <i class="fas fa-chevron-up"></i>
                         </button>
-                        ${isDetailHtml}
                     </div>
-                </div>
-                <button class="btn btn-sm expand-btn ms-2 mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#question-body-${questionIndex}" aria-expanded="true" aria-controls="question-body-@i">
-                    <i class="bi bi-chevron-up"></i>
-                </button>
-            </div>
-            <div class="collapse show question-body" id="question-body-${questionIndex}">
-                <div class="card-body">
-<!--                    <label class="form-label fw-bold">Weging</label>
-                    <input name="Questions[${questionIndex}].Weight" type="range" min="1" max="10" class="form-range mb-2 question-weight" value="1"/>
-                    <div class="d-flex justify-content-between px-1 text-muted small">
-                        <span>1</span>
-                        <span>2</span>
-                        <span>3</span>
-                        <span>4</span>
-                        <span>5</span>
-                        <span>6</span>
-                        <span>7</span>
-                        <span>8</span>
-                        <span>9</span>
-                        <span>10</span>
-                    </div>-->
-                    <label class="form-label fw-bold">Antwoorden</label>
-                    <ul id="answers-list-${questionIndex}">
-                    </ul>
-                    <button type="button" class="btn btn-sm btn-secondary add-answer-btn" question-index=${questionIndex}>Voeg antwoordoptie toe</button>
-                </div>
-            </div>
+                    <div class="criteria-card-body-wrapper" id="@questionBodyId">
+                        <div class="criteria-card-body card-body">
+                            <label class="subcriteria-list-label">Antwoorden</label>
+                            <ul id="answers-list-@i" class="subcriteria-list">
+                            </ul>
+                            <div class="subcriteria-footer">
+                                <button type="button" class="btn btn-secondary btn-sm-equivalent btn-add-subcriteria" question-index="@i">Voeg
+                                    antwoordoptie toe
+                                </button>
+                            </div>
+                        </div>
+                    </div>
         `;
     return newQuestion;
 }
@@ -886,37 +973,43 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
 function generateAnswerHtml(questionIndex: string | number, answerIndex: number): HTMLLIElement {
     const isCriticalHtml = isDiscover
         ? `
-        <div class="col-auto">
-            <div class="form-check">
-                <input type="hidden" value="false" class="critical-value" />
-                <input name="Questions[${questionIndex}].Answers[${answerIndex}].IsCritical" class="form-check-input critical-check" type="checkbox" />
-                <label class="form-check-label">Breekpunt</label>
-            </div>
+        <div class="col-auto form-check">
+            <input type="hidden" value="false" class="critical-value"/>
+            <input name="Questions[${questionIndex}].Answers[${answerIndex}].IsCritical" class="form-check-input critical-check" type="checkbox"/>
+            <label class="form-check-label">Breekpunt</label>
         </div>`
         : "";
 
     const newAnswer = document.createElement("li");
     newAnswer.classList.add("row", "answer-item", "mb-2", "align-items-center", "p-2");
     newAnswer.innerHTML = `
-            <input name="Questions[${questionIndex}].Answers[${answerIndex}].Id" type="hidden" class="answer-id" value="0" />
-            <input name="Questions[${questionIndex}].Answers[${answerIndex}].ToDelete" type="hidden" class="answer-delete" value="false" />
+            <input name="Questions[${questionIndex}].Answers[${answerIndex}].Id" type="hidden" class="answer-id" value="0"/>
+            <input name="Questions[${questionIndex}].Answers[${answerIndex}].ToDelete" type="hidden" class="answer-delete" value="false"/>
             <div class="col-auto fs-5 p-0">
-                <span class="drag-handle">&#x2630</span>
+                <span class="drag-handle">&#x2630;</span>
             </div>
+
             <div class="col">
-                <div class="form-floating mb-2">
-                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].Description" id="Description-@i-@j" class="form-control answer-description" />
+                <div class="subcriteria-input-name-wrapper">
+                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].Description" id="Description-@i-@j"
+                           class="auth-input-field subcriteria-description" placeholder="Beschrijving"/>
                     <label for="Description-${questionIndex}-${answerIndex}">Beschrijving</label>
                 </div>
-                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Description" data-valmsg-replace="true"></span>
-                <div class="form-floating mb-2">
-                    <input name="Questions[${questionIndex}].Answers[${answerIndex}].Advice" id="Advice-@i-@j" class="form-control answer-advice" />
-                    <label for="Advice-${questionIndex}-${answerIndex}" class="advice-label">Aanbeveling</label>
-                </div>
-                <span class="text-danger small field-validation-valid" data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Advice" data-valmsg-replace="true"></span>
+                <span data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Description" data-valmsg-replace="true"
+                      class="auth-validation-message"></span>
+                    <div class="subcriteria-input-name-wrapper">
+                        <input name="Questions[${questionIndex}].Answers[${answerIndex}].Advice" id="Advice-@i-@j"
+                               class="auth-input-field answer-advice" placeholder="Aanbeveling"/>
+                        <label for="Advice-${questionIndex}-${answerIndex}" class="advice-label">Aanbeveling</label>
+                    </div>
+                <span data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Advice" data-valmsg-replace="true"
+                      class="auth-validation-message"></span>
             </div>
-            <div class="col-auto">
-                <button type="button" class="btn btn-danger btn-sm remove-answer-btn">Verwijder</button>
+
+            <div class="subcriteria-remove-button-wrapper">
+                <button type="button" class="btn btn-danger btn-sm-equivalent btn-remove-subcriteria">
+                    Verwijder
+                </button>
             </div>
             ${isCriticalHtml}
         `;
