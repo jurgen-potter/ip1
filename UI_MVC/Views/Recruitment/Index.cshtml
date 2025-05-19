@@ -30,7 +30,7 @@
             {
                 var criteriaBodyId = $"criteria-body-{i}";
                 <li class="criteria-item-card">
-                    <input asp-for="Criteria[i].Id" type="hidden" class="criteria-id" />
+                    <input asp-for="Criteria[i].Id" type="hidden" class="criteria-id"/>
                     <div class="criteria-card-header">
                         <div class="criteria-header-content">
                             <label class="criteria-list-label">Criteria</label>
@@ -51,7 +51,6 @@
                              }
                         </div>
                         <button type="button" class="criteria-expand-button"
-                                data-bs-target="#@criteriaBodyId"
                                 aria-expanded="true"
                                 aria-controls="@criteriaBodyId">
                             <i class="fas fa-chevron-up"></i> 
