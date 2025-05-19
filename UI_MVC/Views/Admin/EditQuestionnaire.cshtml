@@ -38,10 +38,8 @@
                         <div class="criteria-header-content">
                             <label class="criteria-list-label question-number">Vraag @(i + 1)</label>
                             <div class="criteria-header-input-group">
-                                <div class="flex-grow-1">
-                                    <input asp-for="@Model.Questions[@i].Description" class="auth-input-field criteria-description"/>
-                                    <span asp-validation-for="@Model.Questions[@i].Description" class="text-danger small"></span>
-                                </div>
+                                <input asp-for="@Model.Questions[@i].Description" class="auth-input-field criteria-description"/>
+                                <span asp-validation-for="@Model.Questions[@i].Description" class="text-danger small"></span>
                                 <button type="button" class="btn btn-danger btn-sm-equivalent btn-remove-criteria">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -71,34 +69,29 @@
                                 {
                                     <li class="subcriteria-item-row">
                                         <input asp-for="@Model.Questions[@i].Answers[@j].Id" type="hidden" class="answer-id"
-                                               value="@Model.Questions[@i].Answers[@j].Id"/>
-                                        <input asp-for="@Model.Questions[@i].Answers[@j].ToDelete" type="hidden"
-                                               class="answer-delete"/>
+                                               value="@Model.Questions[@i].Answers[@j].Id" />
+                                        <input asp-for="@Model.Questions[@i].Answers[@j].ToDelete" type="hidden" class="answer-delete" />
                                         <div class="col-auto fs-5 p-0">
                                             <span class="drag-handle">&#x2630;</span>
                                         </div>
-
-                                        <div class="col">
+                                        <div class="flex flex-col flex-grow gap-2"> <!-- Nieuwe wrapper voor inputs links -->
                                             <div class="subcriteria-input-name-wrapper">
                                                 <input asp-for="@Model.Questions[@i].Answers[@j].Description"
                                                        id="Description-@i-@j"
                                                        class="auth-input-field subcriteria-description"
                                                        placeholder="Beschrijving"/>
-                                                <label for="Description-@i-@j">Beschrijving</label>
+                                                <label for="Description-@i-@j" class="sr-only">Beschrijving</label>
                                             </div>
-                                            <span asp-validation-for="@Model.Questions[@i].Answers[@j].Description"
-                                                  class="auth-validation-message"></span>
-                                                <div class="subcriteria-input-name-wrapper">
-                                                    <input asp-for="@Model.Questions[@i].Answers[@j].Advice"
-                                                           id="Advice-@i-@j"
-                                                           class="auth-input-field answer-advice"
-                                                           placeholder="Aanbeveling"/>
-                                                    <label for="Advice-@i-@j" class="advice-label">Aanbeveling</label>
-                                                </div>
-                                            <span asp-validation-for="@Model.Questions[@i].Answers[@j].Advice"
-                                                  class="auth-validation-message"></span>
+                                            <span asp-validation-for="@Model.Questions[@i].Answers[@j].Description" class="auth-validation-message"></span>
+                                            <div class="subcriteria-input-name-wrapper advice-wrapper"> <!-- DIT wrappen we -->
+                                                <input asp-for="@Model.Questions[@i].Answers[@j].Advice"
+                                                       id="Advice-@i-@j"
+                                                       class="auth-input-field answer-advice"
+                                                       placeholder="Aanbeveling" />
+                                                <label for="Advice-@i-@j" class="sr-only advice-label">Aanbeveling</label>
+                                            </div>
+                                            <span asp-validation-for="@Model.Questions[@i].Answers[@j].Advice" class="auth-validation-message advice-wrapper"></span>
                                         </div>
-
                                         <div class="subcriteria-remove-button-wrapper">
                                             <button type="button" class="btn btn-danger btn-sm-equivalent btn-remove-subcriteria">
                                                 Verwijder
@@ -106,12 +99,14 @@
                                         </div>
                                         @if (isDiscover)
                                         {
-                                            <div class="col-auto form-check">
-                                                <input type="hidden" value="@Model.Questions[@i].Answers[@j].IsCritical"
-                                                       class="critical-value"/>
+                                            <div class="col-auto form-check flex items-center">
+                                                <input type="hidden" value="@Model.Questions[@i].Answers[@j].IsCritical" class="critical-value" />
                                                 <input asp-for="@Model.Questions[@i].Answers[@j].IsCritical"
-                                                       class="form-check-input critical-check" type="checkbox"/>
-                                                <label class="form-check-label">Breekpunt</label>
+                                                       
+                                                       class="form-check-input critical-check"
+                                                       
+                                                       type="checkbox" />
+                                                <label class="form-check-label ml-2">Breekpunt</label>
                                             </div>
                                         }
                                     </li>

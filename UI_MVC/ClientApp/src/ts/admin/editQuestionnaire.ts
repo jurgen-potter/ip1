@@ -165,11 +165,15 @@ function toggleAdviceOnQuestion(question: HTMLLIElement): void {
 }
 
 function toggleAdviceOnAnswer(answer: HTMLLIElement, detailCheck: HTMLInputElement): void {
-    const advice = answer.querySelector('.answer-advice') as HTMLInputElement;
-    const label = answer.querySelector('.advice-label') as HTMLLabelElement;
+    const wrappers = answer.querySelectorAll('.advice-wrapper');
 
-    advice.style.display = detailCheck.checked ? 'none' : '';
-    label.style.display = detailCheck.checked ? 'none' : '';
+    wrappers.forEach(wrapper => {
+        if (detailCheck.checked) {
+            wrapper.classList.add('hidden');
+        } else {
+            wrapper.classList.remove('hidden');
+        }
+    });
 }
 
 // Create a new question
@@ -206,7 +210,7 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
     const newQuestion = document.createElement("li");
     newQuestion.classList.add("criteria-item-card");
     newQuestion.innerHTML = `
-            <input name="Questions[${questionIndex}].Id" type="hidden" class="question-id" value="0"/>
+        <input name="Questions[${questionIndex}].Id" type="hidden" class="question-id" value="0"/>
         <input name="Questions[${questionIndex}].ToDelete" type="hidden" class="question-delete" value="false"/>
 
         <div class="criteria-card-header">
@@ -217,10 +221,8 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
             <div class="criteria-header-content">
                 <label class="criteria-list-label question-number">Vraag ${questionIndex + 1}</label>
                 <div class="criteria-header-input-group">
-                    <div class="flex-grow-1">
-                        <input name="Questions[${questionIndex}].Description" class="auth-input-field criteria-description"/>
-                        <span data-valmsg-for="Questions[${questionIndex}].Description" data-valmsg-replace="true" class="text-danger small"></span>
-                    </div>
+                    <input name="Questions[${questionIndex}].Description" class="auth-input-field criteria-description"/>
+                    <span data-valmsg-for="Questions[${questionIndex}].Description" data-valmsg-replace="true" class="text-danger small"></span>
                     <button type="button" class="btn btn-danger btn-sm-equivalent btn-remove-criteria">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -255,10 +257,10 @@ function generateQuestionHtml(questionIndex: number): HTMLLIElement {
 function generateAnswerHtml(questionIndex: string | number, answerIndex: number): HTMLLIElement {
     const isCriticalHtml = isDiscover
         ? `
-        <div class="col-auto form-check">
+        <div class="col-auto form-check flex items-center">
             <input type="hidden" value="false" class="critical-value"/>
             <input name="Questions[${questionIndex}].Answers[${answerIndex}].IsCritical" class="form-check-input critical-check" type="checkbox"/>
-            <label class="form-check-label">Breekpunt</label>
+            <label class="form-check-label ml-2">Breekpunt</label>
         </div>`
         : "";
 
@@ -268,31 +270,31 @@ function generateAnswerHtml(questionIndex: string | number, answerIndex: number)
         <input name="Questions[${questionIndex}].Answers[${answerIndex}].Id" type="hidden" class="answer-id" value="0"/>
         <input name="Questions[${questionIndex}].Answers[${answerIndex}].ToDelete" type="hidden" class="answer-delete" value="false"/>
 
-        <div class="col-auto fs-5 p-0">
-            <span class="drag-handle">&#x2630;</span>
+        <div class="col-auto fs-5 p-0 flex items-center">
+            <span class="drag-handle cursor-move">&#x2630;</span>
         </div>
 
-        <div class="col">
+        <div class="flex flex-col flex-grow gap-2 ml-3"> <!-- wrapper inputs in flex-col -->
             <div class="subcriteria-input-name-wrapper">
                 <input name="Questions[${questionIndex}].Answers[${answerIndex}].Description"
                        id="Description-${questionIndex}-${answerIndex}"
                        class="auth-input-field subcriteria-description" placeholder="Beschrijving"/>
-                <label for="Description-${questionIndex}-${answerIndex}">Beschrijving</label>
+                <label for="Description-${questionIndex}-${answerIndex}" class="sr-only">Beschrijving</label>
             </div>
             <span data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Description" data-valmsg-replace="true"
                   class="auth-validation-message"></span>
 
-            <div class="subcriteria-input-name-wrapper">
+            <div class="subcriteria-input-name-wrapper advice-wrapper">
                 <input name="Questions[${questionIndex}].Answers[${answerIndex}].Advice"
                        id="Advice-${questionIndex}-${answerIndex}"
                        class="auth-input-field answer-advice" placeholder="Aanbeveling"/>
-                <label for="Advice-${questionIndex}-${answerIndex}" class="advice-label">Aanbeveling</label>
+                <label for="Advice-${questionIndex}-${answerIndex}" class="sr-only advice-label">Aanbeveling</label>
             </div>
             <span data-valmsg-for="Questions[${questionIndex}].Answers[${answerIndex}].Advice" data-valmsg-replace="true"
-                  class="auth-validation-message"></span>
+                  class="auth-validation-message advice-wrapper"></span>
         </div>
 
-        <div class="subcriteria-remove-button-wrapper">
+        <div class="subcriteria-remove-button-wrapper ml-3">
             <button type="button" class="btn btn-danger btn-sm-equivalent btn-remove-subcriteria">
                 Verwijder
             </button>
