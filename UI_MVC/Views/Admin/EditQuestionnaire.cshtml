@@ -27,7 +27,6 @@
         <ul id="questions-list" class="criteria-list">
             @for (int i = 0; i < Model.Questions.Count; i++)
             {
-                var questionBodyId = $"question-body-{i}";
                 <li class="criteria-item-card">
                     <input asp-for="@Model.Questions[@i].Id" type="hidden" value="@Model.Questions[@i].Id" class="question-id"/>
                     <input asp-for="@Model.Questions[@i].ToDelete" type="hidden" class="question-delete"/>
@@ -59,11 +58,11 @@
                         </div>
                         <button type="button" class="criteria-expand-button"
                                 aria-expanded="true"
-                                aria-controls="@questionBodyId">
+                                aria-controls="question-body-@i">
                             <i class="fas fa-chevron-up"></i>
                         </button>
                     </div>
-                    <div class="criteria-card-body-wrapper" id="@questionBodyId">
+                    <div class="criteria-card-body-wrapper" id="question-body-@i">
                         <div class="criteria-card-body card-body">
                             <label class="subcriteria-list-label">Antwoorden</label>
                             <span asp-validation-for="@Model.Questions[@i].Answers" class="text-danger subcriteria-warning"></span>
