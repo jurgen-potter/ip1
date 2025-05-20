@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+﻿﻿using System.Security.Claims;
 using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Panels;
@@ -15,7 +15,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 [Authorize]
 public class RecommendationsController(
     IPanelManager panelManager,
-    IMemberManager memberManager) : ControllerBase
+    IUserProfileManager userProfileManager) : ControllerBase
 {
     [HttpGet("userVotes")]
     public IActionResult GetUserVotes()
@@ -25,7 +25,7 @@ public class RecommendationsController(
         {
             return Unauthorized();
         }
-
+    
         var votedRecommendation = panelManager.GetVotedRecommendationsByUser(userId);
         return Ok(votedRecommendation);
     }
@@ -34,26 +34,25 @@ public class RecommendationsController(
     public IActionResult Vote([FromBody] VoteDto voteDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var member = memberManager.GetMemberById(userId);
+        var member = userProfileManager.GetUserById(userId);
         if (string.IsNullOrEmpty(userId) || member.UserType != UserType.Member)
         {
             return Unauthorized();
         }
 
-        var recommendation = panelManager.GetRecommendationById(voteDto.Id);
+        var recommendation = panelManager.GetRecommendationByIdWithVotes(voteDto.Id);
         if (recommendation == null)
         {
             return NotFound();
         }
 
-        var hasVoted = panelManager.HasUserVotedForRecommendation(member, recommendation);
+        var hasVoted = panelManager.DoesUserVoteExist(member, recommendation);
         if (hasVoted)
         {
             return BadRequest(new { message = "U heeft al gestemd op deze aanbeveling" });
         }
 
-        panelManager.AddVoteToRecommendation(member, recommendation, voteDto.Recommended);
-        recommendation = panelManager.GetRecommendationById(voteDto.Id);
+        panelManager.AddUserVote(member, recommendation, voteDto.Recommended);
 
         return Ok(new { id = recommendation.Id, votes = recommendation.Votes });
     }
@@ -62,26 +61,28 @@ public class RecommendationsController(
     public IActionResult RemoveVote([FromBody] VoteDto voteDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var member = memberManager.GetMemberById(userId);
+        var member = userProfileManager.GetUserById(userId);
         if (string.IsNullOrEmpty(userId))
         {
             return Unauthorized();
         }
 
-        var recommendation = panelManager.GetRecommendationById(voteDto.Id);
+        var recommendation = panelManager.GetRecommendationByIdWithVotes(voteDto.Id);
+
         if (recommendation == null)
         {
             return NotFound();
         }
 
-        var hasVoted = panelManager.HasUserVotedForRecommendation(member, recommendation);
+        var hasVoted = panelManager.DoesUserVoteExist(member, recommendation);
+
         if (!hasVoted)
         {
             return BadRequest(new { message = "U heeft niet gestemd op deze aanbeveling" });
         }
 
-        panelManager.RemoveVoteFromRecommendation(member, recommendation);
-        recommendation = panelManager.GetRecommendationById(voteDto.Id);
+        panelManager.RemoveUserVote(member, recommendation);
+        panelManager.EditRecommendation(recommendation);
 
         return Ok(new { id = recommendation.Id, votes = recommendation.Votes });
     }

@@ -18,9 +18,8 @@ public class RecommendationController(
     }
 
     [HttpGet]
-    [Route("Recommendation/GetVoters/{recommendationId}")]
     [Authorize(Roles = "Organization")] 
-    public IActionResult GetVoters(int recommendationId = 1)
+    public IActionResult GetVoters(int recommendationId)
     {
         var recommendation = panelManager.GetRecommendationByIdWithVoters(recommendationId);
 
