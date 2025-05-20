@@ -1,0 +1,65 @@
+﻿
+.home-hero-section {
+  @apply bg-brand-ash-gray flex items-center justify-center text-center px-4 sm:px-6 lg:px-8;
+  min-height: 60vh;
+  @apply mt-0 pt-0;
+}
+
+.home-hero-content {
+  @apply max-w-3xl mx-auto py-16 sm:py-24;
+}
+
+.home-hero-title {
+  @apply text-4xl sm:text-5xl md:text-6xl font-bold text-text-black leading-tight mb-6;
+}
+
+.home-hero-subtitle {
+  @apply text-lg sm:text-xl text-text-black text-opacity-75 max-w-2xl mx-auto;
+}
+
+.home-hero-button-container {
+  @apply mt-10;
+}
+
+.home-hero-button {
+  @apply inline-block bg-accent text-text-black font-bold py-3 px-8 rounded-lg text-lg shadow-lg
+  transition-colors duration-150;
+  &:hover {
+    @apply bg-accent-hover text-text-black; /* Behoud text-text-black op hover */
+  }
+}
+
+.home-info-section {
+  @apply container mx-auto p-4 sm:p-6 lg:p-8;
+}
+
+.home-info-title {
+  @apply text-3xl font-semibold text-text-black mb-10 text-center;
+}
+
+.home-info-grid {
+  @apply grid md:grid-cols-2 gap-8;
+}
+
+.home-info-card {
+  @apply bg-surface p-8 rounded-xl shadow-lg transition-shadow duration-300;
+  &:hover {
+    @apply shadow-2xl;
+  }
+}
+
+.home-info-card-title {
+  @apply text-2xl font-semibold text-text-black mb-4;
+}
+
+.home-info-card-text {
+  @apply text-text-black text-opacity-80 mb-6;
+}
+
+.home-info-card-button {
+  @apply inline-block bg-primary text-white font-semibold py-2 px-5 rounded-lg
+  transition-colors duration-150;
+  &:hover {
+    @apply bg-primary-hover text-white; /* Behoud text-white op hover */
+  }
+}

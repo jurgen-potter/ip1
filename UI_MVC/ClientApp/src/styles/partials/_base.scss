@@ -1,0 +1,17 @@
+
+body {
+  @apply font-sans text-base leading-relaxed text-text-black bg-background-page;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-sans font-semibold text-text-black;
+}
+
+a {
+  @apply text-text-black no-underline font-medium transition-colors duration-200 ease-in-out;
+  &:hover {
+    @apply text-primary;
+  }
+}

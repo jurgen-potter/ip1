@@ -1,0 +1,243 @@
+﻿.auth-page-wrapper {
+  @apply relative flex justify-center items-center min-h-[70vh];
+  &.login-wrapper-padding { 
+    @apply pt-20;
+  }
+}
+
+.auth-card-container {
+  @apply w-full max-w-md bg-white rounded-xl shadow-lg p-8 overflow-hidden;
+  /* Specifiek voor login-kaart met absolute positionering: */
+  &.login-card-absolute { /* Voeg deze klasse toe aan de kaart op de login pagina */
+    @apply absolute top-20 left-1/2;
+    transform: translateX(-50%);
+    min-height: 450px;
+    transition: min-height 0.3s ease;
+  }
+  &.auth-card-container--wide {
+    @apply max-w-4xl; 
+  }
+
+}
+
+.auth-page-title { /* Voor H1 ViewData["Title"] */
+  @apply text-2xl font-bold mb-6 text-center;
+}
+
+.auth-form-title { /* Voor H2 subtitel/instructie */
+  @apply text-xl font-semibold mb-4 text-center;
+}
+
+.auth-divider {
+  @apply my-4 border-gray-200;
+}
+
+.auth-form-label {
+  @apply block text-sm font-medium mb-1;
+}
+
+.auth-submit-button {
+  @apply w-full bg-primary text-white px-4 py-2 rounded-lg transition-colors duration-150;
+  &:hover {
+    @apply bg-primary-hover;
+  }
+}
+
+.auth-links-section { /* Specifiek voor login, maar kan generiek zijn */
+  @apply mt-4 space-y-2;
+  a {
+    @apply text-primary;
+    &:hover {
+      @apply underline;
+    }
+  }
+}
+
+.auth-validation-summary {
+  @apply text-red-500;
+  ul {
+    @apply list-disc pl-5;
+  }
+}
+
+.auth-validation-message {
+  @apply text-red-500 text-sm;
+}
+
+
+.login-type-button {
+  @apply flex-1 px-4 py-2 border border-primary text-primary transition-colors duration-150;
+  &:hover {
+    @apply bg-primary text-white;
+  }
+  &.active {
+    @apply bg-primary text-white;
+  }
+}
+#accountBtn.login-type-button { /* ID specificiteit om afronding te garanderen */
+  @apply rounded-l-lg;
+}
+#codeBtn.login-type-button { /* ID specificiteit om afronding te garanderen */
+  @apply rounded-r-lg;
+}
+
+.login-form-fields-container {
+  @apply relative;
+}
+
+.login-form-panel { /* Voor #accountFields en #codeFields */
+  @apply absolute top-0 left-0 w-full;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+
+  &.active {
+    @apply relative opacity-100 pointer-events-auto;
+    transform: translateY(0);
+  }
+}
+
+
+.login-page-wrapper {
+  @apply relative flex justify-center min-h-[calc(100vh-var(--header-height,80px)-var(--footer-height,80px))];
+  @apply pt-20;
+}
+
+.login-card-container {
+  @apply w-full max-w-md bg-white rounded-xl shadow-lg p-8 overflow-hidden;
+  @apply absolute top-20 left-1/2;
+  transform: translateX(-50%);
+  min-height: 450px;
+  transition: min-height 0.3s ease;
+}
+
+.login-title {
+  @apply text-2xl font-bold mb-6 text-center;
+}
+
+.login-subtitle {
+  @apply text-xl font-semibold mb-4 text-center;
+}
+
+
+.login-divider {
+  @apply my-4 border-gray-200;
+}
+
+.form-hidden {
+  display: none !important;
+}
+
+.login-form-label {
+  @apply block text-sm font-medium mb-1;
+}
+
+/* Inputvelden specifieker gemaakt om plugin overrides te counteren */
+input[type="email"].login-input-field,
+input[type="password"].login-input-field,
+input[type="text"].login-input-field { /* Ervan uitgaande dat 'Code' input type="text" is */
+  @apply w-full px-3 py-2 border border-gray-300
+  focus:ring-2 focus:ring-primary focus:border-primary;
+  border-radius: 0.5rem; /* Tailwind's 'lg' waarde (8px) */
+}
+
+.login-checkbox-label {
+  @apply inline-flex items-center;
+  input[type="checkbox"] {
+    /* @tailwindcss/forms zou dit moeten stylen. Indien niet, forceer de afronding. */
+    @apply text-primary border-gray-300; /* Basiskleuren */
+    border-radius: 0.25rem; /* Tailwind's default 'rounded' waarde (4px) */
+    /* Zorg ervoor dat de focus-stijl consistent is als de plugin deze niet afhandelt */
+    &:focus {
+      @apply ring-2 ring-primary border-primary;
+    }
+  }
+}
+
+.login-submit-button {
+  @apply w-full bg-primary text-white px-4 py-2 rounded-lg transition-colors duration-150;
+  &:hover {
+    @apply bg-primary-hover;
+  }
+}
+
+.login-links-section {
+  @apply mt-4 space-y-2;
+  a {
+    @apply text-primary;
+    &:hover {
+      @apply underline;
+    }
+  }
+}
+
+.login-validation-summary {
+  @apply text-red-500;
+  ul {
+    @apply list-disc pl-5;
+  }
+}
+
+.login-validation-message {
+  @apply text-red-500 text-sm;
+}
+
+.auth-form-group {
+  @apply mb-4; 
+}
+
+
+.member-reg-form-group input.auth-input-field,
+form input[type="email"].auth-input-field,
+form input[type="password"].auth-input-field,
+form input[type="text"].auth-input-field,
+form input[type="date"].auth-input-field,
+form input[type="number"].auth-input-field
+{
+  @apply w-full px-3 py-2 border border-gray-300 rounded-lg 
+  focus:ring-2 focus:ring-primary focus:border-primary;
+  border-radius: 0.5rem !important; 
+  &:focus {
+    outline: none; 
+  }
+}
+.member-reg-selected-criteria-tag {
+  @apply inline-block bg-secondary text-white text-sm font-medium mr-2 last:mr-0 mb-2 px-3 py-1 rounded-full;
+}
+.member-reg-criteria-group-label {
+  @apply block text-sm font-medium text-gray-700 mb-2; /* Standaard label styling, mb-2 voor ruimte tot de tags */
+}
+
+.auth-input-field[readonly] {
+  @apply bg-gray-100 cursor-not-allowed border-gray-300 px-3 py-2; /* Zelfde padding als normale inputs */
+  border-radius: 0.5rem !important;
+}
+
+form textarea.auth-input-field {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-lg
+  focus:ring-2 focus:ring-primary focus:border-primary shadow-sm;
+  border-radius: 0.5rem !important; 
+  min-height: 100px; 
+  @screen sm {
+    min-height: 120px; 
+  }
+}
+
+
+.auth-checkbox-label {
+  @apply flex items-center text-sm text-gray-700;
+  input[type="checkbox"].auth-checkbox-input {
+    @apply h-4 w-4 text-primary border-gray-300 rounded mr-2 focus:ring-primary;
+    border-radius: 0.25rem !important;
+    margin-top: 10px; /* Checkbox 3px naar beneden verplaatst */
+  }
+  span {
+    @apply font-medium;
+    padding-top: 9px;
+  }
+}
+
+.login-type-selector {
+  @apply flex w-full mb-4;
+}

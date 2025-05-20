@@ -1,0 +1,102 @@
+﻿.questionnaire-container { /* Algemene wrapper voor de vragenlijst-invulpagina */
+  @apply container mx-auto py-8 px-4 max-w-5xl;
+}
+
+.questionnaire-main-title { /* Voor de ViewBag.Title op invulpagina */
+  @apply text-2xl sm:text-3xl font-bold text-gray-800 mb-6 text-center;
+}
+
+.questionnaire-subtitle { /* Voor de H2 @Model.Questionnaire.Subtitle op invulpagina */
+  @apply text-xl sm:text-2xl font-semibold text-gray-700 mb-8 text-center;
+}
+
+.question-card { /* Container voor elke vraag op invulpagina */
+  @apply bg-white rounded-xl shadow-lg overflow-hidden mb-6 border border-gray-200;
+}
+
+.question-card-header { /* Header binnen de vraag-kaart op invulpagina */
+  @apply px-5 py-3 bg-gray-100 border-b border-gray-300;
+  strong {
+    @apply font-semibold text-gray-700;
+  }
+}
+
+.question-card-body { /* Body van de vraag-kaart op invulpagina */
+  @apply p-5 sm:p-6;
+}
+
+.question-description { /* De paragraaf met de vraagtekst op invulpagina */
+  @apply text-gray-800 text-base leading-relaxed mb-4;
+}
+
+.question-answer-group { /* Wrapper voor elke antwoordoptie (radio + label) op invulpagina */
+  @apply flex items-center mb-3 last:mb-0 p-3 rounded-md hover:bg-gray-50 transition-colors duration-150 cursor-pointer;
+}
+
+/* Specifiekere selector voor de radio button om plugin stijlen te overschrijven */
+label.question-answer-group input[type="radio"].question-answer-radio {
+  @apply h-4 w-4 border-gray-400 text-secondary shrink-0;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: 50%;
+  background-color: theme('colors.white');
+
+
+  &:checked {
+    background-color: theme('colors.secondary') !important;
+    border-color: theme('colors.secondary') !important;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+    /* Optioneel: alternatieve focus, bv. een iets donkerdere rand van de radio zelf */
+    /* border-color: theme('colors.secondary-darker') !important; */
+  }
+}
+
+.question-answer-label { /* De <label> voor het antwoord op invulpagina */
+  @apply ml-3 block text-sm font-medium text-gray-700 cursor-pointer;
+}
+
+.questionnaire-actions { /* Container voor de knoppen onderaan op invulpagina */
+  @apply flex flex-col sm:flex-row justify-start mt-8 gap-3;
+  .btn {
+    @apply w-full sm:w-auto;
+  }
+}
+
+/* --- Questionnaire Result Page Styles --- */
+.questionnaire-result-container {
+  @apply container mx-auto py-8 px-4 max-w-5xl;
+}
+
+.questionnaire-result-main-title {
+  @apply text-2xl sm:text-3xl font-bold text-gray-800 mb-8 text-center;
+}
+
+.questionnaire-result-card {
+  @apply bg-white rounded-xl shadow-lg overflow-hidden mb-6 border border-gray-200 p-5 sm:p-6;
+}
+
+.questionnaire-result-card-title {
+  @apply text-xl font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-200;
+}
+
+.questionnaire-result-item {
+  @apply mb-4 pb-4 border-b border-gray-100 last:mb-0 last:pb-0 last:border-b-0;
+}
+
+.questionnaire-result-label {
+  @apply block text-sm font-semibold text-gray-600 mb-1;
+}
+
+.questionnaire-result-text {
+  @apply text-gray-800 text-base leading-relaxed;
+}
+
+.questionnaire-result-actions {
+  @apply mt-8 text-center;
+}

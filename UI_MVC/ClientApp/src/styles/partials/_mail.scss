@@ -1,0 +1,10 @@
+﻿.message-edit-form-container { /* De kaart-achtige container voor dit specifieke formulier */
+  @apply w-full max-w-5xl bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10 overflow-hidden mx-auto;
+}
+
+.message-edit-form-title { /* Titel van het formulier */
+  @apply text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center;
+}
+.message-edit-form-actions { /* Container voor de submit knop */
+  @apply mt-8 pt-6 border-t border-gray-200 text-center; /* Ruimte boven en een scheidingslijn */
+}

@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿﻿using System.Security.Claims;
+using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Users;
@@ -16,8 +17,20 @@ public class RecommendationsController(
     IPanelManager panelManager,
     IUserProfileManager userProfileManager) : ControllerBase
 {
+    [HttpGet("userVotes")]
+    public IActionResult GetUserVotes()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+    
+        var votedRecommendation = panelManager.GetVotedRecommendationsByUser(userId);
+        return Ok(votedRecommendation);
+    }
+
     [HttpPost("vote")]
-    [Authorize]
     public IActionResult Vote([FromBody] VoteDto voteDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -45,7 +58,6 @@ public class RecommendationsController(
     }
 
     [HttpPost("remove-vote")]
-    [Authorize]
     public IActionResult RemoveVote([FromBody] VoteDto voteDto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -56,12 +68,14 @@ public class RecommendationsController(
         }
 
         var recommendation = panelManager.GetRecommendationByIdWithVotes(voteDto.Id);
+
         if (recommendation == null)
         {
             return NotFound();
         }
 
         var hasVoted = panelManager.DoesUserVoteExist(member, recommendation);
+
         if (!hasVoted)
         {
             return BadRequest(new { message = "U heeft niet gestemd op deze aanbeveling" });

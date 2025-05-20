@@ -1,0 +1,73 @@
+﻿.custom-modal-overlay {
+  @apply fixed inset-0 bg-gray-800 bg-opacity-75 items-center justify-center z-50
+  transition-opacity duration-300 ease-in-out;
+  @apply hidden opacity-0;
+
+  &.is-open {
+    display: flex !important;
+    @apply opacity-100;
+  }
+}
+.custom-modal-dialog {
+  @apply bg-white rounded-lg shadow-xl overflow-hidden max-w-md w-full mx-4
+  transform transition-all duration-300 ease-in-out;
+  @apply scale-95 opacity-0;
+
+  .custom-modal-overlay.is-open & {
+    @apply scale-100 opacity-100;
+  }
+  &.modal-lg {
+    @apply max-w-lg sm:max-w-xl md:max-w-2xl;
+  }
+  &.modal-sm {
+    @apply max-w-sm;
+  }
+}
+
+.custom-modal-header {
+  @apply flex justify-between items-center border-b border-gray-200 p-4;
+}
+
+.custom-modal-title {
+  @apply text-lg font-semibold text-gray-800;
+}
+
+.custom-modal-close-button {
+  @apply text-gray-400 hover:text-gray-600 transition-colors duration-150;
+  svg {
+    @apply w-6 h-6;
+  }
+}
+
+.custom-modal-body {
+  @apply p-4 sm:p-6;
+  form input[type="text"].auth-input-field,
+  form input[type="date"].auth-input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg
+    focus:ring-2 focus:ring-primary focus:border-primary;
+    border-radius: 0.5rem !important;
+
+    &:focus {
+      outline: none;
+    }
+  }
+  .voters-list-section {
+    @apply mb-4;
+    &:last-child {
+      @apply mb-0;
+    }
+  }
+  .voters-list-heading {
+    @apply text-sm font-semibold text-gray-700 mb-2 border-b border-gray-200 pb-1;
+  }
+  .voters-list {
+    @apply list-none p-0 space-y-1;
+    li {
+      @apply text-sm text-gray-600 bg-gray-50 p-2 rounded-md;
+    }
+  }
+}
+
+.custom-modal-footer {
+  @apply flex justify-end gap-3 bg-gray-50 p-4 border-t border-gray-200;
+}

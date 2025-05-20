@@ -4,41 +4,47 @@
 @{
     ViewBag.Title = "Panel maken";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
+}
 
-<h2>Begin met uw panel te maken</h2>
-<form asp-controller="Panel" asp-action="CreatePanel" method="post">
-    <div>
-        <label>Naam van uw panel:</label>
-        <input asp-for="Name" type="text" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label>Beschrijving van uw panel:</label>
-        <textarea rows="5" asp-for="Description" type="number" class="form-control">Geef hier uw beschrijving</textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+<div class="panel-create-container">
+    <h2 class="panel-create-title">Begin met uw panel te maken</h2>
     
-    <div>
-        @if (Model.Result.Criteria != null)
-        {
-            @for (int i = 0; i < Model.Result.Criteria.Count; i++)
-            {
-                <input type="hidden" asp-for="Result.Criteria[i].Name"/>
+    <form asp-controller="Panel" asp-action="CreatePanel" method="post" class="panel-create-form">
+        <div class="panel-form-group">
+            <label asp-for="Name" class="panel-form-label">Naam van uw panel:</label>
+            <input asp-for="Name" type="text" class="panel-form-input" />
+            <span asp-validation-for="Name" class="panel-form-validation-message"></span>
+        </div>
 
-                @for (int j = 0; j < Model.Result.Criteria[i].SubCriteria.Count; j++)
+        <div class="panel-form-group">
+            <label asp-for="Description" class="panel-form-label">Beschrijving van uw panel:</label>
+            <textarea rows="5" asp-for="Description" class="panel-form-textarea">Geef hier uw beschrijving</textarea>
+            <span asp-validation-for="Description" class="panel-form-validation-message"></span>
+        </div>
+        
+        <div>
+            @if (Model.Result.Criteria != null)
+            {
+                @for (int i = 0; i < Model.Result.Criteria.Count; i++)
                 {
-                    <input type="hidden" asp-for="Result.Criteria[i].SubCriteria[j].Name"/>
-                    <input type="hidden" asp-for="Result.Criteria[i].SubCriteria[j].Percentage"/>
+                    <input type="hidden" asp-for="Result.Criteria[i].Name"/>
+
+                    @for (int j = 0; j < Model.Result.Criteria[i].SubCriteria.Count; j++)
+                    {
+                        <input type="hidden" asp-for="Result.Criteria[i].SubCriteria[j].Name"/>
+                        <input type="hidden" asp-for="Result.Criteria[i].SubCriteria[j].Percentage"/>
+                    }
                 }
             }
-        }
-        <input type="hidden" asp-for="@Model.Result.TotalAvailablePotentialPanelmembers"/>
-        <input type="hidden" asp-for="@Model.Result.TotalNeededPanelmembers"/>
-        <input type="hidden" asp-for="@Model.Result.ReservePotPanelmembers"/>
-    </div>
-    
-    <div>
-        <button type="submit" class="btn btn-primary">Maak uw panel</button>
-    </div>
-</form>
+            <input type="hidden" asp-for="@Model.Result.TotalAvailablePotentialPanelmembers"/>
+            <input type="hidden" asp-for="@Model.Result.TotalNeededPanelmembers"/>
+            <input type="hidden" asp-for="@Model.Result.ReservePotPanelmembers"/>
+        </div>
+        
+        <div>
+            <button type="submit" class="panel-form-submit-button">Maak uw panel</button>
+        </div>
+    </form>
+</div>

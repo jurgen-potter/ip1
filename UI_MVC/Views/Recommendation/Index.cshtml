@@ -54,8 +54,6 @@
                                 @if (!recommendation.IsAnonymous)
                                 {
                                     <button type="button" class="btn btn-sm btn-outline-info btn-show-voters"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#votersModal"
                                             data-recommendation-id="@recommendation.Id"
                                             data-recommendation-title="@recommendation.Title">
                                         Bekijk Stemmers
@@ -64,8 +62,6 @@
                                 @if (recommendation.IsVotable)
                                 {
                                     <button type="button" class="btn btn-sm btn-outline-danger btn-stop-voting"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#confirmationModal"
                                             data-recommendation-id="@recommendation.Id">
                                         Stop stemronde
                                     </button>
@@ -95,47 +91,39 @@
 }
 
 
-<div class="modal fade" id="votersModal" tabindex="-1" aria-labelledby="votersModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable"> 
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="votersModalLabel">Stemmers voor Aanbeveling</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="votersModalBody">
-                Laden...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
-            </div>
+<div id="votersModal" class="member-reg-modal-overlay hidden" aria-labelledby="votersModalLabel" aria-hidden="true">
+    <div class="member-reg-modal-dialog modal-dialog-scrollable max-w-lg">
+        <div class="member-reg-modal-header">
+            <h5 class="member-reg-modal-title" id="votersModalLabel">Stemmers voor Aanbeveling</h5>
+        </div>
+        <div class="member-reg-modal-body" id="votersModalBody">
+            Laden...
+        </div>
+        <div class="member-reg-modal-footer">
+            <button type="button" class="member-reg-modal-button-confirm" id="closeModal">Sluiten</button>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmationModalLabel">Bevestiging</h5>
-            </div>
-            <div class="modal-body">
-                <p>Weet u zeker dat het stemmen wilt stoppen?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="stopVotingBtn">Stop de stemming</button>
-                <button type="button" id="cancel-stop-voting" class="btn btn-success" data-bs-dismiss="modal">Even wachten</button>
-            </div>
+
+<div id="confirmationModal" class="member-reg-modal-overlay hidden" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="member-reg-modal-dialog">
+        <div class="member-reg-modal-header">
+            <h5 class="member-reg-modal-title" id="confirmationModalLabel">Bevestiging</h5>
+        </div>
+        <div class="member-reg-modal-body">
+            <p>Weet u zeker dat het stemmen wilt stoppen?</p>
+        </div>
+        <div class="member-reg-modal-footer">
+            <button type="button" class="member-reg-modal-button-confirm" id="stopVotingBtn">Stop de stemming</button>
+            <button type="button" class="member-reg-modal-button-cancel" id="cancel-stop-voting">Even wachten</button>
         </div>
     </div>
 </div>
 
 
 @section Scripts {
-    <script defer src="@Url.Content("~/dist/js/recommendation/vote.js")"></script>
-    
-    @if (User.IsInRole("Organization"))
-    {
-        <script defer src="@Url.Content("~/dist/js/recommendation/votersModalLoader.js")"></script>
-        <script defer src="@Url.Content("~/dist/js/recommendation/endVote.js")"></script>
-    }
+    <script type="module" src="~/dist/clientapp/assets/endVote.js"></script>
+    <script type="module" src="~/dist/clientapp/assets/vote.js"></script>
+    <script type="module" src="~/dist/clientapp/assets/votersModalLoader.js"></script>
 }

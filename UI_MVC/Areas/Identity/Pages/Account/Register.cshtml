@@ -3,47 +3,47 @@
 @{
     ViewData["Title"] = "Registratie";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
+}
 
-<h1>@ViewData["Title"]</h1>
-
-<div class="row">
-    <div class="col-md-4">
+<div class="auth-page-wrapper">
+    <div class="auth-card-container">
+        <h1 class="auth-page-title">@ViewData["Title"]</h1>
+        
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <input type="hidden" asp-for="@Model.Input.IsStaff"/>
-            <h2>Registreer uw organisatie.</h2>
-            <hr/>
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <input type="hidden" asp-for="@Model.Input.IsStaff" />
+            <h2 class="auth-form-title">Registreer uw organisatie.</h2>
+            <hr class="auth-divider"/>
+            <div asp-validation-summary="ModelOnly" class="auth-validation-summary" role="alert"></div>
             @if (Model.Input.IsStaff == "false")
             {
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Name" class="form-control" aria-required="true" placeholder="Organisatie"/>
-                    <label asp-for="Input.Name">Organisatienaam</label>
-                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+                <div class="mb-4">
+                    <label asp-for="Input.Name" class="auth-form-label">Organisatienaam</label>
+                    <input asp-for="Input.Name" class="auth-input-field" aria-required="true" placeholder="Organisatie"/>
+                    <span asp-validation-for="Input.Name" class="auth-validation-message"></span>
                 </div>
             }
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true"
-                       placeholder="name@example.com"/>
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            <div class="mb-4">
+                <label asp-for="Input.Email" class="auth-form-label">Email</label>
+                <input asp-for="Input.Email" class="auth-input-field" autocomplete="username" aria-required="true" placeholder="name@example.com"/>
+                <span asp-validation-for="Input.Email" class="auth-validation-message"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true"
-                       placeholder="password"/>
-                <label asp-for="Input.Password">Wachtwoord</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            <div class="mb-4">
+                <label asp-for="Input.Password" class="auth-form-label">Wachtwoord</label>
+                <input asp-for="Input.Password" class="auth-input-field" autocomplete="new-password" aria-required="true" placeholder="password"/>
+                <span asp-validation-for="Input.Password" class="auth-validation-message"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password"
-                       aria-required="true" placeholder="password"/>
-                <label asp-for="Input.ConfirmPassword">Bevestig wachtwoord</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            <div class="mb-4">
+                <label asp-for="Input.ConfirmPassword" class="auth-form-label">Bevestig wachtwoord</label>
+                <input asp-for="Input.ConfirmPassword" class="auth-input-field" autocomplete="new-password" aria-required="true" placeholder="password"/>
+                <span asp-validation-for="Input.ConfirmPassword" class="auth-validation-message"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Registreer</button>
+            <button id="registerSubmit" type="submit" class="auth-submit-button">Registreer</button>
         </form>
     </div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial"/>
+    <partial name="_ValidationScriptsPartial" />
 }

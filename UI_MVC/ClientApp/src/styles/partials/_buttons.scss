@@ -1,0 +1,101 @@
+
+.btn {
+  @apply inline-block cursor-pointer select-none text-center no-underline
+  font-semibold align-middle
+  border border-transparent
+  rounded-[0.3rem]
+  py-[0.6rem] px-[1.2rem]
+  transition-all duration-200 ease-in-out;
+
+  &:focus {
+    @apply outline-none ring-4;
+  }
+
+  @apply bg-primary text-white border-primary;
+  &:hover {
+    @apply bg-primary-hover border-primary-hover;
+  }
+  &:focus {
+    @apply ring-primary/50;
+  }
+}
+
+.btn-primary {
+  @apply bg-accent text-brand-black border-accent;
+  &:hover {
+    @apply bg-accent-hover border-accent-hover;
+  }
+  &:focus {
+    @apply ring-accent/50;
+  }
+}
+
+.btn-accent {
+  @apply bg-accent text-brand-black border-accent;
+  &:hover {
+    @apply bg-accent-hover border-accent-hover;
+  }
+  &:focus {
+    @apply ring-accent/50;
+  }
+}
+
+.btn-success {
+  @apply bg-brand-celadon text-white border-brand-celadon;
+  &:hover {
+    @apply bg-opacity-80 border-opacity-80;
+  }
+  &:focus {
+    @apply ring-brand-celadon/50;
+  }
+}
+
+.btn-danger {
+  @apply bg-red-500 text-white border-red-500;
+  &:hover {
+    @apply bg-red-600 border-red-600;
+  }
+  &:focus {
+    @apply ring-red-500/50;
+  }
+}
+
+.btn-warning {
+  @apply bg-yellow-500 text-brand-black border-yellow-500;
+  &:hover {
+    @apply bg-yellow-600 border-yellow-600;
+  }
+  &:focus {
+    @apply ring-yellow-500/50;
+  }
+}
+
+.btn-info {
+  @apply bg-sky-500 text-white border-sky-500;
+  &:hover {
+    @apply bg-sky-600 border-sky-600;
+  }
+  &:focus {
+    @apply ring-sky-500/50;
+  }
+}
+
+.btn-outline-secondary {
+  @apply bg-transparent text-primary border-primary;
+  &:hover {
+    @apply bg-primary text-white;
+  }
+  &:focus {
+    @apply ring-primary/50;
+  }
+}
+
+.btn-outline-primary {
+  @apply bg-transparent text-accent border-accent;
+  &:hover {
+    @apply bg-accent text-brand-black;
+  }
+  &:focus {
+    @apply ring-accent/50;
+  }
+}

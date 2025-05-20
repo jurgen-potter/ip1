@@ -8,33 +8,36 @@
     var drawStatus = ViewBag.DrawStatus != null ? (DrawStatus)ViewBag.DrawStatus : DrawStatus.FirstPhaseActive;
     var hasSufficientRegistrations = ViewBag.HasSufficientRegistrations ?? false;
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
+}
 
-<h2>Registratie-overzicht voor panel: @panelName</h2>
+<div class="reg-overview-container">
+    <h2 class="reg-overview-title">Registratie-overzicht voor panel: @panelName</h2>
 
-<div class="row mb-4">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
+    <div class="reg-overview-grid">
+        <div class="reg-overview-card">
+            <div class="reg-overview-card-header">
                 <h5>Lotingsstatus</h5>
             </div>
-            <div class="card-body">
+            <div class="reg-overview-card-body">
                 <p>
                     Status:
-                    <span class="badge @(drawStatus == DrawStatus.FirstPhaseActive ? "bg-primary" : drawStatus == DrawStatus.Complete ? "bg-success" : "bg-secondary")">
+                    <span class="reg-overview-status-badge @(drawStatus == DrawStatus.FirstPhaseActive ? "status-primary" : drawStatus == DrawStatus.Complete ? "status-success" : "status-secondary")">
                         @(drawStatus == DrawStatus.FirstPhaseActive ? "Eerste fase actief" : "Loting afgerond")
                     </span>
                 </p>
                 @if (drawStatus == DrawStatus.Complete)
                 {
-                <a asp-action="DrawResults" asp-route-panelId="@panelId" class="btn btn-info">
+                <a asp-action="DrawResults" asp-route-panelId="@panelId" class="btn btn-info mt-2">
                     Bekijk lotingsresultaten
                 </a>
                 }
 
                 @if (drawStatus == DrawStatus.FirstPhaseActive)
                 {
-                    <form asp-action="EditMail" asp-route-panelId="@panelId" method="post" id="StartFinalPhaseForm">
-                        <button type="button" class="btn btn-primary" id="startSecondPhaseBtn">
+                    <form asp-action="EditMail" asp-route-panelId="@panelId" method="post" id="StartFinalPhaseForm" class="mt-2">
+                        <button type="button" class="btn btn-primary" id="startSecondPhaseBtn" data-modal-trigger="confirmationModalOverview">
                             Start finale loting
                         </button>
                     </form>
@@ -42,113 +45,120 @@
             </div>
         </div>
     </div>
-</div>
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
-@if (ViewBag.TotalMembers != null)
-{
-    <div class="alert alert-info">
-        <h5>Debug Informatie</h5>
-        <p>Totaal aantal members: @ViewBag.TotalMembers</p>
-        
-        @if (ViewBag.MemberDetails != null && ViewBag.MemberDetails.Count > 0)
-        {
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th>Gender</th>
-                        <th>Age</th>
-                        <th>Town</th>
-                        <th>Selected Criteria</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var member in ViewBag.MemberDetails)
-                    {
-                        <tr>
-                            <td>@member.Id</td>
-                            <td>@member.Gender</td>
-                            <td>@member.BirthDate</td>
-                            <td>@member.Town</td>
-                            <td>@member.SelectedCriteria</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </div>
-}
-
-<h3>Overzicht aanmeldingen per doelgroep</h3>
-
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>Criteria</th>
-        <th>Aantal Registraties</th>
-        <th>Status</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var bucket in Model.Buckets)
+    @if (TempData["SuccessMessage"] != null)
     {
-        <tr>
-            <td>
-                @(string.Join(" × ", bucket.SubCriteriaNames.Select((sub,i) => $"{sub} ({bucket.CriteriaNames[i]})")))
-            </td>
-            <td>@bucket.RegisteredCount/@bucket.Count</td>
-            <td>
-                @if (bucket.IsSufficient)
-                {
-                    <span class="badge bg-success">Voldoende</span>
-                }
-                else
-                {
-                    <span class="badge bg-warning text-dark">Onvoldoende</span>
-                }
-            </td>
-        </tr>
+        <div class="reg-overview-alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
     }
-    </tbody>
-</table>
 
-<!-- Confirmation Modal -->
-<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmationModalLabel">Bevestiging</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="reg-overview-alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    @if (ViewBag.TotalMembers != null)
+    {
+        <div class="reg-overview-alert alert-info">
+            <p>Totaal aantal panelleden: @ViewBag.TotalMembers</p>
+            
+            @if (ViewBag.MemberDetails != null && ((List<dynamic>)ViewBag.MemberDetails).Count > 0)
+            {
+                <h5 class="text-md font-semibold mt-4 mb-2">Details van panelleden:</h5>
+                <div class="overflow-x-auto">
+                    <table class="reg-overview-table table-sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Geslacht</th>
+                                <th>Leeftijd</th>
+                                <th>Woonplaats</th>
+                                <th>Geselecteerde Criteria</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var member in (List<dynamic>)ViewBag.MemberDetails)
+                            {
+                                <tr>
+                                    <td>@member.Id</td>
+                                    <td>@member.Gender</td>
+                                    <td>@member.Age</td>
+                                    <td>@member.Town</td>
+                                    <td>@string.Join(", ", member.SelectedCriteria)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    }
+
+    <h3 class="text-xl font-semibold text-gray-800 mt-8 mb-4">Overzicht aanmeldingen per doelgroep</h3>
+
+    <div class="overflow-x-auto bg-white rounded-lg shadow">
+        <table class="reg-overview-table table-striped">
+            <thead>
+            <tr>
+                <th>Criteria</th>
+                <th>Aantal Registraties</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var bucket in Model.Buckets)
+            {
+                var percentage = bucket.Count > 0 ? (double)bucket.RegisteredCount / bucket.Count * 100 : 0;
+                <tr>
+                    <td>
+                        @(string.Join(" × ", bucket.SubCriteriaNames.Select((sub,i) => $"{sub} ({bucket.CriteriaNames[i]})")))
+                    </td>
+                    <td>
+                        <div class="progress-bar-container" title="@bucket.RegisteredCount/@bucket.Count">
+                            <div class="progress-bar-fill @(bucket.IsSufficient ? "is-sufficient" : (percentage < 30 ? "is-low" : ""))" 
+                                 style="width: @(percentage)%;">
+                                <span class="progress-bar-text">@bucket.RegisteredCount/@bucket.Count</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="reg-overview-status-badge @(bucket.IsSufficient ? "status-success" : "status-warning")">
+                            @(bucket.IsSufficient ? "Voldoende" : "Onvoldoende")
+                        </span>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="confirmationModalOverview" class="custom-modal-overlay" aria-labelledby="confirmationModalLabel" role="dialog" aria-modal="true">
+        <div class="custom-modal-dialog modal-sm">
+            <div class="custom-modal-header">
+                <h5 class="custom-modal-title" id="confirmationModalLabel">Bevestiging</h5>
+                <button type="button" class="custom-modal-close-button" data-modal-close="confirmationModalOverview" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="modal-body" id="confirmationModalBody">
+            <div class="custom-modal-body">
                 <p>Weet u zeker dat u de finale lotingsfase wilt starten?</p>
-                <div id="insufficientWarning" style="display: none;" class="alert alert-warning">
+                <div id="insufficientWarningOverview" style="display: none;" class="reg-overview-alert alert-warning mt-3">
                     <strong>Let op:</strong> Er zijn nog onvoldoende aanmeldingen bij sommige criteria. Het is aan te raden om meer deelnemers te werven voordat u doorgaat.
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                <button type="button" class="btn btn-primary" id="confirmStartFinalPhase">Bevestigen</button>
+            <div class="custom-modal-footer">
+                <button type="button" class="btn btn-secondary" data-modal-close="confirmationModalOverview">Annuleren</button>
+                <button type="button" class="btn btn-primary" id="confirmStartFinalPhaseBtn">Bevestigen</button>
             </div>
         </div>
     </div>
 </div>
 
-<div id="hasSufficientRegistrations" type="hidden" data-value="@hasSufficientRegistrations"></div>
+<div id="hasSufficientRegistrations" data-value="@hasSufficientRegistrations.ToString().ToLower()" style="display: none;"></div>
 
 @section Scripts {
-    <script defer src="@Url.Content("~/dist/js/registration/index.js")"></script>
+    <script type="module" src="~/dist/clientapp/assets/registration.js" asp-append-version="true"></script>
 }

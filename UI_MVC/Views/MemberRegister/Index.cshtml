@@ -1,19 +1,20 @@
-
-
 @{
-    ViewBag.Title = "Registreer als een panellid";
+    ViewBag.Title = "Registreer als een panellid"; 
+}
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
 
-<h2>Aanmelden voor een panel</h2>
+<div class="auth-page-wrapper">
+    <div class="auth-card-container">
+        <h2 class="member-reg-title mb-6 text-center">Aanmelden voor een panel</h2>
 
-<div class="row">
-    <div class="col-md-6">
         <form asp-controller="MemberRegister" asp-action="RegisterMember" method="get">
-            <div class="form-group mb-3">
-                <label for="code">Vul uw uitnodigingscode in</label>
-                <input name="code" class="form-control" placeholder="Code"/>
+            <div class="member-reg-form-group">
+                <label for="code" class="auth-form-label">Vul uw uitnodigingscode in</label>
+                <input name="code" id="code" class="auth-input-field" placeholder="Code"/>
             </div>
-            <button type="submit" class="btn btn-primary">Verder</button>
+            <button type="submit" class="auth-submit-button mt-6">Verder</button>
         </form>
     </div>
 </div>

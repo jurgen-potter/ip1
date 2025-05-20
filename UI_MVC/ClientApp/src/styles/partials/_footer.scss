@@ -1,0 +1,12 @@
+
+.site-footer {
+  @apply bg-brand-cadet-gray text-header-text py-10;
+}
+
+.footer-container {
+  @apply container mx-auto px-4 sm:px-6 lg:px-8 text-center;
+}
+
+.footer-link {
+  @apply hover:text-header-text-hover underline;
+}

@@ -1,5 +1,5 @@
 ﻿@model CitizenPanel.BL.Domain.Draws.DrawResult
-@using CitizenPanel.BL.Domain.Users;
+@using CitizenPanel.BL.Domain.Users
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Lotingsresultaten";
@@ -7,115 +7,100 @@
     var panelName = ViewBag.PanelName;
     var criteriaNamesLookup = ViewBag.CriteriaNames as Dictionary<int, string> ?? new Dictionary<int, string>();
 }
-
-<h2>Lotingsresultaten voor panel: @panelName</h2>
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
 
-<div class="row mb-4">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
+<div class="reg-overview-container">
+    <h2 class="reg-overview-title">Lotingsresultaten voor panel: @panelName</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="reg-overview-alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="reg-overview-grid">
+        <div class="reg-overview-card">
+            <div class="reg-overview-card-header">
                 <h5>Lotingsstatus</h5>
             </div>
-            <div class="card-body">
+            <div class="reg-overview-card-body">
                 <p>
                     Status:
-                    <span class="badge bg-success">Loting afgerond</span>
+                    <span class="reg-overview-status-badge status-success">Loting afgerond</span>
                 </p>
-                <a asp-action="Index" asp-route-panelId="@panelId" class="btn btn-secondary">
-                    Terug naar overzicht
+                <a asp-action="Index" asp-controller="Registration" asp-route-panelId="@panelId" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Terug naar registratie-overzicht
                 </a>
             </div>
         </div>
     </div>
-</div>
 
-@foreach (var group in new[]
-          {
-              new { Title = "Geselecteerde deelnemers", Invitations = Model.SelectedInvitations },
-              new { Title = "Reserve deelnemers", Invitations = Model.ReserveInvitations },
-          })
-{
-    @if (group.Invitations.Any())
+    @foreach (var group in new[]
+              {
+                  new { Title = "Geselecteerde deelnemers", Invitations = Model.SelectedInvitations },
+                  new { Title = "Reserve deelnemers", Invitations = Model.ReserveInvitations },
+              })
     {
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <h3>@group.Title</h3>
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Naam</th>
-                        @* <th>Stad</th> *@
-                        <th>Categorie</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var invitation in group.Invitations)
-                    {
-                        var identifierDisplay = !string.IsNullOrEmpty(invitation.Email) ? invitation.Email : invitation.Code ?? "[Onbekend]";
-                        var genderDisplay = invitation.Gender == Gender.Male ? "Man" : invitation.Gender == Gender.Female ? "Vrouw" : "[Onbekend]";
-                        var townDisplay = !string.IsNullOrEmpty(invitation.Town) ? invitation.Town : "[Onbekend]";
+        @if (group.Invitations.Any()) 
+        {
+            <div class="draw-results-section">
+                <h3 class="draw-results-group-title">@group.Title</h3>
+                <div class="overflow-x-auto bg-white rounded-lg shadow">
+                    <table class="reg-overview-table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Categorie</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var invitation in group.Invitations)
+                        {
+                            var identifierDisplay = !string.IsNullOrEmpty(invitation.Email) ? invitation.Email : invitation.Code ?? "[Onbekend]";
+                            var genderDisplay = invitation.Gender == Gender.Male ? "Man" : invitation.Gender == Gender.Female ? "Vrouw" : "[Onbekend]";
+                            var townDisplay = !string.IsNullOrEmpty(invitation.Town) ? invitation.Town : "[Onbekend]";
 
-                        string ageGroupDisplay;
-                        if (invitation.Age <= 0)
-                        {
-                            ageGroupDisplay = "[Onbekende leeftijd]";
-                        }
-                        else if (invitation.Age >= 18 && invitation.Age <= 25)
-                        {
-                            ageGroupDisplay = "18-25";
-                        }
-                        else if (invitation.Age <= 40)
-                        {
-                            ageGroupDisplay = "26-40";
-                        }
-                        else if (invitation.Age <= 60)
-                        {
-                            ageGroupDisplay = "41-60";
-                        }
-                        else
-                        {
-                            ageGroupDisplay = "60+";
-                        }   
+                            string ageGroupDisplay;
+                            if (invitation.Age <= 0) { ageGroupDisplay = "[Onbekende leeftijd]"; }
+                            else if (invitation.Age >= 18 && invitation.Age <= 25) { ageGroupDisplay = "18-25"; }
+                            else if (invitation.Age <= 40) { ageGroupDisplay = "26-40"; } 
+                            else if (invitation.Age <= 60) { ageGroupDisplay = "41-60"; } 
+                            else { ageGroupDisplay = "60+"; }   
 
-                        var criteriaDisplayList = new List<string> { genderDisplay, ageGroupDisplay }; 
-                        if (invitation.SelectedCriteria != null)
-                        {
-                            foreach (var criteriaId in invitation.SelectedCriteria)
+                            var criteriaDisplayList = new List<string> { genderDisplay, ageGroupDisplay }; 
+                            if (invitation.SelectedCriteria != null)
                             {
-                                if (criteriaNamesLookup.TryGetValue(criteriaId, out var name))
+                                foreach (var criteriaId in invitation.SelectedCriteria)
                                 {
-                                    criteriaDisplayList.Add(name);
+                                    if (criteriaNamesLookup.TryGetValue(criteriaId, out var name))
+                                    {
+                                        criteriaDisplayList.Add(name);
+                                    }
                                 }
                             }
+                            
+                            var distinctCriteria = criteriaDisplayList.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+                            var categoryDisplay = string.Join(" × ", distinctCriteria);
+
+                            <tr>
+                                <td>@identifierDisplay</td>
+                                <td>@categoryDisplay</td>
+                            </tr>
                         }
-
-                        var distinctCriteria = criteriaDisplayList.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
-                        var categoryDisplay = string.Join(" × ", distinctCriteria);
-
-                        <tr>
-                            <td>@identifierDisplay</td>
-                            @* <td>@townDisplay</td> *@
-                            <td>@categoryDisplay</td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        }
     }
-}
 
-
-    @if (!Model.SelectedInvitations.Any() && !Model.ReserveInvitations.Any())
+    @if (!Model.SelectedInvitations.Any() && !Model.ReserveInvitations.Any()) 
     {
-        <div class="alert alert-warning">
-            Er zijn geen resultaten beschikbaar. De loting moet mogelijk opnieuw worden uitgevoerd.
+        <div class="reg-overview-alert alert-warning">
+            Er zijn geen resultaten beschikbaar voor geselecteerden of reserves. De loting moet mogelijk opnieuw worden uitgevoerd of er waren geen aanmeldingen.
         </div>
     }
+</div>
