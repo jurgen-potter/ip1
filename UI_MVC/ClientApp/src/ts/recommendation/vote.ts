@@ -3,6 +3,7 @@
     const voteForms = document.querySelectorAll<HTMLFormElement>('#vote-form');
     // Houd bij op welke items al gestemd is 
     const votes: Record<string, boolean> = {};
+    const tenant = window.location.pathname.split('/')[1];
 
     // Functie om één knop bij te werken op basis van stemstatus
     const updateButton = (form: HTMLFormElement, voted: boolean) => {
@@ -38,7 +39,7 @@
     };
 
     // Haal bij het laden van de pagina de lijst met reeds uitgebrachte stemmen op van de server
-    fetch('/api/Recommendations/userVotes')
+    fetch(`/${tenant}/api/Recommendations/userVotes`)
         .then(res => res.ok ? res.json() : Promise.reject()) //bij fout gaat naar de catch
         .then((ids: string[]) => {
             // Zet voor elk ontvangen id de stemstatus op true
@@ -57,7 +58,9 @@
 
                 // Bepaal of we een stem trekken of uitbrengen
                 const voted = votes[id];
-                const url = voted ? '/api/Recommendations/remove-vote' : '/api/Recommendations/vote';
+                const url = voted
+                    ? `/${tenant}/api/Recommendations/remove-vote`
+                    : `/${tenant}/api/Recommendations/vote`;
                 // Vind de knop en zet deze tijdelijk uit
                 const btn = form.querySelector<HTMLButtonElement>('button');
                 btn?.setAttribute('disabled', '');

@@ -1,5 +1,6 @@
 let selectedRecommendationId: number | null = null;
 let selectedRecommendationTitle: string | null = null;
+let lastFocusedTrigger: HTMLElement | null = null;
 const votersModalElement = document.getElementById('votersModal') as HTMLElement;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function initializeButtons(closeButton :HTMLButtonElement,buttons : NodeListOf<HTMLButtonElement>) {
     buttons.forEach(button => {
         button.addEventListener("click", () => {
+            lastFocusedTrigger = button;
             const recommendationId = button.getAttribute("data-recommendation-id");
             const recommendationTitle = button.getAttribute("data-recommendation-title");
             if (recommendationId !== null){
@@ -22,6 +24,7 @@ function initializeButtons(closeButton :HTMLButtonElement,buttons : NodeListOf<H
 
                 selectedRecommendationTitle = recommendationTitle ?? 'Stemmers Details';
                 votersModalElement.classList.remove("hidden");
+                votersModalElement.setAttribute('aria-hidden', 'false');
                 votersModalElement.classList.add("flex");
 
                 setText();
@@ -32,6 +35,12 @@ function initializeButtons(closeButton :HTMLButtonElement,buttons : NodeListOf<H
     closeButton.addEventListener("click", () => {
         votersModalElement.classList.remove("flex");
         votersModalElement.classList.add("hidden");
+        votersModalElement.setAttribute('aria-hidden', 'true');
+
+        if (lastFocusedTrigger) {
+            lastFocusedTrigger.focus();
+            lastFocusedTrigger = null;
+        }
     });
 }
 
