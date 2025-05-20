@@ -11,6 +11,11 @@ public class MeetingRepository(PanelDbContext dbContext) : IMeetingRepository
         dbContext.Meetings.Add(meeting);
         dbContext.SaveChanges();
     }
+
+    public Meeting ReadMeetingById(int id)
+    {
+        return dbContext.Meetings.Find(id);
+    }
     
     public Meeting ReadMeetingByIdWithRecommendations(int id)
     {

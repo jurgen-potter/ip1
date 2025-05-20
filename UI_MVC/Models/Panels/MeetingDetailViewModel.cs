@@ -10,4 +10,6 @@ public class MeetingDetailViewModel
     public DateOnly MeetingDate { get; set; }
     
     public List<RecommendationViewModel> Recommendations { get; set; } = new();
+    
+    public List<string> DocumentNames { get; set; } = new();
 }

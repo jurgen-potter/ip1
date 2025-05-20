@@ -55,21 +55,44 @@ CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
                     }
                 </div>
             </div>
-      
+
 
             <div class="card shadow-sm">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">Documenten</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">Er zijn nog geen documenten toegevoegd voor deze meeting.</p>
+
+                    @if (Model.DocumentNames.Any())
+                    {
+                        <ul class="list-group mb-3">
+                            @foreach (var doc in Model.DocumentNames)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <a href="~/uploads/@doc" target="_blank">@doc</a>
+                                    <span class="badge bg-secondary">📄</span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Er zijn nog geen documenten toegevoegd voor deze meeting.</p>
+                    }
+
                     @if (User.IsInRole("Organization"))
                     {
-                        <a href="#" class="btn btn-outline-primary">
-                            <i class="bi bi-plus-circle me-2"></i>Documenten toevoegen
-                        </a>
+                        <form asp-controller="Meeting" asp-action="Upload" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <input type="file" name="file" class="form-control" />
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Documenten toevoegen
+                            </button>
+                        </form>
                     }
-                    </div>
+
+                </div>
             </div>
         </div>
     </div>
