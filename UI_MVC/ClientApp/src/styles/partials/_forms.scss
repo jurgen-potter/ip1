@@ -1,0 +1,39 @@
+.identity-container {
+  @apply max-w-lg mx-auto my-10 p-8 sm:p-10 bg-brand-ash-gray border border-gray-400
+  rounded-[0.75rem]
+  shadow-xl;
+
+  h2 {
+    @apply text-text-black text-2xl font-bold text-center mt-0 mb-8;
+  }
+
+  .form-group {
+    @apply mb-5;
+
+    label {
+      @apply block mb-[0.6rem] font-medium text-gray-700;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      @apply w-full py-[0.9rem] px-[0.9rem]
+      border-gray-400
+      rounded-[0.3rem]
+      bg-surface text-text-black
+      font-sans text-[0.95rem]
+      focus:border-primary focus:ring-4 focus:ring-primary/25;
+    }
+  }
+
+  .links {
+    @apply mt-7 text-center text-[0.85rem];
+
+    a {
+      @apply mx-2 text-primary;
+      &:hover {
+        @apply text-primary-hover;
+      }
+    }
+  }
+}

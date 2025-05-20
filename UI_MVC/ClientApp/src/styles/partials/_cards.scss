@@ -1,0 +1,21 @@
+
+.card {
+  @apply bg-surface border border-gray-300 rounded-[0.45rem]
+  mb-6 shadow-lg;
+
+  .card-header {
+    @apply py-[0.9rem] px-6 bg-brand-celadon-light border-b border-gray-300
+    text-lg font-semibold
+    rounded-t-[0.45rem];
+  }
+
+  .card-body {
+    @apply p-6;
+  }
+
+  .card-footer {
+    @apply py-[0.9rem] px-6 bg-brand-celadon-light border-t border-gray-300
+    text-sm
+    rounded-b-[0.45rem];
+  }
+}

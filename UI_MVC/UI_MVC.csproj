@@ -30,21 +30,103 @@
     </ItemGroup>
 
     <ItemGroup>
-      <TypeScriptCompile Include="wwwroot\js\account\login.ts" />
-      <TypeScriptCompile Include="wwwroot\js\admin\editQuestionnaire.ts" />
-      <TypeScriptCompile Include="wwwroot\js\dashboard\timeline.ts" />
-      <TypeScriptCompile Include="wwwroot\js\panel\panelUsers.ts" />
-      <TypeScriptCompile Include="wwwroot\js\recommendation\votersModalLoader.ts" />
-      <TypeScriptCompile Include="wwwroot\js\recommendation\endVote.ts" />
-      <TypeScriptCompile Include="wwwroot\js\recommendation\vote.ts" />
-      <TypeScriptCompile Include="wwwroot\js\registration\index.ts" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Update="main.js">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </Content>
+      <Content Update="ClientApp\src\styles\css\admin\editQuestionnaire.scss">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="ClientApp\src\styles\css\panel\dashboard.scss">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="ClientApp\src\styles\css\recruitment\index.scss">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\account\login.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\admin\editQuestionnaire.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\dashboard\Timeline.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\memberRegister\registerMember.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\recommendation\endVote.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\recommendation\vote.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\recommendation\votersModalLoader.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\recruitment\index.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\js\registration\index.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\admin\editQuestionnaire.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\recruitment\index.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.min.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\LICENSE" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\account\login.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\recommendation\endVote.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\recommendation\vote.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\recommendation\votersModalLoader.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\registration\index.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\pages\_admin.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\pages\_home.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\pages\_panel.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\pages\_recruitment.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\css\admin\editQuestionnaire.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\css\panel\dashboard.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\css\recruitment\index.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\dist\css\site.css" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\css\" />
+      <Folder Include="wwwroot\js\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="wwwroot\Antwerpenbanner.jpg" />
     </ItemGroup>
     
     <Target Name="FrontendBuild" AfterTargets="Publish">

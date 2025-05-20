@@ -1,8 +1,16 @@
 @{
     ViewBag.Title = "Code bestaat niet";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
+}
 
-<h2>Dit is geen valide code!</h2>
-
-<a class="btn btn-primary" asp-controller="MemberRegister" asp-action="Index">Kijk de code nog eens na en probeer het opnieuw</a>
-<a class="btn btn-primary" asp-controller="Home" asp-action="Index">Ga terug naar de homepagina</a>
+<div class="auth-page-wrapper">
+    <div class="auth-card-container text-center"> 
+        <h2 class="member-reg-message-title">Dit is geen valide code!</h2>
+        <div class="member-reg-feedback-actions">
+            <a class="btn btn-primary" asp-controller="MemberRegister" asp-action="Index">Code nakijken & opnieuw proberen</a>
+            <a class="btn btn-secondary" asp-controller="Home" asp-action="Index">Terug naar homepagina</a> 
+        </div>
+    </div>
+</div>

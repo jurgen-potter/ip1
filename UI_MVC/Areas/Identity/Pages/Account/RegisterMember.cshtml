@@ -1,121 +1,173 @@
 ﻿@page
-
-@using CitizenPanel.BL.Domain.Users
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-
+@using CitizenPanel.BL.Domain.Users
 @model CitizenPanel.UI.MVC.Areas.Identity.Pages.Account.RegisterMemberModel
 
 @{
-    ViewBag.Title = "Registratie";
+    ViewData["Title"] = "Registratie Panellid";
 }
 
-<h1>@ViewData["Title"]</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true"/>
+}
 
-<div class="row">
-    <div class="col-md-4">
+<div class="auth-page-wrapper">
+    <div class="auth-card-container auth-card-container--wide">
+        <h1 class="auth-page-title">@ViewBag.Title</h1>
+
         <form id="registerForm" asp-route-code="@Model.Code" method="post">
-            <input type="hidden" asp-for="@Model.Code" />
-            <input type="hidden" asp-for="@Model.IsStaff" />
-            <h2>Vul uw gegevens in.</h2>
-            <hr/>
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.FirstName" class="form-control" autocomplete="given-name" aria-required="true"
-                       placeholder="Voornaam"/>
-                <label asp-for="Input.FirstName"></label>
-                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            <input type="hidden" asp-for="Code"/>
+            <input type="hidden" asp-for="IsStaff"/>
+            <input type="hidden" asp-for="PanelId"/>
+            <input type="hidden" asp-for="InvitationId"/>
+
+            <h2 class="auth-form-title mb-6">Vul uw gegevens in</h2>
+            <hr class="auth-divider mb-6"/>
+            <div asp-validation-summary="ModelOnly" class="auth-validation-summary" role="alert"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                <div class="auth-form-group">
+                    <label asp-for="Input.FirstName" class="auth-form-label"></label>
+                    <input asp-for="Input.FirstName" class="auth-input-field" autocomplete="given-name"
+                           aria-required="true" placeholder="Voornaam"/>
+                    <span asp-validation-for="Input.FirstName" class="auth-validation-message"></span>
+                </div>
+
+                <div class="auth-form-group">
+                    <label asp-for="Input.LastName" class="auth-form-label"></label>
+                    <input asp-for="Input.LastName" class="auth-input-field" autocomplete="family-name"
+                           aria-required="true" placeholder="Achternaam"/>
+                    <span asp-validation-for="Input.LastName" class="auth-validation-message"></span>
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.LastName" class="form-control" autocomplete="family-name" aria-required="true"
-                       placeholder="Achternaam"/>
-                <label asp-for="Input.LastName"></label>
-                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+
+            <div class="auth-form-group">
+                <label asp-for="Input.Email" class="auth-form-label"></label>
+                @if (Model.IsStaff == "false")
+                {
+                    <input asp-for="Input.Email" type="email" class="auth-input-field" autocomplete="username"
+                           aria-required="true" placeholder="name@example.com" readonly/>
+                }
+                else
+                {
+                    <input asp-for="Input.Email" type="email" class="auth-input-field" autocomplete="username"
+                           aria-required="true" placeholder="name@example.com"/>
+                }
+                <span asp-validation-for="Input.Email" class="auth-validation-message"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input name="Input.Email" type="email" class="form-control" autocomplete="username" aria-required="true"
-                       value="@Model.Input.Email" @(Model.IsStaff == "false" ? "readonly" : "placeholder=\"Email\"") />
-                <label asp-for="Input.Email"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                <div class="auth-form-group">
+                    <label asp-for="Input.Password" class="auth-form-label"></label>
+                    <input asp-for="Input.Password" type="password" class="auth-input-field" autocomplete="new-password"
+                           aria-required="true" placeholder="Wachtwoord"/>
+                    <span asp-validation-for="Input.Password" class="auth-validation-message"></span>
+                </div>
+
+                <div class="auth-form-group">
+                    <label asp-for="Input.ConfirmPassword" class="auth-form-label"></label>
+                    <input asp-for="Input.ConfirmPassword" type="password" class="auth-input-field"
+                           autocomplete="new-password" aria-required="true" placeholder="Bevestig wachtwoord"/>
+                    <span asp-validation-for="Input.ConfirmPassword" class="auth-validation-message"></span>
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true"
-                       placeholder="wachtwoord"/>
-                <label asp-for="Input.Password"></label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password"
-                       aria-required="true" placeholder="wachtwoord"/>
-                <label asp-for="Input.ConfirmPassword"></label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.BirthDate" type="date" class="form-control" autocomplete="birthdate"
-                       aria-required="true" value="@DateTime.Now.ToString("yyyy-MM-dd")"/>
-                <label asp-for="Input.BirthDate"></label>
-                <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
-            </div>
-            
+
             @if (Model.IsStaff == "false")
             {
-                <div class="form-floating mb-3">
-                    <input class="form-control" autocomplete="gender" aria-required="true"
-                           value="@Model.Input.Gender.ToDutch()" readonly/>
-                    <input type="hidden" asp-for="Input.Gender" value="@Model.Input.Gender"/>
-                    <label asp-for="Input.Gender"></label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                    <div class="auth-form-group">
+                        <label asp-for="Input.Gender" class="auth-form-label"></label>
+                        <input class="auth-input-field" autocomplete="sex" aria-required="true"
+                               value="@Model.Input.Gender.ToDutch()" readonly/>
+                        <input type="hidden" asp-for="Input.Gender" value="@Model.Input.Gender"/>
+                        <span asp-validation-for="Input.Gender" class="auth-validation-message"></span>
+                    </div>
+
+                    <div class="auth-form-group">
+                        <label asp-for="Input.BirthDate" class="auth-form-label"></label>
+                        <input asp-for="Input.BirthDate" type="date" class="auth-input-field" autocomplete="bday"
+                               aria-required="true" value="@DateTime.Now.ToString("yyyy-MM-dd")"/>
+                        <span asp-validation-for="Input.BirthDate" class="auth-validation-message"></span>
+                    </div>
                 </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Town" class="form-control" autocomplete="town" aria-required="true"
+                <div class="auth-form-group">
+                    <label asp-for="Input.Town" class="auth-form-label"></label>
+                    <input asp-for="Input.Town" class="auth-input-field" autocomplete="address-level2"
+                           aria-required="true"
                            value="@Model.Input.Town" readonly/>
-                    <label asp-for="Input.Town"></label>
+                    <span asp-validation-for="Input.Town" class="auth-validation-message"></span>
                 </div>
+
 
                 @if (Model.Input.CriteriaList != null && Model.Input.CriteriaList.Any())
                 {
-                    @foreach (var criteriaPair in Model.Input.CriteriaList.Select((criteria, i) => new { criteria, i }))
-                    {
-                        <div class="mb-3">
-                            <label>@criteriaPair.criteria.Name</label>
-                            <div class="btn-group" role="group">
-                                @if (criteriaPair.criteria.SubCriteria != null && criteriaPair.criteria.SubCriteria.Any())
-                                {
-                                    @foreach (var subCriteria in criteriaPair.criteria.SubCriteria)
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                        @foreach (var criteriaPair in Model.Input.CriteriaList.Select((criteria, i) => new { criteria, i }))
+                        {
+                            <div class="auth-form-group">
+                                <label class="member-reg-criteria-group-label">@criteriaPair.criteria.Name</label>
+                                <div class="flex flex-wrap gap-2 mt-1">
+                                    @if (Model.Input.SelectedCriteria != null && Model.Input.SelectedCriteria.Count > criteriaPair.i)
                                     {
-                                        bool isChecked = Model.Input.SelectedCriteria != null
-                                                         && Model.Input.SelectedCriteria.Count > criteriaPair.i
-                                                         && Model.Input.SelectedCriteria[criteriaPair.i] == subCriteria.Id;
-                                        <label class="btn btn-secondary">
-                                            <input type="radio" name="SelectedCriteria[@criteriaPair.i]"
-                                                   value="@subCriteria.Id" @(isChecked ? "checked" : "") disabled/>
-                                            @subCriteria.Name
-                                        </label>
+                                        var selectedSubCriteriaId = Model.Input.SelectedCriteria[criteriaPair.i];
+                                        var selectedSubCriteria = criteriaPair.criteria.SubCriteria?.FirstOrDefault(sc => sc.Id == selectedSubCriteriaId);
+                                        if (selectedSubCriteria != null)
+                                        {
+                                            <span class="member-reg-selected-criteria-tag">
+                                                @selectedSubCriteria.Name
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-sm text-gray-500 italic">Geen selectie opgegeven</span>
+                                        }
+
+                                        <span asp-validation-for="Input.SelectedCriteria[criteriaPair.i]"
+                                              class="auth-validation-message block mt-1"></span>
                                     }
-                                }
+                                    else
+                                    {
+                                        <span class="text-sm text-gray-500 italic">Geen selectie beschikbaar</span>
+                                    }
+                                </div>
                             </div>
-                        </div>
+                        }
+                    </div>
+                }
+            }
+
+            @if (Model.Input.CriteriaList != null)
+            {
+                @for (int i = 0; i < Model.Input.CriteriaList.Count; i++)
+                {
+                    <input type="hidden" asp-for="Input.CriteriaList[i].Id"/>
+                    <input type="hidden" asp-for="Input.CriteriaList[i].Name"/>
+
+                    @if (Model.Input.CriteriaList[i].SubCriteria != null)
+                    {
+                        @for (int j = 0; j < Model.Input.CriteriaList[i].SubCriteria.Count; j++)
+                        {
+                            <input type="hidden" asp-for="Input.CriteriaList[i].SubCriteria[j].Id"/>
+                            <input type="hidden" asp-for="Input.CriteriaList[i].SubCriteria[j].Name"/>
+                        }
                     }
                 }
             }
-
-            @for (int i = 0; i < Model?.Input.CriteriaList?.Count; i++)
+            @if (Model.Input.SelectedCriteria != null)
             {
-                <input type="hidden" asp-for="Input.CriteriaList[i].Id"/>
-                <input type="hidden" asp-for="Input.CriteriaList[i].Name"/>
-
-                @for (int j = 0; j < Model.Input.CriteriaList[i].SubCriteria.Count; j++)
+                @for (int i = 0; i < Model.Input.SelectedCriteria.Count; i++)
                 {
-                    <input type="hidden" asp-for="Input.CriteriaList[i].SubCriteria[j].Id"/>
-                    <input type="hidden" asp-for="Input.CriteriaList[i].SubCriteria[j].Name"/>
+                    <input type="hidden" name="Input.SelectedCriteria[@i]" value="@Model.Input.SelectedCriteria[i]"/>
                 }
             }
-            @for (int i = 0; i < Model?.Input.SelectedCriteria?.Count; i++)
-            {
-                <input type="hidden" asp-for="Input.SelectedCriteria[i]" value="@Model.Input.SelectedCriteria[i]"/>
-            }
 
-            <input type="hidden" asp-for="PanelId" ></input>
-            <input type="hidden" asp-for="InvitationId" ></input>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Registreer</button>
+            <div class="mt-8">
+                <button id="registerSubmit" type="submit" class="auth-submit-button btn-lg">Registreer</button>
+            </div>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}

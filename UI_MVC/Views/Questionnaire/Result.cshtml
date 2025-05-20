@@ -1,37 +1,47 @@
 @model CitizenPanel.UI.MVC.Models.QuestionnaireModules.QuestionnaireResponseViewModel
 
 @{
-    ViewBag.Title = @Model.Questionnaire.Title;
+    ViewBag.Title = Model.Questionnaire.Title + " - Resultaat";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
 
-<div class="container my-4"> <h2 class="mb-4">Advies op basis van uw antwoorden</h2>
+<div class="questionnaire-result-container"> 
+    <h2 class="questionnaire-result-main-title">Advies op basis van uw antwoorden</h2>
+
     @if (Model.Questionnaire.Questions.Any(q => q.IsDetail))
     {
-        <div class="card m-2 p-2">
-            <div class="card-body">
-                <h5 class="card-title">Details van uw panel</h5>
-                @foreach (var question in Model.Questionnaire.Questions.Where(q => q.IsDetail).OrderBy(q => q.Position))
+        <div class="questionnaire-result-card">
+            <h5 class="questionnaire-result-card-title">Details van uw panel</h5>
+            @foreach (var question in Model.Questionnaire.Questions.Where(q => q.IsDetail).OrderBy(q => q.Position))
+            {
+                int selectedAnswerId;
+                if (!Model.Answers.TryGetValue(question.Id, out selectedAnswerId))
                 {
-                    int selectedAnswerId;
-                    if (!Model.Answers.TryGetValue(question.Id, out selectedAnswerId))
-                    {
-                        continue; // No answer submitted for this question
-                    }
+                    continue; 
+                }
 
-                    var selectedAnswer = question.Answers.FirstOrDefault(a => a.Id == selectedAnswerId);
-                    if (selectedAnswer == null)
-                    {
-                        continue;
-                    }
+                var selectedAnswer = question.Answers.FirstOrDefault(a => a.Id == selectedAnswerId);
+                if (selectedAnswer == null)
+                {
+                    continue;
+                }
 
-                    <h7 class="mb-1"><strong>Vraag: </strong>@question.Description</h7>
-                    <p class="mb-2"><strong>Uw antwoord:</strong> @selectedAnswer.Description</p>
+                <div class="questionnaire-result-item">
+                    <span class="questionnaire-result-label">Vraag:</span>
+                    <p class="questionnaire-result-text">@question.Description</p>
+                    
+                    <span class="questionnaire-result-label mt-2">Uw antwoord:</span>
+                    <p class="questionnaire-result-text">@selectedAnswer.Description</p>
+                    
                     @if (!string.IsNullOrWhiteSpace(selectedAnswer.Advice))
                     {
-                        <p><strong>Aanbeveling:</strong> @selectedAnswer.Advice</p>
+                        <span class="questionnaire-result-label mt-2">Aanbeveling:</span>
+                        <p class="questionnaire-result-text">@selectedAnswer.Advice</p>
                     }
-                }
-            </div>
+                </div>
+            }
         </div>
     }
 
@@ -40,7 +50,7 @@
         int selectedAnswerId;
         if (!Model.Answers.TryGetValue(question.Id, out selectedAnswerId))
         {
-            continue; // No answer submitted for this question
+            continue; 
         }
 
         var selectedAnswer = question.Answers.FirstOrDefault(a => a.Id == selectedAnswerId);
@@ -51,18 +61,23 @@
 
         if (!Model.IsCritical || selectedAnswer.IsCritical)
         {
-            <div class="card m-2 p-2">
-                <div class="card-body">
-                    <h5 class="card-title">@question.Description</h5>
-                    <p class="mb-2"><strong>Uw antwoord:</strong> @selectedAnswer.Description</p>
+            <div class="questionnaire-result-card">
+                <h5 class="questionnaire-result-card-title">@question.Description</h5>
+                
+                <span class="questionnaire-result-label">Uw antwoord:</span>
+                <p class="questionnaire-result-text">@selectedAnswer.Description</p>
 
-                    @if (!string.IsNullOrWhiteSpace(selectedAnswer.Advice))
-                    {
-                        <p><strong>Aanbeveling:</strong> @selectedAnswer.Advice</p>
-                    }
-                </div>
+                @if (!string.IsNullOrWhiteSpace(selectedAnswer.Advice))
+                {
+                    <span class="questionnaire-result-label mt-2">Aanbeveling:</span>
+                    <p class="questionnaire-result-text">@selectedAnswer.Advice</p>
+                }
             </div>
         }
     }
-    <a href="@Url.Action("Index", "Questionnaire", new { questionnaireId = @Model.QuestionnaireId })" class="btn btn-outline-secondary">Nieuwe berekening</a>
+    <div class="questionnaire-result-actions">
+        <a href="@Url.Action("Index", "Questionnaire", new { questionnaireId = @Model.QuestionnaireId })" class="btn btn-outline-secondary">
+            <i class="fas fa-redo-alt"></i> Nieuwe berekening
+        </a>
+    </div>
 </div>

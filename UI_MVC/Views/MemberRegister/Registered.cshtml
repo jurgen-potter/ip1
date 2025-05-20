@@ -1,9 +1,16 @@
 @model dynamic
-
 @{
-    ViewBag.Title = "Registered";
+    ViewBag.Title = "Code reeds geregistreerd";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
 
-<h2>Deze code is al geregistreerd. Binnenkort volgt een mail en begint de tweede loting!</h2>
-
-<a class="btn btn-primary" asp-controller="Home" asp-action="Index">Ga terug naar de homepagina</a>
+<div class="auth-page-wrapper">
+    <div class="auth-card-container text-center">
+        <h2 class="member-reg-message-title">Deze code is al geregistreerd.</h2>
+        <div class="member-reg-feedback-actions">
+            <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Terug naar homepagina</a>
+        </div>
+    </div>
+</div>

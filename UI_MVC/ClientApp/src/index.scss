@@ -1,0 +1,28 @@
+/* index.scss */
+// 1. Tailwind Directives
+
+@use 'styles/partials/variables';
+@use 'styles/partials/base';
+@use 'styles/partials/header';
+@use 'styles/partials/footer';
+@use 'styles/partials/buttons';
+@use 'styles/partials/cards';
+@use 'styles/partials/forms';
+@use 'styles/partials/auth';
+@use 'styles/partials/home';
+@use 'styles/partials/memberRegistration';
+@use 'styles/partials/selectionOverview';
+@use 'styles/partials/panel';
+@use 'styles/partials/meeting';
+@use 'styles/partials/invitations';
+@use 'styles/partials/vote';
+@use 'styles/partials/registration';
+@use 'styles/partials/mail';
+@use 'styles/partials/userQuestionaire';
+@use 'styles/partials/draw';
+@use 'styles/partials/admin';
+@use 'styles/partials/recruitment';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

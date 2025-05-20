@@ -1,79 +1,130 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="nl">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Panello</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
+    
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BurgerPanels</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Recruitment" asp-action="Index">Demografische data invullen</a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-dark" asp-area="" asp-route-questionnaireId="1" asp-controller="Questionnaire" asp-action="Index">Verkenningsmodule</a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-dark" asp-area="" asp-route-questionnaireId="2" asp-controller="Questionnaire" asp-action="Index">Procesbepalingsmodule</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="MemberRegister" asp-action="Index">Code Registreren</a>
-                    </li>
+<body class="min-h-screen flex flex-col"> 
+    <header class="site-header">
+        <nav class="header-nav-container">
+            <div class="header-content">
+                <div class="flex-shrink-0 header-logo">
+                    <a asp-area="" asp-controller="Home" asp-action="Index">
+                        Panello
+                    </a>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-4">
+                    <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="desktop-nav-item">Demografische data invullen</a>
+                    <a asp-area="" asp-route-questionnaireId="1" asp-controller="Questionnaire" asp-action="Index" class="desktop-nav-item">Verkenningsmodule</a>
+                    <a asp-area="" asp-route-questionnaireId="2" asp-controller="Questionnaire" asp-action="Index" class="desktop-nav-item">Procesbepalingsmodule</a>
                     @if (User.IsInRole("Member") || User.IsInRole("Organization"))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Panel" asp-action="UserPanel">Dashboard</a>
-                        </li>
+                        <a asp-area="" asp-controller="Panel" asp-action="UserPanel" class="desktop-nav-item">Dashboard</a>
                     }
                     @if (User.IsInRole("Organization"))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Organization" asp-action="Index">Organisatie overzicht</a>
-                        </li>
+                        <a asp-area="" asp-controller="Organization" asp-action="Index" class="desktop-nav-item">Organisatie overzicht</a>
                     }
                     @if (User.IsInRole("Admin"))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin Dashboard</a>
-                        </li>
+                        <a asp-area="" asp-controller="Admin" asp-action="Index" class="desktop-nav-item">Admin Dashboard</a>
                     }
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="TenantTesting" asp-action="Index">Tenancy test</a>
-                    </li>
-                </ul>
-                <partial name="_LoginPartial"/>
+                </div>
+
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="desktop-nav-item">Code Registreren</a>
+                }
+                <div class="flex justify-end">
+                    <div class="hidden md:block">
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+                
+                <div class="md:hidden flex items-center">
+                    <button type="button" id="mobile-menu-button" class="mobile-menu-button" aria-expanded="false">
+                        <span class="sr-only">Open hoofdmenu</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="md:hidden hidden" id="mobile-menu-dropdown">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="mobile-nav-item">Home</a>
+                <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="mobile-nav-item">Demografische data invullen</a>
+                <a asp-area="" asp-route-questionnaireId="1" asp-controller="Questionnaire" asp-action="Index" class="mobile-nav-item">Verkenningsmodule</a>
+                <a asp-area="" asp-route-questionnaireId="2" asp-controller="Questionnaire" asp-action="Index" class="mobile-nav-item">Procesbepalingsmodule</a>
+                @if (User.IsInRole("Member") || User.IsInRole("Organization"))
+                {
+                    <a asp-area="" asp-controller="Panel" asp-action="UserPanel" class="mobile-nav-item">Dashboard</a>
+                }
+                @if (User.IsInRole("Organization"))
+                {
+                    <a asp-area="" asp-controller="Organization" asp-action="Index" class="mobile-nav-item">Organisatie overzicht</a>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-area="" asp-controller="Admin" asp-action="Index" class="mobile-nav-item">Admin Dashboard</a>
+                }
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="mobile-nav-item">Code Registreren</a>
+                }
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-700">
+                <partial name="_LoginPartial" />
             </div>
         </div>
-    </nav>
-</header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
+    </header>
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2025 - Burgerpanels - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
-</footer>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-@await RenderSectionAsync("Scripts", required: false)
+    <main role="main" class="flex-grow">
+        @if (ViewData["Title"]?.ToString() == "Home")
+        {
+            @RenderBody()
+        }
+        else
+        {
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                @RenderBody()
+            </div>
+        }
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            &copy; @DateTime.Now.Year - Panello - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="footer-link">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenuDropdown = document.getElementById('mobile-menu-dropdown');
+
+        if (mobileMenuButton && mobileMenuDropdown) {
+            mobileMenuButton.addEventListener('click', () => {
+                const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+                mobileMenuButton.setAttribute('aria-expanded', !expanded);
+                mobileMenuDropdown.classList.toggle('hidden');
+            });
+        }
+    </script>
+    
+    @*<script type="module" src="~/dist/clientapp/assets/index.js" asp-append-version="true"></script>*@
+    
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

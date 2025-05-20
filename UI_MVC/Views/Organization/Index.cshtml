@@ -1,19 +1,24 @@
-﻿
-
-@{
+﻿@{
     ViewBag.Title = "Organisatie overzicht";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
+}
 
-<h2>Organisatie overzicht</h2>
-
-<a asp-controller="Panel" asp-action="UserPanel" class="btn btn-primary">
-    Panel(s) bekijken
-</a>
-
-<a asp-controller="Recruitment" class="btn btn-primary">
-    Panel aanmaken
-</a>
-
-<a asp-page="/Account/Register" asp-area="Identity" asp-route-staff="true" class="btn btn-primary">
-    Voeg nieuwe organisatiebeheerder toe
-</a>
+<div class="auth-page-wrapper py-12"> 
+    <div class="auth-card-container"> 
+        <h2 class="auth-page-title">@ViewBag.Title</h2> 
+        
+        <div class="overview-actions-list">
+            <a asp-controller="Panel" asp-action="UserPanel" class="btn btn-primary">
+                Panel(s) bekijken
+            </a>
+            <a asp-controller="Recruitment" asp-action="Index" class="btn btn-primary">
+                Panel aanmaken
+            </a>
+            <a asp-page="/Account/Register" asp-area="Identity" asp-route-staff="true" class="btn btn-primary">
+                Voeg nieuwe organisatiebeheerder toe
+            </a>
+        </div>
+    </div>
+</div>

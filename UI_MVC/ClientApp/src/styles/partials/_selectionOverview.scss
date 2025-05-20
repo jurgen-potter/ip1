@@ -1,0 +1,8 @@
+﻿
+.overview-actions-list {
+  @apply flex flex-col items-center space-y-4 mt-8; /* mt-8 voor ruimte onder de titel */
+  
+  .btn { 
+    @apply w-full max-w-xs; 
+  }
+}

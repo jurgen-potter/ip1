@@ -1,0 +1,18 @@
+﻿.admin-platform-container { /* Algemene wrapper voor de pagina-inhoud */
+  @apply container mx-auto py-8 px-4;
+}
+
+.admin-platform-title { /* Titel van de pagina */
+  @apply text-2xl sm:text-3xl font-bold text-gray-800 mb-8 text-center; /* Meer marge onder, gecentreerd */
+}
+
+.admin-platform-actions-card { /* Kaart-achtige container voor de acties */
+  @apply bg-white rounded-xl shadow-lg p-6 sm:p-8 max-w-lg mx-auto; /* Gecentreerde kaart */
+}
+
+.admin-platform-actions-list { /* Lijst van actieknoppen */
+  @apply space-y-4; /* Ruimte tussen de knoppen */
+  .btn { /* Styling voor de knoppen in deze lijst */
+    @apply w-full text-center block; /* Knoppen nemen volledige breedte en zijn blok-elementen */
+  }
+}

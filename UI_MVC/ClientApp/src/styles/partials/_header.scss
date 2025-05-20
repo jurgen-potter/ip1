@@ -1,0 +1,60 @@
+
+.site-header {
+  @apply bg-brand-black shadow-md sticky top-0 z-50;
+}
+
+.header-nav-container {
+  @apply container mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.header-content {
+  @apply flex items-center justify-between h-16;
+}
+
+.header-logo a {
+  @apply text-header-text font-bold text-2xl pl-0;
+}
+
+.desktop-nav-item {
+  @apply text-header-text;
+  &:hover {
+    @apply text-header-text-hover;
+  }
+}
+
+.mobile-nav-item {
+  @apply block px-3 py-2 rounded-md text-base font-medium text-header-text;
+  &:hover {
+    @apply bg-header-nav-item-bg-hover text-header-text-hover;
+  }
+}
+
+.mobile-menu-button {
+  @apply text-header-text focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white;
+  &:hover {
+    @apply text-header-text-hover;
+  }
+}
+
+/* Stijlen voor _LoginPartial elementen */
+.login-welcome-link {
+  @apply text-header-text; /* Basisstijl */
+  &:hover {
+    @apply text-header-text-hover; /* Hoverstijl */
+  }
+}
+
+.login-action-item { /* Voor "Uitloggen" knop & "Registreer als organisatie" link */
+  @apply text-header-text px-4 py-2 rounded-lg transition-colors duration-150;
+  &:hover {
+    @apply text-header-text-hover bg-header-nav-item-bg-hover; /* Achtergrond op hover voor een meer knop-achtig gevoel */
+  }
+}
+
+.btn-solid-login { /* Voor "Aanmelden" knop */
+  @apply inline-block font-semibold text-center align-middle cursor-pointer select-none no-underline
+  bg-primary text-header-text px-4 py-2 rounded-lg transition-colors duration-150 border border-transparent;
+  &:hover {
+    @apply bg-primary-hover; /* Donkerdere primaire kleur op hover */
+  }
+}

@@ -4,31 +4,38 @@
 @{
     ViewData["Title"] = "Registratie van admin";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
+}
 
-<h1>@ViewData["Title"]</h1>
+<div class="auth-page-wrapper">
+    <div class="auth-card-container">
+        <h1 class="auth-page-title">@ViewData["Title"]</h1>
 
-<div class="row">
-    <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Registreer het nieuwe admin account.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            <h2 class="auth-form-title">Registreer het nieuwe admin account.</h2>
+            <hr class="auth-divider"/>
+            <div asp-validation-summary="ModelOnly" class="auth-validation-summary" role="alert"></div>
+
+            <div class="auth-form-group">
+                <label asp-for="Input.Email" class="auth-form-label">Email</label>
+                <input asp-for="Input.Email" class="auth-input-field" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <span asp-validation-for="Input.Email" class="auth-validation-message"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Wachtwoord</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+
+            <div class="auth-form-group">
+                <label asp-for="Input.Password" class="auth-form-label">Wachtwoord</label>
+                <input asp-for="Input.Password" class="auth-input-field" autocomplete="new-password" aria-required="true" placeholder="Wachtwoord" />
+                <span asp-validation-for="Input.Password" class="auth-validation-message"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Bevestig wachtwoord</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+
+            <div class="auth-form-group">
+                <label asp-for="Input.ConfirmPassword" class="auth-form-label">Bevestig wachtwoord</label>
+                <input asp-for="Input.ConfirmPassword" class="auth-input-field" autocomplete="new-password" aria-required="true" placeholder="Bevestig wachtwoord" />
+                <span asp-validation-for="Input.ConfirmPassword" class="auth-validation-message"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Registreer</button>
+
+            <button id="registerSubmit" type="submit" class="auth-submit-button">Registreer</button>
         </form>
     </div>
 </div>

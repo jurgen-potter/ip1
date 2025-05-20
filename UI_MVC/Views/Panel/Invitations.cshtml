@@ -3,52 +3,69 @@
 @model System.Collections.Generic.IEnumerable<CitizenPanel.BL.Domain.Draws.Invitation>
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Uitnodigingen";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
 
-<h2>Uitnodigingen</h2>
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-    @foreach (var invitation in Model.Where(i => !i.IsRegistered))
+<div class="invitations-container">
+    <h2 class="invitations-title">@ViewBag.Title</h2>
+
+    @if (Model != null && Model.Any(i => !i.IsRegistered))
     {
-        <div class="col d-flex">
-            <div class="card h-100 w-100">
-                <div class="card-body d-flex flex-column">
-                    <p class="card-text flex-grow-1">Geslacht: @invitation.Gender.ToDutch()</p>
-                    <p class="card-text flex-grow-1">Leeftijd:
-                        @if (invitation.Age == 18)
-                        {
-                            @($"18-25")
-                        }
-                        else if (invitation.Age == 26)
-                        {
-                            @($"26-35")
-                        }
-                        else if (invitation.Age == 36)
-                        {
-                            @($"36-50")
-                        }
-                        else if (invitation.Age == 51)
-                        {
-                            @($"51-60")
-                        }
-                        else if (invitation.Age == 61)
-                        {
-                            @($"61")
-                        }
-                    </p>
-                    <p class="card-text flex-grow-1">Code: @invitation.Code</p>
-                    <p class="card-text flex-grow-1">
-                        @if (@invitation.QRCodeString.IsNullOrEmpty())
-                        {
-                            <strong>@($"Deze invitation heeft geen QR-code meer")</strong>
-                        }
-                        else
-                        {
-                            <img src="data:image/png;base64,@invitation.QRCodeString" style="width: 150px; height: 150px;"/>
-                        }
-                    </p>
+        <div class="invitations-grid">
+            @foreach (var invitation in Model.Where(i => !i.IsRegistered))
+            {
+                <div class="invitation-card">
+                    <div class="invitation-card-content">
+                        <p class="flex-grow">Geslacht: @invitation.Gender.ToDutch()</p>
+                        <p class="flex-grow">Leeftijd:
+                            @if (invitation.Age == 18)
+                            {
+                                @($"18-25")
+                            }
+                            else if (invitation.Age == 26)
+                            {
+                                @($"26-35")
+                            }
+                            else if (invitation.Age == 36)
+                            {
+                                @($"36-50")
+                            }
+                            else if (invitation.Age == 51)
+                            {
+                                @($"51-60")
+                            }
+                            else if (invitation.Age == 61)
+                            {
+                                @($"61+")
+                            }
+                            else
+                            {
+                                @($"{invitation.Age}")
+                            }
+                        </p>
+                        <p class="flex-grow">Code: @invitation.Code</p>
+                        <div class="flex-grow mt-auto pt-2">
+                            @if (invitation.QRCodeString.IsNullOrEmpty())
+                            {
+                                <strong class="text-red-600">@($"Deze invitation heeft geen QR-code meer")</strong>
+                            }
+                            else
+                            {
+                                <img src="data:image/png;base64,@invitation.QRCodeString" alt="QR Code voor uitnodiging @invitation.Code"/>
+                            }
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-10">
+            <p class="text-xl text-gray-500">Er zijn momenteel geen openstaande uitnodigingen.</p>
         </div>
     }
 </div>
