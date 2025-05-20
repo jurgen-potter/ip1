@@ -8,6 +8,7 @@ public interface IPanelRepository
 {
     void CreatePanel(Panel panel);
     IEnumerable<Panel> ReadAllPanels(); // wordt al gefilterd op tenant
+    IEnumerable<Panel> ReadThreeActivePanels();
     Panel ReadPanelById(int panelId);
     Panel ReadPanelByIdWithMembers(int panelId);
     Panel ReadPanelByIdWithInvitations(int panelId);

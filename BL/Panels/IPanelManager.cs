@@ -8,6 +8,7 @@ public interface IPanelManager
 {
     Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totAvPotMem);
     IEnumerable<Panel> GetAllPanels(); // wordt al gefilterd op tenant
+    IEnumerable<Panel> GetThreeActivePanels();
     Panel GetPanelById(int panelId);
     Panel GetPanelByIdWithMembers(int panelId);
     Panel GetPanelByIdWithInvitations(int panelId);

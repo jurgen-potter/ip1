@@ -24,6 +24,11 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
         return dbContext.Panels.Find(panelId);
     }
 
+    public IEnumerable<Panel> ReadThreeActivePanels()
+    {
+        return dbContext.Panels.Where(p => p.IsActive).Take(3).IgnoreQueryFilters().ToList();
+    }
+
     public Panel ReadPanelByIdWithMembers(int panelId)
     {
         return dbContext.Panels

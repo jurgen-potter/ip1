@@ -92,6 +92,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             DrawStatus = DrawStatus.FirstPhaseActive,
             TenantId = "antwerpen",
             TotalAvailablePotentialPanelmembers = 10000,
+            IsActive = true,
             Meetings = new List<Meeting>()
             {
                 new Meeting()
@@ -120,6 +121,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                         }
                     },
                     TenantId = "antwerpen"
+                    
                 },
                 new Meeting()
                 {
@@ -148,6 +150,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     TenantId = "antwerpen"
                 }
             }
+            
         };
         panelDbContext.Panels.Add(panel1);
         panel1.Criteria.Add(crit1);
@@ -161,7 +164,8 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Description = "Dit is ook een omschrijving van een panel.",
             StartDate = new DateOnly(2025, 3, 1),
             EndDate = new DateOnly(2025, 8, 14),
-            TenantId = "brussel"
+            TenantId = "brussel",
+            IsActive = true
         };
         panelDbContext.Panels.Add(panel2);
         

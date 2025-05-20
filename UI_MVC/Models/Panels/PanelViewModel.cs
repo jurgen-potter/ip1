@@ -21,6 +21,7 @@ public class PanelViewModel
     public List<RecommendationViewModel> Recommendations { get; set; } = new();
 }
 
+
 public class RecommendationViewModel
 {
     public int    Id          { get; set; }

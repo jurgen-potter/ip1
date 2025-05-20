@@ -26,6 +26,12 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
         return repository.ReadPanelById(panelId);
     }
 
+    public IEnumerable<Panel> GetThreeActivePanels()
+    {
+        return repository.ReadThreeActivePanels();
+    }
+
+
     public Panel GetPanelByIdWithMembers(int panelId)
     {
         return repository.ReadPanelByIdWithMembers(panelId);

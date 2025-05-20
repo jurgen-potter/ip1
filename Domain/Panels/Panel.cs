@@ -34,6 +34,9 @@ public class Panel : ITenanted
     public ICollection<Recommendation> Recommendations { get; set; } = new List<Recommendation>();
     public int TotalAvailablePotentialPanelmembers{ get; set; }
     
+    public bool IsActive { get; set; } = true;
+    public bool IsAnonymous { get; set; }
+    
     [Required]
     public string TenantId { get; set; }
     

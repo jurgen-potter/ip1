@@ -189,4 +189,11 @@ public class PanelController(
         var users = panel.Members;
         return View(panel);
     }
+    
+    
+    public IActionResult Details()
+    {
+        
+        return View();
+    }
 }

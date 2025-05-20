@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home";
 }
+
 @section Styles {
     <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
@@ -26,17 +27,48 @@
     <div class="home-info-grid">
         <div class="home-info-card">
             <h3 class="home-info-card-title">Kiezen voor een burgerpanel</h3>
-            <p class="home-info-card-text">Zet zelf de stap om jouw organisatie aan de hand van een panel te engageren.</p>
+            <p class="home-info-card-text">Zet zelf de stap om jouw organisatie aan de hand van een panel te
+                engageren.</p>
             <a href="#" class="home-info-card-button">
                 Meer informatie &rarr;
             </a>
         </div>
         <div class="home-info-card">
             <h3 class="home-info-card-title">Beginnen aan een burgerpanel?</h3>
-            <p class="home-info-card-text">Kijk hier voor een eerste wegwijzer en informatie om een participatiepanel te beginnen.</p>
+            <p class="home-info-card-text">Kijk hier voor een eerste wegwijzer en informatie om een participatiepanel te
+                beginnen.</p>
             <a href="#" class="home-info-card-button">
                 Startgids &rarr;
             </a>
+        </div>
+    </div>
+    <div class="home-detaild-panels-outer-section">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div class="home-detaild-panels-grid">
+                @foreach (var panel in Model.Panels)
+                {
+                     <a asp-controller="Panel" asp-action="Details" asp-route-tenantId="@panel.TenantId" asp-route-id="@panel.Id" class="panel-select-item group"> @*asp-route-tenantId="@panel.Tenant.Id" asp-route-id="@panel.Id"*@
+
+                        <img class="panel-item-image" src="/Antwerpenbanner.jpg" alt="Afbeelding voor @panel.Name"/>
+
+                        <div class="panel-item-content">
+                            <div class="text-container">
+                                <h5>@panel.Name</h5>
+                            </div>
+                            <div class="arrow-container">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </a>
+                }
+
+            </div>
+
+            <div class="home-view-all-panels-container">
+                <a asp-controller="PanelOverzicht" asp-action="Index" class="home-view-all-panels-link">
+                    meer panels bekijken &rarr;
+                </a> 
+            </div>
         </div>
     </div>
 </div>
