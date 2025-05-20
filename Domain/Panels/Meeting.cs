@@ -9,5 +9,6 @@ public class Meeting : ITenanted
     public string Title { get; set; }
     public DateOnly Date { get; set; }
     public ICollection<Recommendation> Recommendations { get; set; }
+    public IList<string> DocumentNames { get; set; } = new List<string>();
     public string TenantId { get; set; }
 }

@@ -16,7 +16,11 @@ public class MeetingManager(IMeetingRepository repository) : IMeetingManager
         repository.CreateMeeting(meeting);
         return meeting;
     }
-    
+    public Meeting GetMeetingById(int id)
+    {
+        return repository.ReadMeetingById(id);
+    }
+
     public Meeting GetMeetingByIdWithRecommendations(int id)
     {
        return repository.ReadMeetingByIdWithRecommendations(id);
