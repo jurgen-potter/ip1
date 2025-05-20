@@ -126,14 +126,18 @@ public class MeetingController(
             Directory.CreateDirectory(uploads);
 
             var filePath = Path.Combine(uploads, Path.GetFileName(file.FileName));
+            bool exists = System.IO.File.Exists(filePath);
             await using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            var meeting = meetingManager.GetMeetingById(meetingId);
-            meeting.DocumentNames.Add(file.FileName);
-            meetingManager.EditMeeting(meeting);
+            if (!exists)
+            {
+                var meeting = meetingManager.GetMeetingById(meetingId);
+                meeting.DocumentNames.Add(file.FileName);
+                meetingManager.EditMeeting(meeting);
+            }
         }
 
         return RedirectToAction("Details", new { id = meetingId });
@@ -142,7 +146,7 @@ public class MeetingController(
     [HttpPost]
     public IActionResult RemoveDocument(int meetingId, string fileName)
     {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads", meetingId.ToString());
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads", meetingId.ToString(), fileName);
         if (System.IO.File.Exists(filePath))
         {
             System.IO.File.Delete(filePath);
