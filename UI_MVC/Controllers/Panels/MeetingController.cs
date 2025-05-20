@@ -13,10 +13,10 @@ public class MeetingController(
 {
     [HttpGet]
     [Authorize]
-    public IActionResult Details(int id, int panelId)
+    public IActionResult Details(int id)
     {
         var meeting = meetingManager.GetMeetingByIdWithRecommendations(id);
-        var panel = panelManager.GetPanelById(panelId);
+        var panel = panelManager.GetPanelById(meeting.PanelId);
         
         var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads", id.ToString());
         var documents = new List<string>();
@@ -36,7 +36,7 @@ public class MeetingController(
         var model = new MeetingDetailViewModel
         {
             MeetingId = meeting.Id,
-            PanelId = panelId,
+            PanelId = meeting.PanelId,
             PanelName = panel.Name,
             MeetingDate = meeting.Date,
             Recommendations = new List<RecommendationViewModel>(),
@@ -118,7 +118,7 @@ public class MeetingController(
     }
     
     [HttpPost]
-    public async Task<IActionResult> Upload(IFormFile file, int meetingId, int panelId)
+    public async Task<IActionResult> Upload(IFormFile file, int meetingId)
     {
         if (file != null && file.Length > 0)
         {
@@ -136,6 +136,22 @@ public class MeetingController(
             meetingManager.EditMeeting(meeting);
         }
 
-        return RedirectToAction("Details", new { id = meetingId, panelId = panelId });
+        return RedirectToAction("Details", new { id = meetingId });
+    }
+    
+    [HttpPost]
+    public IActionResult RemoveDocument(int meetingId, string fileName)
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads", meetingId.ToString());
+        if (System.IO.File.Exists(filePath))
+        {
+            System.IO.File.Delete(filePath);
+        }
+        
+        var meeting = meetingManager.GetMeetingById(meetingId);
+        meeting.DocumentNames.Remove(fileName);
+        meetingManager.EditMeeting(meeting);
+
+        return RedirectToAction("Details", new { id = meetingId });
     }
 }
