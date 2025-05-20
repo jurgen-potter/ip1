@@ -16,13 +16,22 @@ public class MeetingController(
     public IActionResult Details(int id, int panelId)
     {
         var meeting = meetingManager.GetMeetingByIdWithRecommendations(id);
-
         var panel = panelManager.GetPanelById(panelId);
         
-        var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-        var documents = Directory.Exists(uploadsPath)
-            ? Directory.GetFiles(uploadsPath).Select(Path.GetFileName).ToList()
-            : new List<string>();
+        var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads", id.ToString());
+        var documents = new List<string>();
+
+        if (Directory.Exists(uploadsPath))
+        {
+            foreach (var docName in meeting.DocumentNames)
+            {
+                var fullPath = Path.Combine(uploadsPath, docName);
+                if (System.IO.File.Exists(fullPath))
+                {
+                    documents.Add(docName);
+                }
+            }
+        }
 
         var model = new MeetingDetailViewModel
         {
@@ -76,8 +85,7 @@ public class MeetingController(
             Title = model.Title,
             Description = model.Description,
             NeededVotes = model.NeededVotes,
-            IsAnonymous = model.IsAnonymous,
-            TenantId = meeting.TenantId
+            IsAnonymous = model.IsAnonymous
         };
 
         meeting.Recommendations.Add(recommendation);
@@ -124,7 +132,8 @@ public class MeetingController(
             }
 
             var meeting = meetingManager.GetMeetingById(meetingId);
-            meeting.DocumentNames.Add(Path.GetFileName(filePath));
+            meeting.DocumentNames.Add(file.FileName);
+            meetingManager.EditMeeting(meeting);
         }
 
         return RedirectToAction("Details", new { id = meetingId, panelId = panelId });

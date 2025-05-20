@@ -82,12 +82,12 @@ CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
 
                     @if (User.IsInRole("Organization"))
                     {
-                        <form asp-controller="Meeting" asp-action="Upload" method="post" enctype="multipart/form-data">
+                        <form asp-controller="Meeting" asp-action="Upload" method="post" asp-route-meetingId="@Model.MeetingId" asp-route-panelId="@Model.PanelId" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <input type="file" name="file" class="form-control" />
                             </div>
                             <button type="submit" class="btn btn-outline-primary">
-                                <i class="bi bi-plus-circle me-2"></i>Documenten toevoegen
+                                <i class="bi bi-plus-circle me-2"></i>Document toevoegen
                             </button>
                         </form>
                     }

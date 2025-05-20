@@ -9,7 +9,7 @@ public class MeetingDetailViewModel
     
     public DateOnly MeetingDate { get; set; }
     
-    public List<RecommendationViewModel> Recommendations { get; set; } = new();
+    public ICollection<RecommendationViewModel> Recommendations { get; set; }
     
     public List<string> DocumentNames { get; set; } = new();
 }
