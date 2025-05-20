@@ -23,6 +23,8 @@ using CitizenPanel.UI.MVC.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,26 +56,40 @@ builder.Services.AddScoped<UserManager<ApplicationUser>, ApplicationUserManager>
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
-// Add Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-    {
-        options.User.RequireUniqueEmail = true;
-        options.SignIn.RequireConfirmedAccount = true;
-    })
-    .AddUserManager<ApplicationUserManager>()
-    .AddEntityFrameworkStores<PanelDbContext>()
-    .AddErrorDescriber<DutchIdentityErrorDescriber>()
-    .AddDefaultTokenProviders();
+// Redis setup
+var redisIp = Environment.GetEnvironmentVariable("REDIS_IP");
+var redisConnection = $"{redisIp}:6379";
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnection;
+    options.InstanceName = "redisdb";
+});
 
-builder.Services.AddLiveMonitoring();
+var redis = ConnectionMultiplexer.Connect(redisConnection);
+builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 
+builder.Services.AddDataProtection()
+    .PersistKeysToStackExchangeRedis(redis, "BurgerPanel-DataProtection-Keys");
+
+// Session via Redis
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+// Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedAccount = true;
+})
+    .AddUserManager<ApplicationUserManager>()
+    .AddEntityFrameworkStores<PanelDbContext>()
+    .AddErrorDescriber<DutchIdentityErrorDescriber>()
+    .AddDefaultTokenProviders();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -82,6 +98,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
+// Tenant + Route config
 builder.Services.Configure<RouteOptions>(options =>
 {
     options.ConstraintMap.Add("validTenant", typeof(ValidTenantConstraint));
@@ -98,7 +115,6 @@ app.MapRazorPages();
 using (IServiceScope scope = app.Services.CreateScope()) {
     PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
     if (context.CreateDatabase(true)) {
-        
         var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
         IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
@@ -108,13 +124,13 @@ using (IServiceScope scope = app.Services.CreateScope()) {
     }
 }
 
-// Configure the HTTP request pipeline.
+// Configure HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -122,6 +138,7 @@ app.UseRouting();
 
 app.UseAndMapLiveMonitoring();
 
+// Order is important!
 app.UseSession();
 
 app.UseAuthentication();
