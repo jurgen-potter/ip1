@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CitizenPanel.UI.MVC.Controllers.API;
 
 [ApiController]
-[Route("/api/[controller]")]
+[Route("/{tenantId}/api/[controller]")]
 [Authorize]
 public class MembersController(IPanelManager panelManager) : ControllerBase
 {

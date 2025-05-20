@@ -23,12 +23,6 @@ public class TenantMiddleware(
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        Console.WriteLine("Route values:");
-        foreach (var kvp in context.Request.RouteValues)
-        {
-            Console.WriteLine($"  {kvp.Key}: {kvp.Value}");
-        }
-        
         var path = context.Request.Path.Value ?? "";
 
         // Skip setting tenant context for Identity and public controllers
@@ -45,7 +39,7 @@ public class TenantMiddleware(
             return;
         }
 
-        // 1. Check for tenantId in route
+        // Check for tenantId in route
         var tenantIdFromRoute = context.Request.RouteValues["tenantId"]?.ToString();
         if (!string.IsNullOrEmpty(tenantIdFromRoute))
         {
@@ -61,7 +55,7 @@ public class TenantMiddleware(
             return;
         }
 
-        // 2. If logged in, resolve from user and redirect to tenant URL if needed
+        // Resolve from logged in user
         if (context.User.Identity?.IsAuthenticated == true)
         {
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -87,7 +81,7 @@ public class TenantMiddleware(
             }
         }
 
-        // 3. Try resolving from invitation
+        // Resolve from invitation
         var invitationTenant = tenantResolver.ResolveTenantFromQuery(context);
         if (invitationTenant is not null)
         {
