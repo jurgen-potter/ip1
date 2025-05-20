@@ -9,7 +9,6 @@ namespace CitizenPanel.UI.MVC.Controllers.Panels;
 public class RecommendationController(
     IPanelManager panelManager) : Controller
 {
-    [HttpGet]
     public IActionResult Index(int panelId)
     {
         var panel = panelManager.GetPanelByIdWithRecommendationsAndVotes(panelId);
@@ -18,6 +17,7 @@ public class RecommendationController(
     }
 
     [HttpGet]
+    [Route("{tenant}/Recommendation/GetVoters/{recommendationId}")]
     [Authorize(Roles = "Organization")] 
     public IActionResult GetVoters(int recommendationId)
     {
@@ -27,7 +27,7 @@ public class RecommendationController(
         return PartialView("_VotersList", votes);
     }
     
-    [HttpPost]
+    [HttpGet("{tenant}/Recommendation/StopVoting/{id}")]
     [Authorize(Roles = "Organization")]
     public IActionResult StopVoting(int id)
     {

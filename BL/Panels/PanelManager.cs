@@ -65,6 +65,11 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         return repository.ReadRecommendationByIdWithVoters(recommendationId);
     }
+
+    public IEnumerable<UserVote> GetUserVotesById(string userId)
+    {
+        return repository.ReadUserVotesById(userId);
+    }
     
     public void AddUserVote(ApplicationUser member, Recommendation recommendation, bool recommended)
     {

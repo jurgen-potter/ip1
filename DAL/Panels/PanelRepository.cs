@@ -89,7 +89,12 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
         dbContext.Recommendations.Update(recommendation);
         dbContext.SaveChanges();
     }
-    
+
+    public IEnumerable<UserVote> ReadUserVotesById(string userId)
+    {
+        return dbContext.UserVotes.Where(uv => uv.Voter.Id == userId).ToList();
+    }
+
     public void CreateUserVote(UserVote userVote)
     {
         dbContext.UserVotes.Add(userVote);

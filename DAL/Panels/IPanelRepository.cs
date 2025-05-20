@@ -20,6 +20,7 @@ public interface IPanelRepository
     Recommendation ReadRecommendationByIdWithVoters(int recommendationId);
     void UpdateRecommendation(Recommendation recommendation);
     
+    IEnumerable<UserVote> ReadUserVotesById(string userId);
     void CreateUserVote(UserVote userVote);
     void DeleteUserVote(ApplicationUser member, Recommendation recommendation);
     bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation);

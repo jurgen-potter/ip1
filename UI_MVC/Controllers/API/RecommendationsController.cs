@@ -11,7 +11,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 
 
 [ApiController]
-[Route("/api/[controller]")]
+[Route("{tenant}/api/[controller]")]
 [Authorize]
 public class RecommendationsController(
     IPanelManager panelManager,
@@ -25,8 +25,7 @@ public class RecommendationsController(
         {
             return Unauthorized();
         }
-    
-        var votedRecommendation = panelManager.GetVotedRecommendationsByUser(userId);
+        var votedRecommendation = panelManager.GetUserVotesById(userId);
         return Ok(votedRecommendation);
     }
 

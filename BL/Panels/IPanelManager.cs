@@ -20,6 +20,7 @@ public interface IPanelManager
     Recommendation GetRecommendationByIdWithVoters(int recommendationId);
     void EditRecommendation(Recommendation recommendation);
 
+    IEnumerable<UserVote> GetUserVotesById(string userId);
     void AddUserVote(ApplicationUser member, Recommendation recommendation, bool recommended);
     void RemoveUserVote(ApplicationUser member, Recommendation recommendation);
     bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation);

@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (selectedRecommendationId === null) return;
 
         fetch(`/Recommendation/StopVoting/${selectedRecommendationId}`, {
-            method: 'POST'
+            method: 'GET'
         })
             .then(res => {
                 if (!res.ok) {
