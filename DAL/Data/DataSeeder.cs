@@ -93,6 +93,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             TenantId = "antwerpen",
             TotalAvailablePotentialPanelmembers = 10000,
             IsActive = true,
+            CoverImagePath = "../../UI_MVC/wwwroot/Antwerpenbanner.jpg",
             Meetings = new List<Meeting>()
             {
                 new Meeting()

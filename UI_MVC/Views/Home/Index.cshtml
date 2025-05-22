@@ -47,7 +47,7 @@
             <div class="home-detaild-panels-grid">
                 @foreach (var panel in Model.Panels)
                 {
-                     <a asp-controller="Panel" asp-action="Details" asp-route-tenantId="@panel.TenantId" asp-route-id="@panel.Id" class="panel-select-item group"> @*asp-route-tenantId="@panel.Tenant.Id" asp-route-id="@panel.Id"*@
+                     <a asp-controller="Panel" asp-action="Details" asp-route-tenantId="@panel.TenantId" asp-route-panelId="@panel.Id" class="panel-select-item group"> @*asp-route-tenantId="@panel.Tenant.Id" asp-route-id="@panel.Id"*@
 
                         <img class="panel-item-image" src="/Antwerpenbanner.jpg" alt="Afbeelding voor @panel.Name"/>
 
@@ -65,7 +65,7 @@
             </div>
 
             <div class="home-view-all-panels-container">
-                <a asp-controller="PanelOverzicht" asp-action="Index" class="home-view-all-panels-link">
+                <a asp-controller="Panel" asp-action="ViewAll" class="home-view-all-panels-link">
                     meer panels bekijken &rarr;
                 </a> 
             </div>

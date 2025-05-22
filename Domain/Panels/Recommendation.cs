@@ -14,6 +14,7 @@ public class Recommendation : ITenanted
     public int NeededVotes { get; set; }
     public bool IsAnonymous { get; set; } = false;
     public ICollection<UserVote> UserVotes { get; set; }
+    public bool Accepted { get; set; } = false;
     [Required]
     public string TenantId { get; set; }
 }

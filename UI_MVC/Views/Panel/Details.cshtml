@@ -1,1 +1,112 @@
-﻿
+﻿@model CitizenPanel.UI.MVC.Models.Panels.PanelViewModel
+@using System.Globalization
+@using CitizenPanel.UI.MVC.Models.Panels
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
+    CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
+    ViewBag.Title = $"Burgerpanel: {Model.Name}"; 
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/> 
+}
+
+<div class="citizen-panel-page-container">
+
+    <section class="citizen-panel-banner">
+        @if (!string.IsNullOrEmpty(Model.CoverImagePath))
+        {
+            <img src="@Model.CoverImagePath" alt="Panel Banner" />
+        }
+        else
+        {
+            <span class="banner-placeholder-text">BANNER</span> 
+        }
+    </section>
+
+    <div class="citizen-panel-layout">
+        <main class="citizen-panel-main-content">
+            <section class="panel-content-card">
+                <h1 class="card-title">@Model.Name</h1>
+            </section>
+
+            <section class="panel-content-card">
+                <h2 class="card-subtitle">Beschrijving</h2>
+                <p class="card-text">@Model.Description</p>
+            </section>
+
+            <section class="panel-content-card">
+                <h2 class="card-subtitle">Aangenomen aanbevelingen</h2>
+                <ul class="panel-recommendations-list">
+                    @if (Model.Meetings != null)
+                    {
+                        @foreach (var meeting in Model.Meetings.Where(m => m.Recommendations.Any()).OrderByDescending(m => m.Date))
+                        {
+                            @foreach (var rec in meeting.Recommendations)
+                            {
+                                <li class="recommendation-item">
+                                    <strong>@rec.Title</strong>
+                                    <p>@rec.Description</p>
+                                </li>
+                            }
+                        }
+                    }
+                   
+                </ul>
+                
+            </section>
+
+
+            @if (User.IsInRole("Organization")& Model.CanManagePanel) 
+            {// temp placeholder uploaden doc
+                <section class="document-upload-card">
+                    <a href="#" class="add-document-button" id="openAddDocumentModalBtn">
+                        <i class="fas fa-plus-circle"></i>
+                        DOCUMENT TOEVOEGEN
+                    </a>
+                </section>
+            }
+        </main>
+
+        <aside class="citizen-panel-sidebar">
+            <div class="posts-card">
+                <div class="posts-header">
+                    <h2 class="posts-section-title">Posts</h2>
+                    @if (User.IsInRole("Organization")& Model.CanManagePanel) 
+                    {
+                        <a href="#" class="add-post-button" title="Nieuwe post toevoegen" data-panel-id="@Model.PanelId">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    }
+                </div>
+
+                <div class="posts-list">
+                    @if (Model.Posts != null && Model.Posts.Any())
+                    {
+                        @foreach (var post in Model.Posts)
+                        {
+                            <div class="post-item">
+                                <h3 class="post-item-title">@post.Title</h3>
+                                <p class="post-item-summary">@post.Description</p>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="no-posts">Er zijn momenteel geen posts.</p>
+                    }
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+@if (Model.CanManagePanel)
+{
+    <partial name="_CreatePostModalPartial" model="new CreatePostViewModel { PanelId = Model.PanelId }" />
+}
+@section Scripts {
+    <script defer src="~/dist/clientapp/assets/postModal.js" asp-append-version="true"></script>
+}

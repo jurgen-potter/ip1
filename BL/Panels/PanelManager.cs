@@ -46,6 +46,12 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         return repository.ReadPanelByIdWithRecommendations(panelId);
     }
+
+    public Panel GetPanelByIdWithAcceptedRecommendationsAndPosts(int panelId)
+    {
+        return repository.ReadPanelByIdWithAcceptedRecommendationsAndPosts(panelId);
+    }
+
     
     public Panel GetPanelByIdWithRecommendationsAndVotes(int panelId)
     {
@@ -137,4 +143,10 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         return repository.ReadAllPanels();
     }
+
+    public IEnumerable<Panel> GetAllPanelsWithoutTentant()
+    {
+        return repository.ReadAllPanelsWithoutTentant();
+    }
+
 }
