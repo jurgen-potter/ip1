@@ -189,4 +189,9 @@ public class AdminController(IQuestionnaireManager questionnaireModuleManager) :
     {
         return View();
     }
+
+    public IActionResult ManageOrganizations()
+    {
+        return View();
+    }
 }

@@ -9,21 +9,7 @@ namespace CitizenPanel.DAL.Data;
 
 public class DataSeeder(PanelDbContext panelDbContext)
 {
-    public void Seed()
-    {
-        SeedTenants();
-        SeedPanels();
-        panelDbContext.SaveChanges();
-        panelDbContext.ChangeTracker.Clear();
-
-        SeedInvitations();
-        SeedQuestionnaires();
-
-        panelDbContext.SaveChanges();
-        panelDbContext.ChangeTracker.Clear();
-    }
-
-    private void SeedTenants()
+    public void SeedTenants()
     {
         var tenant1 = new Tenant
         {
@@ -36,6 +22,19 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Name = "Brussel"
         };
         panelDbContext.Tenants.AddRange(tenant1, tenant2);
+    }
+    
+    public void Seed()
+    {
+        SeedPanels();
+        panelDbContext.SaveChanges();
+        panelDbContext.ChangeTracker.Clear();
+
+        SeedInvitations();
+        SeedQuestionnaires();
+
+        panelDbContext.SaveChanges();
+        panelDbContext.ChangeTracker.Clear();
     }
     
     private void SeedPanels()

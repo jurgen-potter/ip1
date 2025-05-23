@@ -58,15 +58,19 @@ public class PanelDbContext(
 
         foreach (var tenantedModel in tenantedModels)
         {
-            modelBuilder.Entity(tenantedModel.ClrType)
-                .HasQueryFilter<ITenanted>(e => IsAdmin || e.TenantId == TenantId)
-                .HasIndex(nameof(ITenanted.TenantId))
-                ;
-            modelBuilder.Entity(tenantedModel.ClrType)
-                .Property(nameof(ITenanted.TenantId))
+            var entity = modelBuilder.Entity(tenantedModel.ClrType);
+            
+            entity.HasOne(typeof(Tenant))
+                .WithMany()
+                .HasForeignKey(nameof(ITenanted.TenantId))
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasQueryFilter<ITenanted>(e => IsAdmin || e.TenantId == TenantId)
+                .HasIndex(nameof(ITenanted.TenantId));
+            
+            entity.Property(nameof(ITenanted.TenantId))
                 .IsRequired()
-                .HasValueGenerator<TenantIdValueGenerator>()
-                ;
+                .HasValueGenerator<TenantIdValueGenerator>();
         }
         
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PanelDbContext).Assembly);
@@ -79,12 +83,14 @@ public class PanelDbContext(
         modelBuilder.Entity<ApplicationUser>()
             .HasOne(u => u.MemberProfile)
             .WithOne(m => m.ApplicationUser)
-            .HasForeignKey<MemberProfile>(m => m.ApplicationUserId);
+            .HasForeignKey<MemberProfile>(m => m.ApplicationUserId)
+            .OnDelete(DeleteBehavior.Cascade);
     
         modelBuilder.Entity<ApplicationUser>()
             .HasOne(u => u.OrganizationProfile)
             .WithOne(o => o.ApplicationUser)
-            .HasForeignKey<OrganizationProfile>(o => o.ApplicationUserId);
+            .HasForeignKey<OrganizationProfile>(o => o.ApplicationUserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<DrawResult>()
             .HasMany(dr => dr.SelectedInvitations)

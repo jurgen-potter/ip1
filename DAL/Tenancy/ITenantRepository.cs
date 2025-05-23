@@ -8,4 +8,5 @@ public interface ITenantRepository
     Tenant ReadTenantById(string id);
     bool TenantIdExists(string tenantId);
     ICollection<Tenant> ReadAllTenants();
+    bool DeleteTenant(Tenant tenant);
 }
