@@ -21,6 +21,8 @@ public interface IPanelManager
     
     Recommendation GetRecommendationByIdWithVotes(int recommendationId);
     Recommendation GetRecommendationByIdWithVoters(int recommendationId);
+    IEnumerable<Recommendation> GetVotableRecommendationsByIdWithVotes(int panelId);
+    IEnumerable<Recommendation> GetUnvotableRecommendationsByIdWithVotes(int panelId);
     void EditRecommendation(Recommendation recommendation);
 
     IEnumerable<UserVote> GetUserVotesById(string userId);
@@ -30,4 +32,6 @@ public interface IPanelManager
 
     IEnumerable<Criteria> GetExtraCriteriaByPanelId(int panelId);
     IEnumerable<Criteria> GetCriteriaByPanelIdWithSubcriteria(int panelId);
+    
+    IEnumerable<Meeting> GetMeetingsById(int panelId);
 }
