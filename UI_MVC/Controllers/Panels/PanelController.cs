@@ -1,15 +1,17 @@
+using System.Security.Claims;
 using CitizenPanel.BL.Domain.Draws;
 using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
+using CitizenPanel.BL.Tenancy;
 using CitizenPanel.BL.Users;
 using CitizenPanel.BL.Utilities;
 using CitizenPanel.UI.MVC.Models.DTO;
 using CitizenPanel.UI.MVC.Models.Panels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using JsonSerializer=System.Text.Json.JsonSerializer;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CitizenPanel.UI.MVC.Controllers.Panels;
 
@@ -17,6 +19,7 @@ public class PanelController(
     IPanelManager panelManager,
     IDrawManager drawManager,
     IUserProfileManager userProfileManager,
+    ITenantManager tenantManager,
     IUtilityManager utilityManager) : Controller
 {
     [HttpGet]
@@ -24,7 +27,7 @@ public class PanelController(
     public IActionResult Index(int id)
     {
         Panel panel = panelManager.GetPanelByIdWithRecommendations(id);
-        
+
         PanelViewModel model = new PanelViewModel()
         {
             PanelId = panel.Id,
@@ -43,7 +46,7 @@ public class PanelController(
                 Title = meeting.Title,
                 Date = meeting.Date,
             };
-            
+
             if (meeting.Recommendations != null)
             {
                 foreach (Recommendation rec in meeting.Recommendations)
@@ -56,6 +59,7 @@ public class PanelController(
                     });
                 }
             }
+
             model.Meetings.Add(meetingViewModel);
         }
 
@@ -75,12 +79,12 @@ public class PanelController(
 
         return View(model);
     }
-    
+
     [HttpPost]
     [Authorize(Roles = "Organization, Admin")]
     public IActionResult CreatePanel(CreatePanelViewModel model)
     {
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
             return View(model);
 
         List<Criteria> criteria = new List<Criteria>();
@@ -97,17 +101,19 @@ public class PanelController(
                         subCriteria.Add(drawManager.AddSubCriteria(sub.Name, sub.Percentage));
                     }
                 }
+
                 criteria.Add(drawManager.AddCriteria(crit.Name, subCriteria));
             }
         }
-        
-        Panel newPanel = panelManager.AddPanel(model.Name, model.Description, criteria, model.Result.TotalAvailablePotentialPanelmembers);
+
+        Panel newPanel = panelManager.AddPanel(model.Name, model.Description, criteria,
+            model.Result.TotalAvailablePotentialPanelmembers);
         var invitations = utilityManager.GenerateInvitations(model.Result.ReservePotPanelmembers, criteria, newPanel);
         newPanel.Invitations = invitations.ToList();
         panelManager.EditPanel(newPanel);
-        return RedirectToAction("Index","Panel",new { id = newPanel.Id });
+        return RedirectToAction("Index", "Panel", new { id = newPanel.Id });
     }
-    
+
     [Authorize]
     public IActionResult UserPanel(string returnUrl)
     {
@@ -123,7 +129,9 @@ public class PanelController(
             return LocalRedirect(returnUrl);
         }
 
-        var panels = user.UserType == UserType.Member ? user.MemberProfile.Panels : panelManager.GetAllPanels().ToList();
+        var panels = user.UserType == UserType.Member
+            ? user.MemberProfile.Panels
+            : panelManager.GetAllPanels().ToList();
 
         if (panels.Count == 1)
         {
@@ -140,8 +148,9 @@ public class PanelController(
                     Name = panel.Name
                 });
             }
+
             TempData["Panels"] = JsonSerializer.Serialize(panelsData);
-            
+
             return RedirectToAction("PanelSelect");
         }
         else // Count == 0
@@ -171,7 +180,7 @@ public class PanelController(
                 return View(viewModel);
             }
         }
-        
+
         return RedirectToAction("UserPanel", new { returnUrl = "/" });
     }
 
@@ -188,5 +197,145 @@ public class PanelController(
         var panel = panelManager.GetPanelByIdWithMembers(panelId);
         var users = panel.Members;
         return View(panel);
+    }
+
+    [HttpGet]
+    public IActionResult Details(int panelId)
+    {
+        Panel panel = panelManager.GetPanelByIdWithAcceptedRecommendationsAndPosts(panelId);
+
+        PanelViewModel model = new PanelViewModel()
+        {
+            PanelId = panel.Id,
+            Name = panel.Name,
+            Description = panel.Description,
+            StartDate = panel.StartDate,
+            EndDate = panel.EndDate,
+            CoverImagePath = panel.CoverImagePath
+        };
+        foreach (Meeting meeting in panel.Meetings.OrderBy(m => m.Date)) // TEMP voor aanbevelingen testen 
+        {
+            MeetingViewModel meetingViewModel = new MeetingViewModel
+            {
+                Id = meeting.Id,
+                Title = meeting.Title,
+                Date = meeting.Date,
+            };
+
+            if (meeting.Recommendations != null)
+            {
+                foreach (Recommendation rec in meeting.Recommendations)
+                {
+                    meetingViewModel.Recommendations.Add(new RecommendationViewModel
+                    {
+                        Id = rec.Id,
+                        Title = rec.Title,
+                        Description = rec.Description
+                    });
+                }
+            }
+
+            model.Meetings.Add(meetingViewModel);
+        }
+
+        foreach (Post post in panel.Posts)
+        {
+            PostViewModel postViewModel = new PostViewModel
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Description = post.Description,
+                DatePosted = post.DatePosted
+            };
+            model.Posts.Add(postViewModel);
+        }
+
+        if (User.Identity.IsAuthenticated)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = userProfileManager.GetUserByIdWithProfile(userId);
+            string currentUserTenantId = null;
+
+            if (user.UserType == UserType.Organization && user.OrganizationProfile != null)
+            {
+                currentUserTenantId = user.OrganizationProfile.TenantId;
+            }
+
+            // else if (user.UserType == UserType.Member && user.MemberProfile != null) //mss als leden dat ook moeten kunnen anapassen
+            // {
+            //     currentUserTenantId = user.MemberProfile.TenantId;
+            // }
+            model.CanManagePanel = User.IsInRole("Organization") && panel.TenantId == currentUserTenantId;
+        }
+
+
+        return View(model);
+    }
+
+    public IActionResult ViewAll(string searchPanelName, string searchOrganisationName)
+    {
+        var allPanels = panelManager.GetAllPanelsWithoutTentant(); 
+
+        IEnumerable<Panel>
+            filteredPanels = allPanels.AsEnumerable(); 
+
+        if (!string.IsNullOrEmpty(searchPanelName))
+        {
+            filteredPanels = filteredPanels.Where(p =>
+                p.Name != null &&
+                p.Name.Contains(searchPanelName, StringComparison.OrdinalIgnoreCase));
+        }
+        
+        var allTenants = tenantManager.GetAllTenants(); 
+        var tenantNameLookup = allTenants.ToDictionary(t => t.Id, t => t.Name ?? "Onbekende Organisatie");
+
+        if (!string.IsNullOrEmpty(searchOrganisationName))
+        {
+            // Vind TenantIds die overeenkomen met de gezochte organisatienaam
+            var matchingTenantIds = allTenants
+                .Where(t => t.Name != null &&
+                            t.Name.Contains(searchOrganisationName, StringComparison.OrdinalIgnoreCase))
+                .Select(t => t.Id)
+                .ToList();
+
+            filteredPanels = filteredPanels.Where(p =>
+                !string.IsNullOrEmpty(p.TenantId) && matchingTenantIds.Contains(p.TenantId));
+        }
+
+        var panelSummaries = filteredPanels.Select(p =>
+        {
+            string status;
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+
+            if (p.EndDate < today) // Panel.EndDate is DateOnly (niet nullable)
+                status = "Afgelopen";
+            else if (p.StartDate > today)
+                status = "Gepland";
+            else
+                status = "Actief";
+
+            tenantNameLookup.TryGetValue(p.TenantId ?? string.Empty, out string orgName);
+
+            return new PanelSummaryViewModel
+            {
+                TenantId = p.TenantId,
+                PanelId = p.Id,
+                PanelName = p.Name ?? "N/A",
+                OrganisationName =
+                    orgName ?? (string.IsNullOrEmpty(p.TenantId) ? "Geen Tenant" : $"Tenant ID: {p.TenantId}"),
+                StartDate = p.StartDate, 
+                EndDate = p.EndDate, 
+                Status = status
+            };
+        }).OrderByDescending(p => p.StartDate).ToList();
+
+        var viewModel = new AllPanelsViewModel
+        {
+            Panels = panelSummaries,
+            SearchPanelName = searchPanelName,
+            SearchOrganisationName = searchOrganisationName
+        };
+
+        return View(viewModel); // Zorg dat je een View hebt genaamd "ViewAll.cshtml" of pas de naam aan.
     }
 }

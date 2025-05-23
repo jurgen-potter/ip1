@@ -1,0 +1,94 @@
+﻿@model CitizenPanel.UI.MVC.Models.Panels.AllPanelsViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Alle Panels";
+    CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
+    CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
+}
+
+<div class="panel-list-container">
+    <h1 class="panel-list-title">@ViewData["Title"]</h1>
+
+    <form asp-controller="Panel" asp-action="ViewAll" method="get" class="panel-list-search-form">
+        <div class="search-form-grid">
+            <div class="search-form-group">
+                <label asp-for="SearchPanelName" class="search-form-label"></label>
+                <input asp-for="SearchPanelName" class="search-form-input" />
+            </div>
+            <div class="search-form-group">
+                <label asp-for="SearchOrganisationName" class="search-form-label"></label>
+                <input asp-for="SearchOrganisationName" class="search-form-input" />
+            </div>
+            <div class="search-form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i>Zoeken
+                </button>
+                @if (!string.IsNullOrEmpty(Model.SearchPanelName) || !string.IsNullOrEmpty(Model.SearchOrganisationName))
+                {
+                    <a asp-controller="Panel" asp-action="ViewAll" class="btn btn-secondary">
+                        Wissen
+                    </a>
+                }
+            </div>
+        </div>
+    </form>
+
+    @if (Model.Panels.Any())
+    {
+        <div class="panel-list-table-wrapper">
+            <table class="panel-list-table">
+                <thead class="panel-list-table-head">
+                    <tr>
+                        <th scope="col" class="panel-list-th">Panelnaam</th>
+                        <th scope="col" class="panel-list-th">Organisatie</th>
+                        <th scope="col" class="panel-list-th">Startdatum</th>
+                        <th scope="col" class="panel-list-th">Einddatum</th>
+                        <th scope="col" class="panel-list-th">Status</th>
+                        <th scope="col" class="panel-list-th relative">
+                            <span class="sr-only">Acties</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="panel-list-table-body">
+                    @foreach (var panel in Model.Panels)
+                    {
+                        <tr>
+                            <td class="panel-list-td panel-list-td--panel-name">@panel.PanelName</td>
+                            <td class="panel-list-td">@panel.OrganisationName</td>
+                            <td class="panel-list-td">@panel.FormattedStartDate</td>
+                            <td class="panel-list-td">@panel.FormattedEndDate</td>
+                            <td class="panel-list-td">
+                                @if (panel.Status == "Actief")
+                                {
+                                    <span class="status-badge status-badge--active">@panel.Status</span>
+                                }
+                                else if (panel.Status == "Gepland")
+                                {
+                                    <span class="status-badge status-badge--planned">@panel.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-badge--ended">@panel.Status</span>
+                                }
+                            </td>
+                            <td class="panel-list-td panel-list-td--actions">
+                                <a asp-controller="Panel" asp-action="Details" asp-route-tenantId="@panel.TenantId" asp-route-panelId="@panel.PanelId"  class="panel-list-details-link">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="panel-list-no-results">
+            <i class="fas fa-folder-open no-results-icon"></i>
+            <p class="no-results-text">Geen panels gevonden die voldoen aan je zoekcriteria.</p>
+            @if (!string.IsNullOrEmpty(Model.SearchPanelName) || !string.IsNullOrEmpty(Model.SearchOrganisationName))
+            {
+                <a asp-controller="Panel" asp-action="ViewAll" class="no-results-clear-link">Toon alle panels</a>
+            }
+        </div>
+    }
+</div>

@@ -22,6 +22,7 @@ export default defineConfig({
         endVote: path.resolve('src/ts/recommendation/endVote.ts'),
         votersModalLoader: path.resolve('src/ts/recommendation/votersModalLoader.ts'),
         dashboard: path.resolve('src/ts/dashboard/timeline.ts'),
+        postModal: path.resolve('src/ts/dashboard/createPostModal.ts'),
         recruitment: path.resolve('src/ts/recruitment/index.ts'),
         registration: path.resolve('src/ts/registration/index.ts'),
         memberRegister: path.resolve('src/ts/memberRegister/registerMember.ts'),

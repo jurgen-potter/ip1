@@ -7,6 +7,16 @@ public class MeetingManager(IMeetingRepository repository) : IMeetingManager
 {
     public Meeting AddMeeting(string title, DateOnly date, int panelId)
     {
+        if (panelId <= 0)
+        {
+            throw new ArgumentException($"Invalid panelId: {panelId}. PanelId must be greater than 0.");
+        }
+        
+        if (string.IsNullOrEmpty(title))
+        {
+            throw new ArgumentException("Meeting title cannot be null or empty.");
+        }
+        
         var meeting = new Meeting()
         {
             PanelId = panelId,

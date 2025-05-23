@@ -19,7 +19,10 @@ public class PanelViewModel
 
     public List<MeetingViewModel> Meetings { get; set; } = new();
     public List<RecommendationViewModel> Recommendations { get; set; } = new();
+    public List<PostViewModel> Posts { get; set; } = new();
+    public bool CanManagePanel { get; set; }
 }
+
 
 public class RecommendationViewModel
 {
@@ -34,6 +37,7 @@ public class MeetingViewModel
     public string Title { get; set; }
     public DateOnly Date { get; set; }
     public List<RecommendationViewModel> Recommendations { get; set; } = new();
+    public List<string> DocumentNames { get; set; } = new();
     
 }
 

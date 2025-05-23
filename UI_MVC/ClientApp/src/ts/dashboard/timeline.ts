@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', init);
 async function init(): Promise<void> {
     const panelEl = document.body.querySelector<HTMLElement>('[data-panel-id]');
     const panelId = panelEl?.dataset.panelId ?? '';
+    const tenantId = window.location.pathname.split('/')[1];
 
     // Initialize modal elements
     createMeetingModal = document.getElementById('createMeetingModal');
@@ -40,10 +41,9 @@ async function init(): Promise<void> {
     setupCustomModalListeners();
 
     if (createMeetingForm) {
-        setupForm(panelId, createMeetingForm);
+        setupForm(panelId, tenantId,createMeetingForm);
     }
 }
-
 //Set up click handling for timeline items
 function setupTimelineItemClicks(panelId: string): void {
     document.body.addEventListener('click', (e) => {
@@ -139,7 +139,7 @@ function getTodayAtMidnight(): Date {
 }
 
 //Set up the meeting creation form
-function setupForm(panelId: string, form: MeetingFormElement): void {
+function setupForm(panelId: string,tenantId: string, form: MeetingFormElement): void {
     const elements = {
         saveBtn: document.getElementById('saveMeetingBtn') as HTMLButtonElement,
         dateInput: form.elements.Date,
@@ -152,7 +152,7 @@ function setupForm(panelId: string, form: MeetingFormElement): void {
         initializeDateInput(elements.dateInput, elements.errorDate, today);
     }
     setupInputListeners(elements);
-    form.addEventListener('submit', (e) => handleFormSubmit(e, form, elements, panelId));
+    form.addEventListener('submit', (e) => handleFormSubmit(e, form, elements, panelId, tenantId));
 }
 
 //Initialize date input with validation and defaults
@@ -202,7 +202,8 @@ async function handleFormSubmit(
         errorTitle: HTMLElement | null;
         errorDate: HTMLElement | null;
     },
-    panelId: string
+    panelId: string,
+    tenantId: string
 ): Promise<void> {
     e.preventDefault();
     const { saveBtn, dateInput, titleInput, errorTitle, errorDate } = elements;
@@ -220,7 +221,7 @@ async function handleFormSubmit(
     setButtonLoadingState(saveBtn, true);
 
     try {
-        const result = await submitFormData(form, panelId);
+        const result = await submitFormData(form,tenantId, panelId);
         if (result.success && result.meeting) { // Controleer ook of result.meeting bestaat
             addToTimeline(result.meeting);
             closeModal(createMeetingModal);
@@ -295,10 +296,10 @@ function setButtonLoadingState(button: HTMLButtonElement | null, isLoading: bool
 }
 
 //Submit form data to server
-async function submitFormData(form: HTMLFormElement, panelId: string): Promise<any> {
+async function submitFormData(form: HTMLFormElement,tenantId: string, panelId: string): Promise<any> {
     const data = new FormData(form);
     data.set('panelId', panelId); // Zorg ervoor dat panelId correct wordt meegestuurd
-    const response = await fetch('/Meeting/Create', { // Controleer of dit het juiste endpoint is
+    const response = await fetch(`/${tenantId}/Meeting/Create`, {
         method: 'POST',
         body: data
     });
