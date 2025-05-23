@@ -58,7 +58,7 @@ builder.Services.AddRazorPages();
 
 // Redis setup
 var redisIp = Environment.GetEnvironmentVariable("REDIS_IP");
-var redisConnection = $"{redisIp}:6379";
+var redisConnection = $"{redisIp}:6379,abortConnect=false"; // ← belangrijke fix!
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
