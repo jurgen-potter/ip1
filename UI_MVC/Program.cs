@@ -106,7 +106,9 @@ builder.Services.Configure<RouteOptions>(options =>
 
 builder.Services
     .AddTenantContext()
-    .AddScoped<TenantMiddleware>();
+    .AddScoped<TenantMiddleware>()
+    .AddScoped<RoleManager<IdentityRole>>();
+
 
 var app = builder.Build();
 
