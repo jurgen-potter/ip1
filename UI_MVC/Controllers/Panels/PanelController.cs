@@ -192,7 +192,7 @@ public class PanelController(
     }
 
     [Authorize(Roles = "Organization")]
-    public IActionResult SeeMembers(int panelId)
+    public IActionResult Members(int panelId)
     {
         var panel = panelManager.GetPanelByIdWithMembers(panelId);
         var users = panel.Members;

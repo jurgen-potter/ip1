@@ -27,11 +27,12 @@
                 <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
                     <i class="fas fa-user-plus"></i> Voeg panellid toe
                 </a>
-                <a asp-controller="Panel" asp-action="SeeMembers" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
+                <a asp-controller="Panel" asp-action="Members" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
                     <i class="fa-solid fa-eye"></i> Panelleden
                 </a>
                 <a asp-controller="Panel" asp-action="Details" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
                     <i class="fa-solid fa-table-columns"></i> Projectpagina
+
                 </a>
                 @* <a asp-action="Edit" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm"> *@
                 @*     <i class="bi bi-pencil-square me-1"></i> Edit Panel *@
