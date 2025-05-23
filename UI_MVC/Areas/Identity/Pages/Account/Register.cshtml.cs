@@ -171,7 +171,6 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             {
                 var user = CreateOrganization();
                 user.UserType = UserType.Organization;
-                user.IsSuper = Input.IsSuper;
                 user.OrganizationProfile = new OrganizationProfile();
                 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -184,6 +183,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 }
                 else
                 {
+                    user.IsStaff = true;
                     result = await _userManager.CreateWithTenantAsync(user, Input.Password);
                 }
                 await _userManager.AddToRoleAsync(user, "Organization");

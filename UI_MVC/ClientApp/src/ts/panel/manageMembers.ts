@@ -2,8 +2,7 @@ interface MemberDto {
     id: string;
     name: string;
     email: string;
-    age: number;
-    gender: string;
+    isStaff: boolean;
 }
 
 const panelInput = document.querySelector<HTMLInputElement>('#panelId');
@@ -48,10 +47,11 @@ function showMembers(members: MemberDto[]): void {
         const row = document.createElement("tr");
         
         row.innerHTML = `
-            <td>${member.name}</td>
+            <td>
+                ${member.name}
+                ${member.isStaff ? `<i title="Staff" class="fa-solid fa-star"></i>` : ""}
+            </td>
             <td>${member.email}</td>
-            <td>${member.age}</td>
-            <td>${member.gender}</td>
             <td></td>
         `;
 

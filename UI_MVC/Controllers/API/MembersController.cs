@@ -16,7 +16,9 @@ public class MembersController(IPanelManager panelManager, IUserProfileManager u
     [HttpGet("{panelId}")]
     public IActionResult Get(int panelId)
     {
-        var members = panelManager.GetMembersByPanelId(panelId).ToList();
+        var members = panelManager.GetMembersByPanelId(panelId)
+            .OrderByDescending(u => u.IsStaff)
+            .ToList();
         
         if (members.Count == 0) {
             return NoContent();
@@ -30,8 +32,7 @@ public class MembersController(IPanelManager panelManager, IUserProfileManager u
                 Id = member.Id,
                 Name = member.MemberProfile.FirstName + " " + member.MemberProfile.LastName,
                 Email = member.Email,
-                Age = DateTime.Today.AddYears(-member.MemberProfile.BirthDate.Year).Year,
-                Gender = member.MemberProfile.Gender.ToDutch()
+                IsStaff = member.IsStaff
             };
             memberDtos.Add(memberDto);
         }
