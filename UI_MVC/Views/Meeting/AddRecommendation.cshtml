@@ -26,11 +26,11 @@
                 <textarea asp-for="Description" class="auth-input-field"></textarea>
                 <span asp-validation-for="Description" class="auth-validation-message"></span>
             </div>
-
+            
             <div class="auth-form-group">
-                <label asp-for="NeededVotes" class="auth-form-label">Hoeveel stemmen zijn er minstens nodig?</label>
-                <input type="number" asp-for="NeededVotes" class="auth-input-field"/>
-                <span asp-validation-for="NeededVotes" class="auth-validation-message"></span>
+                <label asp-for="NeededPercentage" class="auth-form-label">Hoeveel stemmen (in procenten) zijn er minstens nodig?</label>
+                <input type="number" asp-for="NeededPercentage" class="auth-input-field"/>
+                <span asp-validation-for="NeededPercentage" class="auth-validation-message"></span>
             </div>
 
             <div class="auth-form-group">

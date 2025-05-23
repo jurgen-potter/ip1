@@ -332,7 +332,7 @@ function generateRecommendationHtml(meeting: any, currRec: number) : HTMLElement
     
     const finished = (!meeting.recVotable[currRec] as boolean)
         ? `<p class="mb-1"><strong>Het stemmen is afgelopen</strong></p>`
-        : (meeting.recNeededVotes[currRec] <= meeting.recVotes[currRec])
+        : (meeting.recNeededPercentages[currRec] <= meeting.recVotes[currRec])
             ? `<p class="mb-1"><strong>U heeft genoeg stemmen voor een gebalanceerd resultaat</strong></p>`
             : ""
     

@@ -26,9 +26,9 @@ public class MeetingsController(IPanelManager panelManager) : ControllerBase
             List<bool> recAnon = new List<bool>();
             List<bool> recVotable = new List<bool>();
             List<int> recVotes = new List<int>();
-            List<int> recNeededVotes = new List<int>();
             List<int> recVotesFor = new List<int>();
             List<int> recVotesAgainst = new List<int>();
+            List<double> recNeededPercentages = new List<double>();
             foreach (var recommendation in meeting.Recommendations)
             {
                 recIds.Add(recommendation.Id);
@@ -37,7 +37,7 @@ public class MeetingsController(IPanelManager panelManager) : ControllerBase
                 recAnon.Add(recommendation.IsAnonymous);
                 recVotable.Add(recommendation.IsVotable);
                 recVotes.Add(recommendation.Votes);
-                recNeededVotes.Add(recommendation.NeededVotes);
+                recNeededPercentages.Add(recommendation.NeededPercentage);
                 recVotesFor.Add(recommendation.UserVotes.Count(uv => uv.Recommended));
                 recVotesAgainst.Add(recommendation.UserVotes.Count(uv => !uv.Recommended));
                 if (recommendation.IsVotable) totalVotable++;
@@ -53,12 +53,11 @@ public class MeetingsController(IPanelManager panelManager) : ControllerBase
                 RecAnon = recAnon,
                 RecVotable = recVotable,
                 RecVotes = recVotes,
-                RecNeededVotes = recNeededVotes,
+                RecNeededPercentages = recNeededPercentages,
                 RecVotesFor = recVotesFor,
                 RecVotesAgainst = recVotesAgainst
             });
         }
-        
         return Ok(meetRecs);
     }
 }
