@@ -20,6 +20,7 @@ using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Areas.Identity.Services;
 using CitizenPanel.UI.MVC.Middleware;
 using CitizenPanel.UI.MVC.Services;
+using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -71,6 +72,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddErrorDescriber<DutchIdentityErrorDescriber>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddSingleton(StorageClient.Create());
 
 builder.Services.AddLiveMonitoring();
 
