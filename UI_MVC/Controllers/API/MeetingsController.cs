@@ -15,7 +15,7 @@ public class MeetingsController(IPanelManager panelManager) : ControllerBase
     {
         var meetings = panelManager.GetMeetingsById(panelId);
 
-        List<MeetRecDTO> meetRecs = new List<MeetRecDTO>();
+        List<MeetRecDto> meetRecs = new List<MeetRecDto>();
         
         foreach (var meeting in meetings)
         {
@@ -26,6 +26,7 @@ public class MeetingsController(IPanelManager panelManager) : ControllerBase
             List<bool> recAnon = new List<bool>();
             List<bool> recVotable = new List<bool>();
             List<int> recVotes = new List<int>();
+            List<int> recNeededVotes = new List<int>();
             List<int> recVotesFor = new List<int>();
             List<int> recVotesAgainst = new List<int>();
             foreach (var recommendation in meeting.Recommendations)
@@ -36,11 +37,12 @@ public class MeetingsController(IPanelManager panelManager) : ControllerBase
                 recAnon.Add(recommendation.IsAnonymous);
                 recVotable.Add(recommendation.IsVotable);
                 recVotes.Add(recommendation.Votes);
+                recNeededVotes.Add(recommendation.NeededVotes);
                 recVotesFor.Add(recommendation.UserVotes.Count(uv => uv.Recommended));
                 recVotesAgainst.Add(recommendation.UserVotes.Count(uv => !uv.Recommended));
                 if (recommendation.IsVotable) totalVotable++;
             }
-            meetRecs.Add(new MeetRecDTO
+            meetRecs.Add(new MeetRecDto
             {
                 MeetingTitle = meeting.Title,
                 MeetingId = meeting.Id,
@@ -51,6 +53,7 @@ public class MeetingsController(IPanelManager panelManager) : ControllerBase
                 RecAnon = recAnon,
                 RecVotable = recVotable,
                 RecVotes = recVotes,
+                RecNeededVotes = recNeededVotes,
                 RecVotesFor = recVotesFor,
                 RecVotesAgainst = recVotesAgainst
             });

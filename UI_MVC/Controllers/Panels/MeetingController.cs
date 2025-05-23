@@ -83,6 +83,7 @@ public class MeetingController(
         var recommendation = new Recommendation()
         {
             Title = model.Title,
+            MeetingId = meeting.Id,
             Description = model.Description,
             NeededVotes = model.NeededVotes,
             IsAnonymous = model.IsAnonymous

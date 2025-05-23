@@ -1,6 +1,6 @@
 namespace CitizenPanel.UI.MVC.Models.DTO;
 
-public class MeetRecDTO
+public class MeetRecDto
 {
     public int MeetingId { get; set; }
     public string MeetingTitle { get; set; }
@@ -11,6 +11,7 @@ public class MeetRecDTO
     public List<bool> RecAnon { get; set; }
     public List<bool> RecVotable { get; set; }
     public List<int> RecVotes { get; set; }
+    public List<int> RecNeededVotes { get; set; }
     public List<int> RecVotesFor { get; set; }
     public List<int> RecVotesAgainst { get; set; }
 }
