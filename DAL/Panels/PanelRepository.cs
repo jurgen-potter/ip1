@@ -143,6 +143,19 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
 
         dbContext.SaveChanges();
     }
+    public bool DeleteUserVotesByMember(ApplicationUser member)
+    {
+        var userVotes = dbContext.UserVotes
+            .Where(uv => uv.Voter == member)
+            .ToList();
+
+        foreach (var vote in userVotes)
+        {
+            dbContext.UserVotes.Remove(vote);
+        }
+        
+        return dbContext.SaveChanges() > 0;
+    }
 
     public bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation)
     {
@@ -173,6 +186,15 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .FirstOrDefault(p => p.Id == panelId);
 
         return panel?.Criteria
+            .ToList();
+    }
+    
+    public IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId)
+    {
+        return dbContext.Panels
+            .Where(p => p.Id == panelId)
+            .SelectMany(p => p.Members.Select(m => m.ApplicationUser))
+            .Include(u => u.MemberProfile)
             .ToList();
     }
 }

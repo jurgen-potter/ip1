@@ -43,7 +43,7 @@ function loadTenants(query: string = ""): void {
 
 
 function showTenants(tenants: TenantDto[]): void {
-    const tableBody = document.getElementById("tenantTableBody")!;
+    const tableBody = document.getElementById("tenantTableBody") as HTMLTableElement;
     tableBody.innerHTML = "";
 
     tenants.forEach(tenant => {

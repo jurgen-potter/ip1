@@ -56,6 +56,8 @@ public class IdentitySeeder(UserManager<ApplicationUser> userManager, RoleManage
         
         user3.MemberProfile = new MemberProfile()
         {
+            FirstName = "Paul",
+            LastName = "Veenstra",
             Gender = Gender.Male,
             BirthDate = new DateOnly(1980, 1, 1),
             TenantId = "antwerpen"

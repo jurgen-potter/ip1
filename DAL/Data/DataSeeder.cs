@@ -203,6 +203,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Kate",
+                    LastName = "Jansen",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1960, 8, 14),
                     Town = "Antwerpen",
@@ -218,6 +219,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Rozie",
+                    LastName = "de Jong",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1947, 2, 23),
                     Town = "Antwerpen",
@@ -233,6 +235,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Rozalinda",
+                    LastName = "van Loon",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1955, 11, 5),
                     Town = "Antwerpen",
@@ -248,6 +251,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Alice",
+                    LastName = "Veerman",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1951, 6, 30),
                     Town = "Antwerpen",
@@ -263,6 +267,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Emma",
+                    LastName = "de Boer",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(2001, 3, 18),
                     Town = "Antwerpen",

@@ -1,32 +1,59 @@
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Panels;
+using CitizenPanel.BL.Users;
 using CitizenPanel.UI.MVC.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers.API;
 
 [ApiController]
 [Route("/{tenantId}/api/[controller]")]
-[Authorize]
-public class MembersController(IPanelManager panelManager) : ControllerBase
+[Authorize(Roles = "Organization, Admin")]
+public class MembersController(IPanelManager panelManager, IUserProfileManager userProfileManager, UserManager<ApplicationUser> userManager) : ControllerBase
 {
-    [HttpGet("{id}")]
-    [Authorize(Roles = "Organization")]
-    public IActionResult Get(int id)
+    [HttpGet("{panelId}")]
+    public IActionResult Get(int panelId)
     {
-        var panel = panelManager.GetPanelByIdWithMembers(id);
-        List<MemberProfileDto> users = new List<MemberProfileDto>();
+        var members = panelManager.GetMembersByPanelId(panelId).ToList();
         
-        foreach (var panelMember in panel.Members)
-        {
-            users.Add(new MemberProfileDto
-            {
-                Age = DateTime.Today.AddYears(-panelMember.BirthDate.Year).Year,
-                Email = panelMember.ApplicationUser.Email,
-                Gender = panelMember.Gender.ToDutch()
-            });
+        if (members.Count == 0) {
+            return NoContent();
         }
-        return Ok(users);
+        
+        List<MemberProfileDto> memberDtos = [];
+        foreach (var member in members)
+        {
+            var memberDto = new MemberProfileDto()
+            {
+                Id = member.Id,
+                Name = member.MemberProfile.FirstName + " " + member.MemberProfile.LastName,
+                Email = member.Email,
+                Age = DateTime.Today.AddYears(-member.MemberProfile.BirthDate.Year).Year,
+                Gender = member.MemberProfile.Gender.ToDutch()
+            };
+            memberDtos.Add(memberDto);
+        }
+        
+        return Ok(memberDtos);
+    }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var user = userProfileManager.GetUserById(id);
+
+        if (user == null)
+            return NotFound();
+
+        if (user.UserType != UserType.Member)
+            return BadRequest("User is not a member.");
+
+        panelManager.RemoveUserVotesByMember(user);
+        
+        await userManager.DeleteAsync(user);
+    
+        return NoContent();
     }
 }

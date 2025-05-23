@@ -9,19 +9,23 @@
     <input type="hidden" id="panelId" value="@Model.Id" />
 
     <div>
-        <table id="members" class="reg-overview-table table-striped">
+        <table class="reg-overview-table table-striped">
             <thead>
             <tr>
+                <th>Naam</th>
                 <th>Email</th>
-                <th>Age</th>
-                <th>Gender</th>
+                <th>Leeftijd</th>
+                <th>Geslacht</th>
+                <th>Verwijder panellid?</th>
             </tr>
             </thead>
-            <tbody></tbody>
+            <tbody id="memberTableBody">
+            
+            </tbody>
         </table>
     </div>
 </div>
 
 @section Scripts {
-    <script type="module" src="~/dist/clientapp/assets/panelUsers.js" asp-append-version="true"></script>
+    <script type="module" src="~/dist/clientapp/assets/manageMembers.js" asp-append-version="true"></script>
 }

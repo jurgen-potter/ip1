@@ -118,7 +118,11 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
             recommendation.Votes--;
         }
     }
-    
+    public bool RemoveUserVotesByMember(ApplicationUser member)
+    {
+        return repository.DeleteUserVotesByMember(member);
+    }
+
     public bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation)
     {
         return repository.DoesUserVoteExist(member, recommendation);
@@ -149,4 +153,8 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
         return repository.ReadAllPanelsWithoutTentant();
     }
 
+    public IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId)
+    {
+        return repository.ReadMembersByPanelId(panelId);
+    }
 }
