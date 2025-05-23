@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace CitizenPanel.UI.MVC.Controllers.API;
 
 [ApiController]
-[Route("/api/[controller]")]
-[Authorize(Roles = "Admin")]
-public class AdminsController(IUserProfileManager userProfileManager, UserManager<ApplicationUser> userManager) : ControllerBase
+[Route("/{tenantId}/api/[controller]")]
+[Authorize(Roles = "Organization")]
+public class OrganizationsController(IUserProfileManager userProfileManager, UserManager<ApplicationUser> userManager) : ControllerBase
 {
     [HttpGet]
     public IActionResult Get()
@@ -18,31 +18,31 @@ public class AdminsController(IUserProfileManager userProfileManager, UserManage
         var currentUser = userManager.GetUserAsync(User).Result;
         if (currentUser is { IsSuper: false })
         {
-            return Forbid("Alleen root admins kunnen admins verwijderen.");
+            return Forbid("Alleen root organisatie beheerders kunnen organisatie accounts verwijderen.");
         }
         
-        var admins = userProfileManager.GetAllAdmins()
+        var staffOrgs = userProfileManager.GetAllOrganizations()
             .Where(u => u.Id != currentUser?.Id)
-            .OrderByDescending(u => u.IsSuper)
+            .OrderByDescending(o => o.IsSuper)
             .ToList();
         
-        if (admins.Count == 0) {
+        if (staffOrgs.Count == 0) {
             return NoContent();
         }
         
-        List<AdminDto> adminDtos = [];
-        foreach (var admin in admins)
+        List<OrganizationDto> organizationDtos = [];
+        foreach (var staff in staffOrgs)
         {
-            var adminDto = new AdminDto()
+            var organizationDto = new OrganizationDto()
             {
-                Id = admin.Id,
-                Email = admin.Email,
-                IsSuper = admin.IsSuper
+                Id = staff.Id,
+                Email = staff.Email,
+                IsSuper = staff.IsSuper
             };
-            adminDtos.Add(adminDto);
+            organizationDtos.Add(organizationDto);
         }
         
-        return Ok(adminDtos);
+        return Ok(organizationDtos);
     }
     
     [HttpDelete("{id}")]
@@ -51,7 +51,7 @@ public class AdminsController(IUserProfileManager userProfileManager, UserManage
         var currentUser = await userManager.GetUserAsync(User);
         if (currentUser is { IsSuper: false })
         {
-            return Forbid("Alleen superadmins kunnen admins verwijderen.");
+            return Forbid("Alleen super organisatie beheerders kunnen organisatie accounts verwijderen.");
         }
         
         var user = userProfileManager.GetUserById(id);
@@ -59,12 +59,11 @@ public class AdminsController(IUserProfileManager userProfileManager, UserManage
         if (user == null)
             return NotFound();
 
-        if (user.UserType != UserType.Admin)
-            return BadRequest("User is not an admin.");
-
+        if (user.UserType != UserType.Organization)
+            return BadRequest("User is not an organization account.");
+        
         await userManager.DeleteAsync(user);
     
         return NoContent();
     }
-
 }

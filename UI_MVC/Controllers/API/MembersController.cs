@@ -10,7 +10,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 
 [ApiController]
 [Route("/{tenantId}/api/[controller]")]
-[Authorize(Roles = "Organization, Admin")]
+[Authorize(Roles = "Organization")]
 public class MembersController(IPanelManager panelManager, IUserProfileManager userProfileManager, UserManager<ApplicationUser> userManager) : ControllerBase
 {
     [HttpGet("{panelId}")]

@@ -30,6 +30,10 @@ public class UserProfileManager(
     {
         return userProfileRepository.ReadOrganizationByIdWithProfileAndAnswers(organizationId);
     }
+    public IEnumerable<ApplicationUser> GetAllOrganizations()
+    {
+        return userProfileRepository.ReadAllOrganizations();
+    }
 
     public Task EditOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
     {

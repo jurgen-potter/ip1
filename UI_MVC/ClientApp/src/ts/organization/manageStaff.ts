@@ -1,25 +1,22 @@
-interface MemberDto {
+interface OrganizationDto {
     id: string;
-    name: string;
     email: string;
-    isStaff: boolean;
+    isSuper: boolean;
 }
 
-const panelInput = document.querySelector<HTMLInputElement>('#panelId');
-const panelId = panelInput?.value;
-const memberTenantId = window.location.pathname.split('/')[1];
+const orgTenantId = window.location.pathname.split('/')[1];
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (!panelId || !memberTenantId) {
-        console.error('Missing panel ID or tenant ID');
+    if (!orgTenantId) {
+        console.error('Missing tenant ID');
         return;
     }
 
-    loadMembers();
+    loadOrganizations();
 });
 
-function loadMembers() {
-    fetch(`/${memberTenantId}/api/Members/${panelId}`, {
+function loadOrganizations() {
+    fetch(`/${orgTenantId}/api/Organizations`, {
         method: "GET",
         headers: {
             "Accept": "application/json"
@@ -33,32 +30,31 @@ function loadMembers() {
             if (!response.ok) throw new Error("Network response was not ok");
             return response.json();
         })
-        .then((members: MemberDto[]) => {
-            showMembers(members);
+        .then((organizations: OrganizationDto[]) => {
+            showOrganizations(organizations);
         })
-        .catch(error => alert(`Failed to load members: ${error.message}`));
+        .catch(error => alert(`Failed to load organizations: ${error.message}`));
 }
 
-function showMembers(members: MemberDto[]): void {
-    const tableBody = document.getElementById("memberTableBody") as HTMLTableElement;
+function showOrganizations(organizations: OrganizationDto[]): void {
+    const tableBody = document.getElementById("organizationTableBody") as HTMLTableElement;
     tableBody.innerHTML = "";
 
-    members.forEach(member => {
+    organizations.forEach(organization => {
         const row = document.createElement("tr");
         
         row.innerHTML = `
             <td>
-                ${member.name}
-                ${member.isStaff ? `<i title="Staff" class="fa-solid fa-star"></i>` : ""}
+                ${organization.email}
+                ${organization.isSuper ? `<i title="Superbeheerder" class="fa-solid fa-star"></i>` : ""}
             </td>
-            <td>${member.email}</td>
             <td></td>
         `;
 
         const deleteBtn = document.createElement("button");
         deleteBtn.className = "btn btn-danger btn-sm";
         deleteBtn.textContent = "Verwijderen";
-        deleteBtn.addEventListener("click", () => deleteMember(member.id));
+        deleteBtn.addEventListener("click", () => deleteOrganization(organization.id));
 
         const deleteCell = row.querySelector("td:last-child");
         if (deleteCell) deleteCell.appendChild(deleteBtn);
@@ -67,10 +63,10 @@ function showMembers(members: MemberDto[]): void {
     });
 }
 
-function deleteMember(memberId: string): void {
-    if (!confirm("Weet je zeker dat je dit panellid wilt verwijderen?")) return;
+function deleteOrganization(organizationId: string): void {
+    if (!confirm("Weet je zeker dat je dit organizatie account wilt verwijderen?")) return;
 
-    fetch(`/${memberTenantId}/api/Members/${memberId}`, {
+    fetch(`/${orgTenantId}/api/Organizations/${organizationId}`, {
         method: "DELETE",
         headers: {
             "Accept": "application/json"
@@ -78,7 +74,7 @@ function deleteMember(memberId: string): void {
     })
         .then(response => {
             if (response.ok) {
-                loadMembers();
+                loadOrganizations();
             } else {
                 alert("Verwijderen mislukt.");
             }
