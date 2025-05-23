@@ -2,6 +2,7 @@ namespace CitizenPanel.UI.MVC.Models.DTO;
 
 public class MeetRecDTO
 {
+    public int MeetingId { get; set; }
     public string MeetingTitle { get; set; }
     public int AmountVotable { get; set; }
     public List<int> RecIds { get; set; }

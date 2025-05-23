@@ -43,6 +43,7 @@ public class MeetingsController(IPanelManager panelManager) : ControllerBase
             meetRecs.Add(new MeetRecDTO
             {
                 MeetingTitle = meeting.Title,
+                MeetingId = meeting.Id,
                 AmountVotable = totalVotable,
                 RecIds = recIds,
                 RecTitles = recTitles,
