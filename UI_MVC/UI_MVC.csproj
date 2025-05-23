@@ -133,8 +133,8 @@
     </ItemGroup>
     
     <Target Name="FrontendBuild" AfterTargets="Publish">
-        <Exec Command="npm install" WorkingDirectory="$(ProjectDir)" />
-        <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)" />
+        <Exec Command="npm install" WorkingDirectory="$(ProjectDir)/ClientApp" />
+        <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)/ClientApp" />
     </Target>
 
 </Project>
