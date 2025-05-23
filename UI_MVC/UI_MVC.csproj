@@ -52,9 +52,17 @@
       <None Include="wwwroot\Antwerpenbanner.jpg" />
     </ItemGroup>
     
-    <Target Name="FrontendBuild" AfterTargets="Publish">
+    <Target Name="FrontendBuild" BeforeTargets="Build">
         <Exec Command="npm install" WorkingDirectory="$(ProjectDir)/ClientApp" />
         <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)/ClientApp" />
     </Target>
+
+    <ItemGroup>
+        <DistFiles Include="ClientApp/dist/**" />
+        <Content Include="ClientApp/dist/**">
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+            <Link>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </Content>
+    </ItemGroup>
 
 </Project>
