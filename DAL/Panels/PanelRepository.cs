@@ -84,6 +84,43 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .SingleOrDefault(r => r.Id == recommendationId);
     }
 
+    public IEnumerable<Recommendation> ReadVotableRecommendationsByIdWithVotes(int panelId)
+    {
+        var meetings = dbContext.Meetings.Include(m => m.Recommendations).ThenInclude(r => r.UserVotes).Where(m => m.PanelId == panelId).ToList();
+        
+        List<Recommendation> recommendations = new List<Recommendation>();
+        foreach (var meeting in meetings)
+        {
+            foreach (var recommendation in meeting.Recommendations)
+            {
+                if (recommendation.IsVotable)
+                {
+                    recommendations.Add(recommendation);
+                }
+            }
+        }
+        return recommendations;
+    }
+    
+    public IEnumerable<Recommendation> ReadUnvotableRecommendationsByIdWithVotes(int panelId)
+    {
+        var meetings = dbContext.Meetings.Include(m => m.Recommendations).ThenInclude(r => r.UserVotes).Where(m => m.PanelId == panelId).ToList();
+        
+        List<Recommendation> recommendations = new List<Recommendation>();
+        foreach (var meeting in meetings)
+        {
+            foreach (var recommendation in meeting.Recommendations)
+            {
+                if (recommendation.IsVotable)
+                {
+                    recommendations.Add(recommendation);
+                }
+            }
+        }
+        return recommendations;
+    }
+
+
     public void UpdateRecommendation(Recommendation recommendation)
     {
         dbContext.Recommendations.Update(recommendation);
@@ -151,5 +188,13 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
 
         return panel?.Criteria
             .ToList();
+    }
+
+    public IEnumerable<Meeting> ReadMeetingsById(int panelId)
+    {
+        return dbContext.Meetings
+            .Include(m => m.Recommendations)
+            .ThenInclude(r => r.UserVotes)
+            .Where(m => m.PanelId == panelId).ToList();
     }
 }

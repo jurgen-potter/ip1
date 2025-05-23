@@ -121,7 +121,22 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         return repository.ReadCriteriaByPanelIdWithSubcriteria(panelId);
     }
-    
+
+    public IEnumerable<Meeting> GetMeetingsById(int panelId)
+    {
+        return repository.ReadMeetingsById(panelId);
+    }
+
+    public IEnumerable<Recommendation> GetVotableRecommendationsByIdWithVotes(int panelId)
+    {
+        return repository.ReadVotableRecommendationsByIdWithVotes(panelId);
+    }
+
+    public IEnumerable<Recommendation> GetUnvotableRecommendationsByIdWithVotes(int panelId)
+    {
+        return repository.ReadUnvotableRecommendationsByIdWithVotes(panelId);
+    }
+
     public void EditRecommendation(Recommendation recommendation)
     {
         repository.UpdateRecommendation(recommendation);
