@@ -1,7 +1,14 @@
 ﻿@page
+@using CitizenPanel.BL.Domain.Users
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model CitizenPanel.UI.MVC.Areas.Identity.Pages.Account.RegisterModel
+@inject UserManager<ApplicationUser> UserManager
+
 @{
     ViewData["Title"] = "Registratie";
+    var user = await UserManager.GetUserAsync(User);
+    var isSuper = user?.IsSuper == true;
 }
 @section Styles {
     <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
@@ -31,14 +38,23 @@
             </div>
             <div class="mb-4">
                 <label asp-for="Input.Password" class="auth-form-label">Wachtwoord</label>
-                <input asp-for="Input.Password" class="auth-input-field" autocomplete="new-password" aria-required="true" placeholder="password"/>
+                <input asp-for="Input.Password" class="auth-input-field" autocomplete="new-password" aria-required="true" placeholder="Wachtwoord"/>
                 <span asp-validation-for="Input.Password" class="auth-validation-message"></span>
             </div>
             <div class="mb-4">
                 <label asp-for="Input.ConfirmPassword" class="auth-form-label">Bevestig wachtwoord</label>
-                <input asp-for="Input.ConfirmPassword" class="auth-input-field" autocomplete="new-password" aria-required="true" placeholder="password"/>
+                <input asp-for="Input.ConfirmPassword" class="auth-input-field" autocomplete="new-password" aria-required="true" placeholder="Wachtwoord"/>
                 <span asp-validation-for="Input.ConfirmPassword" class="auth-validation-message"></span>
             </div>
+            
+            @if (isSuper)
+            {
+                <div class="auth-form-group">
+                    <label asp-for="Input.IsSuper" class="auth-form-label">Maak root admin</label>
+                    <input asp-for="Input.IsSuper" class="auth-input-field" type="checkbox" aria-required="false" />
+                    <span asp-validation-for="Input.IsSuper" class="auth-validation-message"></span>
+                </div>
+            }
             <button id="registerSubmit" type="submit" class="auth-submit-button">Registreer</button>
         </form>
     </div>

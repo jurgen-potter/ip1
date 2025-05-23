@@ -25,7 +25,7 @@ public class UserProfileManager(
         var userId = userManager.GetUserId(userPrincipal);
         return userProfileRepository.ReadUserByIdWithProfileAndPanels(userId);
     }
-
+    
     public ApplicationUser GetOrganizationByIdWithProfileAndAnswers(string organizationId)
     {
         return userProfileRepository.ReadOrganizationByIdWithProfileAndAnswers(organizationId);
@@ -34,5 +34,10 @@ public class UserProfileManager(
     public Task EditOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
     {
         return userProfileRepository.UpdateOrganizationAnswersAsync(userId, questionnaireId, answers);
+    }
+    
+    public IEnumerable<ApplicationUser> GetAllAdmins()
+    {
+        return userProfileRepository.ReadAllAdmins();
     }
 }

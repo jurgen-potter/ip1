@@ -3,6 +3,7 @@ using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Questionnaires;
 using CitizenPanel.BL.Domain.Tenancy;
 using CitizenPanel.BL.Domain.Users;
+using CitizenPanel.DAL.ServiceInterfaces;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -18,7 +19,8 @@ namespace CitizenPanel.DAL.Data;
 public class PanelDbContext(
     DbContextOptions<PanelDbContext> options,
     IConfiguration configuration,
-    TenantContext tenantContext) : IdentityDbContext<ApplicationUser>(options)
+    TenantContext tenantContext,
+    ICurrentUserService currentUserService) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Panel> Panels { get; set; }
     public DbSet<Recommendation> Recommendations { get; set; }
@@ -38,6 +40,7 @@ public class PanelDbContext(
     public DbSet<Tenant> Tenants { get; set; }
 
     public string TenantId => tenantContext.Tenant.Id;
+    public bool IsAdmin => currentUserService.IsAdmin;
 
     override protected void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (!optionsBuilder.IsConfigured) {
@@ -56,7 +59,7 @@ public class PanelDbContext(
         foreach (var tenantedModel in tenantedModels)
         {
             modelBuilder.Entity(tenantedModel.ClrType)
-                .HasQueryFilter<ITenanted>(e => e.TenantId == TenantId)
+                .HasQueryFilter<ITenanted>(e => IsAdmin || e.TenantId == TenantId)
                 .HasIndex(nameof(ITenanted.TenantId))
                 ;
             modelBuilder.Entity(tenantedModel.ClrType)

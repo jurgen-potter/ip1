@@ -1,7 +1,12 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using CitizenPanel.BL.Domain.Users
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model CitizenPanel.UI.MVC.Models.QuestionnaireModules.QuestionnaireSelectViewModel
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewBag.Title = "Platformbeheer";
+    var user = await UserManager.GetUserAsync(User);
+    var isSuper = user?.IsSuper == true;
 }
 @section Styles {
     <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
@@ -12,9 +17,15 @@
 
     <div class="admin-platform-actions-card">
         <div class="admin-platform-actions-list">
-            <a asp-page="/Account/RegisterAdmin" asp-area="Identity" class="btn btn-primary">
-                <i class="fas fa-user-shield mr-2"></i> Voeg nieuwe admin toe
-            </a>
+            @if (isSuper)
+            {
+                <a asp-page="/Account/RegisterAdmin" asp-area="Identity" class="btn btn-primary">
+                    <i class="fas fa-user-shield mr-2"></i> Voeg nieuwe admin toe
+                </a>
+                <a asp-action="ManageAdmins" class="btn btn-primary">
+                    <i class="fas fa-user-shield mr-2"></i> Adminbeheer
+                </a>
+            }
 
             @if (Model.Questionnaires != null && Model.Questionnaires.Any())
             {

@@ -62,4 +62,11 @@ public class UserProfileRepository(PanelDbContext dbContext) : IUserProfileRepos
 
         await dbContext.SaveChangesAsync();
     }
+    
+    public IEnumerable<ApplicationUser> ReadAllAdmins()
+    {
+        return dbContext.Users
+            .Where(u => u.UserType == UserType.Admin)
+            .ToList();
+    }
 }

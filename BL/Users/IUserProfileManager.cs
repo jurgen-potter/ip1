@@ -13,4 +13,6 @@ public interface IUserProfileManager
     
     ApplicationUser GetOrganizationByIdWithProfileAndAnswers(string organizationId);
     Task EditOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers);
+    
+    IEnumerable<ApplicationUser> GetAllAdmins();
 }

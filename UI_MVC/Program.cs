@@ -12,6 +12,7 @@ using CitizenPanel.DAL.Data;
 using CitizenPanel.DAL.Draws;
 using CitizenPanel.DAL.Panels;
 using CitizenPanel.DAL.Questionnaires;
+using CitizenPanel.DAL.ServiceInterfaces;
 using CitizenPanel.DAL.Tenancy;
 using CitizenPanel.DAL.Users;
 using CitizenPanel.UI.MVC;
@@ -53,6 +54,8 @@ builder.Services.AddScoped<ITenantManager, TenantManager>();
 builder.Services.AddScoped<ITenantRepository, TenantRepository>();
 builder.Services.AddScoped<ITenantResolver, TenantResolver>();
 builder.Services.AddScoped<UserManager<ApplicationUser>, ApplicationUserManager>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 

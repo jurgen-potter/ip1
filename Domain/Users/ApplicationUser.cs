@@ -11,6 +11,7 @@ public class ApplicationUser : IdentityUser
     public UserType UserType { get; set; }
     public MemberProfile MemberProfile { get; set; }
     public OrganizationProfile OrganizationProfile { get; set; }
+    public bool IsSuper { get; set; }
 }
 
 public class MemberProfile : ITenanted

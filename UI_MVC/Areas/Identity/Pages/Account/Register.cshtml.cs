@@ -131,6 +131,9 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "De wachtwoorden komen niet overeen.")]
             public string ConfirmPassword { get; set; }
             
+            [Display(Name = "Is supergebruiker?")]
+            public bool IsSuper { get; set; }
+            
             public string IsStaff { get; set; }
         }
         
@@ -168,6 +171,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             {
                 var user = CreateOrganization();
                 user.UserType = UserType.Organization;
+                user.IsSuper = Input.IsSuper;
                 user.OrganizationProfile = new OrganizationProfile();
                 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -175,6 +179,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 IdentityResult result;
                 if (Input.IsStaff == "false")
                 {
+                    user.IsSuper = true;
                     result = await _userManager.CreateWithTenantAsync(user, Input.Password, newTenantName: Input.Name);
                 }
                 else
