@@ -18,9 +18,7 @@ export default defineConfig({
       input: {
         main: path.resolve('src/main.ts'),
         styles: path.resolve('src/index.scss'),
-        vote: path.resolve('src/ts/recommendation/vote.ts'),
-        endVote: path.resolve('src/ts/recommendation/endVote.ts'),
-        votersModalLoader: path.resolve('src/ts/recommendation/votersModalLoader.ts'),
+        loadRecommendations: path.resolve('src/ts/recommendation/loadRecommendations.ts'),
         dashboard: path.resolve('src/ts/dashboard/timeline.ts'),
         postModal: path.resolve('src/ts/dashboard/createPostModal.ts'),
         recruitment: path.resolve('src/ts/recruitment/index.ts'),

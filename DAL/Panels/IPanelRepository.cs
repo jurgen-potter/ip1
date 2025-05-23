@@ -21,6 +21,8 @@ public interface IPanelRepository
     
     Recommendation ReadRecommendationByIdWithVotes(int recommendationId);
     Recommendation ReadRecommendationByIdWithVoters(int recommendationId);
+    IEnumerable<Recommendation> ReadVotableRecommendationsByIdWithVotes(int panelId);
+    public IEnumerable<Recommendation> ReadUnvotableRecommendationsByIdWithVotes(int panelId);
     void UpdateRecommendation(Recommendation recommendation);
     
     IEnumerable<UserVote> ReadUserVotesById(string userId);
@@ -33,4 +35,6 @@ public interface IPanelRepository
     IEnumerable<Criteria> ReadCriteriaByPanelIdWithSubcriteria(int panelId);
     
     IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId);
+
+    IEnumerable<Meeting> ReadMeetingsById(int panelId);
 }
