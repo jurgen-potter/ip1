@@ -1,19 +1,34 @@
 using System.Diagnostics;
+using CitizenPanel.BL.Domain.Panels;
+using CitizenPanel.BL.Panels;
 using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
+using CitizenPanel.UI.MVC.Models.Panels;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
-public class HomeController(ILogger<HomeController> logger) : Controller
+public class HomeController(ILogger<HomeController> logger, IPanelManager panelManager) : Controller
 {
-    private readonly ILogger<HomeController> _logger = logger;
 
     [HttpGet]
     [AllowAnonymous]
     public IActionResult Index()
     {
-        return View();
+        var panels = panelManager.GetThreeActivePanels();
+        var viewModel = new PanelSelectViewModel
+        {
+            Panels = panels.Select(p => new PanelSelectOptionViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                CoverImagePath = p.CoverImagePath,
+                TenantId = p.TenantId
+                
+            }).ToList()
+        };
+
+        return View(viewModel);
     }
 
     [HttpGet]

@@ -19,9 +19,22 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
         return dbContext.Panels.ToList();
     }
 
+    public IEnumerable<Panel> ReadAllPanelsWithoutTentant()
+    {
+        return dbContext.Panels
+            .IgnoreQueryFilters()
+            .Where(p => p.IsActive)
+            .ToList();
+    }
+
     public Panel ReadPanelById(int panelId)
     {
         return dbContext.Panels.Find(panelId);
+    }
+
+    public IEnumerable<Panel> ReadThreeActivePanels()
+    {
+        return dbContext.Panels.Where(p => p.IsActive).Take(3).IgnoreQueryFilters().ToList();
     }
 
     public Panel ReadPanelByIdWithMembers(int panelId)
@@ -35,11 +48,11 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
     public Panel ReadPanelByIdWithInvitations(int panelId)
     {
         return dbContext.Panels
-            .Include(p => p.Invitations) 
+            .Include(p => p.Invitations)
             .Include(p => p.DrawResult)
             .SingleOrDefault(p => p.Id == panelId);
     }
-    
+
     public Panel ReadPanelByIdWithRecommendations(int panelId)
     {
         return dbContext.Panels
@@ -47,6 +60,16 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .ThenInclude(m => m.Recommendations)
             .SingleOrDefault(p => p.Id == panelId);
     }
+
+    public Panel ReadPanelByIdWithAcceptedRecommendationsAndPosts(int panelId)
+    {
+        return dbContext.Panels
+            .Include(p => p.Posts)
+            .Include(p => p.Meetings)
+            .ThenInclude(m => m.Recommendations.Where(rec => rec.Accepted == true))
+            .SingleOrDefault(p => p.Id == panelId);
+    }
+
 
     public Panel ReadPanelByIdWithRecommendationsAndVotes(int panelId)
     {
@@ -56,7 +79,7 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .ThenInclude(r => r.UserVotes)
             .SingleOrDefault(p => p.Id == panelId);
     }
-    
+
     public void UpdatePanel(Panel panel)
     {
         dbContext.Update(panel);
@@ -67,7 +90,7 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
     {
         dbContext.Panels.Remove(panel);
     }
-    
+
     public Recommendation ReadRecommendationByIdWithVotes(int recommendationId)
     {
         return dbContext.Recommendations
@@ -117,16 +140,16 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
         }
 
         dbContext.UserVotes.Remove(userVote);
-        
+
         dbContext.SaveChanges();
     }
-    
+
     public bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation)
     {
         return dbContext.UserVotes
             .Any(uv => uv.Voter == member && uv.Recommendation == recommendation);
     }
-    
+
     public IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId)
     {
         var panel = dbContext.Panels

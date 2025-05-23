@@ -1,0 +1,50 @@
+﻿@model CitizenPanel.UI.MVC.Models.Panels.CreatePostViewModel
+
+<div id="createPostModal" class="create-post-modal-overlay hidden" aria-labelledby="createPostModalTitle" role="dialog" aria-modal="true">
+    <div class="create-post-modal-dialog">
+        <div class="create-post-modal-header">
+            <h3 id="createPostModalTitle" class="create-post-modal-title">Nieuwe Post Toevoegen</h3>
+            <button id="closeCreatePostModalBtn" type="button" class="create-post-modal-close-btn" aria-label="Sluiten">
+                <i class="fas fa-times fa-lg"></i>
+            </button>
+        </div>
+
+        <div class="create-post-modal-body">
+            <form asp-controller="Post" asp-action="Create" method="post" id="createPostForm" data-ajax="true" onsubmit="return false;">
+                <input type="hidden" asp-for="PanelId" id="modalPanelIdForPost" />
+
+                <div class="modal-form-group">
+                    <label asp-for="Title" class="modal-form-label">Titel</label>
+                    <input asp-for="Title" class="modal-form-input" placeholder="Titel van de post" maxlength="200" />
+                    <span asp-validation-for="Title" class="modal-validation-message" data-valmsg-for="Title"></span>
+                </div>
+
+                <div class="modal-form-group">
+                    <label asp-for="Content" class="modal-form-label">Inhoud</label>
+                    <textarea asp-for="Content" rows="8" class="modal-form-textarea" placeholder="Schrijf hier de inhoud van de post..." maxlength="10000"></textarea>
+                    <span asp-validation-for="Content" class="modal-validation-message" data-valmsg-for="Content"></span>
+                </div>
+
+                <div asp-validation-summary="ModelOnly" class="modal-validation-summary hidden"></div>
+
+                <div class="create-post-modal-footer">
+                    <button id="cancelCreatePostBtn" type="button" class="modal-btn modal-btn-secondary">Annuleren</button>
+                    <button type="submit" class="modal-btn modal-btn-primary">
+                        <i class="fas fa-arrow-up mr-2"></i>Posten
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* Display temp data errors if they exist *@
+@foreach (var key in TempData.Keys.Where(k => k.StartsWith("Error_")))
+{
+    var errorKey = key.Substring(6); // Remove "Error_" prefix
+    var errorMessage = TempData[key]?.ToString();
+    if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div data-temp-error data-temp-error-key="@errorKey" data-temp-error-message="@errorMessage" style="display: none;"></div>
+    }
+}

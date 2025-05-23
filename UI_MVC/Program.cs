@@ -36,6 +36,8 @@ builder.Services.AddDbContext<PanelDbContext>(options =>
 // Add Repositories and Managers
 builder.Services.AddScoped<IDrawRepository, DrawRepository>();
 builder.Services.AddScoped<IPanelRepository, PanelRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<IPostManager, PostManager>();
 builder.Services.AddScoped<IQuestionnaireRepository, QuestionnaireRepository>();
 builder.Services.AddScoped<IDrawManager, DrawManager>();
 builder.Services.AddScoped<IPanelManager, PanelManager>();

@@ -20,4 +20,9 @@ public class TenantRepository(PanelDbContext dbContext) : ITenantRepository
     {
         return dbContext.Tenants.Any(t => t.Id == tenantId);
     }
+
+    public ICollection<Tenant> ReadAllTenants()
+    {
+        return dbContext.Tenants.ToList();
+    }
 }

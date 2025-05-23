@@ -30,4 +30,9 @@ public class TenantManager(ITenantRepository repository) : ITenantManager
     {
         return repository.ReadTenantById(id);
     }
+
+    public ICollection<Tenant> GetAllTenants()
+    {
+        return repository.ReadAllTenants();
+    }
 }
