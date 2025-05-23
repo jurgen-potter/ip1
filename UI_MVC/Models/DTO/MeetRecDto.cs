@@ -4,6 +4,7 @@ public class MeetRecDto
 {
     public int MeetingId { get; set; }
     public string MeetingTitle { get; set; }
+    public int Participants { get; set; }
     public int AmountVotable { get; set; }
     public List<int> RecIds { get; set; }
     public List<string> RecTitles { get; set; }

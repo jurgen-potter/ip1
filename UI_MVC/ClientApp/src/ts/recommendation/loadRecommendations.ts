@@ -35,8 +35,6 @@ function loadButtons() : void {
             method: 'GET'
         })
             .then(res => {
-                console.log("Fetch status:", res.status); // ✅ Add this
-
                 if (!res.ok) {
                     throw Error(`Received status code ${res.status}.`)
                 }
@@ -53,12 +51,7 @@ function loadButtons() : void {
         
         confirmationModal.classList.add('hidden');
         selectedRecommendationId = null;
-
-        // 🪵 Add logs here
-        console.log("✅ Just called loadMeetings(). Current DOM state:");
-        console.log("Active body:", document.getElementById('active-body')?.innerHTML);
-        console.log("Not-active body:", document.getElementById('not-active-body')?.innerHTML);
-
+        
     });
 
     waitButton?.addEventListener("click", () => {
@@ -154,8 +147,6 @@ function loadButtons() : void {
                     votes[id] = !voted;
                     updateAllButtons();
                 } catch {
-                    // Toon foutmelding bij mislukking
-                    console.log('Fout bij verwerken van uw stem.');
                 } finally {
                     // Zet de knop weer aan
                     btn?.removeAttribute('disabled');
@@ -228,7 +219,6 @@ async function setModalBodyText(response: Response) {
         modalBodyElement.innerHTML = htmlContent;
     }
     else{
-        console.error('Fout bij ophalen/weergeven stemmers');
         let userMessage = 'Kon de lijst met stemmers niet laden.';
         modalBodyElement.innerHTML = `<div class="alert alert-danger m-3">${userMessage}</div>`;
     }
@@ -250,8 +240,6 @@ function loadMeetings() {
             }
         })
         .then(data => {
-            console.log("Loaded meetings:", data); // ✅ Add this
-
             addMeetings(data);
             loadButtons();
         })
@@ -295,7 +283,6 @@ function createMeeting(meeting: any): void {
 
 function createRecommendations(meeting: any): void {
     for (let i = 0; i < meeting.recIds.length; i++) {
-        console.log(`Rec ${meeting.recIds[i]} votable?`, meeting.recVotable[i]); // ✅ Add this
 
         if (meeting.recVotable[i]) {
             const recsDiv = document.getElementById('active-recommendation-body-' + meeting.meetingId) as HTMLDivElement;
@@ -330,11 +317,11 @@ function generateRecommendationHtml(meeting: any, currRec: number) : HTMLElement
         ? "(Anonieme stemming) " 
         : "";
     
+    const percFor = meeting.recVotesFor[currRec] / meeting.recVotes[currRec];
+    
     const finished = (!meeting.recVotable[currRec] as boolean)
-        ? `<p class="mb-1"><strong>Het stemmen is afgelopen</strong></p>`
-        : (meeting.recNeededPercentages[currRec] <= meeting.recVotes[currRec])
-            ? `<p class="mb-1"><strong>U heeft genoeg stemmen voor een gebalanceerd resultaat</strong></p>`
-            : ""
+        ? `<p class="mb-1"><strong>Het stemmen is afgelopen. ${(percFor >= (meeting.recNeededPercentages[currRec] / 100)) ? `De aanbeveling is aangenomen!` : `De aanbeveling is niet aangenomen`}</strong></p>`
+        : ""
     
     let text = "";
     
@@ -358,7 +345,8 @@ function generateRecommendationHtml(meeting: any, currRec: number) : HTMLElement
         }
         text += `
             <div class="mt-auto">
-                <p class="mb-1">Alle stemmen: <span id="vote-count-${meeting.recIds[currRec]}">${meeting.recVotes[currRec]}</span></p>
+                <p class="mb-1">Stemmen: <span id="vote-count-${meeting.recIds[currRec]}">${meeting.recVotes[currRec]}/${meeting.participants}</span></p>
+                <p class="mb-1">Percentage nodig om te slagen: ${meeting.recNeededPercentages[currRec]}%</p>
                 <ul>
                     <li>
                         <p class="mb-1" style="color: limegreen">Voor deze aanbeveling: ${meeting.recVotesFor[currRec]}</p>

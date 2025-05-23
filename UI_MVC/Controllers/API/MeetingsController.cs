@@ -46,6 +46,7 @@ public class MeetingsController(IPanelManager panelManager) : ControllerBase
             {
                 MeetingTitle = meeting.Title,
                 MeetingId = meeting.Id,
+                Participants = meeting.PanelParticipants,
                 AmountVotable = totalVotable,
                 RecIds = recIds,
                 RecTitles = recTitles,

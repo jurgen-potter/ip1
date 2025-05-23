@@ -89,16 +89,18 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Description = "Dit is de omschrijving van het panel.",
             StartDate = new DateOnly(2025, 1, 12),
             EndDate = new DateOnly(2025, 7, 22),
-            DrawStatus = DrawStatus.Complete,
+            DrawStatus = DrawStatus.FirstPhaseActive,
             TenantId = "antwerpen",
             TotalAvailablePotentialPanelmembers = 10000,
             IsActive = true,
+            MemberCount = 11,
             CoverImagePath = "../../UI_MVC/wwwroot/Antwerpenbanner.jpg",
             Meetings = new List<Meeting>()
             {
                 new Meeting()
                 {
                     Title = "Eerste bijeenkomst",
+                    PanelParticipants = 11,
                     Date = new DateOnly(2025, 4, 12),
                     Recommendations = new List<Recommendation>()
                     {
@@ -127,6 +129,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 new Meeting()
                 {
                     Title = "Tweede bijeenkomst",
+                    PanelParticipants = 11,
                     Date = new DateOnly(2025, 5, 1),
                     Recommendations = new List<Recommendation>()
                     {
@@ -146,6 +149,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 new Meeting()
                 {
                     Title = "Derde bijeenkomst",
+                    PanelParticipants = 11,
                     Date = new DateOnly(2025, 6, 12),
                     Recommendations = new List<Recommendation>(),
                     TenantId = "antwerpen"
@@ -341,7 +345,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             new UserVote
             {
                 Voter = members[0],
-                Recommended = false,
+                Recommended = true,
                 VotedAt = DateTime.UtcNow,
                 TenantId = "antwerpen"
             },
@@ -369,7 +373,21 @@ public class DataSeeder(PanelDbContext panelDbContext)
             new UserVote
             {
                 Voter = members[4],
-                Recommended = false,
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[5],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[6],
+                Recommended = true,
                 VotedAt = DateTime.UtcNow,
                 TenantId = "antwerpen"
             }
