@@ -56,6 +56,7 @@ builder.Services.AddScoped<ITenantResolver, TenantResolver>();
 builder.Services.AddScoped<UserManager<ApplicationUser>, ApplicationUserManager>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<ITenantAccessService, TenantAccessService>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 

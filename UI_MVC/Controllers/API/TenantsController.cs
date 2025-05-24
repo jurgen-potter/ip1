@@ -42,12 +42,6 @@ public class TenantsController(ITenantManager tenantManager, UserManager<Applica
         if (tenant == null)
             return NotFound();
         
-        var currentUser = await userManager.GetUserAsync(User);
-        if (currentUser is { IsSuper: false })
-        {
-            return Forbid("Alleen root admins kunnen organisaties verwijderen.");
-        }
-        
         tenantManager.RemoveTenant(tenant);
         
         return NoContent();
