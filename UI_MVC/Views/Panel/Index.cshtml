@@ -131,6 +131,7 @@
             <div class="custom-modal-body">
                 <form id="createMeetingForm" novalidate class="space-y-4" asp-controller="Meeting" asp-action="Create">
                     <input type="hidden" name="PanelId" value="@Model.PanelId" />
+                    <input type="hidden" name="PanelPartcipants" value="@Model.PanelPartcipants" />
                     <div class="panel-form-group">
                         <label for="meetingTitle" class="auth-form-label">Titel</label>
                         <input type="text" class="auth-input-field" id="meetingTitle" name="Title" required>

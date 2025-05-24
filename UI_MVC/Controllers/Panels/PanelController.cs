@@ -31,6 +31,7 @@ public class PanelController(
         PanelViewModel model = new PanelViewModel()
         {
             PanelId = panel.Id,
+            PanelPartcipants = panel.MemberCount,
             Name = panel.Name,
             Description = panel.Description,
             StartDate = panel.StartDate,

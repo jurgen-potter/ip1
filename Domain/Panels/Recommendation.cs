@@ -12,7 +12,7 @@ public class Recommendation : ITenanted
     public string Description { get; set; }
     public bool IsVotable { get; set; } = true;
     public int Votes { get; set; }
-    public int NeededVotes { get; set; }
+    public double NeededPercentage { get; set; }
     public bool IsAnonymous { get; set; }
     public ICollection<UserVote> UserVotes { get; set; }
     public bool Accepted { get; set; } = false;
