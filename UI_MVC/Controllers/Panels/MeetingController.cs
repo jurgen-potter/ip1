@@ -84,7 +84,7 @@ public class MeetingController(
         {
             Title = model.Title,
             MeetingId = meeting.Id,
-            Description = model.Description,
+            Description = model.Description ?? "",
             NeededPercentage = model.NeededPercentage,
             IsAnonymous = model.IsAnonymous
         };

@@ -330,15 +330,15 @@ function generateRecommendationHtml(meeting: any, currRec: number) : HTMLElement
         if (!meeting.recAnon[currRec]){
             buttons += `
                 <button type="button" class="btn btn-sm btn-outline-info btn-show-voters"
-                        data-recommendation-id=${meeting.recIds[currRec]}
-                        data-recommendation-title=${meeting.recTitles[currRec]}>
+                        data-recommendation-id="${meeting.recIds[currRec]}"
+                        data-recommendation-title="${meeting.recTitles[currRec]}">
                     Bekijk Stemmers
                 </button>`
         }
         if (meeting.recVotable[currRec]){
             buttons += `
                 <button type="button" class="btn btn-sm btn-outline-danger btn-stop-voting"
-                        data-recommendation-id=${meeting.recIds[currRec]}>
+                        data-recommendation-id="${meeting.recIds[currRec]}">
                     Stop stemronde
                 </button>
             `
@@ -364,12 +364,12 @@ function generateRecommendationHtml(meeting: any, currRec: number) : HTMLElement
         text += `
             <div class="vote-form">
                 <form class="mt-auto">
-                    <input type="hidden" name="id" value=${meeting.recIds[currRec]}>
+                    <input type="hidden" name="id" value="${meeting.recIds[currRec]}">
                     <button type="submit" id="vote-for" class="btn btn-success">Stem voor</button>
                 </form>
 
                 <form class="mt-auto">
-                    <input type="hidden" name="id" value=${meeting.recIds[currRec]}>
+                    <input type="hidden" name="id" value="${meeting.recIds[currRec]}">
                     <button type="submit" id="vote-against" class="btn btn-danger">Stem tegen</button>
                 </form>
             </div>`
@@ -382,7 +382,7 @@ function generateRecommendationHtml(meeting: any, currRec: number) : HTMLElement
                     ${anonymousHeader}${meeting.recTitles[currRec]}
                 </h5>
                 <p class="card-text flex-grow-1">${meeting.recDescriptions[currRec]}</p>
-                <p class="mb-1" id=${meeting.recIds[currRec]} hidden>
+                <p class="mb-1" id="${meeting.recIds[currRec]}" hidden>
                     <strong>Het stemmen is afgelopen</strong>
                 </p>
 
