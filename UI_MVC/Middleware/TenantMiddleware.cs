@@ -32,21 +32,20 @@ public class TenantMiddleware(
         var area = context.Request.RouteValues.TryGetValue("area", out var areaObj) ? areaObj?.ToString() : null;
         var controller = context.Request.RouteValues.TryGetValue("controller", out var controllerObj) ? controllerObj?.ToString()?.ToLower() : null;
         var action = context.Request.RouteValues.TryGetValue("action", out var actionObj) ? actionObj?.ToString()?.ToLower() : null;
-
-        // Skip setting tenant context for Identity and public controllers
+        var routeTenantId = context.Request.RouteValues["tenantId"]?.ToString();
+        
         var isIdentityArea = area?.Equals("Identity", StringComparison.OrdinalIgnoreCase) == true;
         var isPublicController = _publicControllers.Contains(controller);
         var isTenantSpecificRoute = controller != null && action != null && _tenantSpecificRoutes.Contains((controller, action));
 
+        // Skip setting tenant context for Identity and public controllers
         if (isIdentityArea || isPublicController)
         {
-            // Remove tenantId from URL path if it exists
-            var routeTenantId = context.Request.RouteValues["tenantId"]?.ToString();
             if (!string.IsNullOrEmpty(routeTenantId) && path.StartsWith($"/{routeTenantId}", StringComparison.OrdinalIgnoreCase))
             {
-                var newPath = path[$"/{routeTenantId}".Length..]; // remove tenantId from beginning
+                var newPath = path[$"/{routeTenantId}".Length..];
                 if (string.IsNullOrWhiteSpace(newPath))
-                    newPath = "/"; // default to root if empty
+                    newPath = "/";
 
                 var query = context.Request.QueryString;
                 context.Response.Redirect($"{newPath}{query}");
@@ -57,19 +56,9 @@ public class TenantMiddleware(
             return;
         }
 
-        var tenantIdFromRoute = context.Request.RouteValues["tenantId"]?.ToString();
         if (!isTenantSpecificRoute)
         {
             // Resolve from logged in user
-            if (!string.IsNullOrEmpty(tenantIdFromRoute))
-            {
-                path = path[$"/{tenantIdFromRoute}".Length..];
-                if (string.IsNullOrEmpty(path))
-                    path = "/";
-            
-                context.Request.Path = new PathString(path);
-            }
-            
             if (context.User.Identity?.IsAuthenticated == true)
             {
                 var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -82,10 +71,21 @@ public class TenantMiddleware(
                     {
                         tenantContext.Tenant = tenant;
 
-                        if (!path.StartsWith($"/{tenant.Id}", StringComparison.OrdinalIgnoreCase))
+                        if (string.IsNullOrEmpty(routeTenantId))
                         {
                             var newPath = $"/{tenant.Id}{path}{context.Request.QueryString}";
                             context.Response.Redirect(newPath);
+                            return;
+                        }
+                        else if (routeTenantId != tenant.Id)
+                        {
+                            var newPath = path[$"/{routeTenantId}".Length..];
+                            if (string.IsNullOrWhiteSpace(newPath))
+                                newPath = "/";
+
+                            var correctedUrl = $"/{tenant.Id}{newPath}{context.Request.QueryString}";
+                            
+                            context.Response.Redirect(correctedUrl);
                             return;
                         }
 
@@ -97,6 +97,7 @@ public class TenantMiddleware(
         }
         
         // Check for tenantId in route
+        var tenantIdFromRoute = context.Request.RouteValues["tenantId"]?.ToString();
         if (!string.IsNullOrEmpty(tenantIdFromRoute))
         {
             var tenant = tenantManager.GetTenantById(tenantIdFromRoute);
