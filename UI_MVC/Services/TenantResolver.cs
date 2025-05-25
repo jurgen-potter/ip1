@@ -5,6 +5,12 @@ using CitizenPanel.BL.Tenancy;
 
 namespace CitizenPanel.UI.MVC.Services;
 
+public interface ITenantResolver
+{
+    Tenant ResolveTenantFromUser(ApplicationUser user);
+    Tenant ResolveTenantFromQuery(HttpContext context);
+}
+
 public class TenantResolver : ITenantResolver
 {
     private readonly IDrawManager _drawManager;

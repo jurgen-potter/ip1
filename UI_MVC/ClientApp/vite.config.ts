@@ -26,7 +26,10 @@ export default defineConfig({
         memberRegister: path.resolve('src/ts/memberRegister/registerMember.ts'),
         admin: path.resolve('src/ts/admin/editQuestionnaire.ts'),
         account: path.resolve('src/ts/account/login.ts'),
-        panelUsers: path.resolve('src/ts/panel/panelUsers.ts')
+        manageMembers: path.resolve('src/ts/panel/manageMembers.ts'),
+        manageAdmins: path.resolve('src/ts/admin/manageAdmins.ts'),
+        manageOrganizations: path.resolve('src/ts/admin/manageOrganizations.ts'),
+        manageStaff: path.resolve('src/ts/organization/manageStaff.ts')
       },
       output: {
         assetFileNames: 'assets/[name][extname]',

@@ -28,10 +28,13 @@ public interface IPanelRepository
     IEnumerable<UserVote> ReadUserVotesById(string userId);
     void CreateUserVote(UserVote userVote);
     void DeleteUserVote(ApplicationUser member, Recommendation recommendation);
+    bool DeleteUserVotesByMember(ApplicationUser member);
     bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation);
 
     IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId);
     IEnumerable<Criteria> ReadCriteriaByPanelIdWithSubcriteria(int panelId);
     
+    IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId);
+
     IEnumerable<Meeting> ReadMeetingsById(int panelId);
 }

@@ -10,5 +10,8 @@ public interface IUserProfileRepository
     ApplicationUser ReadUserByIdWithProfileAndPanels(string userId);
 
     ApplicationUser ReadOrganizationByIdWithProfileAndAnswers(string organizationId);
+    IEnumerable<ApplicationUser> ReadAllOrganizations();
     Task UpdateOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers);
+    
+    IEnumerable<ApplicationUser> ReadAllAdmins();
 }
