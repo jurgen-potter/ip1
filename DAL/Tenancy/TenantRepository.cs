@@ -27,6 +27,10 @@ public class TenantRepository(PanelDbContext dbContext) : ITenantRepository
     }
     public bool DeleteTenant(Tenant tenant)
     {
+        var invitations = dbContext.Invitations
+            .Where(i => i.TenantId == tenant.Id)
+            .ToList();
+        
         var userVotes = dbContext.UserVotes
             .Where(uv => uv.TenantId == tenant.Id)
             .ToList();
@@ -45,6 +49,7 @@ public class TenantRepository(PanelDbContext dbContext) : ITenantRepository
             .Concat(organizationUsers)
             .ToList();
 
+        dbContext.Invitations.RemoveRange(invitations);
         dbContext.UserVotes.RemoveRange(userVotes);
         dbContext.Users.RemoveRange(allUsersToDelete);
         
