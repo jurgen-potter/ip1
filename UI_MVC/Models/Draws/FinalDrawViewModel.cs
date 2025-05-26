@@ -17,16 +17,7 @@ Wij zijn verheugd u te kunnen meedelen dat u, uit alle aanmeldingen, bent gesele
 
 Wat kunt u verwachten? 
 Tijdens de panelbijeenkomsten gaat u samen met andere geselecteerde burgers in gesprek. U krijgt informatie van experts, kunt vragen stellen en discussiëren met medepanelleden. Uiteindelijk werkt u samen aan aanbevelingen voor de organisatie.";
-
-    [Required]
-    public string ReserveSubject { get; set; } = "U bent geselecteerd als reserve voor het burgerpanel";
-
-    [Required]
-    public string ReserveMessage { get; set; } = @"Beste heer/mevrouw,
-
-Hartelijk dank voor uw aanmelding voor het burgerpanel.
-Via deze weg informeren wij u dat u op dit moment niet direct bent geselecteerd voor deelname aan het panel, maar dat u wel bent opgenomen op onze reservelijst. Dit betekent dat we mogelijk alsnog een beroep op u doen als een geselecteerd panellid verhinderd is.";
-
+    
     [Required]
     public string NotSelectedSubject { get; set; } = "U bent niet geselecteerd voor het burgerpanel";
 
