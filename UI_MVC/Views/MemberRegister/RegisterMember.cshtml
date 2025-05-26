@@ -3,6 +3,7 @@
 
 @{
     ViewBag.Title = "Vul uw gegevens in";
+    var isLoggedIn = User.Identity is { IsAuthenticated: true };
 }
 @section Styles {
     <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
@@ -15,7 +16,11 @@
         <form asp-controller="MemberRegister" asp-action="RegisterMember" asp-route-code="@Model.Code" method="post">
             <div class="member-reg-form-group">
                 <label asp-for="Email" class="auth-form-label">Email:</label>
-                <input asp-for="Email" type="email" class="auth-input-field">
+                <input name="Email"
+                       type="email"
+                       class="auth-input-field"
+                       value="@Model.Email"
+                       @(isLoggedIn ? "readonly" : "")/>
                 <span asp-validation-for="Email" class="auth-validation-message"></span>
             </div>
 
@@ -57,6 +62,18 @@
             <input type="hidden" asp-for="@Model.Code">
             
             <button type="submit" class="auth-submit-button mt-6">Aanmelden</button>
+
+            @if (!isLoggedIn)
+            {
+                <div>
+                    <a id="existing-member"
+                       asp-area="Identity"
+                       asp-page="/Account/Login"
+                       asp-route-returnUrl="@Url.Action("RegisterMember", "MemberRegister", new { code = Model.Code })">
+                        Heeft u al een account binnen de organisatie?
+                    </a>
+                </div>
+            }
         </form>
     </div>
 </div>

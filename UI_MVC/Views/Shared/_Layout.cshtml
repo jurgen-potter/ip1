@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 <!DOCTYPE html>
 <html lang="nl">
@@ -37,7 +37,7 @@
                     {
                         <a asp-area="" asp-controller="Admin" asp-action="Index" class="desktop-nav-item">Admin Dashboard</a>
                     }
-                    @if (!User.Identity.IsAuthenticated)
+                    @if (!User.Identity.IsAuthenticated || User.IsInRole("Member"))
                     {
                         <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="desktop-nav-item">Code Registreren</a>
                     }
@@ -78,7 +78,7 @@
                 {
                     <a asp-area="" asp-controller="Admin" asp-action="Index" class="mobile-nav-item">Admin Dashboard</a>
                 }
-                @if (!User.Identity.IsAuthenticated)
+                @if (!User.Identity.IsAuthenticated || User.IsInRole("Member"))
                 {
                     <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="mobile-nav-item">Code Registreren</a>
                 }

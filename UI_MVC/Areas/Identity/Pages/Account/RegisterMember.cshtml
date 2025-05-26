@@ -8,7 +8,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
 
 <div class="auth-page-wrapper">
@@ -163,6 +163,11 @@
 
             <div class="mt-8">
                 <button id="registerSubmit" type="submit" class="auth-submit-button btn-lg">Registreer</button>
+            </div>
+            <div>
+                <p>
+                    <a id="existing-member" asp-controller="Organization" asp-action="AddMember" asp-route-panelId="@Model.PanelId" >Een bestaand organisatieaccount toevoegen?</a>
+                </p>
             </div>
         </form>
     </div>

@@ -11,6 +11,7 @@ public interface IUserProfileRepository
 
     ApplicationUser ReadOrganizationByIdWithProfileAndAnswers(string organizationId);
     IEnumerable<ApplicationUser> ReadAllOrganizations();
+    IEnumerable<MemberProfile> ReadAllOrganizationMembersNotInPanel(int panelId);
     Task UpdateOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers);
     
     IEnumerable<ApplicationUser> ReadAllAdmins();

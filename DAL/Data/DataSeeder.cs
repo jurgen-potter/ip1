@@ -23,7 +23,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
         };
         panelDbContext.Tenants.AddRange(tenant1, tenant2);
     }
-    
+
     public void Seed()
     {
         SeedPanels();
@@ -36,51 +36,9 @@ public class DataSeeder(PanelDbContext panelDbContext)
         panelDbContext.SaveChanges();
         panelDbContext.ChangeTracker.Clear();
     }
-    
+
     private void SeedPanels()
     {
-        //criteria
-        var subCrit1 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
-        var subCrit2 = new SubCriteria() { Name = "Vrouw", Percentage = 60, TenantId = "antwerpen" };
-        var subCrit3 = new SubCriteria() { Name = "18-25", Percentage = 20, TenantId = "antwerpen" };
-        var subCrit4 = new SubCriteria() { Name = "26-35", Percentage = 50, TenantId = "antwerpen" };
-        var subCrit5 = new SubCriteria() { Name = "36-50", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit6 = new SubCriteria() { Name = "51-60", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit7 = new SubCriteria() { Name = "60+", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit8 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
-        var subCrit9 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
-        var subCrit10 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
-        var subCrit11 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
-        
-        panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4, subCrit5, subCrit6, subCrit7, subCrit8, subCrit9, subCrit10, subCrit11);
-
-        var crit1 = new Criteria()
-        {
-            Name = "Geslacht",
-            SubCriteria = { subCrit1, subCrit2 },
-            TenantId = "antwerpen"
-        };
-        var crit2 = new Criteria()
-        {
-            Name = "Leeftijd",
-            SubCriteria = { subCrit3, subCrit4, subCrit5, subCrit6, subCrit7 },
-            TenantId = "antwerpen"
-        };
-        var crit3 = new Criteria()
-        {
-            Name = "Vervoer",
-            SubCriteria = { subCrit8, subCrit9 },
-            TenantId = "antwerpen"
-        };
-        var crit4 = new Criteria()
-        {
-            Name = "Opleiding",
-            SubCriteria = { subCrit10, subCrit11 },
-            TenantId = "antwerpen"
-        };
-        panelDbContext.Criteria.AddRange(crit1, crit2, crit3, crit4);
-
-
         // Create panel objects
         var panel1 = new Panel()
         {
@@ -88,7 +46,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Description = "Dit is de omschrijving van het panel.",
             StartDate = new DateOnly(2025, 1, 12),
             EndDate = new DateOnly(2025, 7, 22),
-            DrawStatus = DrawStatus.FirstPhaseActive,
+            DrawStatus = DrawStatus.Complete,
             TenantId = "antwerpen",
             TotalAvailablePotentialPanelmembers = 10000,
             IsActive = true,
@@ -123,7 +81,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
                         }
                     },
                     TenantId = "antwerpen"
-                    
                 },
                 new Meeting()
                 {
@@ -154,15 +111,68 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     TenantId = "antwerpen"
                 }
             }
-            
         };
         panelDbContext.Panels.Add(panel1);
-        panel1.Criteria.Add(crit1);
-        panel1.Criteria.Add(crit2);
-        panel1.Criteria.Add(crit3);
-        panel1.Criteria.Add(crit4);
+        panelDbContext.SaveChanges();
+
+        //criteria
+        var subCrit21 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
+        var subCrit22 = new SubCriteria() { Name = "Vrouw", Percentage = 60, TenantId = "antwerpen" };
+        var subCrit23 = new SubCriteria() { Name = "18-25", Percentage = 20, TenantId = "antwerpen" };
+        var subCrit24 = new SubCriteria() { Name = "26-35", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit25 = new SubCriteria() { Name = "36-50", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit26 = new SubCriteria() { Name = "51-60", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit27 = new SubCriteria() { Name = "60+", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit28 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
+        var subCrit29 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
+        var subCrit210 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit211 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
+
+        panelDbContext.SubCriteria.AddRange(subCrit21, subCrit22, subCrit23, subCrit24, subCrit25, subCrit26, subCrit27, subCrit28, subCrit29, subCrit210, subCrit211);
+
+        var crit21 = new Criteria()
+        {
+            Name = "Geslacht",
+            SubCriteria = { subCrit21, subCrit22 },
+            TenantId = "antwerpen"
+        };
+        var crit22 = new Criteria()
+        {
+            Name = "Leeftijd",
+            SubCriteria = { subCrit23, subCrit24, subCrit25, subCrit26, subCrit27 },
+            TenantId = "antwerpen"
+        };
+        var crit23 = new Criteria()
+        {
+            Name = "Vervoer",
+            SubCriteria = { subCrit28, subCrit29 },
+            TenantId = "antwerpen"
+        };
+        var crit24 = new Criteria()
+        {
+            Name = "Opleiding",
+            SubCriteria = { subCrit210, subCrit211 },
+            TenantId = "antwerpen"
+        };
+        panelDbContext.Criteria.AddRange(crit21, crit22, crit23, crit24);
 
         var panel2 = new Panel()
+        {
+            Name = "Panel Antwerpen 2",
+            Description = "Dit is ook nog een omschrijving van een panel",
+            StartDate = new DateOnly(2025, 3, 11),
+            EndDate = new DateOnly(2025, 7, 17),
+            DrawStatus = DrawStatus.FirstPhaseActive,
+            TenantId = "antwerpen",
+            TotalAvailablePotentialPanelmembers = 10000
+        };
+        panelDbContext.Panels.Add(panel2);
+        panel2.Criteria.Add(crit21);
+        panel2.Criteria.Add(crit22);
+        panel2.Criteria.Add(crit23);
+        panel2.Criteria.Add(crit24);
+
+        var panel3 = new Panel()
         {
             Name = "Panel Brussel",
             Description = "Dit is ook een omschrijving van een panel.",
@@ -171,18 +181,54 @@ public class DataSeeder(PanelDbContext panelDbContext)
             TenantId = "brussel",
             IsActive = true
         };
-        panelDbContext.Panels.Add(panel2);
-        
-        var panel3 = new Panel()
+        panelDbContext.Panels.Add(panel3);
+
+        //criteria
+        var subCrit1 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
+        var subCrit2 = new SubCriteria() { Name = "Vrouw", Percentage = 60, TenantId = "antwerpen" };
+        var subCrit3 = new SubCriteria() { Name = "18-25", Percentage = 20, TenantId = "antwerpen" };
+        var subCrit4 = new SubCriteria() { Name = "26-35", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit5 = new SubCriteria() { Name = "36-50", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit6 = new SubCriteria() { Name = "51-60", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit7 = new SubCriteria() { Name = "60+", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit8 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
+        var subCrit9 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
+        var subCrit10 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit11 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
+
+        panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4, subCrit5, subCrit6, subCrit7, subCrit8, subCrit9, subCrit10, subCrit11);
+
+        var crit1 = new Criteria()
         {
-            Name = "Panel Antwerpen 2",
-            Description = "Dit is ook nog een omschrijving van een panel",
-            StartDate = new DateOnly(2025, 3, 11),
-            EndDate = new DateOnly(2025, 7, 17),
+            Name = "Geslacht",
+            SubCriteria = { subCrit1, subCrit2 },
             TenantId = "antwerpen"
         };
-        panelDbContext.Panels.Add(panel3);
-        
+        var crit2 = new Criteria()
+        {
+            Name = "Leeftijd",
+            SubCriteria = { subCrit3, subCrit4, subCrit5, subCrit6, subCrit7 },
+            TenantId = "antwerpen"
+        };
+        var crit3 = new Criteria()
+        {
+            Name = "Vervoer",
+            SubCriteria = { subCrit8, subCrit9 },
+            TenantId = "antwerpen"
+        };
+        var crit4 = new Criteria()
+        {
+            Name = "Opleiding",
+            SubCriteria = { subCrit10, subCrit11 },
+            TenantId = "antwerpen"
+        };
+        panelDbContext.Criteria.AddRange(crit1, crit2, crit3, crit4);
+
+        panel1.Criteria.Add(crit1);
+        panel1.Criteria.Add(crit2);
+        panel1.Criteria.Add(crit3);
+        panel1.Criteria.Add(crit4);
+
         var antwerpen = panelDbContext.Users
             .Include(u => u.OrganizationProfile)
             .SingleOrDefault(u => u.UserName == "antwerpen@example.com");
@@ -193,10 +239,139 @@ public class DataSeeder(PanelDbContext panelDbContext)
             .Include(u => u.MemberProfile)
             .SingleOrDefault(u => u.UserName == "paul@example.com");
         panel1.Members.Add(paul?.MemberProfile);
-        //panel3.Members.Add(paul?.MemberProfile);
+        //panel2.Members.Add(paul?.MemberProfile);
         paul?.MemberProfile.Panels.Add(panel1);
-        //paul?.MemberProfile.Panels.Add(panel3);
+        //paul?.MemberProfile.Panels.Add(panel2);
 
+        List<Invitation> selectedInvitations = new List<Invitation>()
+        {
+            new Invitation
+            {
+                Email = "kate@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-kate",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 20, 21 }
+            },
+            new Invitation
+            {
+                Email = "rozie@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-rozie",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 20, 21 }
+            },
+            new Invitation
+            {
+                Email = "rozalinda@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-rozalinda",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "alice2@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-alice",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "emma3@example.com",
+                Gender = Gender.Female,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-emma",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "emilie@example.com",
+                Gender = Gender.Female,
+                Age = 36,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-emilie",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "Jurgen@example.com",
+                Gender = Gender.Male,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-jurgen",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "xander@example.com",
+                Gender = Gender.Male,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-xander",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "Lars@example.com",
+                Gender = Gender.Male,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-lars",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            }
+        };
+        panelDbContext.AddRange(selectedInvitations);
+
+        DrawResult drawResult = new DrawResult()
+        {
+            TenantId = "antwerpen",
+            SelectedInvitations = selectedInvitations
+        };
+        panelDbContext.DrawResults.Add(drawResult);
+        panel1.DrawResult = drawResult;
 
         var members = new List<ApplicationUser>
         {
@@ -340,10 +515,9 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
                 }
             }
-            
         };
 
-        
+
         var userVotesRec1 = new List<UserVote>
         {
             new UserVote
@@ -432,17 +606,18 @@ public class DataSeeder(PanelDbContext panelDbContext)
         var rec1 = panel1.Meetings.FirstOrDefault().Recommendations.FirstOrDefault();
         rec1.UserVotes = userVotesRec1;
         rec1.Votes = userVotesRec1.Count();
-        
+
         var rec2 = panel1.Meetings.FirstOrDefault().Recommendations.LastOrDefault();
         rec2.UserVotes = userVotesRec2;
         rec2.Votes = userVotesRec2.Count();
-        
+
         panelDbContext.AddRange(members);
+        panelDbContext.Panels.Update(panel1);
+        panelDbContext.SaveChanges();
     }
 
     private void SeedInvitations()
     {
-        
         // Create initial list with members for Panel 1 and Panel 2
         var invitations = new List<Invitation>
         {
@@ -458,7 +633,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 IsRegistered = true,
                 SelectedCriteria = new List<int>([8, 11]),
             },
-            
+
             // Panel 2 members
             new Invitation()
             {
@@ -1100,7 +1275,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 IsRegistered = true,
                 SelectedCriteria = new List<int>([8, 10]),
             }
-            
         };
         //invitations
         var invitation1 = new Invitation()
@@ -1273,11 +1447,11 @@ public class DataSeeder(PanelDbContext panelDbContext)
         question3.Answers.Add(answer7);
         question3.Questionnaire = questionnaire;
         questionnaire.Questions.Add(question3);
-        
+
         panelDbContext.Questionnaires.Add(questionnaire);
         panelDbContext.Questions.AddRange(question1, question2, question3);
         panelDbContext.Answers.AddRange(answer1, answer2, answer3, answer4, answer5, answer6, answer7);
-        
+
         var questionnaire2 = new Questionnaire
         {
             Title = "Procesbepalingsmodule",
@@ -1453,28 +1627,28 @@ public class DataSeeder(PanelDbContext panelDbContext)
         question5.Answers.Add(answer10);
         question5.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question5);
-        
+
         question6.Answers.Add(answer14);
         question6.Answers.Add(answer15);
         question6.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question6);
-        
+
         question7.Answers.Add(answer16);
         question7.Answers.Add(answer17);
         question7.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question7);
-        
+
         question8.Answers.Add(answer18);
         question8.Answers.Add(answer19);
         question8.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question8);
-        
+
         question9.Answers.Add(answer20);
         question9.Answers.Add(answer21);
         question9.Answers.Add(answer22);
         question9.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question9);
-        
+
         question10.Answers.Add(answer23);
         question10.Answers.Add(answer24);
         question10.Questionnaire = questionnaire2;

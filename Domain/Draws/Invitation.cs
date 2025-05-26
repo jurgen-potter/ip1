@@ -15,5 +15,6 @@ public class Invitation
     public bool IsDrawn { get; set; }
     public List<int> SelectedCriteria { get; set; }
     public string Email { get; set; }
+    public string UserId { get; set; }
     public string TenantId { get; set; }
 }

@@ -41,8 +41,17 @@ public class UserProfileRepository(PanelDbContext dbContext) : IUserProfileRepos
     public IEnumerable<ApplicationUser> ReadAllOrganizations()
     {
         return dbContext.OrganizationProfiles
-            .Select(op => op.ApplicationUser)
+            .Select(u => u.ApplicationUser)
             .Where(u => u.UserType == UserType.Organization)
+            .ToList();
+    }
+    public IEnumerable<MemberProfile> ReadAllOrganizationMembersNotInPanel(int panelId)
+    {
+        return dbContext.MemberProfiles
+            .Include(u => u.ApplicationUser)
+            .Where(u => u.ApplicationUser.UserType == UserType.Member)
+            .Where(u => u.Panels.All(p => p.Id != panelId))
+            .Where(u => u.ApplicationUser.IsStaff == true)
             .ToList();
     }
 
