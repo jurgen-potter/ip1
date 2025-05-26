@@ -20,6 +20,7 @@ using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Areas.Identity.Services;
 using CitizenPanel.UI.MVC.Middleware;
 using CitizenPanel.UI.MVC.Services;
+using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -72,7 +73,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddErrorDescriber<DutchIdentityErrorDescriber>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddSingleton(StorageClient.Create());
+builder.Services.AddSingleton<StorageClient>(provider =>
+{
+    var credential = GoogleCredential.GetApplicationDefault()
+        .CreateScoped("https://www.googleapis.com/auth/devstorage.read_write");
+    return StorageClient.Create(credential);
+});
 
 builder.Services.AddLiveMonitoring();
 
