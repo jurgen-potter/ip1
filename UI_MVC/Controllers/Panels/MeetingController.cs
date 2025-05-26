@@ -142,13 +142,14 @@ public class MeetingController(
             }
             catch (GoogleApiException ex)
             {
-                // Log dit naar bestand of console
-                Console.WriteLine($"[Upload Error] {ex.Message}");
-                Console.WriteLine($"[Upload Error] StatusCode: {ex.HttpStatusCode}");
-                Console.WriteLine($"[Upload Error] Error details: {ex.Error}");
-
-                throw; 
+                Console.WriteLine($"❌ Upload gefaald:");
+                Console.WriteLine($"➡️  Message: {ex.Message}");
+                Console.WriteLine($"➡️  StatusCode: {ex.HttpStatusCode}");
+                Console.WriteLine($"➡️  Error: {ex.Error}");
+    
+                return BadRequest("Upload gefaald: " + ex.Message);
             }
+
 
             var meeting = _meetingManager.GetMeetingById(meetingId);
             if (!meeting.DocumentNames.Contains(file.FileName))
