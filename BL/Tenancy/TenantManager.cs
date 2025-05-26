@@ -35,4 +35,8 @@ public class TenantManager(ITenantRepository repository) : ITenantManager
     {
         return repository.ReadAllTenants();
     }
+    public bool RemoveTenant(Tenant tenant)
+    {
+        return repository.DeleteTenant(tenant);
+    }
 }

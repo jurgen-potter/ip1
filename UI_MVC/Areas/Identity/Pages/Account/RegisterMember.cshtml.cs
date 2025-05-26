@@ -264,6 +264,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 }
                 else
                 {
+                    user.IsStaff = true;
                     user.MemberProfile = new MemberProfile()
                     {
                         FirstName = Input.FirstName,

@@ -12,6 +12,7 @@ using CitizenPanel.DAL.Data;
 using CitizenPanel.DAL.Draws;
 using CitizenPanel.DAL.Panels;
 using CitizenPanel.DAL.Questionnaires;
+using CitizenPanel.DAL.ServiceInterfaces;
 using CitizenPanel.DAL.Tenancy;
 using CitizenPanel.DAL.Users;
 using CitizenPanel.UI.MVC;
@@ -53,6 +54,9 @@ builder.Services.AddScoped<ITenantManager, TenantManager>();
 builder.Services.AddScoped<ITenantRepository, TenantRepository>();
 builder.Services.AddScoped<ITenantResolver, TenantResolver>();
 builder.Services.AddScoped<UserManager<ApplicationUser>, ApplicationUserManager>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<ITenantAccessService, TenantAccessService>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
@@ -104,8 +108,9 @@ using (IServiceScope scope = app.Services.CreateScope()) {
         var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
         IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
-        await identitySeeder.SeedAsync();
         DataSeeder dataSeeder = new DataSeeder(context);
+        dataSeeder.SeedTenants();
+        await identitySeeder.SeedAsync();
         dataSeeder.Seed();
     }
 }

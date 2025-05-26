@@ -9,21 +9,7 @@ namespace CitizenPanel.DAL.Data;
 
 public class DataSeeder(PanelDbContext panelDbContext)
 {
-    public void Seed()
-    {
-        SeedTenants();
-        SeedPanels();
-        panelDbContext.SaveChanges();
-        panelDbContext.ChangeTracker.Clear();
-
-        SeedInvitations();
-        SeedQuestionnaires();
-
-        panelDbContext.SaveChanges();
-        panelDbContext.ChangeTracker.Clear();
-    }
-
-    private void SeedTenants()
+    public void SeedTenants()
     {
         var tenant1 = new Tenant
         {
@@ -36,6 +22,19 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Name = "Brussel"
         };
         panelDbContext.Tenants.AddRange(tenant1, tenant2);
+    }
+    
+    public void Seed()
+    {
+        SeedPanels();
+        panelDbContext.SaveChanges();
+        panelDbContext.ChangeTracker.Clear();
+
+        SeedInvitations();
+        SeedQuestionnaires();
+
+        panelDbContext.SaveChanges();
+        panelDbContext.ChangeTracker.Clear();
     }
     
     private void SeedPanels()
@@ -208,6 +207,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Kate",
+                    LastName = "Jansen",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1960, 8, 14),
                     Town = "Antwerpen",
@@ -223,6 +223,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Rozie",
+                    LastName = "de Jong",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1947, 2, 23),
                     Town = "Antwerpen",
@@ -238,6 +239,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Rozalinda",
+                    LastName = "van Loon",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1955, 11, 5),
                     Town = "Antwerpen",
@@ -253,6 +255,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Alice",
+                    LastName = "Veerman",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1951, 6, 30),
                     Town = "Antwerpen",
@@ -268,6 +271,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Emma",
+                    LastName = "de Boer",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(2001, 3, 18),
                     Town = "Antwerpen",

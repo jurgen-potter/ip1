@@ -1,10 +1,9 @@
-using CitizenPanel.BL.Domain.Users;
-
 namespace CitizenPanel.UI.MVC.Models.DTO;
 
 public class MemberProfileDto
 {
+    public string Id { get; set; }
+    public string Name { get; set; }
     public string Email { get; set; }
-    public int Age { get; set; }
-    public String Gender { get; set; }
+    public bool IsStaff { get; set; }
 }

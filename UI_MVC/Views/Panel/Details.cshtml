@@ -1,12 +1,15 @@
 ﻿@model CitizenPanel.UI.MVC.Models.Panels.PanelViewModel
 @using System.Globalization
 @using CitizenPanel.UI.MVC.Models.Panels
+@using CitizenPanel.UI.MVC.Services
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-
+@inject ITenantAccessService TenantAccessService;
 @{
     CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
     CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
-    ViewBag.Title = $"Burgerpanel: {Model.Name}"; 
+    ViewBag.Title = $"Burgerpanel: {Model.Name}";
+    var inTenant = await TenantAccessService.IsUserInCurrentTenantAsync();
+    var internalAllowed = User.IsInRole("Organization") && inTenant || User.IsInRole("Admin");
 }
 
 @section Styles {
@@ -30,6 +33,13 @@
         <main class="citizen-panel-main-content">
             <section class="panel-content-card">
                 <h1 class="card-title">@Model.Name</h1>
+
+                @if (internalAllowed)
+                {
+                    <a asp-action="Index" asp-route-id="@Model.PanelId" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-table-columns"></i> Interne pagina
+                    </a>
+                }
             </section>
 
             <section class="panel-content-card">

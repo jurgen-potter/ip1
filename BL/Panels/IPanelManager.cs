@@ -27,10 +27,13 @@ public interface IPanelManager
     IEnumerable<UserVote> GetUserVotesById(string userId);
     void AddUserVote(ApplicationUser member, Recommendation recommendation, bool recommended);
     void RemoveUserVote(ApplicationUser member, Recommendation recommendation);
+    bool RemoveUserVotesByMember(ApplicationUser member);
     bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation);
 
     IEnumerable<Criteria> GetExtraCriteriaByPanelId(int panelId);
     IEnumerable<Criteria> GetCriteriaByPanelIdWithSubcriteria(int panelId);
     
+    IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId);
+
     IEnumerable<Meeting> GetMeetingsById(int panelId);
 }
