@@ -129,6 +129,7 @@ public class MeetingController(
     }
     
     [HttpPost]
+    [Authorize] 
     public async Task<IActionResult> Upload(IFormFile file, int meetingId)
     {
         if (file != null && file.Length > 0)
