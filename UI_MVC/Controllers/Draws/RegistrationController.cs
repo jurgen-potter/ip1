@@ -14,7 +14,8 @@ public class RegistrationController(
     IEmailSender mailSender,
     IPanelManager panelManager,
     IDrawManager drawManager,
-    IUtilityManager utilityManager) : Controller
+    IUtilityManager utilityManager,
+    IUserProfileManager userProfileManager) : Controller
 {
     [HttpGet]
     public IActionResult Index(int panelId)
@@ -140,6 +141,16 @@ public class RegistrationController(
                 }
             }
         }
+        
+        foreach (var selected in dr.SelectedInvitations)
+        {
+            if (selected.UserId is not null)
+            {
+                var user = userProfileManager.GetUserByIdWithProfile(selected.UserId);
+                panel.Members.Add(user.MemberProfile);
+            }
+        }
+        panelManager.EditPanel(panel);
 
         ViewBag.PanelName = panel.Name;
         ViewBag.PanelId = panelId;

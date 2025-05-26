@@ -9,7 +9,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class TenantsController(ITenantManager tenantManager, UserManager<ApplicationUser> userManager) : ControllerBase
+public class TenantsController(ITenantManager tenantManager) : ControllerBase
 {
     [HttpGet]
     public IActionResult Get()
@@ -35,7 +35,7 @@ public class TenantsController(ITenantManager tenantManager, UserManager<Applica
     }
     
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(string id)
+    public IActionResult Delete(string id)
     {
         var tenant = tenantManager.GetTenantById(id);
 

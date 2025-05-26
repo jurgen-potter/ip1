@@ -161,8 +161,65 @@ public class DataSeeder(PanelDbContext panelDbContext)
         panel1.Criteria.Add(crit2);
         panel1.Criteria.Add(crit3);
         panel1.Criteria.Add(crit4);
+        
+        //criteria
+        var subCrit21 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
+        var subCrit22 = new SubCriteria() { Name = "Vrouw", Percentage = 60, TenantId = "antwerpen" };
+        var subCrit23 = new SubCriteria() { Name = "18-25", Percentage = 20, TenantId = "antwerpen" };
+        var subCrit24 = new SubCriteria() { Name = "26-35", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit25 = new SubCriteria() { Name = "36-50", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit26 = new SubCriteria() { Name = "51-60", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit27 = new SubCriteria() { Name = "60+", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit28 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
+        var subCrit29 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
+        var subCrit210 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit211 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        
+        panelDbContext.SubCriteria.AddRange(subCrit21, subCrit22, subCrit23, subCrit24, subCrit25, subCrit26, subCrit27, subCrit28, subCrit29, subCrit210, subCrit211);
+
+        var crit21 = new Criteria()
+        {
+            Name = "Geslacht",
+            SubCriteria = { subCrit21, subCrit22 },
+            TenantId = "antwerpen"
+        };
+        var crit22 = new Criteria()
+        {
+            Name = "Leeftijd",
+            SubCriteria = { subCrit23, subCrit24, subCrit25, subCrit26, subCrit27 },
+            TenantId = "antwerpen"
+        };
+        var crit23 = new Criteria()
+        {
+            Name = "Vervoer",
+            SubCriteria = { subCrit28, subCrit29 },
+            TenantId = "antwerpen"
+        };
+        var crit24 = new Criteria()
+        {
+            Name = "Opleiding",
+            SubCriteria = { subCrit210, subCrit211 },
+            TenantId = "antwerpen"
+        };
+        panelDbContext.Criteria.AddRange(crit21, crit22, crit23, crit24);
 
         var panel2 = new Panel()
+        {
+            Name = "Panel Antwerpen 2",
+            Description = "Dit is ook nog een omschrijving van een panel",
+            StartDate = new DateOnly(2025, 3, 11),
+            EndDate = new DateOnly(2025, 7, 17),
+            DrawStatus = DrawStatus.FirstPhaseActive,
+            TenantId = "antwerpen",
+            TotalAvailablePotentialPanelmembers = 10000
+        };
+        panelDbContext.Panels.Add(panel2);
+        panel2.Criteria.Add(crit21);
+        panel2.Criteria.Add(crit22);
+        panel2.Criteria.Add(crit23);
+        panel2.Criteria.Add(crit24);
+        
+        var panel3 = new Panel()
         {
             Name = "Panel Brussel",
             Description = "Dit is ook een omschrijving van een panel.",
@@ -171,17 +228,8 @@ public class DataSeeder(PanelDbContext panelDbContext)
             TenantId = "brussel",
             IsActive = true
         };
-        panelDbContext.Panels.Add(panel2);
-        
-        var panel3 = new Panel()
-        {
-            Name = "Panel Antwerpen 2",
-            Description = "Dit is ook nog een omschrijving van een panel",
-            StartDate = new DateOnly(2025, 3, 11),
-            EndDate = new DateOnly(2025, 7, 17),
-            TenantId = "antwerpen"
-        };
         panelDbContext.Panels.Add(panel3);
+        
         
         var antwerpen = panelDbContext.Users
             .Include(u => u.OrganizationProfile)
@@ -193,9 +241,9 @@ public class DataSeeder(PanelDbContext panelDbContext)
             .Include(u => u.MemberProfile)
             .SingleOrDefault(u => u.UserName == "paul@example.com");
         panel1.Members.Add(paul?.MemberProfile);
-        //panel3.Members.Add(paul?.MemberProfile);
+        //panel2.Members.Add(paul?.MemberProfile);
         paul?.MemberProfile.Panels.Add(panel1);
-        //paul?.MemberProfile.Panels.Add(panel3);
+        //paul?.MemberProfile.Panels.Add(panel2);
 
 
         var members = new List<ApplicationUser>
