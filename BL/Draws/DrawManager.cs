@@ -1,12 +1,11 @@
 ﻿using CitizenPanel.BL.Domain.Draws;
-using CitizenPanel.BL.Domain.Panels;
+using CitizenPanel.BL.Domain.Tenancy;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.DAL.Draws;
-using QRCoder;
 
 namespace CitizenPanel.BL.Draws;
 
-public class DrawManager(IDrawRepository repository) : IDrawManager
+public class DrawManager(IDrawRepository repository, TenantContext tenantContext) : IDrawManager
 {
     public Invitation AddInvitation(string code, string qrCodeString, int panelId, Gender gender, int age)
     {
@@ -16,7 +15,9 @@ public class DrawManager(IDrawRepository repository) : IDrawManager
             QRCodeString = qrCodeString,
             PanelId = panelId,
             Gender = gender,
-            Age = age
+            Age = age,
+            Town = tenantContext.Tenant.Name,
+            TenantId = tenantContext.Tenant.Id
         };
         repository.CreateInvitation(invitation);
         return invitation;
