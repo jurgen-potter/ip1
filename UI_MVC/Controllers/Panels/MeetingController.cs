@@ -2,6 +2,7 @@
 using CitizenPanel.BL.Panels;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.Panels;
+using Google;
 using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -135,7 +136,16 @@ public class MeetingController(
         {
             var objectName = $"{meetingId}/{file.FileName}";
             using var stream = file.OpenReadStream();
-            await _storageClient.UploadObjectAsync(_bucketName, objectName, file.ContentType, stream);
+            try
+            {
+                await _storageClient.UploadObjectAsync(_bucketName, objectName, file.ContentType, stream);
+            }
+            catch (GoogleApiException ex)
+            {
+                // Log dit naar bestand of console
+                Console.WriteLine($"Upload failed: {ex.Message}");
+                throw; 
+            }
 
             var meeting = _meetingManager.GetMeetingById(meetingId);
             if (!meeting.DocumentNames.Contains(file.FileName))
