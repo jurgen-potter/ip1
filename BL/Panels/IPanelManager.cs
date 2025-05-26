@@ -14,15 +14,13 @@ public interface IPanelManager
     Panel GetPanelByIdWithMembers(int panelId);
     Panel GetPanelByIdWithInvitations(int panelId);
     Panel GetPanelByIdWithRecommendations(int panelId);
-    Panel GetPanelByIdWithAcceptedRecommendationsAndPosts(int panelId);
+    Panel GetPanelByIdWithRecommendationsAndPosts(int panelId);
     Panel GetPanelByIdWithRecommendationsAndVotes(int panelId);
     void EditPanel(Panel panel);
     void RemovePanel(Panel panel);
     
     Recommendation GetRecommendationByIdWithVotes(int recommendationId);
     Recommendation GetRecommendationByIdWithVoters(int recommendationId);
-    IEnumerable<Recommendation> GetVotableRecommendationsByIdWithVotes(int panelId);
-    IEnumerable<Recommendation> GetUnvotableRecommendationsByIdWithVotes(int panelId);
     void EditRecommendation(Recommendation recommendation);
 
     IEnumerable<UserVote> GetUserVotesById(string userId);

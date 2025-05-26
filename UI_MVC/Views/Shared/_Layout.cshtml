@@ -21,8 +21,8 @@
                     </a>
                 </div>
 
-                <div class="hidden md:flex items-center space-x-4">
-                    <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="desktop-nav-item">Demografische data invullen</a>
+                <div class="hidden md:flex items-center w-full justify-evenly">
+                    <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="desktop-nav-item">Panel maken</a>
                     <a asp-area="" asp-route-questionnaireId="1" asp-controller="Questionnaire" asp-action="Index" class="desktop-nav-item">Verkenningsmodule</a>
                     <a asp-area="" asp-route-questionnaireId="2" asp-controller="Questionnaire" asp-action="Index" class="desktop-nav-item">Procesbepalingsmodule</a>
                     @if (User.IsInRole("Member") || User.IsInRole("Organization"))
@@ -37,12 +37,12 @@
                     {
                         <a asp-area="" asp-controller="Admin" asp-action="Index" class="desktop-nav-item">Admin Dashboard</a>
                     }
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="desktop-nav-item">Code Registreren</a>
+                    }
                 </div>
 
-                @if (!User.Identity.IsAuthenticated)
-                {
-                    <a asp-area="" asp-controller="MemberRegister" asp-action="Index" class="desktop-nav-item">Code Registreren</a>
-                }
                 <div class="flex justify-end">
                     <div class="hidden md:block">
                         <partial name="_LoginPartial" />

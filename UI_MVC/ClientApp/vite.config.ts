@@ -26,7 +26,8 @@ export default defineConfig({
         memberRegister: path.resolve('src/ts/memberRegister/registerMember.ts'),
         admin: path.resolve('src/ts/admin/editQuestionnaire.ts'),
         account: path.resolve('src/ts/account/login.ts'),
-        panelUsers: path.resolve('src/ts/panel/panelUsers.ts')
+        panelUsers: path.resolve('src/ts/panel/panelUsers.ts'),
+        details: path.resolve('src/ts/panel/details.ts')
       },
       output: {
         assetFileNames: 'assets/[name][extname]',

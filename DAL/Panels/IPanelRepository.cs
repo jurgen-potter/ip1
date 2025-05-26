@@ -14,15 +14,13 @@ public interface IPanelRepository
     Panel ReadPanelByIdWithMembers(int panelId);
     Panel ReadPanelByIdWithInvitations(int panelId);
     Panel ReadPanelByIdWithRecommendations(int panelId);
-    Panel ReadPanelByIdWithAcceptedRecommendationsAndPosts(int panelId);
+    Panel ReadPanelByIdWithRecommendationsAndPosts(int panelId);
     Panel ReadPanelByIdWithRecommendationsAndVotes(int panelId);
     void UpdatePanel(Panel panel);
     void DeletePanel(Panel panel);
     
     Recommendation ReadRecommendationByIdWithVotes(int recommendationId);
     Recommendation ReadRecommendationByIdWithVoters(int recommendationId);
-    IEnumerable<Recommendation> ReadVotableRecommendationsByIdWithVotes(int panelId);
-    public IEnumerable<Recommendation> ReadUnvotableRecommendationsByIdWithVotes(int panelId);
     void UpdateRecommendation(Recommendation recommendation);
     
     IEnumerable<UserVote> ReadUserVotesById(string userId);

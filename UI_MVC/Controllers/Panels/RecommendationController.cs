@@ -36,6 +36,8 @@ public class RecommendationController(
             return NotFound();
 
         recommendation.IsVotable = false;
+        recommendation.Accepted = ((double)recommendation.UserVotes.Count(uv => uv.Recommended) / (double)recommendation.Votes) >=
+                                  ((double)recommendation.NeededPercentage / 100.0);
         panelManager.EditRecommendation(recommendation);
         
         return Ok();
