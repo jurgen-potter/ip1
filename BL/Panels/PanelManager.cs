@@ -46,10 +46,16 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         return repository.ReadPanelByIdWithRecommendations(panelId);
     }
-
-    public Panel GetPanelByIdWithAcceptedRecommendationsAndPosts(int panelId)
+    
+    public Panel GetPanelByIdWithRecommendationsWithoutTenant(int panelId)
     {
-        return repository.ReadPanelByIdWithAcceptedRecommendationsAndPosts(panelId);
+        return repository.ReadPanelByIdWithRecommendationsWithoutTenant(panelId);
+    }
+
+
+    public Panel GetPanelByIdWithRecommendationsAndPosts(int panelId)
+    {
+        return repository.ReadPanelByIdWithRecommendationsAndPosts(panelId);
     }
 
     
@@ -142,17 +148,7 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         return repository.ReadMeetingsById(panelId);
     }
-
-    public IEnumerable<Recommendation> GetVotableRecommendationsByIdWithVotes(int panelId)
-    {
-        return repository.ReadVotableRecommendationsByIdWithVotes(panelId);
-    }
-
-    public IEnumerable<Recommendation> GetUnvotableRecommendationsByIdWithVotes(int panelId)
-    {
-        return repository.ReadUnvotableRecommendationsByIdWithVotes(panelId);
-    }
-
+    
     public void EditRecommendation(Recommendation recommendation)
     {
         repository.UpdateRecommendation(recommendation);

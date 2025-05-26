@@ -84,18 +84,4 @@ public class RecommendationsController(
 
         return Ok(new { id = recommendation.Id, votes = recommendation.Votes });
     }
-
-    [HttpGet("votableRecs/{panelId}")]
-    public IActionResult GetVotableRecommendations(int panelId)
-    {
-        var recs = panelManager.GetVotableRecommendationsByIdWithVotes(panelId);
-        return Ok(recs);
-    }
-
-    [HttpGet("unvotableRecs/{panelId}")]
-    public IActionResult GetUnvotableRecommendations(int panelId)
-    {
-        var recs = panelManager.GetUnvotableRecommendationsByIdWithVotes(panelId);
-        return Ok(recs);
-    }
 }

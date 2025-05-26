@@ -15,48 +15,36 @@ public class MeetingsController(IPanelManager panelManager) : ControllerBase
     {
         var meetings = panelManager.GetMeetingsById(panelId);
 
-        List<MeetRecDto> meetRecs = new List<MeetRecDto>();
+        List<MeetingDto> meetRecs = new List<MeetingDto>();
         
         foreach (var meeting in meetings)
         {
             int totalVotable = 0;
-            List<int> recIds = new List<int>();
-            List<string> recTitles = new List<string>();
-            List<string> recDescriptions = new List<string>();
-            List<bool> recAnon = new List<bool>();
-            List<bool> recVotable = new List<bool>();
-            List<int> recVotes = new List<int>();
-            List<int> recVotesFor = new List<int>();
-            List<int> recVotesAgainst = new List<int>();
-            List<double> recNeededPercentages = new List<double>();
+            List<RecDto> recs = new List<RecDto>();
             foreach (var recommendation in meeting.Recommendations)
             {
-                recIds.Add(recommendation.Id);
-                recTitles.Add(recommendation.Title);
-                recDescriptions.Add(recommendation.Description);
-                recAnon.Add(recommendation.IsAnonymous);
-                recVotable.Add(recommendation.IsVotable);
-                recVotes.Add(recommendation.Votes);
-                recNeededPercentages.Add(recommendation.NeededPercentage);
-                recVotesFor.Add(recommendation.UserVotes.Count(uv => uv.Recommended));
-                recVotesAgainst.Add(recommendation.UserVotes.Count(uv => !uv.Recommended));
+                RecDto rec = new RecDto()
+                {
+                    Id = recommendation.Id,
+                    Title = recommendation.Title,
+                    Description = recommendation.Description,
+                    Anon = recommendation.IsAnonymous,
+                    Votable = recommendation.IsVotable,
+                    Votes = recommendation.Votes,
+                    NeededPercentages = recommendation.NeededPercentage,
+                    VotesFor = recommendation.UserVotes.Count(uv => uv.Recommended),
+                    VotesAgainst = recommendation.UserVotes.Count(uv => !uv.Recommended)
+                };
                 if (recommendation.IsVotable) totalVotable++;
+                recs.Add(rec);
             }
-            meetRecs.Add(new MeetRecDto
+            meetRecs.Add(new MeetingDto
             {
                 MeetingTitle = meeting.Title,
                 MeetingId = meeting.Id,
                 Participants = meeting.PanelParticipants,
                 AmountVotable = totalVotable,
-                RecIds = recIds,
-                RecTitles = recTitles,
-                RecDescriptions = recDescriptions,
-                RecAnon = recAnon,
-                RecVotable = recVotable,
-                RecVotes = recVotes,
-                RecNeededPercentages = recNeededPercentages,
-                RecVotesFor = recVotesFor,
-                RecVotesAgainst = recVotesAgainst
+                Recs = recs
             });
         }
         return Ok(meetRecs);

@@ -60,13 +60,22 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .ThenInclude(m => m.Recommendations)
             .SingleOrDefault(p => p.Id == panelId);
     }
+    
+    public Panel ReadPanelByIdWithRecommendationsWithoutTenant(int panelId)
+    {
+        return dbContext.Panels
+            .IgnoreQueryFilters()
+            .Include(r => r.Meetings)
+            .ThenInclude(m => m.Recommendations)
+            .SingleOrDefault(p => p.Id == panelId);
+    }
 
-    public Panel ReadPanelByIdWithAcceptedRecommendationsAndPosts(int panelId)
+    public Panel ReadPanelByIdWithRecommendationsAndPosts(int panelId)
     {
         return dbContext.Panels
             .Include(p => p.Posts)
             .Include(p => p.Meetings)
-            .ThenInclude(m => m.Recommendations.Where(rec => rec.Accepted == true))
+            .ThenInclude(m => m.Recommendations.Where(r => !r.IsVotable))
             .SingleOrDefault(p => p.Id == panelId);
     }
 
@@ -106,43 +115,6 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .ThenInclude(v => v.MemberProfile)
             .SingleOrDefault(r => r.Id == recommendationId);
     }
-
-    public IEnumerable<Recommendation> ReadVotableRecommendationsByIdWithVotes(int panelId)
-    {
-        var meetings = dbContext.Meetings.Include(m => m.Recommendations).ThenInclude(r => r.UserVotes).Where(m => m.PanelId == panelId).ToList();
-        
-        List<Recommendation> recommendations = new List<Recommendation>();
-        foreach (var meeting in meetings)
-        {
-            foreach (var recommendation in meeting.Recommendations)
-            {
-                if (recommendation.IsVotable)
-                {
-                    recommendations.Add(recommendation);
-                }
-            }
-        }
-        return recommendations;
-    }
-    
-    public IEnumerable<Recommendation> ReadUnvotableRecommendationsByIdWithVotes(int panelId)
-    {
-        var meetings = dbContext.Meetings.Include(m => m.Recommendations).ThenInclude(r => r.UserVotes).Where(m => m.PanelId == panelId).ToList();
-        
-        List<Recommendation> recommendations = new List<Recommendation>();
-        foreach (var meeting in meetings)
-        {
-            foreach (var recommendation in meeting.Recommendations)
-            {
-                if (recommendation.IsVotable)
-                {
-                    recommendations.Add(recommendation);
-                }
-            }
-        }
-        return recommendations;
-    }
-
 
     public void UpdateRecommendation(Recommendation recommendation)
     {
