@@ -16,4 +16,9 @@ public class OrganizationController : Controller
     {
         return View();
     }
+    
+    public IActionResult AddMember(int panelId)
+    {
+        return View(panelId);
+    }
 }

@@ -34,6 +34,10 @@ public class UserProfileManager(
     {
         return userProfileRepository.ReadAllOrganizations();
     }
+    public IEnumerable<MemberProfile> GetAllOrganizationMembersNotInPanel(int panelId)
+    {
+        return userProfileRepository.ReadAllOrganizationMembersNotInPanel(panelId);
+    }
 
     public Task EditOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
     {

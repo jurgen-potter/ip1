@@ -13,6 +13,7 @@ public interface IUserProfileManager
     
     ApplicationUser GetOrganizationByIdWithProfileAndAnswers(string organizationId);
     IEnumerable<ApplicationUser> GetAllOrganizations(); // wordt al gefilterd op tenant
+    IEnumerable<MemberProfile> GetAllOrganizationMembersNotInPanel(int panelId); // wordt al gefilterd op tenant
     Task EditOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers);
     
     IEnumerable<ApplicationUser> GetAllAdmins();

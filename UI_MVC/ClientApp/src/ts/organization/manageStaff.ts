@@ -64,7 +64,7 @@ function showOrganizations(organizations: OrganizationDto[]): void {
 }
 
 function deleteOrganization(organizationId: string): void {
-    if (!confirm("Weet je zeker dat je dit organizatie account wilt verwijderen?")) return;
+    if (!confirm("Weet je zeker dat je dit organisatie account wilt verwijderen?")) return;
 
     fetch(`/${orgTenantId}/api/Organizations/${organizationId}`, {
         method: "DELETE",
