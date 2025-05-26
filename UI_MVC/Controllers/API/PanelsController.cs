@@ -9,7 +9,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 [Route("{tenant}/api/[controller]")]
 public class PanelsController(IPanelManager panelManager) : ControllerBase
 {
-    [HttpPost("edit")]
+    [HttpPut("edit")]
     public IActionResult EditPanel([FromBody] PanelDto model)
     {
         var panel = panelManager.GetPanelByIdWithRecommendationsWithoutTenant(model.Id);

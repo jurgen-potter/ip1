@@ -33,7 +33,7 @@ function rejected() {
 
     const panelDto = {id: panelId, showRejected: value}
     fetch(`/${tenant}/api/Panels/edit`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
