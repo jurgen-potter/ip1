@@ -7,28 +7,6 @@ window.addEventListener('DOMContentLoaded', () => {
         checkbox.addEventListener('change', () => {
             rejected();
             if(checkbox.checked){
-                const tenant = window.location.pathname.split('/')[1];
-                const panelId = Number((document.querySelector('.add-post-button') as HTMLAnchorElement).getAttribute('data-panel-id'));
-
-                const panelDto = {id: panelId, showRejected: checkbox.checked}
-                fetch(`/${tenant}/api/Panels/edit`, {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(panelDto),
-                })
-                    .then(res => {
-                        if (!res.ok) {
-                            throw Error(`Received status code ${res.status}.`)
-                        }
-                        else{
-                            return res.json();
-                        }
-                    })
-                    .then(data => showRejected(data))
-                    .catch(err => alert('Something went wrong: ' + err));
             }
         });
     }
@@ -36,12 +14,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function rejected() {
     const rejected = document.getElementById('rejected') as HTMLTableSectionElement;
-    let value = false;
+    let value;
     if (checkbox !== null){
         value = checkbox.checked;
     }
     else {
-        value = rejectValue.value as unknown as boolean;
+        value = (rejectValue.value == "true");
     }
     if (value) {
         rejected.classList.remove('hidden');
@@ -49,6 +27,29 @@ function rejected() {
     else {
         rejected.classList.add('hidden');
     }
+
+    const tenant = window.location.pathname.split('/')[1];
+    const panelId = Number(rejected.getAttribute('data-panel-id'));
+
+    const panelDto = {id: panelId, showRejected: value}
+    fetch(`/${tenant}/api/Panels/edit`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(panelDto),
+    })
+        .then(res => {
+            if (!res.ok) {
+                throw Error(`Received status code ${res.status}.`)
+            }
+            else{
+                return res.json();
+            }
+        })
+        .then(data => showRejected(data))
+        .catch(err => alert('Something went wrong: ' + err));
 }
 
 function showRejected(recs: any): void  {
@@ -66,6 +67,6 @@ function showRejected(recs: any): void  {
         }
     }
     else {
-        list.innerHTML = `<p>Er zijn nog geen afgewezen aanbevelingen`;
+        list.innerHTML = `<p>Er zijn nog geen afgewezen aanbevelingen.`;
     }
 }

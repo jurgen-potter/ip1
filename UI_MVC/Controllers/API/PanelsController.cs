@@ -7,13 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace CitizenPanel.UI.MVC.Controllers.API;
 [ApiController]
 [Route("{tenant}/api/[controller]")]
-[Authorize]
 public class PanelsController(IPanelManager panelManager) : ControllerBase
 {
     [HttpPost("edit")]
     public IActionResult EditPanel([FromBody] PanelDto model)
     {
-        var panel = panelManager.GetPanelByIdWithRecommendations(model.Id);
+        var panel = panelManager.GetPanelByIdWithRecommendationsWithoutTenant(model.Id);
         panel.ShowRejectedRecommendations = model.ShowRejected;
         panelManager.EditPanel(panel);
         

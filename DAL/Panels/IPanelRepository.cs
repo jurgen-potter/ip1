@@ -14,6 +14,7 @@ public interface IPanelRepository
     Panel ReadPanelByIdWithMembers(int panelId);
     Panel ReadPanelByIdWithInvitations(int panelId);
     Panel ReadPanelByIdWithRecommendations(int panelId);
+    Panel ReadPanelByIdWithRecommendationsWithoutTenant(int panelId);
     Panel ReadPanelByIdWithRecommendationsAndPosts(int panelId);
     Panel ReadPanelByIdWithRecommendationsAndVotes(int panelId);
     void UpdatePanel(Panel panel);

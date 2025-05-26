@@ -60,6 +60,15 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .ThenInclude(m => m.Recommendations)
             .SingleOrDefault(p => p.Id == panelId);
     }
+    
+    public Panel ReadPanelByIdWithRecommendationsWithoutTenant(int panelId)
+    {
+        return dbContext.Panels
+            .IgnoreQueryFilters()
+            .Include(r => r.Meetings)
+            .ThenInclude(m => m.Recommendations)
+            .SingleOrDefault(p => p.Id == panelId);
+    }
 
     public Panel ReadPanelByIdWithRecommendationsAndPosts(int panelId)
     {

@@ -46,6 +46,12 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         return repository.ReadPanelByIdWithRecommendations(panelId);
     }
+    
+    public Panel GetPanelByIdWithRecommendationsWithoutTenant(int panelId)
+    {
+        return repository.ReadPanelByIdWithRecommendationsWithoutTenant(panelId);
+    }
+
 
     public Panel GetPanelByIdWithRecommendationsAndPosts(int panelId)
     {

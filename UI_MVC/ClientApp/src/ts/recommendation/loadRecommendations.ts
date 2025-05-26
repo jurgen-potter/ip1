@@ -352,7 +352,7 @@ function generateRecommendationHtml(recommendation: any, participants: number) :
                         <p class="mb-1" style="color: limegreen">Voor deze aanbeveling: ${recommendation.votesFor}</p>
                     </li>
                     <li>
-                        <p class="mb-1" style="color: red">Tegen deze aanbeveling: ${recommendation.otesAgainst}</p>
+                        <p class="mb-1" style="color: red">Tegen deze aanbeveling: ${recommendation.votesAgainst}</p>
                     </li>
                 </ul>
                 <div class="d-flex justify-content-start mt-4 gap-2">
