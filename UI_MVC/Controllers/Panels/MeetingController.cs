@@ -143,7 +143,10 @@ public class MeetingController(
             catch (GoogleApiException ex)
             {
                 // Log dit naar bestand of console
-                Console.WriteLine($"Upload failed: {ex.Message}");
+                Console.WriteLine($"[Upload Error] {ex.Message}");
+                Console.WriteLine($"[Upload Error] StatusCode: {ex.HttpStatusCode}");
+                Console.WriteLine($"[Upload Error] Error details: {ex.Error}");
+
                 throw; 
             }
 
