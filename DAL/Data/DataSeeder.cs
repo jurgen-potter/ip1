@@ -409,7 +409,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             new UserVote
             {
                 Voter = members[1],
-                Recommended = true,
+                Recommended = false,
                 VotedAt = DateTime.UtcNow,
                 TenantId = "antwerpen"
             },

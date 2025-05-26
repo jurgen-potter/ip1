@@ -23,6 +23,7 @@ public class PanelViewModel
     public List<RecommendationViewModel> Recommendations { get; set; } = new();
     public List<PostViewModel> Posts { get; set; } = new();
     public bool CanManagePanel { get; set; }
+    public bool ShowRejected { get; set; }
 }
 
 
@@ -39,6 +40,7 @@ public class MeetingViewModel
     public string Title { get; set; }
     public DateOnly Date { get; set; }
     public List<RecommendationViewModel> Recommendations { get; set; } = new();
+    public List<RecommendationViewModel> RejectedRecommendations { get; set; } = new();
     public List<string> DocumentNames { get; set; } = new();
     
 }

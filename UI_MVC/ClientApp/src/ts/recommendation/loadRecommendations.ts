@@ -262,7 +262,7 @@ function addMeetings(meetings: any) {
 
 
 function createMeeting(meeting: any): void {
-    if (meeting.recIds.length > 0){
+    if (meeting.recs.length > 0){
         if (meeting.amountVotable !== 0){
             const activeHeader = document.getElementById('active-header') as HTMLHeadElement;
             activeHeader.classList.remove('hidden');
@@ -270,7 +270,7 @@ function createMeeting(meeting: any): void {
             const newMeeting = generateMeetingHtml(meeting, 'active');
             meetingsDiv.appendChild(newMeeting);
         }
-        if (meeting.amountVotable !== meeting.recIds.length){
+        if (meeting.amountVotable !== meeting.recs.length){
             const notActiveHeader = document.getElementById('not-active-header') as HTMLHeadElement;
             notActiveHeader.classList.remove('hidden');
             const meetingsDiv = document.getElementById('not-active-body') as HTMLDivElement;
@@ -282,16 +282,16 @@ function createMeeting(meeting: any): void {
 }
 
 function createRecommendations(meeting: any): void {
-    for (let i = 0; i < meeting.recIds.length; i++) {
+    for (let i = 0; i < meeting.recs.length; i++) {
 
-        if (meeting.recVotable[i]) {
+        if (meeting.recs[i].votable) {
             const recsDiv = document.getElementById('active-recommendation-body-' + meeting.meetingId) as HTMLDivElement;
-            const newRec = generateRecommendationHtml(meeting,i);
+            const newRec = generateRecommendationHtml(meeting.recs[i], meeting.participants);
             recsDiv.appendChild(newRec);
         }
         else {
             const recsDiv = document.getElementById('not-active-recommendation-body-' + meeting.meetingId) as HTMLDivElement;
-            const newRec = generateRecommendationHtml(meeting,i);
+            const newRec = generateRecommendationHtml(meeting.recs[i], meeting.participants);
             recsDiv.appendChild(newRec);
         }
     }
@@ -310,49 +310,49 @@ function generateMeetingHtml(meeting: any, active: string) : HTMLElement {
     return newMeeting;
 }
 
-function generateRecommendationHtml(meeting: any, currRec: number) : HTMLElement {
+function generateRecommendationHtml(recommendation: any, participants: number) : HTMLElement {
     const newRec = document.createElement('div');
-    newRec.classList.add('recommendation-body-' + meeting.recIds[currRec]);
-    const anonymousHeader = (meeting.recAnon[currRec] as boolean) 
+    newRec.classList.add('recommendation-body-' + recommendation.id);
+    const anonymousHeader = (recommendation.anon as boolean) 
         ? "(Anonieme stemming) " 
         : "";
     
-    const percFor = meeting.recVotesFor[currRec] / meeting.recVotes[currRec];
+    const percFor = recommendation.votesFor / recommendation.votes;
     
-    const finished = (!meeting.recVotable[currRec] as boolean)
-        ? `<p class="mb-1"><strong>Het stemmen is afgelopen. ${(percFor >= (meeting.recNeededPercentages[currRec] / 100)) ? `De aanbeveling is aangenomen!` : `De aanbeveling is niet aangenomen`}</strong></p>`
+    const finished = (!recommendation.votable as boolean)
+        ? `<p class="mb-1"><strong>Het stemmen is afgelopen. ${(percFor >= (recommendation.neededPercentages / 100)) ? `De aanbeveling is aangenomen!` : `De aanbeveling is niet aangenomen`}</strong></p>`
         : ""
     
     let text = "";
     
     if (currRole === 'Organization'){
         let buttons = "";
-        if (!meeting.recAnon[currRec]){
+        if (!recommendation.anon){
             buttons += `
                 <button type="button" class="btn btn-sm btn-outline-info btn-show-voters"
-                        data-recommendation-id="${meeting.recIds[currRec]}"
-                        data-recommendation-title="${meeting.recTitles[currRec]}">
+                        data-recommendation-id="${recommendation.id}"
+                        data-recommendation-title="${recommendation.title}">
                     Bekijk Stemmers
                 </button>`
         }
-        if (meeting.recVotable[currRec]){
+        if (recommendation.votable){
             buttons += `
                 <button type="button" class="btn btn-sm btn-outline-danger btn-stop-voting"
-                        data-recommendation-id="${meeting.recIds[currRec]}">
+                        data-recommendation-id="${recommendation.id}">
                     Stop stemronde
                 </button>
             `
         }
         text += `
             <div class="mt-auto">
-                <p class="mb-1">Stemmen: <span id="vote-count-${meeting.recIds[currRec]}">${meeting.recVotes[currRec]}/${meeting.participants}</span></p>
-                <p class="mb-1">Percentage nodig om te slagen: ${meeting.recNeededPercentages[currRec]}%</p>
+                <p class="mb-1">Stemmen: <span id="vote-count-${recommendation.id}">${recommendation.votes}/${participants}</span></p>
+                <p class="mb-1">Percentage nodig om te slagen: ${recommendation.neededPercentages}%</p>
                 <ul>
                     <li>
-                        <p class="mb-1" style="color: limegreen">Voor deze aanbeveling: ${meeting.recVotesFor[currRec]}</p>
+                        <p class="mb-1" style="color: limegreen">Voor deze aanbeveling: ${recommendation.votesFor}</p>
                     </li>
                     <li>
-                        <p class="mb-1" style="color: red">Tegen deze aanbeveling: ${meeting.recVotesAgainst[currRec]}</p>
+                        <p class="mb-1" style="color: red">Tegen deze aanbeveling: ${recommendation.votesAgainst}</p>
                     </li>
                 </ul>
                 <div class="d-flex justify-content-start mt-4 gap-2">
@@ -360,16 +360,16 @@ function generateRecommendationHtml(meeting: any, currRec: number) : HTMLElement
                 </div>
             </div>`
     }
-    else if (currRole === 'Member' && meeting.recVotable[currRec]){
+    else if (currRole === 'Member' && recommendation.votable){
         text += `
             <div class="vote-form">
                 <form class="mt-auto">
-                    <input type="hidden" name="id" value="${meeting.recIds[currRec]}">
+                    <input type="hidden" name="id" value="${recommendation.id}">
                     <button type="submit" id="vote-for" class="btn btn-success">Stem voor</button>
                 </form>
 
                 <form class="mt-auto">
-                    <input type="hidden" name="id" value="${meeting.recIds[currRec]}">
+                    <input type="hidden" name="id" value="${recommendation.id}">
                     <button type="submit" id="vote-against" class="btn btn-danger">Stem tegen</button>
                 </form>
             </div>`
@@ -379,10 +379,10 @@ function generateRecommendationHtml(meeting: any, currRec: number) : HTMLElement
         <div class="card h-100 w-100">
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title">
-                    ${anonymousHeader}${meeting.recTitles[currRec]}
+                    ${anonymousHeader}${recommendation.title}
                 </h5>
-                <p class="card-text flex-grow-1">${meeting.recDescriptions[currRec]}</p>
-                <p class="mb-1" id="${meeting.recIds[currRec]}" hidden>
+                <p class="card-text flex-grow-1">${recommendation.description}</p>
+                <p class="mb-1" id="${recommendation.id}" hidden>
                     <strong>Het stemmen is afgelopen</strong>
                 </p>
 
