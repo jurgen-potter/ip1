@@ -20,25 +20,29 @@ public class MeetingController(
     private readonly string _bucketName = "whimp24-bucket";
     [HttpGet]
     [Authorize]
-    public IActionResult Details(int id)
+    public async Task<IActionResult> Details(int id)
     {
         var meeting = meetingManager.GetMeetingByIdWithRecommendations(id);
         var panel = panelManager.GetPanelById(meeting.PanelId);
         
-        var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads", id.ToString());
         var documents = new List<string>();
 
-        if (Directory.Exists(uploadsPath))
+        foreach (var docName in meeting.DocumentNames)
         {
-            foreach (var docName in meeting.DocumentNames)
+            var objectName = $"{id}/{docName}";
+
+            try
             {
-                var fullPath = Path.Combine(uploadsPath, docName);
-                if (System.IO.File.Exists(fullPath))
-                {
-                    documents.Add(docName);
-                }
+                var obj = await _storageClient.GetObjectAsync(_bucketName, objectName);
+                var publicUrl = $"https://storage.googleapis.com/{_bucketName}/{objectName}";
+                documents.Add(publicUrl);
+            }
+            catch (Google.GoogleApiException e) when (e.Error.Code == 404)
+            {
+                // Bestand niet gevonden in bucket
             }
         }
+
 
         var model = new MeetingDetailViewModel
         {
