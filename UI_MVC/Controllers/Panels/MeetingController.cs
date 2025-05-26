@@ -22,26 +22,27 @@ public class MeetingController(
     [Authorize]
     public async Task<IActionResult> Details(int id)
     {
-        var meeting = _meetingManager.GetMeetingByIdWithRecommendations(id);
-        var panel = _panelManager.GetPanelById(meeting.PanelId);
-
+        var meeting = meetingManager.GetMeetingByIdWithRecommendations(id);
+        var panel = panelManager.GetPanelById(meeting.PanelId);
+        
         var documents = new List<string>();
 
         foreach (var docName in meeting.DocumentNames)
         {
             var objectName = $"{id}/{docName}";
+
             try
             {
                 var obj = await _storageClient.GetObjectAsync(_bucketName, objectName);
-
                 var publicUrl = $"https://storage.googleapis.com/{_bucketName}/{objectName}";
                 documents.Add(publicUrl);
             }
             catch (Google.GoogleApiException e) when (e.Error.Code == 404)
             {
-                // Bestand niet gevonden – negeer of log
+                // Bestand niet gevonden in bucket
             }
         }
+
 
         var model = new MeetingDetailViewModel
         {
@@ -50,7 +51,7 @@ public class MeetingController(
             PanelName = panel.Name,
             MeetingDate = meeting.Date,
             Recommendations = new List<RecommendationViewModel>(),
-            DocumentNames = documents // Let op: dit zijn nu URLs
+            DocumentNames = documents
         };
 
         if (meeting.Recommendations != null)
@@ -68,7 +69,6 @@ public class MeetingController(
 
         return View(model);
     }
-
 
 
     [HttpGet]
@@ -129,7 +129,6 @@ public class MeetingController(
     }
     
     [HttpPost]
-    [Authorize] 
     public async Task<IActionResult> Upload(IFormFile file, int meetingId)
     {
         if (file != null && file.Length > 0)
