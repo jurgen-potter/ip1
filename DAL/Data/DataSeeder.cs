@@ -39,48 +39,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
     
     private void SeedPanels()
     {
-        //criteria
-        var subCrit1 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
-        var subCrit2 = new SubCriteria() { Name = "Vrouw", Percentage = 60, TenantId = "antwerpen" };
-        var subCrit3 = new SubCriteria() { Name = "18-25", Percentage = 20, TenantId = "antwerpen" };
-        var subCrit4 = new SubCriteria() { Name = "26-35", Percentage = 50, TenantId = "antwerpen" };
-        var subCrit5 = new SubCriteria() { Name = "36-50", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit6 = new SubCriteria() { Name = "51-60", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit7 = new SubCriteria() { Name = "60+", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit8 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
-        var subCrit9 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
-        var subCrit10 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
-        var subCrit11 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
-        
-        panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4, subCrit5, subCrit6, subCrit7, subCrit8, subCrit9, subCrit10, subCrit11);
-
-        var crit1 = new Criteria()
-        {
-            Name = "Geslacht",
-            SubCriteria = { subCrit1, subCrit2 },
-            TenantId = "antwerpen"
-        };
-        var crit2 = new Criteria()
-        {
-            Name = "Leeftijd",
-            SubCriteria = { subCrit3, subCrit4, subCrit5, subCrit6, subCrit7 },
-            TenantId = "antwerpen"
-        };
-        var crit3 = new Criteria()
-        {
-            Name = "Vervoer",
-            SubCriteria = { subCrit8, subCrit9 },
-            TenantId = "antwerpen"
-        };
-        var crit4 = new Criteria()
-        {
-            Name = "Opleiding",
-            SubCriteria = { subCrit10, subCrit11 },
-            TenantId = "antwerpen"
-        };
-        panelDbContext.Criteria.AddRange(crit1, crit2, crit3, crit4);
-
-
         // Create panel objects
         var panel1 = new Panel()
         {
@@ -157,10 +115,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
             
         };
         panelDbContext.Panels.Add(panel1);
-        panel1.Criteria.Add(crit1);
-        panel1.Criteria.Add(crit2);
-        panel1.Criteria.Add(crit3);
-        panel1.Criteria.Add(crit4);
         
         //criteria
         var subCrit21 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
@@ -230,6 +184,51 @@ public class DataSeeder(PanelDbContext panelDbContext)
         };
         panelDbContext.Panels.Add(panel3);
         
+        //criteria
+        var subCrit1 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
+        var subCrit2 = new SubCriteria() { Name = "Vrouw", Percentage = 60, TenantId = "antwerpen" };
+        var subCrit3 = new SubCriteria() { Name = "18-25", Percentage = 20, TenantId = "antwerpen" };
+        var subCrit4 = new SubCriteria() { Name = "26-35", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit5 = new SubCriteria() { Name = "36-50", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit6 = new SubCriteria() { Name = "51-60", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit7 = new SubCriteria() { Name = "60+", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit8 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
+        var subCrit9 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
+        var subCrit10 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit11 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        
+        panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4, subCrit5, subCrit6, subCrit7, subCrit8, subCrit9, subCrit10, subCrit11);
+
+        var crit1 = new Criteria()
+        {
+            Name = "Geslacht",
+            SubCriteria = { subCrit1, subCrit2 },
+            TenantId = "antwerpen"
+        };
+        var crit2 = new Criteria()
+        {
+            Name = "Leeftijd",
+            SubCriteria = { subCrit3, subCrit4, subCrit5, subCrit6, subCrit7 },
+            TenantId = "antwerpen"
+        };
+        var crit3 = new Criteria()
+        {
+            Name = "Vervoer",
+            SubCriteria = { subCrit8, subCrit9 },
+            TenantId = "antwerpen"
+        };
+        var crit4 = new Criteria()
+        {
+            Name = "Opleiding",
+            SubCriteria = { subCrit10, subCrit11 },
+            TenantId = "antwerpen"
+        };
+        panelDbContext.Criteria.AddRange(crit1, crit2, crit3, crit4);
+        
+        panel1.Criteria.Add(crit1);
+        panel1.Criteria.Add(crit2);
+        panel1.Criteria.Add(crit3);
+        panel1.Criteria.Add(crit4);
         
         var antwerpen = panelDbContext.Users
             .Include(u => u.OrganizationProfile)
