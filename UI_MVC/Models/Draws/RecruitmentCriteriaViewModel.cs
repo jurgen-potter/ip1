@@ -7,7 +7,7 @@ public class RecruitmentCriteriaViewModel
 {
     public int PanelId { get; set; }
     
-    [Range(100, int.MaxValue, ErrorMessage = "Er moeten meer dan 100 mensen mee kunnen doen.")]
+    [Range(100, int.MaxValue, ErrorMessage = "Er moet een pool zijn van meer dan 100 mensen.")]
     public int TotalAvailablePotentialPanelmembers { get; set; }
     
     [Required(ErrorMessage = "Er moet minstens één criterium zijn.")]

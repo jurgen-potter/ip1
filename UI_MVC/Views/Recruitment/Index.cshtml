@@ -22,7 +22,9 @@
         <div class="recruitment-form-group">
             <label asp-for="TotalAvailablePotentialPanelmembers" class="auth-form-label">Aantal inwoners gemeente</label>
             <input asp-for="TotalAvailablePotentialPanelmembers" type="number" class="auth-input-field" required/>
-            <span asp-validation-for="TotalAvailablePotentialPanelmembers" class="auth-validation-message"></span>
+            <span class="text-danger panelmember-warning" style="display:none;">
+                Er moeten minstens 100 potentiële deelnemers zijn.
+            </span>
         </div>
 
         <ul id="criterias-list" class="criteria-list">

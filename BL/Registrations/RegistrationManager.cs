@@ -155,7 +155,7 @@ public class RegistrationManager(
     public void StartFinalDraw(Panel panel)
     {
         var criteria = panelManager.GetCriteriaByPanelIdWithSubcriteria(panel.Id);
-        var recruitmentPlan = utilityManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
+        var recruitmentPlan = utilityManager.CalculateRecruitment(panel.TotalNeededPanelmembers, criteria);
 
         LoadCriteriaCache(panel.Id);
 
@@ -177,7 +177,7 @@ public class RegistrationManager(
                                         .Except(drawSelectionResult.ReserveInvitations)
                                         .ToList(),
             TotalNeededPanelmembers = recruitmentPlan.TotalNeededPanelmembers,
-            ReservePanelmembers = recruitmentPlan.ReservePotPanelmembers,
+            ReservePanelmembers = recruitmentPlan.TotalNeededInvitations,
             TenantId = panel.TenantId
         };
 
@@ -217,7 +217,7 @@ public class RegistrationManager(
         Dictionary<RecruitmentBucket, List<Invitation>> invitationsByBucket)
     {
         var selectedInvitations = new List<Invitation>();
-        var potentialReserveInvitations = new List<Invitation>();
+        var reserveInvitations = new List<Invitation>();
         var selectedOrReservedInvitationIds = new HashSet<string>();
         var random = new Random();
 
@@ -240,32 +240,12 @@ public class RegistrationManager(
                     selectedInvitations.Add(invitation);
                     selectedCount++;
                 }
-                else if (!selectedOrReservedInvitationIds.Contains(invitation.Code))
+                else
                 {
-                     potentialReserveInvitations.Add(invitation);
+                    reserveInvitations.Add(invitation);
+                    break;
                 }
             }
-        }
-
-        potentialReserveInvitations = potentialReserveInvitations.DistinctBy(inv => inv.Code).ToList();
-
-        var reserveInvitations = new List<Invitation>();
-        var shuffledReservePool = potentialReserveInvitations
-                                    .Where(inv => !selectedOrReservedInvitationIds.Contains(inv.Code))
-                                    .OrderBy(_ => random.Next())
-                                    .ToList();
-
-        int reserveTarget = recruitmentPlan.ReservePotPanelmembers;
-        int reserveSelectedCount = 0;
-
-        foreach (var invitation in shuffledReservePool)
-        {
-            if (reserveSelectedCount < reserveTarget && selectedOrReservedInvitationIds.Add(invitation.Code))
-            {
-                reserveInvitations.Add(invitation);
-                reserveSelectedCount++;
-            }
-            else if (reserveSelectedCount >= reserveTarget) break;
         }
 
         return new DrawSelectionInternalResult
