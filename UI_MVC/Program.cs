@@ -93,6 +93,10 @@ builder.Services.Configure<RouteOptions>(options =>
     options.ConstraintMap.Add("validTenant", typeof(ValidTenantConstraint));
 });
 
+var tenantStore = new TenantStore();
+builder.Services.AddSingleton(tenantStore);
+
+
 builder.Services
     .AddTenantContext()
     .AddScoped<TenantMiddleware>();
@@ -100,6 +104,12 @@ builder.Services
 var app = builder.Build();
 
 app.MapRazorPages();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
+    tenantStore.TenantIds.UnionWith(db.Tenants.Select(t => t.Id));
+}
 
 using (IServiceScope scope = app.Services.CreateScope()) {
     PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
@@ -140,6 +150,13 @@ app.MapControllerRoute(
     name: "tenant",
     pattern: "{tenantId:validTenant}/{controller=Home}/{action=Index}/{id?}",
     constraints: new { tenantId = @"^[a-zA-Z0-9_-]+$" });
+
+app.MapControllerRoute(
+    name: "tenant-api",
+    pattern: "{tenantId:validTenant}/api/{controller=Home}/{action=Index}/{id?}",
+    constraints: new { tenantId = @"^[a-zA-Z0-9_-]+$" });
+
+
 
 app.MapControllerRoute(
     name: "public",

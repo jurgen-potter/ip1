@@ -71,7 +71,7 @@ public class UtilityManager(IDrawManager drawManager) : IUtilityManager
                 };
 
                 string code = GenerateCode();
-                string qrCodePlace = $"http://whimp24.duckdns.org/MemberRegister/RegisterMember?code={code}";
+                string qrCodePlace = $"https://panello.xyz/MemberRegister/RegisterMember?code={code}";
 
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodePlace, QRCodeGenerator.ECCLevel.Q);
                 PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
