@@ -148,7 +148,11 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         return repository.ReadMeetingsById(panelId);
     }
-    
+    public IEnumerable<Invitation> GetReservesByPanelId(int panelId)
+    {
+        return repository.ReadReservesByPanelId(panelId);
+    }
+
     public void EditRecommendation(Recommendation recommendation)
     {
         repository.UpdateRecommendation(recommendation);
