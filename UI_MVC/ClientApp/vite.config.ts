@@ -32,7 +32,9 @@ export default defineConfig({
         manageStaff: path.resolve('src/ts/organization/manageStaff.ts'),
         addMember: path.resolve('src/ts/organization/addMember.ts'),
         details: path.resolve('src/ts/panel/details.ts'),
-        CreatePanel: path.resolve('src/ts/panel/CreatePanel.ts')
+        editInformation: path.resolve('src/ts/home/editInformation.ts'),
+        CreatePanel: path.resolve('src/ts/panel/CreatePanel.ts'),
+        loadInformation: path.resolve('src/ts/home/loadInformation.ts')
       },
       output: {
         assetFileNames: 'assets/[name][extname]',
