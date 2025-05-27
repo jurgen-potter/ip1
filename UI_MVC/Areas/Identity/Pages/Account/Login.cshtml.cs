@@ -129,7 +129,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     {
                         _logger.LogInformation("User logged in.");
                         
-                        if (returnUrl.ToLower().Contains("save") || returnUrl.ToLower().Contains("createpanelfromresult"))
+                        if (returnUrl.ToLower().Contains("save") || returnUrl.ToLower().Contains("createpanelfromresult") || returnUrl.ToLower().Contains("registermember"))
                         {
                             return LocalRedirect(returnUrl);
                         }

@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Organisatiebeheer";
+}
+
+<h2>Organisatiebeheer</h2>
+
+<form id="searchForm" class="mb-3">
+    <div class="form-group d-flex">
+        <input type="text" id="searchInput" placeholder="Zoek organisatie..." class="form-control me-2" />
+        <button type="submit" class="btn btn-primary">Zoeken</button>
+        <button type="button" id="clearSearch" class="btn btn-secondary ms-2">Wissen</button>
+    </div>
+</form>
+
+<table class="reg-overview-table table-striped">
+    <thead>
+    <tr>
+        <th>Organisatie</th>
+        <th>Verwijder organisatie?</th>
+    </tr>
+    </thead>
+    <tbody id="tenantTableBody">
+    
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/manageOrganizations.js" asp-append-version="true"></script>
+}

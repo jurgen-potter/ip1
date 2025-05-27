@@ -14,7 +14,7 @@ public class UniqueCriteriaAttribute : ValidationAttribute
         ErrorMessage = "Duplicate criteria names are not allowed.";
     }
 
-    public override bool IsValid(object? value)
+    public override bool IsValid(object value)
     {
         if (value is List<CriteriaViewModel> criteriaList)
         {

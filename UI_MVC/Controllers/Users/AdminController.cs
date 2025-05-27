@@ -13,7 +13,7 @@ public class AdminController(IQuestionnaireManager questionnaireModuleManager) :
     [Authorize(Roles = "Admin")]
     public IActionResult Index()
     {
-        var questionnaires = questionnaireModuleManager.GetAllQuestionnaires();
+        var questionnaires = questionnaireModuleManager.GetAllQuestionnaires().OrderBy(q => q.Title).ToList();
         var questionnaireSelect = new QuestionnaireSelectViewModel();
         foreach (var questionnaire in questionnaires)
         {
@@ -183,5 +183,15 @@ public class AdminController(IQuestionnaireManager questionnaireModuleManager) :
         questionnaireModuleManager.EditQuestionnaire(questionnaire);
 
         return RedirectToAction(nameof(Index));
+    }
+
+    public IActionResult ManageAdmins()
+    {
+        return View();
+    }
+
+    public IActionResult ManageOrganizations()
+    {
+        return View();
     }
 }

@@ -1,12 +1,15 @@
 ﻿@model CitizenPanel.UI.MVC.Models.Panels.PanelViewModel
 @using System.Globalization
 @using CitizenPanel.UI.MVC.Models.Panels
+@using CitizenPanel.UI.MVC.Services
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-
+@inject ITenantAccessService TenantAccessService;
 @{
     CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
     CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
-    ViewBag.Title = $"Burgerpanel: {Model.Name}"; 
+    ViewBag.Title = $"Burgerpanel: {Model.Name}";
+    var inTenant = await TenantAccessService.IsUserInCurrentTenantAsync();
+    var internalAllowed = User.IsInRole("Organization") && inTenant || User.IsInRole("Admin");
 }
 
 @section Styles {
@@ -18,7 +21,7 @@
     <section class="citizen-panel-banner">
         @if (!string.IsNullOrEmpty(Model.CoverImagePath))
         {
-            <img src="@Model.CoverImagePath" alt="Panel Banner" />
+            //<img src="@Model.CoverImagePath" alt="Panel Banner" />
         }
         else
         {
@@ -30,6 +33,13 @@
         <main class="citizen-panel-main-content">
             <section class="panel-content-card">
                 <h1 class="card-title">@Model.Name</h1>
+
+                @if (internalAllowed)
+                {
+                    <a asp-action="Index" asp-route-id="@Model.PanelId" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-table-columns"></i> Interne pagina
+                    </a>
+                }
             </section>
 
             <section class="panel-content-card">
@@ -39,8 +49,18 @@
 
             <section class="panel-content-card">
                 <h2 class="card-subtitle">Aangenomen aanbevelingen</h2>
+                <input type="hidden" value="@Model.ShowRejected.ToString().ToLower()" class="sr-only peer" id="rejectValue">
+
+                @if (User.IsInRole("Organization") && Model.CanManagePanel)
+                {
+                    <label class="items-center me-5 cursor-pointer">
+                        <p>Toon afgewezen aanbevelingen? </p>
+                        <input type="checkbox" checked="@Model.ShowRejected" class="sr-only peer" id="rejectBox">
+                        <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
+                    </label>
+                }
                 <ul class="panel-recommendations-list">
-                    @if (Model.Meetings != null)
+                    @if (Model.Meetings != null && Model.Meetings.Any(m => m.Recommendations.Count > 0))
                     {
                         @foreach (var meeting in Model.Meetings.Where(m => m.Recommendations.Any()).OrderByDescending(m => m.Date))
                         {
@@ -53,11 +73,19 @@
                             }
                         }
                     }
-                   
+                    else
+                    {
+                        <li>Er zijn nog geen aanbevelingen.</li>
+                    }
                 </ul>
-                
             </section>
-
+            
+            <section class="panel-content-card hidden" id="rejected" data-panel-id="@Model.PanelId">
+                <h2 class="card-subtitle">Afgewezen aanbevelingen</h2>
+                <ul class="panel-recommendations-list" id="rejectedList">
+                    <li>Er zijn nog geen afgewezen aanbevelingen.</li>
+                </ul>
+            </section>
 
             @if (User.IsInRole("Organization")& Model.CanManagePanel) 
             {// temp placeholder uploaden doc
@@ -109,4 +137,5 @@
 }
 @section Scripts {
     <script defer src="~/dist/clientapp/assets/postModal.js" asp-append-version="true"></script>
+    <script defer src="~/dist/clientapp/assets/details.js" asp-append-version="true"></script>
 }

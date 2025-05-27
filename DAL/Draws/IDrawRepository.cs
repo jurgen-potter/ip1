@@ -5,6 +5,7 @@ namespace CitizenPanel.DAL.Draws;
 public interface IDrawRepository
 {
     void CreateInvitation(Invitation invitation);
+    Invitation ReadInvitationById(int id);
     Invitation ReadInvitationByCode(string code);
     IEnumerable<Invitation> ReadInvitationsByPanelId(int panelId);
     IEnumerable<Invitation> ReadRegisteredInvitationsByPanelId(int panelId);

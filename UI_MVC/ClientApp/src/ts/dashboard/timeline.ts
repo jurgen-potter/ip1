@@ -1,8 +1,14 @@
-﻿// Interfaces blijven hetzelfde
-interface Meeting {
+﻿interface Meeting {
     id: number;
     title: string;
-    date: string; // Verwacht ISO date string (YYYY-MM-DDTHH:mm:ss)
+    date: string; 
+}
+
+type MeetingValidationErrors = Record<string, string | string[]> | string;
+interface CreateMeetingResponse {
+    success: boolean;
+    meeting?: Meeting;
+    errors?: Record<string, string | string[]> | string;
 }
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -296,24 +302,50 @@ function setButtonLoadingState(button: HTMLButtonElement | null, isLoading: bool
 }
 
 //Submit form data to server
-async function submitFormData(form: HTMLFormElement,tenantId: string, panelId: string): Promise<any> {
+async function submitFormData(
+    form: HTMLFormElement,
+    tenantId: string,
+    panelId: string
+): Promise<CreateMeetingResponse> {
     const data = new FormData(form);
-    data.set('panelId', panelId); // Zorg ervoor dat panelId correct wordt meegestuurd
-    const response = await fetch(`/${tenantId}/Meeting/Create`, {
-        method: 'POST',
-        body: data
-    });
-    if (!response.ok) {
-        // Probeer de error body te lezen als die er is
-        const errorData = await response.json().catch(() => ({ errors: "Serverfout: " + response.statusText }));
-        return { success: false, errors: errorData.errors || errorData.message || "Serverfout" };
+    data.set('panelId', panelId);
+
+    try {
+        const response = await fetch(`/${tenantId}/Meeting/Create`, {
+            method: 'POST',
+            body: data
+        });
+
+        const json = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                errors: json.errors || json.message || `Serverfout: ${response.statusText}`
+            };
+        }
+
+        // Extra validatie op structuur van json
+        if (typeof json.success === 'boolean' && (json.meeting || json.errors)) {
+            return json as CreateMeetingResponse;
+        }
+
+        return {
+            success: false,
+            errors: 'Ongeldig antwoord van de server'
+        };
+    } catch (err) {
+        return {
+            success: false,
+            errors: 'Netwerkfout of server niet bereikbaar'
+        };
     }
-    return await response.json();
 }
+
 
 //Handle validation errors returned from server
 function handleServerValidationErrors(
-    errors: any,
+    errors: MeetingValidationErrors,
     elements: {
         titleInput: HTMLInputElement;
         dateInput: HTMLInputElement;

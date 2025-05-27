@@ -5,7 +5,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account;
 
 public class DrawPendingModel : PageModel
 {
-    public async Task<IActionResult> OnPostAsync()
+    public IActionResult OnPostAsync()
     {
         return RedirectToPage("/Index");
     }

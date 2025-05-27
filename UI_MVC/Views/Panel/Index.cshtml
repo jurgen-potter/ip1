@@ -28,6 +28,9 @@
             <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
                 <i class="fas fa-user-plus"></i> Voeg panellid toe
             </a>
+            <a asp-controller="Registration" asp-action="ReserveMembers" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Reserve leden
+            </a>
             <a asp-controller="Panel" asp-action="Members" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
                 <i class="fa-solid fa-eye"></i> Panelleden
             </a>
@@ -131,6 +134,7 @@
             <div class="custom-modal-body">
                 <form id="createMeetingForm" novalidate class="space-y-4" asp-controller="Meeting" asp-action="Create">
                     <input type="hidden" name="PanelId" value="@Model.PanelId" />
+                    <input type="hidden" name="PanelPartcipants" value="@Model.PanelPartcipants" />
                     <div class="panel-form-group">
                         <label for="meetingTitle" class="auth-form-label">Titel</label>
                         <input type="text" class="auth-input-field" id="meetingTitle" name="Title" required>

@@ -91,8 +91,9 @@ public class MeetingController(
         var recommendation = new Recommendation()
         {
             Title = model.Title,
-            Description = model.Description,
-            NeededVotes = model.NeededVotes,
+            MeetingId = meeting.Id,
+            Description = model.Description ?? "",
+            NeededPercentage = model.NeededPercentage,
             IsAnonymous = model.IsAnonymous
         };
 
@@ -111,7 +112,7 @@ public class MeetingController(
 
         if (viewModel.Date < DateOnly.FromDateTime(DateTime.Now)) { return BadRequest(new { success = false, errors = "Meeting date cannot be in the past" }); }
 
-        var meeting = meetingManager.AddMeeting(viewModel.Title, viewModel.Date, viewModel.PanelId);
+        var meeting = meetingManager.AddMeeting(viewModel.Title, viewModel.Date, viewModel.PanelId, viewModel.PanelPartcipants);
 
         return Json(new
         {

@@ -12,6 +12,7 @@ using CitizenPanel.DAL.Data;
 using CitizenPanel.DAL.Draws;
 using CitizenPanel.DAL.Panels;
 using CitizenPanel.DAL.Questionnaires;
+using CitizenPanel.DAL.ServiceInterfaces;
 using CitizenPanel.DAL.Tenancy;
 using CitizenPanel.DAL.Users;
 using CitizenPanel.UI.MVC;
@@ -59,6 +60,9 @@ builder.Services.AddScoped<ITenantManager, TenantManager>();
 builder.Services.AddScoped<ITenantRepository, TenantRepository>();
 builder.Services.AddScoped<ITenantResolver, TenantResolver>();
 builder.Services.AddScoped<UserManager<ApplicationUser>, ApplicationUserManager>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<ITenantAccessService, TenantAccessService>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
@@ -101,6 +105,10 @@ builder.Services.Configure<RouteOptions>(options =>
     options.ConstraintMap.Add("validTenant", typeof(ValidTenantConstraint));
 });
 
+var tenantStore = new TenantStore();
+builder.Services.AddSingleton(tenantStore);
+
+
 builder.Services
     .AddTenantContext()
     .AddScoped<TenantMiddleware>();
@@ -109,6 +117,12 @@ var app = builder.Build();
 
 app.MapRazorPages();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
+    tenantStore.TenantIds.UnionWith(db.Tenants.Select(t => t.Id));
+}
+
 using (IServiceScope scope = app.Services.CreateScope()) {
     PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
     if (context.CreateDatabase(true)) {
@@ -116,8 +130,9 @@ using (IServiceScope scope = app.Services.CreateScope()) {
         var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
         IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
-        await identitySeeder.SeedAsync();
         DataSeeder dataSeeder = new DataSeeder(context);
+        dataSeeder.SeedTenants();
+        await identitySeeder.SeedAsync();
         dataSeeder.Seed();
     }
 }
@@ -146,6 +161,13 @@ app.MapControllerRoute(
     name: "tenant",
     pattern: "{tenantId:validTenant}/{controller=Home}/{action=Index}/{id?}",
     constraints: new { tenantId = @"^[a-zA-Z0-9_-]+$" });
+
+app.MapControllerRoute(
+    name: "tenant-api",
+    pattern: "{tenantId:validTenant}/api/{controller=Home}/{action=Index}/{id?}",
+    constraints: new { tenantId = @"^[a-zA-Z0-9_-]+$" });
+
+
 
 app.MapControllerRoute(
     name: "public",

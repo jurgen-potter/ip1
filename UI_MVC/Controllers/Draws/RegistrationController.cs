@@ -6,6 +6,7 @@ using CitizenPanel.BL.Utilities;
 using CitizenPanel.UI.MVC.Models.Draws;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers.Panels;
 
@@ -14,7 +15,8 @@ public class RegistrationController(
     IEmailSender mailSender,
     IPanelManager panelManager,
     IDrawManager drawManager,
-    IUtilityManager utilityManager) : Controller
+    IUtilityManager utilityManager,
+    IUserProfileManager userProfileManager) : Controller
 {
     [HttpGet]
     public IActionResult Index(int panelId)
@@ -22,14 +24,13 @@ public class RegistrationController(
         var criteria = panelManager.GetCriteriaByPanelIdWithSubcriteria(panelId);
         var users = drawManager.GetRegisteredInvitationsByPanelId(panelId).ToList();
         var panel = panelManager.GetPanelById(panelId);
-        var result = utilityManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
+        var result = utilityManager.CalculateRecruitment(panel.TotalNeededPanelmembers, criteria);
 
         var bucketsWithActuals = registrationManager.AssignActualRegistrationsToBuckets(result.Buckets, users);
 
         var vm = new ResultViewModel
         {
-            TotalAvailablePotentialPanelmembers = panel.TotalAvailablePotentialPanelmembers,
-            ReservePotPanelmembers = result.ReservePotPanelmembers,
+            TotalNeededInvitations = result.TotalNeededInvitations,
             TotalNeededPanelmembers = result.TotalNeededPanelmembers,
             Criteria = criteria.Select(c => new CriteriaViewModel
             {
@@ -140,10 +141,60 @@ public class RegistrationController(
                 }
             }
         }
+        
+        foreach (var selected in dr.SelectedInvitations)
+        {
+            if (selected.UserId is not null)
+            {
+                var user = userProfileManager.GetUserByIdWithProfile(selected.UserId);
+                panel.Members.Add(user.MemberProfile);
+            }
+        }
+        panelManager.EditPanel(panel);
 
         ViewBag.PanelName = panel.Name;
         ViewBag.PanelId = panelId;
         ViewBag.DrawStatus = panel.DrawStatus;
         return View(dr);
+    }
+
+    [HttpGet]
+    public IActionResult ReserveMembers(int panelId)
+    {
+        var model = new ReserveMailModel()
+        {
+            PanelId = panelId
+        };
+        return View(model);
+    }
+    
+    [HttpPost]
+    public IActionResult SendInvitations(ReserveMailModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View("ReserveMembers", model);
+        }
+
+        var invitationIds = JsonConvert.DeserializeObject<List<int>>(model.SelectedInvitationIds);
+        var panel = panelManager.GetPanelByIdWithInvitations(model.PanelId);
+
+
+        foreach (var invitationId in invitationIds)
+        {
+            var inv = drawManager.GetInvitationById(invitationId);
+            if (inv != null)
+            {
+                mailSender.SendEmailAsync(inv.Email, model.Subject,
+                    model.Message.Replace(Environment.NewLine, "<br />"));
+                panel.DrawResult.ReserveInvitations.Remove(inv);
+                panel.DrawResult.SelectedInvitations.Add(inv);
+                inv.IsDrawn = true;
+                drawManager.EditInvitation(inv);
+            }
+        }
+        panelManager.EditPanel(panel);
+        
+        return RedirectToAction("Index", "Panel", new { id = model.PanelId });
     }
 }

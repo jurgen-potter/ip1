@@ -3,12 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers.Users;
 
+[Authorize (Roles = "Organization")]
 public class OrganizationController : Controller
 {
     [HttpGet]
-    [Authorize (Roles = "Organization")]
     public IActionResult Index()
     {
         return View();
+    }
+    
+    public IActionResult ManageOrganization()
+    {
+        return View();
+    }
+    
+    public IActionResult AddMember(int panelId)
+    {
+        return View(panelId);
     }
 }
