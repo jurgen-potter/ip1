@@ -15,6 +15,11 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         toggleAllBtn.textContent = allCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
     }
+
+    const totalAvailableInput = document.getElementById('TotalAvailablePotentialPanelmembers') as HTMLInputElement | null;
+    totalAvailableInput?.addEventListener('input', () => {
+        validateAllFormInputs();
+    });
 });
 
 // ----------------------
@@ -329,11 +334,15 @@ function updateSubCriteriaButtonState(ci: string): void { // Hernoemd
     addBtn.disabled = count >= MAX_SUBCRITERIA;
 }
 
-function validateAllFormInputs(): void { // Hernoemd
+function validateAllFormInputs(): void {
     const calculateBtn = document.getElementById('calculate-btn') as HTMLButtonElement | null;
-    if (!calculateBtn) return;
+    const totalAvailableInput = document.getElementById('TotalAvailablePotentialPanelmembers') as HTMLInputElement | null;
+    const panelWarning = document.querySelector<HTMLElement>('.panelmember-warning');
+
+    if (!calculateBtn || !totalAvailableInput || !panelWarning) return;
 
     let allSumsAreValid = true;
+
     document.querySelectorAll<HTMLLIElement>('.criteria-item-card').forEach(item => {
         const inputs = item.querySelectorAll<HTMLInputElement>('.subcriteria-percentage');
         if (inputs.length > 0) {
@@ -350,8 +359,10 @@ function validateAllFormInputs(): void { // Hernoemd
             return input.value.trim() !== '';
         });
 
-    const totalAvailableInput = document.getElementById('TotalAvailablePotentialPanelmembers') as HTMLInputElement | null;
-    const totalAvailableFilled = totalAvailableInput ? totalAvailableInput.value.trim() !== '' && Number(totalAvailableInput.value) > 0 : false;
+    const totalAvailable = Number(totalAvailableInput.value);
+    const totalAvailableValid = !isNaN(totalAvailable) && totalAvailable >= 100;
 
-    calculateBtn.disabled = !allSumsAreValid || !allDescriptionsFilled || !totalAvailableFilled;
+    panelWarning.style.display = totalAvailableValid ? 'none' : 'block';
+
+    calculateBtn.disabled = !allSumsAreValid || !allDescriptionsFilled || !totalAvailableValid;
 }

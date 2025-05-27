@@ -8,7 +8,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/dist/clientapp/assets/index.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
 
 <div class="auth-page-wrapper">
@@ -67,7 +67,7 @@
                 <div class="auth-form-group">
                     <label asp-for="Input.ConfirmPassword" class="auth-form-label"></label>
                     <input asp-for="Input.ConfirmPassword" type="password" class="auth-input-field"
-                           autocomplete="new-password" aria-required="true" placeholder="Bevestig wachtwoord"/>
+                           autocomplete="new-password" aria-required="true" placeholder="Wachtwoord"/>
                     <span asp-validation-for="Input.ConfirmPassword" class="auth-validation-message"></span>
                 </div>
             </div>
@@ -164,6 +164,14 @@
             <div class="mt-8">
                 <button id="registerSubmit" type="submit" class="auth-submit-button btn-lg">Registreer</button>
             </div>
+            @if (User.IsInRole("Organization"))
+            {
+                <div>
+                    <p>
+                        <a id="existing-member" asp-controller="Organization" asp-action="AddMember" asp-route-panelId="@Model.PanelId" >Een bestaand organisatieaccount toevoegen?</a>
+                    </p>
+                </div>
+            }
         </form>
     </div>
 </div>

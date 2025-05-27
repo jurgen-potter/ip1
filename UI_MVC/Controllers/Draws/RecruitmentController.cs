@@ -85,12 +85,13 @@ public class RecruitmentController(IUtilityManager utilityManager) : Controller
 
             criteria.Add(cr);
         }
-        var result = utilityManager.CalculateRecruitment(model.TotalAvailablePotentialPanelmembers, criteria);
+        var toDraw = utilityManager.CalculateMembers(model.TotalAvailablePotentialPanelmembers);
+        var result = utilityManager.CalculateRecruitment(toDraw, criteria);
 
         var resultModel = new ResultViewModel()
         {
             TotalAvailablePotentialPanelmembers = model.TotalAvailablePotentialPanelmembers,
-            ReservePotPanelmembers = result.ReservePotPanelmembers,
+            TotalNeededInvitations = result.TotalNeededInvitations,
             TotalNeededPanelmembers = result.TotalNeededPanelmembers,
             Criteria = model.Criteria
         };
@@ -105,6 +106,57 @@ public class RecruitmentController(IUtilityManager utilityManager) : Controller
             });
         }
         return View("Result", resultModel);
+    }
+    
+    [HttpPost]
+    [AllowAnonymous]
+    public IActionResult Recalculate(ResultViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View("Result", model);
+        }
+
+        var criteria = new List<Criteria>();
+
+        foreach (var cvm in model.Criteria)
+        {
+            var cr = new Criteria
+            {
+                Id = cvm.Id,
+                Name = cvm.Name,
+                SubCriteria = new List<SubCriteria>()
+            };
+
+            foreach (var svm in cvm.SubCriteria)
+            {
+                var subCr = new SubCriteria
+                {
+                    Id = svm.Id,
+                    Name = svm.Name,
+                    Percentage = svm.Percentage
+                };
+                cr.SubCriteria.Add(subCr);
+            }
+
+            criteria.Add(cr);
+        }
+        var result = utilityManager.CalculateRecruitment(model.TotalNeededPanelmembers, criteria);
+
+        model.TotalNeededInvitations = result.TotalNeededInvitations;
+
+        List<BucketViewModel> newBuckets = new List<BucketViewModel>();
+        foreach (var bucket in result.Buckets)
+        {
+            newBuckets.Add(new BucketViewModel()
+            {
+                Count = bucket.Count,
+                CriteriaNames = bucket.CriteriaNames,
+                SubCriteriaNames = bucket.SubCriteriaNames
+            });
+        }
+        model.Buckets = newBuckets;
+        return View("Result", model);
     }
     
     [HttpPost]

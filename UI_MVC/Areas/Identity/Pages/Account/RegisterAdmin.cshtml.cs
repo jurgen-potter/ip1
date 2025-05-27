@@ -100,23 +100,41 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
             [Display(Name = "Bevestig wachtwoord")]
             [Compare("Password", ErrorMessage = "De wachtwoorden komen niet overeen.")]
             public string ConfirmPassword { get; set; }
+            
+            [Display(Name = "Is superadmin?")]
+            public bool IsSuper { get; set; }
         }
 
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser is { IsSuper: false })
+            {
+                return Forbid();
+            }
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser is { IsSuper: false })
+            {
+                return Forbid();
+            }
+            
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
                 user.UserType = UserType.Admin;
+                user.IsSuper = Input.IsSuper;
                 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -156,10 +174,6 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                         continue;
                     }
                     
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-                foreach (var error in roleResult.Errors)
-                {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }

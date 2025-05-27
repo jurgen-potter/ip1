@@ -1,6 +1,7 @@
 using CitizenPanel.BL.Domain.Draws;
 using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Users;
+using System.Collections;
 
 namespace CitizenPanel.DAL.Panels;
 
@@ -14,7 +15,8 @@ public interface IPanelRepository
     Panel ReadPanelByIdWithMembers(int panelId);
     Panel ReadPanelByIdWithInvitations(int panelId);
     Panel ReadPanelByIdWithRecommendations(int panelId);
-    Panel ReadPanelByIdWithAcceptedRecommendationsAndPosts(int panelId);
+    Panel ReadPanelByIdWithRecommendationsWithoutTenant(int panelId);
+    Panel ReadPanelByIdWithRecommendationsAndPosts(int panelId);
     Panel ReadPanelByIdWithRecommendationsAndVotes(int panelId);
     void UpdatePanel(Panel panel);
     void DeletePanel(Panel panel);
@@ -26,8 +28,15 @@ public interface IPanelRepository
     IEnumerable<UserVote> ReadUserVotesById(string userId);
     void CreateUserVote(UserVote userVote);
     void DeleteUserVote(ApplicationUser member, Recommendation recommendation);
+    bool DeleteUserVotesByMember(ApplicationUser member);
     bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation);
 
     IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId);
     IEnumerable<Criteria> ReadCriteriaByPanelIdWithSubcriteria(int panelId);
+    
+    IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId);
+
+    IEnumerable<Meeting> ReadMeetingsById(int panelId);
+    
+    IEnumerable<Invitation> ReadReservesByPanelId(int panelId);
 }

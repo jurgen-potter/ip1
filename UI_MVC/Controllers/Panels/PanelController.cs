@@ -31,6 +31,7 @@ public class PanelController(
         PanelViewModel model = new PanelViewModel()
         {
             PanelId = panel.Id,
+            PanelPartcipants = panel.MemberCount,
             Name = panel.Name,
             Description = panel.Description,
             StartDate = panel.StartDate,
@@ -107,8 +108,8 @@ public class PanelController(
         }
 
         Panel newPanel = panelManager.AddPanel(model.Name, model.Description, criteria,
-            model.Result.TotalAvailablePotentialPanelmembers);
-        var invitations = utilityManager.GenerateInvitations(model.Result.ReservePotPanelmembers, criteria, newPanel);
+            model.Result.TotalNeededPanelmembers);
+        var invitations = utilityManager.GenerateInvitations(model.Result.TotalNeededInvitations, criteria, newPanel);
         newPanel.Invitations = invitations.ToList();
         panelManager.EditPanel(newPanel);
         return RedirectToAction("Index", "Panel", new { id = newPanel.Id });
@@ -202,7 +203,7 @@ public class PanelController(
     [HttpGet]
     public IActionResult Details(int panelId)
     {
-        Panel panel = panelManager.GetPanelByIdWithAcceptedRecommendationsAndPosts(panelId);
+        Panel panel = panelManager.GetPanelByIdWithRecommendationsAndPosts(panelId);
 
         PanelViewModel model = new PanelViewModel()
         {
@@ -211,7 +212,8 @@ public class PanelController(
             Description = panel.Description,
             StartDate = panel.StartDate,
             EndDate = panel.EndDate,
-            CoverImagePath = panel.CoverImagePath
+            CoverImagePath = panel.CoverImagePath,
+            ShowRejected = panel.ShowRejectedRecommendations
         };
         foreach (Meeting meeting in panel.Meetings.OrderBy(m => m.Date)) // TEMP voor aanbevelingen testen 
         {
@@ -224,7 +226,7 @@ public class PanelController(
 
             if (meeting.Recommendations != null)
             {
-                foreach (Recommendation rec in meeting.Recommendations)
+                foreach (Recommendation rec in meeting.Recommendations.Where(rec => rec.Accepted))
                 {
                     meetingViewModel.Recommendations.Add(new RecommendationViewModel
                     {
@@ -232,6 +234,19 @@ public class PanelController(
                         Title = rec.Title,
                         Description = rec.Description
                     });
+                }
+
+                if (panel.ShowRejectedRecommendations)
+                {
+                    foreach (Recommendation rec in meeting.Recommendations.Where(rec => !rec.Accepted))
+                    {
+                        meetingViewModel.RejectedRecommendations.Add(new RecommendationViewModel
+                        {
+                            Id = rec.Id,
+                            Title = rec.Title,
+                            Description = rec.Description
+                        });
+                    }
                 }
             }
 

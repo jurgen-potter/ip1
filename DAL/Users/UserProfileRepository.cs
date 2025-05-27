@@ -38,7 +38,23 @@ public class UserProfileRepository(PanelDbContext dbContext) : IUserProfileRepos
             .ThenInclude(op => op.Answers)
             .SingleOrDefault(au => au.Id == organizationId);
     }
-    
+    public IEnumerable<ApplicationUser> ReadAllOrganizations()
+    {
+        return dbContext.OrganizationProfiles
+            .Select(u => u.ApplicationUser)
+            .Where(u => u.UserType == UserType.Organization)
+            .ToList();
+    }
+    public IEnumerable<MemberProfile> ReadAllOrganizationMembersNotInPanel(int panelId)
+    {
+        return dbContext.MemberProfiles
+            .Include(u => u.ApplicationUser)
+            .Where(u => u.ApplicationUser.UserType == UserType.Member)
+            .Where(u => u.Panels.All(p => p.Id != panelId))
+            .Where(u => u.ApplicationUser.IsStaff == true)
+            .ToList();
+    }
+
     public async Task UpdateOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
     {
         var user = ReadOrganizationByIdWithProfileAndAnswers(userId);
@@ -61,5 +77,12 @@ public class UserProfileRepository(PanelDbContext dbContext) : IUserProfileRepos
         dbContext.Update(user);
 
         await dbContext.SaveChangesAsync();
+    }
+    
+    public IEnumerable<ApplicationUser> ReadAllAdmins()
+    {
+        return dbContext.Users
+            .Where(u => u.UserType == UserType.Admin)
+            .ToList();
     }
 }

@@ -18,9 +18,7 @@ export default defineConfig({
       input: {
         main: path.resolve('src/main.ts'),
         styles: path.resolve('src/index.scss'),
-        vote: path.resolve('src/ts/recommendation/vote.ts'),
-        endVote: path.resolve('src/ts/recommendation/endVote.ts'),
-        votersModalLoader: path.resolve('src/ts/recommendation/votersModalLoader.ts'),
+        loadRecommendations: path.resolve('src/ts/recommendation/loadRecommendations.ts'),
         dashboard: path.resolve('src/ts/dashboard/timeline.ts'),
         postModal: path.resolve('src/ts/dashboard/createPostModal.ts'),
         recruitment: path.resolve('src/ts/recruitment/index.ts'),
@@ -28,7 +26,14 @@ export default defineConfig({
         memberRegister: path.resolve('src/ts/memberRegister/registerMember.ts'),
         admin: path.resolve('src/ts/admin/editQuestionnaire.ts'),
         account: path.resolve('src/ts/account/login.ts'),
-        panelUsers: path.resolve('src/ts/panel/panelUsers.ts')
+        manageMembers: path.resolve('src/ts/panel/manageMembers.ts'),
+        manageAdmins: path.resolve('src/ts/admin/manageAdmins.ts'),
+        manageOrganizations: path.resolve('src/ts/admin/manageOrganizations.ts'),
+        manageStaff: path.resolve('src/ts/organization/manageStaff.ts'),
+        addMember: path.resolve('src/ts/organization/addMember.ts'),
+        details: path.resolve('src/ts/panel/details.ts'),
+        reserveMembers: path.resolve('src/ts/registration/reserveMembers.ts'),
+        CreatePanel: path.resolve('src/ts/panel/CreatePanel.ts')
       },
       output: {
         assetFileNames: 'assets/[name][extname]',

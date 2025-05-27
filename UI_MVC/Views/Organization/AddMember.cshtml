@@ -1,0 +1,28 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "Voeg panellid toe";
+}
+
+<h2>Voeg een bestaand panellid toe</h2>
+<input type="hidden" id="panel-id" value="@Model">
+
+<div>
+    <div>
+        <table class="reg-overview-table table-striped">
+            <thead>
+            <tr>
+                <th>Naam</th>
+                <th>Toevoegen?</th>
+            </tr>
+            </thead>
+            <tbody id="memberTableBody">
+            
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/addMember.js" asp-append-version="true"></script>
+}

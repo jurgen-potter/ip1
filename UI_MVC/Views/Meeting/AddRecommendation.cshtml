@@ -26,11 +26,24 @@
                 <textarea asp-for="Description" class="auth-input-field"></textarea>
                 <span asp-validation-for="Description" class="auth-validation-message"></span>
             </div>
-
+            
             <div class="auth-form-group">
-                <label asp-for="NeededVotes" class="auth-form-label">Hoeveel stemmen zijn er minstens nodig?</label>
-                <input type="number" asp-for="NeededVotes" class="auth-input-field"/>
-                <span asp-validation-for="NeededVotes" class="auth-validation-message"></span>
+                <label asp-for="NeededPercentage" class="auth-form-label">Hoeveel stemmen zijn er minstens nodig?</label>
+                <div class="rounded-lg p-4 shadow-lg w-full">
+                    <div class="price-range p-4">
+                        <span class="text-sm">0</span>
+                        <span class="text-sm">%</span>
+                        <input class="w-full accent-green-700" asp-for="NeededPercentage" type="range" value="0" min="0" max="100" oninput="this.previousElementSibling.previousElementSibling.innerText=this.value"/>
+                        <div class="-mt-2 mx-2 flex w-full justify-between">
+                            <span class="text-sm text-gray-600">0</span>
+                            <span class="text-sm text-gray-600">25</span>
+                            <span class="text-sm text-gray-600">50</span>
+                            <span class="text-sm text-gray-600">75</span>
+                            <span class="text-sm text-gray-600">100</span>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="NeededPercentage" class="auth-validation-message"></span>
             </div>
 
             <div class="auth-form-group">

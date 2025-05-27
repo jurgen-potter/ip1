@@ -9,21 +9,7 @@ namespace CitizenPanel.DAL.Data;
 
 public class DataSeeder(PanelDbContext panelDbContext)
 {
-    public void Seed()
-    {
-        SeedTenants();
-        SeedPanels();
-        panelDbContext.SaveChanges();
-        panelDbContext.ChangeTracker.Clear();
-
-        SeedInvitations();
-        SeedQuestionnaires();
-
-        panelDbContext.SaveChanges();
-        panelDbContext.ChangeTracker.Clear();
-    }
-
-    private void SeedTenants()
+    public void SeedTenants()
     {
         var tenant1 = new Tenant
         {
@@ -37,9 +23,166 @@ public class DataSeeder(PanelDbContext panelDbContext)
         };
         panelDbContext.Tenants.AddRange(tenant1, tenant2);
     }
-    
+
+    public void Seed()
+    {
+        SeedPanels();
+        panelDbContext.SaveChanges();
+        panelDbContext.ChangeTracker.Clear();
+
+        SeedInvitations();
+        SeedQuestionnaires();
+
+        panelDbContext.SaveChanges();
+        panelDbContext.ChangeTracker.Clear();
+    }
+
     private void SeedPanels()
     {
+        // Create panel objects
+        var panel1 = new Panel()
+        {
+            Name = "Panel Antwerpen",
+            Description = "Dit is de omschrijving van het panel.",
+            StartDate = new DateOnly(2025, 1, 12),
+            EndDate = new DateOnly(2025, 7, 22),
+            DrawStatus = DrawStatus.Complete,
+            TenantId = "antwerpen",
+            TotalNeededPanelmembers = 100,
+            IsActive = true,
+            MemberCount = 11,
+            CoverImagePath = "../../UI_MVC/wwwroot/Antwerpenbanner.jpg",
+            Meetings = new List<Meeting>()
+            {
+                new Meeting()
+                {
+                    Title = "Eerste bijeenkomst",
+                    PanelParticipants = 11,
+                    Date = new DateOnly(2025, 4, 12),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Meer bomen",
+                            Description = "We willen graag meer bomen planten in de stad",
+                            Votes = 0,
+                            TenantId = "antwerpen",
+                            IsVotable = true,
+                            NeededPercentage = 50,
+                        },
+                        new Recommendation()
+                        {
+                            Title = "Minder afval",
+                            Description = "Minder afval op de straat door meer vuilnisbakken te plaatsen",
+                            Votes = 0,
+                            TenantId = "antwerpen",
+                            IsVotable = true,
+                            NeededPercentage = 50,
+                        }
+                    },
+                    TenantId = "antwerpen"
+                },
+                new Meeting()
+                {
+                    Title = "Tweede bijeenkomst",
+                    PanelParticipants = 11,
+                    Date = new DateOnly(2025, 5, 1),
+                    Recommendations = new List<Recommendation>()
+                    {
+                        new Recommendation()
+                        {
+                            Title = "Betere wegen",
+                            Description = "We willen betere wegen aanleggen in de gemeente antwerpen",
+                            Votes = 0,
+                            TenantId = "antwerpen",
+                            IsVotable = true,
+                            NeededPercentage = 70,
+                            IsAnonymous = true
+                        }
+                    },
+                    TenantId = "antwerpen"
+                },
+                new Meeting()
+                {
+                    Title = "Derde bijeenkomst",
+                    PanelParticipants = 11,
+                    Date = new DateOnly(2025, 6, 12),
+                    Recommendations = new List<Recommendation>(),
+                    TenantId = "antwerpen"
+                }
+            }
+        };
+        panelDbContext.Panels.Add(panel1);
+        panelDbContext.SaveChanges();
+
+        //criteria
+        var subCrit21 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
+        var subCrit22 = new SubCriteria() { Name = "Vrouw", Percentage = 60, TenantId = "antwerpen" };
+        var subCrit23 = new SubCriteria() { Name = "18-25", Percentage = 20, TenantId = "antwerpen" };
+        var subCrit24 = new SubCriteria() { Name = "26-35", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit25 = new SubCriteria() { Name = "36-50", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit26 = new SubCriteria() { Name = "51-60", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit27 = new SubCriteria() { Name = "60+", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit28 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
+        var subCrit29 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
+        var subCrit210 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit211 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
+
+        panelDbContext.SubCriteria.AddRange(subCrit21, subCrit22, subCrit23, subCrit24, subCrit25, subCrit26, subCrit27, subCrit28, subCrit29, subCrit210, subCrit211);
+
+        var crit21 = new Criteria()
+        {
+            Name = "Geslacht",
+            SubCriteria = { subCrit21, subCrit22 },
+            TenantId = "antwerpen"
+        };
+        var crit22 = new Criteria()
+        {
+            Name = "Leeftijd",
+            SubCriteria = { subCrit23, subCrit24, subCrit25, subCrit26, subCrit27 },
+            TenantId = "antwerpen"
+        };
+        var crit23 = new Criteria()
+        {
+            Name = "Vervoer",
+            SubCriteria = { subCrit28, subCrit29 },
+            TenantId = "antwerpen"
+        };
+        var crit24 = new Criteria()
+        {
+            Name = "Opleiding",
+            SubCriteria = { subCrit210, subCrit211 },
+            TenantId = "antwerpen"
+        };
+        panelDbContext.Criteria.AddRange(crit21, crit22, crit23, crit24);
+
+        var panel2 = new Panel()
+        {
+            Name = "Panel Antwerpen 2",
+            Description = "Dit is ook nog een omschrijving van een panel",
+            StartDate = new DateOnly(2025, 3, 11),
+            EndDate = new DateOnly(2025, 7, 17),
+            DrawStatus = DrawStatus.FirstPhaseActive,
+            TenantId = "antwerpen",
+            TotalNeededPanelmembers = 100
+        };
+        panelDbContext.Panels.Add(panel2);
+        panel2.Criteria.Add(crit21);
+        panel2.Criteria.Add(crit22);
+        panel2.Criteria.Add(crit23);
+        panel2.Criteria.Add(crit24);
+
+        var panel3 = new Panel()
+        {
+            Name = "Panel Brussel",
+            Description = "Dit is ook een omschrijving van een panel.",
+            StartDate = new DateOnly(2025, 3, 1),
+            EndDate = new DateOnly(2025, 8, 14),
+            TenantId = "brussel",
+            IsActive = true
+        };
+        panelDbContext.Panels.Add(panel3);
+
         //criteria
         var subCrit1 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
         var subCrit2 = new SubCriteria() { Name = "Vrouw", Percentage = 60, TenantId = "antwerpen" };
@@ -52,7 +195,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
         var subCrit9 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
         var subCrit10 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
         var subCrit11 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
-        
+
         panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4, subCrit5, subCrit6, subCrit7, subCrit8, subCrit9, subCrit10, subCrit11);
 
         var crit1 = new Criteria()
@@ -81,105 +224,11 @@ public class DataSeeder(PanelDbContext panelDbContext)
         };
         panelDbContext.Criteria.AddRange(crit1, crit2, crit3, crit4);
 
-
-        // Create panel objects
-        var panel1 = new Panel()
-        {
-            Name = "Panel Antwerpen",
-            Description = "Dit is de omschrijving van het panel.",
-            StartDate = new DateOnly(2025, 1, 12),
-            EndDate = new DateOnly(2025, 7, 22),
-            DrawStatus = DrawStatus.FirstPhaseActive,
-            TenantId = "antwerpen",
-            TotalAvailablePotentialPanelmembers = 10000,
-            IsActive = true,
-            CoverImagePath = "../../UI_MVC/wwwroot/Antwerpenbanner.jpg",
-            Meetings = new List<Meeting>()
-            {
-                new Meeting()
-                {
-                    Title = "Eerste bijeenkomst",
-                    Date = new DateOnly(2025, 4, 12),
-                    Recommendations = new List<Recommendation>()
-                    {
-                        new Recommendation()
-                        {
-                            Title = "Meer bomen",
-                            Description = "We willen graag meer bomen planten in de stad",
-                            Votes = 0,
-                            TenantId = "antwerpen",
-                            IsVotable = true,
-                            NeededVotes = 5
-                        },
-                        new Recommendation()
-                        {
-                            Title = "Minder afval",
-                            Description = "Minder afval op de straat door meer vuilnisbakken te plaatsen",
-                            Votes = 0,
-                            TenantId = "antwerpen",
-                            IsVotable = true,
-                            NeededVotes = 5
-                        }
-                    },
-                    TenantId = "antwerpen"
-                    
-                },
-                new Meeting()
-                {
-                    Title = "Tweede bijeenkomst",
-                    Date = new DateOnly(2025, 5, 1),
-                    Recommendations = new List<Recommendation>()
-                    {
-                        new Recommendation()
-                        {
-                            Title = "Betere wegen",
-                            Description = "We willen betere wegen aanleggen in de gemeente antwerpen",
-                            Votes = 0,
-                            TenantId = "antwerpen",
-                            IsVotable = true,
-                            NeededVotes = 10,
-                            IsAnonymous = true
-                        }
-                    },
-                    TenantId = "antwerpen"
-                },
-                new Meeting()
-                {
-                    Title = "Derde bijeenkomst",
-                    Date = new DateOnly(2025, 6, 12),
-                    Recommendations = new List<Recommendation>(),
-                    TenantId = "antwerpen"
-                }
-            }
-            
-        };
-        panelDbContext.Panels.Add(panel1);
         panel1.Criteria.Add(crit1);
         panel1.Criteria.Add(crit2);
         panel1.Criteria.Add(crit3);
         panel1.Criteria.Add(crit4);
 
-        var panel2 = new Panel()
-        {
-            Name = "Panel Brussel",
-            Description = "Dit is ook een omschrijving van een panel.",
-            StartDate = new DateOnly(2025, 3, 1),
-            EndDate = new DateOnly(2025, 8, 14),
-            TenantId = "brussel",
-            IsActive = true
-        };
-        panelDbContext.Panels.Add(panel2);
-        
-        var panel3 = new Panel()
-        {
-            Name = "Panel Antwerpen 2",
-            Description = "Dit is ook nog een omschrijving van een panel",
-            StartDate = new DateOnly(2025, 3, 11),
-            EndDate = new DateOnly(2025, 7, 17),
-            TenantId = "antwerpen"
-        };
-        panelDbContext.Panels.Add(panel3);
-        
         var antwerpen = panelDbContext.Users
             .Include(u => u.OrganizationProfile)
             .SingleOrDefault(u => u.UserName == "antwerpen@example.com");
@@ -190,10 +239,139 @@ public class DataSeeder(PanelDbContext panelDbContext)
             .Include(u => u.MemberProfile)
             .SingleOrDefault(u => u.UserName == "paul@example.com");
         panel1.Members.Add(paul?.MemberProfile);
-        //panel3.Members.Add(paul?.MemberProfile);
+        //panel2.Members.Add(paul?.MemberProfile);
         paul?.MemberProfile.Panels.Add(panel1);
-        //paul?.MemberProfile.Panels.Add(panel3);
+        //paul?.MemberProfile.Panels.Add(panel2);
 
+        List<Invitation> selectedInvitations = new List<Invitation>()
+        {
+            new Invitation
+            {
+                Email = "kate@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-kate",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 20, 21 }
+            },
+            new Invitation
+            {
+                Email = "rozie@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-rozie",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 20, 21 }
+            },
+            new Invitation
+            {
+                Email = "rozalinda@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-rozalinda",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "alice2@example.com",
+                Gender = Gender.Female,
+                Age = 61,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-alice",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "emma3@example.com",
+                Gender = Gender.Female,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-emma",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "emilie@example.com",
+                Gender = Gender.Female,
+                Age = 36,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-emilie",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "Jurgen@example.com",
+                Gender = Gender.Male,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-jurgen",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "xander@example.com",
+                Gender = Gender.Male,
+                Age = 26,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-xander",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            },
+            new Invitation
+            {
+                Email = "Lars@example.com",
+                Gender = Gender.Male,
+                Age = 18,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Code = "inv-lars",
+                IsRegistered = true,
+                IsDrawn = true,
+                SelectedCriteria = new List<int> { 19, 21 }
+            }
+        };
+        panelDbContext.AddRange(selectedInvitations);
+
+        DrawResult drawResult = new DrawResult()
+        {
+            TenantId = "antwerpen",
+            SelectedInvitations = selectedInvitations
+        };
+        panelDbContext.DrawResults.Add(drawResult);
+        panel1.DrawResult = drawResult;
 
         var members = new List<ApplicationUser>
         {
@@ -204,6 +382,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Kate",
+                    LastName = "Jansen",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1960, 8, 14),
                     Town = "Antwerpen",
@@ -219,6 +398,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Rozie",
+                    LastName = "de Jong",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1947, 2, 23),
                     Town = "Antwerpen",
@@ -234,6 +414,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Rozalinda",
+                    LastName = "van Loon",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1955, 11, 5),
                     Town = "Antwerpen",
@@ -249,6 +430,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Alice",
+                    LastName = "Veerman",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(1951, 6, 30),
                     Town = "Antwerpen",
@@ -264,8 +446,69 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 MemberProfile = new MemberProfile
                 {
                     FirstName = "Emma",
+                    LastName = "de Boer",
                     Gender = Gender.Female,
                     BirthDate = new DateOnly(2001, 3, 18),
+                    Town = "Antwerpen",
+                    Panels = new List<Panel> { panel1 },
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "emilie@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    FirstName = "Emilie",
+                    Gender = Gender.Female,
+                    BirthDate = new DateOnly(1987, 3, 18),
+                    Town = "Antwerpen",
+                    Panels = new List<Panel> { panel1 },
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "Jurgen@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    FirstName = "Jurgen",
+                    Gender = Gender.Male,
+                    BirthDate = new DateOnly(2003, 4, 11),
+                    Town = "Antwerpen",
+                    Panels = new List<Panel> { panel1 },
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "xander@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    FirstName = "Xander",
+                    Gender = Gender.Male,
+                    BirthDate = new DateOnly(2001, 6, 18),
+                    Town = "Antwerpen",
+                    Panels = new List<Panel> { panel1 },
+                    TenantId = "antwerpen",
+                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
+                }
+            },
+            new ApplicationUser
+            {
+                Email = "Lars@example.com",
+                UserType = UserType.Member,
+                MemberProfile = new MemberProfile
+                {
+                    FirstName = "Lars",
+                    Gender = Gender.Male,
+                    BirthDate = new DateOnly(2002, 9, 27),
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
@@ -274,13 +517,13 @@ public class DataSeeder(PanelDbContext panelDbContext)
             }
         };
 
-        
+
         var userVotesRec1 = new List<UserVote>
         {
             new UserVote
             {
                 Voter = members[0],
-                Recommended = false,
+                Recommended = true,
                 VotedAt = DateTime.UtcNow,
                 TenantId = "antwerpen"
             },
@@ -308,7 +551,21 @@ public class DataSeeder(PanelDbContext panelDbContext)
             new UserVote
             {
                 Voter = members[4],
-                Recommended = false,
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[5],
+                Recommended = true,
+                VotedAt = DateTime.UtcNow,
+                TenantId = "antwerpen"
+            },
+            new UserVote
+            {
+                Voter = members[6],
+                Recommended = true,
                 VotedAt = DateTime.UtcNow,
                 TenantId = "antwerpen"
             }
@@ -326,7 +583,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             new UserVote
             {
                 Voter = members[1],
-                Recommended = true,
+                Recommended = false,
                 VotedAt = DateTime.UtcNow,
                 TenantId = "antwerpen"
             },
@@ -349,17 +606,18 @@ public class DataSeeder(PanelDbContext panelDbContext)
         var rec1 = panel1.Meetings.FirstOrDefault().Recommendations.FirstOrDefault();
         rec1.UserVotes = userVotesRec1;
         rec1.Votes = userVotesRec1.Count();
-        
+
         var rec2 = panel1.Meetings.FirstOrDefault().Recommendations.LastOrDefault();
         rec2.UserVotes = userVotesRec2;
         rec2.Votes = userVotesRec2.Count();
-        
+
         panelDbContext.AddRange(members);
+        panelDbContext.Panels.Update(panel1);
+        panelDbContext.SaveChanges();
     }
 
     private void SeedInvitations()
     {
-        
         // Create initial list with members for Panel 1 and Panel 2
         var invitations = new List<Invitation>
         {
@@ -369,21 +627,21 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
                 SelectedCriteria = new List<int>([8, 11]),
             },
-            
-            // Panel 1 members
+
+            // Panel 2 members
             new Invitation()
             {
                 Email = "els@example.com",
                 Gender = Gender.Female,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "1wer-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -395,7 +653,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 36,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "q1er-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -407,7 +665,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qw1r-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -419,7 +677,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 36,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwe1-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -433,7 +691,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-1yui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -445,7 +703,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-t1ui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -457,7 +715,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-ty1i-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -469,7 +727,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyu1-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -481,7 +739,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-1pas-dfgh-jklz",
                 IsRegistered = true,
@@ -493,7 +751,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-o1as-dfgh-jklz",
                 IsRegistered = true,
@@ -507,7 +765,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-op1s-dfgh-jklz",
                 IsRegistered = true,
@@ -519,7 +777,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opa1-dfgh-jklz",
                 IsRegistered = true,
@@ -531,7 +789,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-1fgh-jklz",
                 IsRegistered = true,
@@ -543,7 +801,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-d1gh-jklz",
                 IsRegistered = true,
@@ -555,7 +813,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-df1h-jklz",
                 IsRegistered = true,
@@ -567,7 +825,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-dfg1-jklz",
                 IsRegistered = true,
@@ -581,7 +839,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 36,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-dfgh-1klz",
                 IsRegistered = true,
@@ -593,7 +851,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 51,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-dfgh-j1lz",
                 IsRegistered = true,
@@ -605,7 +863,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 51,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-dfgh-jk1z",
                 IsRegistered = true,
@@ -617,7 +875,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 36,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-dfgh-jkl1",
                 IsRegistered = true,
@@ -629,7 +887,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 36,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "2wer-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -641,7 +899,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 51,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "q2er-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -655,7 +913,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qw2r-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -667,7 +925,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwe2-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -679,7 +937,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-2yui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -691,7 +949,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-t2ui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -703,7 +961,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-ty2i-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -715,7 +973,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Male,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyu2-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -729,7 +987,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-2pas-dfgh-jklz",
                 IsRegistered = true,
@@ -741,7 +999,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-o2as-dfgh-jklz",
                 IsRegistered = true,
@@ -753,7 +1011,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-op2s-dfgh-jklz",
                 IsRegistered = true,
@@ -765,7 +1023,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opa2-dfgh-jklz",
                 IsRegistered = true,
@@ -777,7 +1035,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-2fgh-jklz",
                 IsRegistered = true,
@@ -789,7 +1047,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 18,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-d2gh-jklz",
                 IsRegistered = true,
@@ -803,7 +1061,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-df2h-jklz",
                 IsRegistered = true,
@@ -815,7 +1073,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-dfg2-jklz",
                 IsRegistered = true,
@@ -827,7 +1085,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-dfgh-2klz",
                 IsRegistered = true,
@@ -839,7 +1097,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-dfgh-j2lz",
                 IsRegistered = true,
@@ -851,7 +1109,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 26,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-dfgh-jk2z",
                 IsRegistered = true,
@@ -863,7 +1121,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 36,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opas-dfgh-jkl2",
                 IsRegistered = true,
@@ -877,7 +1135,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 36,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "3wer-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -889,7 +1147,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 51,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "q3er-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -901,7 +1159,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 51,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qw3r-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -913,7 +1171,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 36,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwe3-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -925,7 +1183,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 36,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-3yui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -937,7 +1195,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 51,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-t3ui-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -951,7 +1209,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-ty3i-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -963,7 +1221,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyu3-opas-dfgh-jklz",
                 IsRegistered = true,
@@ -975,7 +1233,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-3pas-dfgh-jklz",
                 IsRegistered = true,
@@ -987,7 +1245,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-o3as-dfgh-jklz",
                 IsRegistered = true,
@@ -999,7 +1257,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-op3s-dfgh-jklz",
                 IsRegistered = true,
@@ -1011,13 +1269,12 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Gender = Gender.Female,
                 Age = 61,
                 Town = "Antwerpen",
-                PanelId = 1,
+                PanelId = 2,
                 TenantId = "antwerpen",
                 Code = "qwer-tyui-opa3-dfgh-jklz",
                 IsRegistered = true,
                 SelectedCriteria = new List<int>([8, 10]),
             }
-            
         };
         //invitations
         var invitation1 = new Invitation()
@@ -1026,7 +1283,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Age = 26,
             Code = "blLy-Tvxl-1TXG-nYg3-CBtD",
             Gender = Gender.Female,
-            PanelId = 1,
+            PanelId = 2,
             Town = "Antwerpen",
             QRCodeString =
                 "",
@@ -1039,7 +1296,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Age = 18,
             Code = "tDK6-KFhD-ipIi-tQjz-m6cZ",
             Gender = Gender.Male,
-            PanelId = 1,
+            PanelId = 2,
             Town = "Antwerpen",
             QRCodeString =
                 "",
@@ -1052,7 +1309,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Age = 36,
             Code = "Iga7-FHyw-yVfo-8wvN-Bxa8",
             Gender = Gender.Male,
-            PanelId = 1,
+            PanelId = 2,
             Town = "Antwerpen",
             QRCodeString =
                 "",
@@ -1077,7 +1334,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Age = 26,
             Code = "HEMf-Xu0L-1ETh-urZJ-26s9",
             Gender = Gender.Male,
-            PanelId = 1,
+            PanelId = 2,
             Town = "Antwerpen",
             QRCodeString =
                 "",
@@ -1190,11 +1447,11 @@ public class DataSeeder(PanelDbContext panelDbContext)
         question3.Answers.Add(answer7);
         question3.Questionnaire = questionnaire;
         questionnaire.Questions.Add(question3);
-        
+
         panelDbContext.Questionnaires.Add(questionnaire);
         panelDbContext.Questions.AddRange(question1, question2, question3);
         panelDbContext.Answers.AddRange(answer1, answer2, answer3, answer4, answer5, answer6, answer7);
-        
+
         var questionnaire2 = new Questionnaire
         {
             Title = "Procesbepalingsmodule",
@@ -1370,28 +1627,28 @@ public class DataSeeder(PanelDbContext panelDbContext)
         question5.Answers.Add(answer10);
         question5.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question5);
-        
+
         question6.Answers.Add(answer14);
         question6.Answers.Add(answer15);
         question6.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question6);
-        
+
         question7.Answers.Add(answer16);
         question7.Answers.Add(answer17);
         question7.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question7);
-        
+
         question8.Answers.Add(answer18);
         question8.Answers.Add(answer19);
         question8.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question8);
-        
+
         question9.Answers.Add(answer20);
         question9.Answers.Add(answer21);
         question9.Answers.Add(answer22);
         question9.Questionnaire = questionnaire2;
         questionnaire2.Questions.Add(question9);
-        
+
         question10.Answers.Add(answer23);
         question10.Answers.Add(answer24);
         question10.Questionnaire = questionnaire2;

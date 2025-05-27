@@ -18,7 +18,8 @@ public class IdentitySeeder(UserManager<ApplicationUser> userManager, RoleManage
         var user1 = new ApplicationUser()
         {
             UserName = "admin@example.com",
-            Email = "admin@example.com"
+            Email = "admin@example.com",
+            IsSuper = true
         };
         await userManager.CreateAsync(user1, "Test1!");
         var token1 = await userManager.GenerateEmailConfirmationTokenAsync(user1);
@@ -29,7 +30,8 @@ public class IdentitySeeder(UserManager<ApplicationUser> userManager, RoleManage
         var user2 = new ApplicationUser()
         {
             UserName = "antwerpen@example.com",
-            Email = "antwerpen@example.com"
+            Email = "antwerpen@example.com",
+            IsSuper = true
         };
         await userManager.CreateAsync(user2, "Test1!");
         
@@ -54,6 +56,8 @@ public class IdentitySeeder(UserManager<ApplicationUser> userManager, RoleManage
         
         user3.MemberProfile = new MemberProfile()
         {
+            FirstName = "Paul",
+            LastName = "Veenstra",
             Gender = Gender.Male,
             BirthDate = new DateOnly(1980, 1, 1),
             TenantId = "antwerpen"
@@ -83,5 +87,16 @@ public class IdentitySeeder(UserManager<ApplicationUser> userManager, RoleManage
         var token4 = await userManager.GenerateEmailConfirmationTokenAsync(user4);
         await userManager.ConfirmEmailAsync(user4, token4);
         await userManager.AddToRoleAsync(user4, "Organization");
+        
+        // user 5
+        var user5 = new ApplicationUser()
+        {
+            UserName = "admin2@example.com",
+            Email = "admin2@example.com"
+        };
+        await userManager.CreateAsync(user5, "Test1!");
+        var token5 = await userManager.GenerateEmailConfirmationTokenAsync(user5);
+        await userManager.ConfirmEmailAsync(user5, token5);
+        await userManager.AddToRoleAsync(user5, "Admin");
     }
 }

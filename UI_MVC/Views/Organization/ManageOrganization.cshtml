@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "Organisatie beheer";
+}
+
+<h2>Organisatie beheer</h2>
+
+<div class="draw-results-section">
+    <div>
+        <table class="reg-overview-table table-striped">
+            <thead>
+            <tr>
+                <th>Naam</th>
+                <th>Verwijder organisatie account?</th>
+            </tr>
+            </thead>
+            <tbody id="organizationTableBody">
+            
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/manageStaff.js" asp-append-version="true"></script>
+}

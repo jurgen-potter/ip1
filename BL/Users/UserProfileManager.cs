@@ -25,14 +25,27 @@ public class UserProfileManager(
         var userId = userManager.GetUserId(userPrincipal);
         return userProfileRepository.ReadUserByIdWithProfileAndPanels(userId);
     }
-
+    
     public ApplicationUser GetOrganizationByIdWithProfileAndAnswers(string organizationId)
     {
         return userProfileRepository.ReadOrganizationByIdWithProfileAndAnswers(organizationId);
+    }
+    public IEnumerable<ApplicationUser> GetAllOrganizations()
+    {
+        return userProfileRepository.ReadAllOrganizations();
+    }
+    public IEnumerable<MemberProfile> GetAllOrganizationMembersNotInPanel(int panelId)
+    {
+        return userProfileRepository.ReadAllOrganizationMembersNotInPanel(panelId);
     }
 
     public Task EditOrganizationAnswersAsync(string userId, int questionnaireId, List<Answer> answers)
     {
         return userProfileRepository.UpdateOrganizationAnswersAsync(userId, questionnaireId, answers);
+    }
+    
+    public IEnumerable<ApplicationUser> GetAllAdmins()
+    {
+        return userProfileRepository.ReadAllAdmins();
     }
 }

@@ -14,7 +14,8 @@ public interface IPanelManager
     Panel GetPanelByIdWithMembers(int panelId);
     Panel GetPanelByIdWithInvitations(int panelId);
     Panel GetPanelByIdWithRecommendations(int panelId);
-    Panel GetPanelByIdWithAcceptedRecommendationsAndPosts(int panelId);
+    Panel GetPanelByIdWithRecommendationsWithoutTenant(int panelId);
+    Panel GetPanelByIdWithRecommendationsAndPosts(int panelId);
     Panel GetPanelByIdWithRecommendationsAndVotes(int panelId);
     void EditPanel(Panel panel);
     void RemovePanel(Panel panel);
@@ -26,8 +27,15 @@ public interface IPanelManager
     IEnumerable<UserVote> GetUserVotesById(string userId);
     void AddUserVote(ApplicationUser member, Recommendation recommendation, bool recommended);
     void RemoveUserVote(ApplicationUser member, Recommendation recommendation);
+    bool RemoveUserVotesByMember(ApplicationUser member);
     bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation);
 
     IEnumerable<Criteria> GetExtraCriteriaByPanelId(int panelId);
     IEnumerable<Criteria> GetCriteriaByPanelIdWithSubcriteria(int panelId);
+    
+    IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId);
+
+    IEnumerable<Meeting> GetMeetingsById(int panelId);
+    
+    IEnumerable<Invitation> GetReservesByPanelId(int panelId);
 }
