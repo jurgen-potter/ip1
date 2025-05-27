@@ -1,3 +1,15 @@
+interface RecDto {
+    id: number;
+    title: string;
+    description: string;
+    anonymous: boolean;
+    votable: boolean;
+    votes: number;
+    votesFor: number;
+    votesAgainst: number;
+    neededpercentages: number;
+}
+
 const checkbox = document.getElementById('rejectBox') as HTMLInputElement;
 const rejectValue = document.getElementById('rejectValue') as HTMLInputElement;
 
@@ -52,7 +64,7 @@ function rejected() {
         .catch(err => alert('Something went wrong: ' + err));
 }
 
-function showRejected(recs: any): void  {
+function showRejected(recs: RecDto[]): void  {
     const list = document.getElementById('rejectedList') as HTMLUListElement;
     list.innerHTML = '';
     if (recs.length > 0) {

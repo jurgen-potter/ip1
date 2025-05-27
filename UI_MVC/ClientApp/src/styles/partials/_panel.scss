@@ -2,6 +2,25 @@
   @apply max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-md my-8;
 }
 
+.loading-overlay {
+  @apply fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-[9999]; /* Zeer hoge z-index */
+  @apply hidden; 
+
+  &.is-active {
+    @apply flex;
+  }
+}
+
+.loading-indicator {
+  @apply bg-white p-8 rounded-lg shadow-xl text-center max-w-sm mx-auto;
+  .spinner {
+    @apply block w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4;
+  }
+  .loading-text {
+    @apply text-gray-700 font-semibold text-lg;
+  }
+}
+
 .panel-create-title {
   @apply text-2xl font-semibold mb-6 text-center sm:text-left;
 }
