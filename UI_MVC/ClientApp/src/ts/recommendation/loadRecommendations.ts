@@ -1,3 +1,23 @@
+interface MeetingDto {
+    meetingId: number;
+    meetingTitle: string;
+    participants: number;
+    amountVotable: number;
+    recs: RecDto[];
+}
+
+interface RecDto {
+    id: number;
+    title: string;
+    description: string;
+    anonymous: boolean;
+    votable: boolean;
+    votes: number;
+    votesFor: number;
+    votesAgainst: number;
+    neededPercentages: number;
+}
+
 let selectedRecommendationId: number | null = null;
 let selectedRecommendationTitle: string | null = null;
 let lastFocusedTrigger: HTMLElement | null = null;
@@ -246,7 +266,7 @@ function loadMeetings() {
         .catch(err => alert('Something went wrong: ' + err));
 }
 
-function addMeetings(meetings: any) {
+function addMeetings(meetings: MeetingDto[]) {
     const activeDiv = document.getElementById('active-body') as HTMLDivElement;
     const notActiveDiv = document.getElementById('not-active-body') as HTMLDivElement;
     const activeHeader = document.getElementById('active-header') as HTMLElement;
@@ -257,11 +277,11 @@ function addMeetings(meetings: any) {
     activeHeader.classList.add('hidden');
     notActiveHeader.classList.add('hidden');
     
-    meetings.forEach((meeting: any) => createMeeting(meeting));
+    meetings.forEach((meeting: MeetingDto) => createMeeting(meeting));
 }
 
 
-function createMeeting(meeting: any): void {
+function createMeeting(meeting: MeetingDto): void {
     if (meeting.recs.length > 0){
         if (meeting.amountVotable !== 0){
             const activeHeader = document.getElementById('active-header') as HTMLHeadElement;
@@ -281,7 +301,7 @@ function createMeeting(meeting: any): void {
     }
 }
 
-function createRecommendations(meeting: any): void {
+function createRecommendations(meeting: MeetingDto): void {
     for (let i = 0; i < meeting.recs.length; i++) {
 
         if (meeting.recs[i].votable) {
@@ -298,7 +318,7 @@ function createRecommendations(meeting: any): void {
 }
 
 
-function generateMeetingHtml(meeting: any, active: string) : HTMLElement {
+function generateMeetingHtml(meeting: MeetingDto, active: string) : HTMLElement {
     const newMeeting = document.createElement('div');
     newMeeting.classList.add(active + '-meeting-body-' + meeting.meetingId);
     newMeeting.innerHTML = `
@@ -310,10 +330,10 @@ function generateMeetingHtml(meeting: any, active: string) : HTMLElement {
     return newMeeting;
 }
 
-function generateRecommendationHtml(recommendation: any, participants: number) : HTMLElement {
+function generateRecommendationHtml(recommendation: RecDto, participants: number) : HTMLElement {
     const newRec = document.createElement('div');
     newRec.classList.add('recommendation-body-' + recommendation.id);
-    const anonymousHeader = (recommendation.anon as boolean) 
+    const anonymousHeader = recommendation.anonymous 
         ? "(Anonieme stemming) " 
         : "";
     
@@ -327,7 +347,7 @@ function generateRecommendationHtml(recommendation: any, participants: number) :
     
     if (currRole === 'Organization'){
         let buttons = "";
-        if (!recommendation.anon){
+        if (!recommendation.anonymous){
             buttons += `
                 <button type="button" class="btn btn-sm btn-outline-info btn-show-voters"
                         data-recommendation-id="${recommendation.id}"

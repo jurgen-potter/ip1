@@ -63,4 +63,23 @@
             }
         });
     }
+    
+    const generateButton = document.getElementById('generateInvites') as HTMLButtonElement;
+    generateButton.addEventListener('click', () => {
+        const panelId = generateButton.dataset.panelId;
+        //const tenantId = window.location.pathname.split('/')[1];
+        fetch(`api/Invitations/makeInvitations/${panelId}`, {
+          method: 'POST', 
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+          },
+      })
+          .then(response => {
+              if (response.ok) {
+                  alert('Nieuwe uitnodigingen zijn aangemaakt.');
+              }
+          })
+          .catch(err => alert('Er ging iets fout: ' + err));
+    })
 });
