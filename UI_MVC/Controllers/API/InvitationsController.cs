@@ -11,7 +11,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 [ApiController]
 [Route("/{tenantId}/api/[controller]")]
 [Authorize(Roles = "Organization")]
-public class InvitationsController(IPanelManager panelManager) : ControllerBase
+public class InvitationsController(IPanelManager panelManager, IUtilityManager utilityManager) : ControllerBase
 {
     [HttpGet("{panelId}")]
     public IActionResult Get(int panelId)
