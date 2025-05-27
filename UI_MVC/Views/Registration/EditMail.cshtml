@@ -31,6 +31,21 @@
                 </div>
             </fieldset>
 
+            <fieldset class="space-y-6 mb-8 pb-6 border-b border-gray-200">
+                <legend class="text-xl font-semibold text-gray-700 mb-4">Bericht aan Reserves</legend>
+                <div class="auth-form-group">
+                    <label asp-for="ReserveSubject" class="auth-form-label">Onderwerp</label>
+                    <input type="text" asp-for="ReserveSubject" class="auth-input-field" />
+                    <span asp-validation-for="ReserveSubject" class="auth-validation-message"></span>
+                </div>
+
+                <div class="auth-form-group">
+                    <label asp-for="ReserveMessage" class="auth-form-label">Bericht</label>
+                    <textarea asp-for="ReserveMessage" class="auth-input-field" rows="5" >@Model.ReserveMessage</textarea>
+                    <span asp-validation-for="ReserveMessage" class="auth-validation-message"></span>
+                </div>
+            </fieldset>
+
             <fieldset class="space-y-6">
                 <legend class="text-xl font-semibold text-gray-700 mb-4">Bericht aan Niet Geselecteerden</legend>
                 <div class="auth-form-group">

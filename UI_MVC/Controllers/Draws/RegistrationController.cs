@@ -30,6 +30,7 @@ public class RegistrationController(
         var vm = new ResultViewModel
         {
             TotalAvailablePotentialPanelmembers = panel.TotalAvailablePotentialPanelmembers,
+            ReservePotPanelmembers = result.ReservePotPanelmembers,
             TotalNeededPanelmembers = result.TotalNeededPanelmembers,
             Criteria = criteria.Select(c => new CriteriaViewModel
             {
@@ -80,6 +81,8 @@ public class RegistrationController(
 
         TempData["SelectedSubject"] = finalDraw.SelectedSubject;
         TempData["SelectedMessage"] = finalDraw.SelectedMessage;
+        TempData["ReserveSubject"] = finalDraw.ReserveSubject;
+        TempData["ReserveMessage"] = finalDraw.ReserveMessage;
         TempData["NotSelectedSubject"] = finalDraw.NotSelectedSubject;
         TempData["NotSelectedMessage"] = finalDraw.NotSelectedMessage;
 
@@ -91,6 +94,8 @@ public class RegistrationController(
     {
         var selectedSubject = TempData["SelectedSubject"] as string ?? "Test";
         var selectedMessage = TempData["SelectedMessage"] as string ?? "Test";
+        var reserveSubject = TempData["ReserveSubject"] as string ?? "Test";
+        var reserveMessage = TempData["ReserveMessage"] as string ?? "Test";
         var notSelectedSubject = TempData["NotSelectedSubject"] as string ?? "Test";
         var notSelectedMessage = TempData["NotSelectedMessage"] as string ?? "Test";
 
@@ -118,6 +123,12 @@ public class RegistrationController(
             {
                 mailSender.SendEmailAsync(selected.Email, selectedSubject,
                     selectedMessage.Replace(Environment.NewLine, "<br />"));
+            }
+        
+            foreach (var reserve in dr.ReserveInvitations)
+            {
+                mailSender.SendEmailAsync(reserve.Email, reserveSubject,
+                    reserveMessage.Replace(Environment.NewLine, "<br />"));
             }
         
             if (dr.NotSelectedInvitations.Count > 0)

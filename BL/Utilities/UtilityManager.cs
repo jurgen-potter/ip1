@@ -132,7 +132,7 @@ public class UtilityManager(IDrawManager drawManager) : IUtilityManager
         return new RecruitmentResult
         {
             TotalNeededPanelmembers = totalToDraw,
-            TotalNeededInvitations = reservePool,
+            ReservePotPanelmembers = reservePool,
             Buckets = buckets
         };
     }

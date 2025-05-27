@@ -40,7 +40,8 @@
 
     @foreach (var group in new[]
               {
-                  new { Title = "Geselecteerde deelnemers", Invitations = Model.SelectedInvitations }
+                  new { Title = "Geselecteerde deelnemers", Invitations = Model.SelectedInvitations },
+                  new { Title = "Reserve deelnemers", Invitations = Model.ReserveInvitations },
               })
     {
         @if (group.Invitations.Any()) 
@@ -96,10 +97,10 @@
         }
     }
 
-    @if (!Model.SelectedInvitations.Any()) 
+    @if (!Model.SelectedInvitations.Any() && !Model.ReserveInvitations.Any()) 
     {
         <div class="reg-overview-alert alert-warning">
-            Er zijn geen resultaten beschikbaar voor geselecteerden. De loting moet mogelijk opnieuw worden uitgevoerd of er waren geen aanmeldingen.
+            Er zijn geen resultaten beschikbaar voor geselecteerden of reserves. De loting moet mogelijk opnieuw worden uitgevoerd of er waren geen aanmeldingen.
         </div>
     }
 </div>
