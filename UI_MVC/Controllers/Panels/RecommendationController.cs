@@ -17,7 +17,7 @@ public class RecommendationController(
     }
 
     [HttpGet]
-    [Route("{tenant}/Recommendation/GetVoters/{recommendationId}")]
+    [Route("{tenantId}/Recommendation/GetVoters/{recommendationId}")]
     [Authorize(Roles = "Organization")] 
     public IActionResult GetVoters(int recommendationId)
     {
@@ -27,7 +27,7 @@ public class RecommendationController(
         return PartialView("_VotersList", votes);
     }
     
-    [HttpGet("{tenant}/Recommendation/StopVoting/{id}")]
+    [HttpGet("{tenantId}/Recommendation/StopVoting/{id}")]
     [Authorize(Roles = "Organization")]
     public IActionResult StopVoting(int id)
     {

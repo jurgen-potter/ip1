@@ -25,12 +25,6 @@ public class TenantMiddleware(
     {
         ("panel", "details"),
         ("panels","editpanel"),
-        /*
-        ("meetings", "getmeetings"),
-        ("recommendations", "getuservotes"),
-        ("recommendations", "vote"),
-        ("recommendations","removevote")*/
-
     };
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -40,18 +34,10 @@ public class TenantMiddleware(
         var controller = context.Request.RouteValues.TryGetValue("controller", out var controllerObj) ? controllerObj?.ToString()?.ToLower() : null;
         var action = context.Request.RouteValues.TryGetValue("action", out var actionObj) ? actionObj?.ToString()?.ToLower() : null;
         var routeTenantId = context.Request.RouteValues["tenantId"]?.ToString();
-        var routeTenantId2 = context.GetRouteValue("tenantId")?.ToString();
-        var routeTenantId3 = context.Request.RouteValues["tenant"]?.ToString();
-        //var tryRouteTenantId = context.Request.Path.Value?.Split('/')[1];
         
         var isIdentityArea = area?.Equals("Identity", StringComparison.OrdinalIgnoreCase) == true;
         var isPublicController = _publicControllers.Contains(controller);
         var isTenantSpecificRoute = controller != null && action != null && _tenantSpecificRoutes.Contains((controller, action));
-
-        if (routeTenantId3 != null)
-        {
-            routeTenantId = routeTenantId3;
-        }
         
         // Skip setting tenant context for Identity and public controllers
         if (isIdentityArea || isPublicController)
