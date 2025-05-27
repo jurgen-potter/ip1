@@ -155,7 +155,7 @@ public class RegistrationManager(
     public void StartFinalDraw(Panel panel)
     {
         var criteria = panelManager.GetCriteriaByPanelIdWithSubcriteria(panel.Id);
-        var recruitmentPlan = utilityManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
+        var recruitmentPlan = utilityManager.CalculateRecruitment(panel.TotalNeededPanelmembers, criteria);
 
         LoadCriteriaCache(panel.Id);
 
@@ -177,7 +177,7 @@ public class RegistrationManager(
                                         .Except(drawSelectionResult.ReserveInvitations)
                                         .ToList(),
             TotalNeededPanelmembers = recruitmentPlan.TotalNeededPanelmembers,
-            ReservePanelmembers = recruitmentPlan.ReservePotPanelmembers,
+            ReservePanelmembers = recruitmentPlan.TotalNeededInvitations,
             TenantId = panel.TenantId
         };
 
@@ -255,7 +255,7 @@ public class RegistrationManager(
                                     .OrderBy(_ => random.Next())
                                     .ToList();
 
-        int reserveTarget = recruitmentPlan.ReservePotPanelmembers;
+        int reserveTarget = recruitmentPlan.TotalNeededInvitations;
         int reserveSelectedCount = 0;
 
         foreach (var invitation in shuffledReservePool)

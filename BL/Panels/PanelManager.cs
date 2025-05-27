@@ -7,7 +7,7 @@ namespace CitizenPanel.BL.Panels;
 
 public class PanelManager(IPanelRepository repository) : IPanelManager
 {
-    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totAvPotMem)
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totNeedMem)
     {
         Panel newPanel = new Panel()
         {
@@ -15,7 +15,7 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
             Description = description,
             MemberCount = 0,
             Criteria = criteria,
-            TotalAvailablePotentialPanelmembers = totAvPotMem
+            TotalNeededPanelmembers = totNeedMem
         };
         repository.CreatePanel(newPanel);
         return newPanel;

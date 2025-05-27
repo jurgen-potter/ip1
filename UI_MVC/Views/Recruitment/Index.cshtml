@@ -20,29 +20,11 @@
     <form asp-action="Calculate" method="post">
         <input asp-for="PanelId" type="hidden"/>
         <div class="recruitment-form-group">
-            <div class="panel-size-toggle-container">
-                <div class="panel-size-input-group">
-                    <label asp-for="TotalAvailablePotentialPanelmembers" class="auth-form-label">Aantal inwoners gemeente</label>
-                    <input asp-for="TotalAvailablePotentialPanelmembers" type="number" class="auth-input-field" id="total-available-input"/>
-                    <span class="text-danger panelmember-warning" style="display:none;">
-                        Er moeten minstens 100 potentiële deelnemers zijn.
-                    </span>
-                </div>
-
-                <div class="panel-size-toggle-button">
-                    <button type="button" class="btn btn-outline-secondary btn-sm-equivalent" id="toggle-input-mode">
-                        <i class="fas fa-exchange-alt"></i>
-                    </button>
-                </div>
-
-                <div class="panel-size-input-group">
-                    <label asp-for="TotalPanelmembers" class="auth-form-label">Specifiek aantal panelleden</label>
-                    <input asp-for="TotalPanelmembers" type="number" class="auth-input-field" id="specific-panel-size" disabled/>
-                    <span class="text-danger specific-panel-warning" style="display:none;">
-                        Er moeten minstens 5 panelleden zijn.
-                    </span>
-                </div>
-            </div>
+            <label asp-for="TotalAvailablePotentialPanelmembers" class="auth-form-label">Aantal inwoners gemeente</label>
+            <input asp-for="TotalAvailablePotentialPanelmembers" type="number" class="auth-input-field" required/>
+            <span class="text-danger panelmember-warning" style="display:none;">
+                Er moeten minstens 100 potentiële deelnemers zijn.
+            </span>
         </div>
 
         <ul id="criterias-list" class="criteria-list">

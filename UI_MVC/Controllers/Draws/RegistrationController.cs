@@ -23,14 +23,13 @@ public class RegistrationController(
         var criteria = panelManager.GetCriteriaByPanelIdWithSubcriteria(panelId);
         var users = drawManager.GetRegisteredInvitationsByPanelId(panelId).ToList();
         var panel = panelManager.GetPanelById(panelId);
-        var result = utilityManager.CalculateRecruitment(panel.TotalAvailablePotentialPanelmembers, criteria);
+        var result = utilityManager.CalculateRecruitment(panel.TotalNeededPanelmembers, criteria);
 
         var bucketsWithActuals = registrationManager.AssignActualRegistrationsToBuckets(result.Buckets, users);
 
         var vm = new ResultViewModel
         {
-            TotalAvailablePotentialPanelmembers = panel.TotalAvailablePotentialPanelmembers,
-            ReservePotPanelmembers = result.ReservePotPanelmembers,
+            TotalNeededInvitations = result.TotalNeededInvitations,
             TotalNeededPanelmembers = result.TotalNeededPanelmembers,
             Criteria = criteria.Select(c => new CriteriaViewModel
             {

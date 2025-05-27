@@ -32,7 +32,7 @@ public class Panel : ITenanted
     public DrawStatus DrawStatus { get; set; }
     public DrawResult DrawResult { get; set; }
     public ICollection<Recommendation> Recommendations { get; set; } = new List<Recommendation>();
-    public int TotalAvailablePotentialPanelmembers{ get; set; }
+    public int TotalNeededPanelmembers{ get; set; }
     
     public bool IsActive { get; set; } = true;
     public bool IsAnonymous { get; set; }

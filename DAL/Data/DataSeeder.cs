@@ -48,7 +48,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             EndDate = new DateOnly(2025, 7, 22),
             DrawStatus = DrawStatus.Complete,
             TenantId = "antwerpen",
-            TotalAvailablePotentialPanelmembers = 10000,
+            TotalNeededPanelmembers = 100,
             IsActive = true,
             MemberCount = 11,
             CoverImagePath = "../../UI_MVC/wwwroot/Antwerpenbanner.jpg",
@@ -164,7 +164,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             EndDate = new DateOnly(2025, 7, 17),
             DrawStatus = DrawStatus.FirstPhaseActive,
             TenantId = "antwerpen",
-            TotalAvailablePotentialPanelmembers = 10000
+            TotalNeededPanelmembers = 100
         };
         panelDbContext.Panels.Add(panel2);
         panel2.Criteria.Add(crit21);

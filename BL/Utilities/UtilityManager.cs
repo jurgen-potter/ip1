@@ -107,10 +107,14 @@ public class UtilityManager(IDrawManager drawManager) : IUtilityManager
 
         return code;
     }
-    
-    public RecruitmentResult CalculateRecruitment(int totalAvailablePotentialPanelmembers, IEnumerable<Criteria> criteriaList)
+
+    public int CalculateMembers(int totalAvailableMembers)
     {
-        int totalToDraw = (int)Math.Round(0.50 * Math.Sqrt(totalAvailablePotentialPanelmembers));
+        return (int)Math.Round(0.50 * Math.Sqrt(totalAvailableMembers));
+    }
+    
+    public RecruitmentResult CalculateRecruitment(int totalToDraw, IEnumerable<Criteria> criteriaList)
+    {
         int reservePool = (int)Math.Ceiling(totalToDraw / 0.08);
         
         var buckets = BuildBuckets(criteriaList.ToList(), totalToDraw);
@@ -132,7 +136,7 @@ public class UtilityManager(IDrawManager drawManager) : IUtilityManager
         return new RecruitmentResult
         {
             TotalNeededPanelmembers = totalToDraw,
-            ReservePotPanelmembers = reservePool,
+            TotalNeededInvitations = reservePool,
             Buckets = buckets
         };
     }

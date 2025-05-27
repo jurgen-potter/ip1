@@ -2,7 +2,7 @@
 
 public class RecruitmentResult
 {
-    public int ReservePotPanelmembers {get; set;}
+    public int TotalNeededInvitations {get; set;}
     public int TotalNeededPanelmembers {get; set;}
     public List<RecruitmentBucket> Buckets { get; set; } = new List<RecruitmentBucket>();
 }
