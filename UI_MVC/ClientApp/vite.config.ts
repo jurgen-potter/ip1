@@ -22,6 +22,7 @@ export default defineConfig({
         dashboard: path.resolve('src/ts/dashboard/timeline.ts'),
         postModal: path.resolve('src/ts/dashboard/createPostModal.ts'),
         recruitment: path.resolve('src/ts/recruitment/index.ts'),
+        recruitmentResult: path.resolve('src/ts/recruitment/result.ts'),
         registration: path.resolve('src/ts/registration/index.ts'),
         memberRegister: path.resolve('src/ts/memberRegister/registerMember.ts'),
         admin: path.resolve('src/ts/admin/editQuestionnaire.ts'),
