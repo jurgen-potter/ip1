@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers.API;
 [ApiController]
-[Route("{tenant}/api/[controller]")]
+[Route("{tenantId}/api/[controller]")]
 public class PanelsController(IPanelManager panelManager) : ControllerBase
 {
     [HttpPut("edit")]

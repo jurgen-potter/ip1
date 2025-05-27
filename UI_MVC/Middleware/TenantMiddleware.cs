@@ -23,7 +23,8 @@ public class TenantMiddleware(
     
     private readonly HashSet<(string Controller, string Action)> _tenantSpecificRoutes = new()
     {
-        ("panel", "details")
+        ("panel", "details"),
+        ("panels","editpanel"),
     };
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -37,7 +38,7 @@ public class TenantMiddleware(
         var isIdentityArea = area?.Equals("Identity", StringComparison.OrdinalIgnoreCase) == true;
         var isPublicController = _publicControllers.Contains(controller);
         var isTenantSpecificRoute = controller != null && action != null && _tenantSpecificRoutes.Contains((controller, action));
-
+        
         // Skip setting tenant context for Identity and public controllers
         if (isIdentityArea || isPublicController)
         {
@@ -71,7 +72,8 @@ public class TenantMiddleware(
                     {
                         tenantContext.Tenant = tenant;
 
-                        if (string.IsNullOrEmpty(routeTenantId))
+                        if (string.IsNullOrEmpty(routeTenantId) /*|| routeTenantId.ToLower() == controller ||
+                            (controller == null && action == null)*/)
                         {
                             var newPath = $"/{tenant.Id}{path}{context.Request.QueryString}";
                             context.Response.Redirect(newPath);

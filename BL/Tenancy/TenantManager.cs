@@ -39,4 +39,9 @@ public class TenantManager(ITenantRepository repository) : ITenantManager
     {
         return repository.DeleteTenant(tenant);
     }
+
+    public bool TenantExists(string tenantId)
+    {
+        return repository.TenantIdExists(tenantId);
+    }
 }

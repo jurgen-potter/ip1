@@ -10,7 +10,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 
 
 [ApiController]
-[Route("{tenant}/api/[controller]")]
+[Route("{tenantId}/api/[controller]")]
 [Authorize]
 public class RecommendationsController(
     IPanelManager panelManager,
