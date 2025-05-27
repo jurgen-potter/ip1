@@ -20,11 +20,23 @@
     <form asp-action="Calculate" method="post">
         <input asp-for="PanelId" type="hidden"/>
         <div class="recruitment-form-group">
-            <label asp-for="TotalAvailablePotentialPanelmembers" class="auth-form-label">Aantal inwoners gemeente</label>
-            <input asp-for="TotalAvailablePotentialPanelmembers" type="number" class="auth-input-field" required/>
+            <div class="label-tooltip-wrapper">
+                <label asp-for="TotalAvailablePotentialPanelmembers" class="auth-form-label">Aantal inwoners gemeente</label>
+                <div class="tooltip-trigger">
+                    <i class="fas fa-question-circle tooltip-icon"></i>
+                    <div class="tooltip-text">
+                        Vul hier het totale aantal inwoners in uw gemeente in die potentieel kunnen deelnemen.
+                        Voor meer informatie over bevolkingsaantallen, zie: 
+                        <a href="https://provincies.incijfers.be/dashboard/kernindicatoren/bevolking" target="_blank" rel="noopener noreferrer">provincies.incijfers.be</a>.
+                        De berekening houdt rekening met een realistische responsgraad.
+                    </div>
+                </div>
+            </div>
+            <input asp-for="TotalAvailablePotentialPanelmembers" type="number" value="100" class="auth-input-field" required/>
             <span class="text-danger panelmember-warning" style="display:none;">
                 Er moeten minstens 100 potentiële deelnemers zijn.
             </span>
+            <span asp-validation-for="TotalAvailablePotentialPanelmembers" class="auth-validation-message"></span>
         </div>
 
         <ul id="criterias-list" class="criteria-list">
@@ -32,7 +44,7 @@
             {
                 var criteriaBodyId = $"criteria-body-{i}";
                 <li class="criteria-item-card">
-                    <input asp-for="Criteria[i].Id" type="hidden" class="criteria-id"/>
+                    <input asp-for="Criteria[i].Id" type="hidden" class="criteria-id" />
                     <div class="criteria-card-header">
                         <div class="criteria-header-content">
                             <label class="criteria-list-label">Criteria</label>
@@ -53,6 +65,7 @@
                              }
                         </div>
                         <button type="button" class="criteria-expand-button"
+                                data-bs-target="#@criteriaBodyId"
                                 aria-expanded="true"
                                 aria-controls="@criteriaBodyId">
                             <i class="fas fa-chevron-up"></i> 
@@ -83,7 +96,7 @@
                                             <div class="subcriteria-input-percentage-wrapper">
                                                 <div class="subcriteria-percentage-group">
                                                     <input asp-for="Criteria[i].SubCriteria[j].Percentage"
-                                                           class="subcriteria-percentage subcriteria-percentage-group"
+                                                           class="panel-form-percentage-input subcriteria-percentage"
                                                            type="number" min="0" max="100"/>
                                                     <span class="percentage-suffix">%</span>
                                                 </div>
@@ -92,7 +105,7 @@
                                             {
                                                 <div class="subcriteria-remove-button-wrapper">
                                                     <button type="button" class="btn btn-danger btn-sm-equivalent btn-remove-subcriteria">
-                                                        Verwijder
+                                                        <i class="fas fa-trash"></i>
                                                     </button>
                                                 </div>
                                             }
@@ -132,10 +145,8 @@
             }
         </ul>
 
-        
-
         <div class="recruitment-criteria-actions">
-            <button type="button" id="add-criteria-btn" class="btn btn-secondary mb-3">Voeg criteria toe</button>
+            <button type="button" id="add-criteria-btn" class="btn btn-secondary">Voeg criteria toe</button>
             <button
                 type="submit"
                 formaction="@Url.Action("Calculate")"
