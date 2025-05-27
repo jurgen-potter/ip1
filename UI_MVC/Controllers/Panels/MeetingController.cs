@@ -142,11 +142,6 @@ public class MeetingController(
             }
             catch (GoogleApiException ex)
             {
-                Console.WriteLine($"❌ Upload gefaald:");
-                Console.WriteLine($"➡️  Message: {ex.Message}");
-                Console.WriteLine($"➡️  StatusCode: {ex.HttpStatusCode}");
-                Console.WriteLine($"➡️  Error: {ex.Error}");
-    
                 return BadRequest("Upload gefaald: " + ex.Message);
             }
 
@@ -162,17 +157,23 @@ public class MeetingController(
     }
 
     [HttpPost]
-    public IActionResult RemoveDocument(int meetingId, string fileName)
+    public async Task<IActionResult> RemoveDocument(int meetingId, string fileName)
     {
         var objectName = $"{meetingId}/{fileName}";
 
         try
         {
-            _storageClient.DeleteObject(_bucketName, objectName);
+            await _storageClient.DeleteObjectAsync(_bucketName, objectName);
         }
         catch (Google.GoogleApiException e) when (e.Error.Code == 404)
         {
             // Bestand bestaat niet, negeer
+        }
+        catch (Exception ex)
+        {
+            // Log de fout, want nu weet je niet waarom het faalt
+            Console.WriteLine($"Error deleting object: {ex}");
+            return BadRequest("Kon bestand niet verwijderen.");
         }
 
         var meeting = _meetingManager.GetMeetingById(meetingId);
@@ -184,4 +185,5 @@ public class MeetingController(
 
         return RedirectToAction("Details", new { id = meetingId });
     }
+
 }
