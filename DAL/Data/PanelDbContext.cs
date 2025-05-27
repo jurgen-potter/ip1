@@ -98,11 +98,6 @@ public class PanelDbContext(
             .HasForeignKey("SelectedDrawResultId");
 
         modelBuilder.Entity<DrawResult>()
-            .HasMany(dr => dr.ReserveInvitations)
-            .WithOne()
-            .HasForeignKey("ReserveDrawResultId");
-
-        modelBuilder.Entity<DrawResult>()
             .HasMany(dr => dr.NotSelectedInvitations)
             .WithOne()
             .HasForeignKey("NotSelectedDrawResultId");

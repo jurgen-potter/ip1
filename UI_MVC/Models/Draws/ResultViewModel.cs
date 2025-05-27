@@ -3,7 +3,7 @@ namespace CitizenPanel.UI.MVC.Models.Draws;
 public class ResultViewModel
 {
     public int TotalAvailablePotentialPanelmembers {get; set;}
-    public int ReservePotPanelmembers {get; set;}
+    public int TotalNeededInvitations {get; set;}
     public int TotalNeededPanelmembers {get; set;}
     public List<BucketViewModel> Buckets { get; set; } = new List<BucketViewModel>();
     public List<CriteriaViewModel> Criteria { get; set; } = new();

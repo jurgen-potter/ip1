@@ -90,7 +90,7 @@ public class RecruitmentController(IUtilityManager utilityManager) : Controller
         var resultModel = new ResultViewModel()
         {
             TotalAvailablePotentialPanelmembers = model.TotalAvailablePotentialPanelmembers,
-            ReservePotPanelmembers = result.ReservePotPanelmembers,
+            TotalNeededInvitations = result.TotalNeededInvitations,
             TotalNeededPanelmembers = result.TotalNeededPanelmembers,
             Criteria = model.Criteria
         };

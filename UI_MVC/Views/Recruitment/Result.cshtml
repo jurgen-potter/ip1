@@ -15,7 +15,7 @@
     <h2 class="draw-calc-page-title">Resultaten Panelberekening voor: @panelName</h2>
 
     <div class="reg-overview-alert alert-info">
-        <strong>@Model.ReservePotPanelmembers</strong> burgers moeten uitgenodigd worden om het benodigde aantal panelleden te bereiken.
+        <strong>@Model.TotalNeededInvitations</strong> burgers moeten uitgenodigd worden om het benodigde aantal panelleden te bereiken.
     </div>
 
     <div class="reg-overview-card mb-6"> 
@@ -63,7 +63,7 @@
         }
         <input type="hidden" name="TotalAvailablePotentialPanelmembers" value="@Model.TotalAvailablePotentialPanelmembers"/>
         <input type="hidden" name="TotalNeededPanelmembers" value="@Model.TotalNeededPanelmembers"/>
-        <input type="hidden" name="ReservePotPanelmembers" value="@Model.ReservePotPanelmembers"/>
+        <input type="hidden" name="TotalNeededInvitations" value="@Model.TotalNeededInvitations"/>
 
         @if (Model.Buckets != null) // Null check voor Buckets
         {
