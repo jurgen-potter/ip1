@@ -71,7 +71,7 @@
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center gap-2">
                                 <span class="badge bg-secondary">📄</span>
-                                <a href="~/meetingUploads/@Model.MeetingId/@doc" target="_blank">@doc</a>
+                                <a href="@doc" target="_blank">@System.IO.Path.GetFileName(doc)</a>
                             </div>
                             @if (User.IsInRole("Organization"))
                             {
