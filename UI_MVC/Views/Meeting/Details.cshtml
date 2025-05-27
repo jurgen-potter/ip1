@@ -75,11 +75,15 @@
                             </div>
                             @if (User.IsInRole("Organization"))
                             {
-                                <form asp-controller="Meeting" asp-action="RemoveDocument" method="post" class="mb-0" asp-route-meetingId="@Model.MeetingId" asp-route-fileName="@doc">
-                                    <button type="submit" class="btn btn-sm btn-danger" title="Verwijder document" onclick="return confirm('Weet je zeker dat u dit document wilt verwijderen?');">
+                                <form asp-controller="Meeting" asp-action="RemoveDocument" method="post" class="mb-0" 
+                                      asp-route-meetingId="@Model.MeetingId" 
+                                      asp-route-fileName="@System.IO.Path.GetFileName(doc)">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Verwijder document" 
+                                            onclick="return confirm('Weet je zeker dat u dit document wilt verwijderen?');">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
+
                             }
                         </li>
                     }
