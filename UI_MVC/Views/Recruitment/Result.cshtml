@@ -12,7 +12,7 @@
 }
 
 <div class="reg-overview-container"> 
-    <h2 class="draw-calc-page-title">Resultaten Panelberekening voor: @panelName</h2>
+    <h2 class="draw-calc-page-title">Resultaten panelgrootte berekening@(panelName != null ? " voor:" + panelName : "")</h2>
 
     <div class="reg-overview-alert alert-info">
         <strong>@Model.ReservePotPanelmembers</strong> burgers moeten uitgenodigd worden om het benodigde aantal panelleden te bereiken.
@@ -23,13 +23,13 @@
             <h5>Samenvatting</h5>
         </div>
         <div class="reg-overview-card-body">
-            <p><strong>Benodigde Panelleden:</strong> <span class="reg-overview-status-badge status-secondary">@Model.TotalNeededPanelmembers</span></p>
+            <p><strong>Geadviseerd aantal panelleden:</strong> <span class="reg-overview-status-badge status-secondary">@Model.TotalNeededPanelmembers</span></p>
         </div>
     </div>
 
     @if (Model.Buckets != null && Model.Buckets.Any())
     {
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Details per Doelgroep:</h3>
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Details per doelgroep:</h3>
         <div class="draw-calc-bucket-list">
             @foreach(var bucket in Model.Buckets)
             {
@@ -77,6 +77,11 @@
                 <input type="hidden" name="Buckets[@(Model.Buckets.IndexOf(bucket))].Count" value="@bucket.Count"/>
             }
         }
+
+        <div class="recalculate-form-group">
+            <label for="TotalNeededPanelmembers">Eigen aantal gewenste panelleden</label>
+            <input type="number" name="TotalNeededPanelmembers" class="auth-input-field" min="1" value="@Model.TotalNeededPanelmembers" />
+        </div>
 
         <div class="draw-calc-actions">
             <button type="submit" class="btn btn-success">Maak uw panel</button>

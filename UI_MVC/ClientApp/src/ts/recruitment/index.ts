@@ -1,10 +1,12 @@
 let allCollapsed: boolean = false;
 const MAX_CRITERIA = 5;
 const MAX_SUBCRITERIA = 5;
+let isTotalAvailableMode: boolean = true;
 
 window.addEventListener('DOMContentLoaded', () => {
     editCriteriaInit();
     initSubcriteriaSums(); // Deze functie roept validateAll aan
+    initPanelSizeToggle();
 
     const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement | null;
     if (toggleAllBtn) {
@@ -15,6 +17,11 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         toggleAllBtn.textContent = allCollapsed ? 'Alles uitvouwen' : 'Alles invouwen';
     }
+
+    const totalAvailableInput = document.getElementById('TotalAvailablePotentialPanelmembers') as HTMLInputElement | null;
+    totalAvailableInput?.addEventListener('input', () => {
+        validateAllFormInputs();
+    });
 });
 
 // ----------------------
@@ -94,6 +101,51 @@ function addSubCriteriaHandlers(subcriteriaItemRow: HTMLLIElement): void {
             updateSumForCriteria(criteriaCard as HTMLLIElement);
         }
     });
+}
+
+function initPanelSizeToggle(): void {
+    const toggleBtn = document.getElementById('toggle-input-mode') as HTMLButtonElement | null;
+    const totalAvailableInput = document.getElementById('total-available-input') as HTMLInputElement | null;
+    const specificPanelInput = document.getElementById('specific-panel-size') as HTMLInputElement | null;
+
+    if (!toggleBtn || !totalAvailableInput || !specificPanelInput) return;
+
+    // Set initial state
+    updatePanelSizeInputs();
+
+    // Add event listeners
+    toggleBtn.addEventListener('click', () => {
+        isTotalAvailableMode = !isTotalAvailableMode;
+        updatePanelSizeInputs();
+        validateAllFormInputs();
+    });
+
+    specificPanelInput.addEventListener('input', () => {
+        validateAllFormInputs();
+    });
+}
+
+function updatePanelSizeInputs(): void {
+    const totalAvailableInput = document.getElementById('total-available-input') as HTMLInputElement | null;
+    const specificPanelInput = document.getElementById('specific-panel-size') as HTMLInputElement | null;
+
+    if (!totalAvailableInput || !specificPanelInput) return;
+
+    if (isTotalAvailableMode) {
+        // Enable total available input, disable specific panel input
+        totalAvailableInput.disabled = false;
+        totalAvailableInput.required = true;
+        specificPanelInput.disabled = true;
+        specificPanelInput.required = false;
+        specificPanelInput.value = ''; // Clear the disabled input
+    } else {
+        // Enable specific panel input, disable total available input
+        totalAvailableInput.disabled = true;
+        totalAvailableInput.required = false;
+        totalAvailableInput.value = ''; // Clear the disabled input
+        specificPanelInput.disabled = false;
+        specificPanelInput.required = true;
+    }
 }
 
 // ----------------------
@@ -329,11 +381,17 @@ function updateSubCriteriaButtonState(ci: string): void { // Hernoemd
     addBtn.disabled = count >= MAX_SUBCRITERIA;
 }
 
-function validateAllFormInputs(): void { // Hernoemd
+function validateAllFormInputs(): void {
     const calculateBtn = document.getElementById('calculate-btn') as HTMLButtonElement | null;
-    if (!calculateBtn) return;
+    const totalAvailableInput = document.getElementById('total-available-input') as HTMLInputElement | null;
+    const specificPanelInput = document.getElementById('specific-panel-size') as HTMLInputElement | null;
+    const panelWarning = document.querySelector<HTMLElement>('.panelmember-warning');
+    const specificPanelWarning = document.querySelector<HTMLElement>('.specific-panel-warning');
+
+    if (!calculateBtn || !totalAvailableInput || !specificPanelInput || !panelWarning || !specificPanelWarning) return;
 
     let allSumsAreValid = true;
+
     document.querySelectorAll<HTMLLIElement>('.criteria-item-card').forEach(item => {
         const inputs = item.querySelectorAll<HTMLInputElement>('.subcriteria-percentage');
         if (inputs.length > 0) {
@@ -350,8 +408,20 @@ function validateAllFormInputs(): void { // Hernoemd
             return input.value.trim() !== '';
         });
 
-    const totalAvailableInput = document.getElementById('TotalAvailablePotentialPanelmembers') as HTMLInputElement | null;
-    const totalAvailableFilled = totalAvailableInput ? totalAvailableInput.value.trim() !== '' && Number(totalAvailableInput.value) > 0 : false;
+    // Validate panel size inputs based on current mode
+    let panelSizeValid = false;
 
-    calculateBtn.disabled = !allSumsAreValid || !allDescriptionsFilled || !totalAvailableFilled;
+    if (isTotalAvailableMode) {
+        const totalAvailable = Number(totalAvailableInput.value);
+        panelSizeValid = !isNaN(totalAvailable) && totalAvailable >= 100;
+        panelWarning.style.display = panelSizeValid ? 'none' : 'block';
+        specificPanelWarning.style.display = 'none';
+    } else {
+        const specificPanelSize = Number(specificPanelInput.value);
+        panelSizeValid = !isNaN(specificPanelSize) && specificPanelSize >= 5;
+        specificPanelWarning.style.display = panelSizeValid ? 'none' : 'block';
+        panelWarning.style.display = 'none';
+    }
+
+    calculateBtn.disabled = !allSumsAreValid || !allDescriptionsFilled || !panelSizeValid;
 }
