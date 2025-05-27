@@ -15,9 +15,6 @@ public class MeetingController(
     StorageClient storageClient) : Controller
 
 {
-    private readonly IMeetingManager _meetingManager = meetingManager;
-    private readonly IPanelManager _panelManager = panelManager;
-    private readonly StorageClient _storageClient = storageClient;
     private readonly string _bucketName = "whimp24-bucket";
     [HttpGet]
     [Authorize]
@@ -34,7 +31,6 @@ public class MeetingController(
 
             try
             {
-                var obj = await _storageClient.GetObjectAsync(_bucketName, objectName);
                 var publicUrl = $"https://storage.googleapis.com/{_bucketName}/{objectName}";
                 documents.Add(publicUrl);
             }
@@ -138,7 +134,7 @@ public class MeetingController(
             using var stream = file.OpenReadStream();
             try
             {
-                await _storageClient.UploadObjectAsync(_bucketName, objectName, file.ContentType, stream);
+                await storageClient.UploadObjectAsync(_bucketName, objectName, file.ContentType, stream);
             }
             catch (GoogleApiException ex)
             {
@@ -146,11 +142,11 @@ public class MeetingController(
             }
 
 
-            var meeting = _meetingManager.GetMeetingById(meetingId);
+            var meeting = meetingManager.GetMeetingById(meetingId);
             if (!meeting.DocumentNames.Contains(file.FileName))
             {
                 meeting.DocumentNames.Add(file.FileName);
-                _meetingManager.EditMeeting(meeting);
+                meetingManager.EditMeeting(meeting);
             }
         }
         return RedirectToAction("Details", new { id = meetingId });
@@ -163,7 +159,7 @@ public class MeetingController(
 
         try
         {
-            await _storageClient.DeleteObjectAsync(_bucketName, objectName);
+            await storageClient.DeleteObjectAsync(_bucketName, objectName);
         }
         catch (Google.GoogleApiException e) when (e.Error.Code == 404)
         {
@@ -176,11 +172,11 @@ public class MeetingController(
             return BadRequest("Kon bestand niet verwijderen.");
         }
 
-        var meeting = _meetingManager.GetMeetingById(meetingId);
+        var meeting = meetingManager.GetMeetingById(meetingId);
         if (meeting.DocumentNames.Contains(fileName))
         {
             meeting.DocumentNames.Remove(fileName);
-            _meetingManager.EditMeeting(meeting);
+            meetingManager.EditMeeting(meeting);
         }
 
         return RedirectToAction("Details", new { id = meetingId });
