@@ -1,6 +1,7 @@
 using CitizenPanel.BL.Domain.Draws;
 using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Users;
+using System.Collections;
 
 namespace CitizenPanel.DAL.Panels;
 
@@ -36,4 +37,6 @@ public interface IPanelRepository
     IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId);
 
     IEnumerable<Meeting> ReadMeetingsById(int panelId);
+    
+    IEnumerable<Invitation> ReadReservesByPanelId(int panelId);
 }

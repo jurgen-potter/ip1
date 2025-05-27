@@ -22,7 +22,11 @@ public class DrawManager(IDrawRepository repository, TenantContext tenantContext
         repository.CreateInvitation(invitation);
         return invitation;
     }
-    
+    public Invitation GetInvitationById(int id)
+    {
+        return repository.ReadInvitationById(id);
+    }
+
     public Invitation GetInvitationByCode(string code)
     {
         return repository.ReadInvitationByCode(code);

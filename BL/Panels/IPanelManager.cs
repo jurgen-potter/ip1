@@ -14,7 +14,7 @@ public interface IPanelManager
     Panel GetPanelByIdWithMembers(int panelId);
     Panel GetPanelByIdWithInvitations(int panelId);
     Panel GetPanelByIdWithRecommendations(int panelId);
-    public Panel GetPanelByIdWithRecommendationsWithoutTenant(int panelId);
+    Panel GetPanelByIdWithRecommendationsWithoutTenant(int panelId);
     Panel GetPanelByIdWithRecommendationsAndPosts(int panelId);
     Panel GetPanelByIdWithRecommendationsAndVotes(int panelId);
     void EditPanel(Panel panel);
@@ -36,4 +36,6 @@ public interface IPanelManager
     IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId);
 
     IEnumerable<Meeting> GetMeetingsById(int panelId);
+    
+    IEnumerable<Invitation> GetReservesByPanelId(int panelId);
 }

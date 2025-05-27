@@ -28,6 +28,9 @@
             <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
                 <i class="fas fa-user-plus"></i> Voeg panellid toe
             </a>
+            <a asp-controller="Registration" asp-action="ReserveMembers" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Reserve leden
+            </a>
             <a asp-controller="Panel" asp-action="Members" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
                 <i class="fa-solid fa-eye"></i> Panelleden
             </a>
