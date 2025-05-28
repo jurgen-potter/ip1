@@ -1,0 +1,22 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "Bewerk panel";
+}
+
+<h2>Bewerk uw panel</h2>
+
+<div>
+    <input type="hidden" id="panelId" value="@Model">
+    <input id="titleInput" type="text" placeholder="Titel" />
+    <textarea id="descriptionInput" placeholder="Beschrijving"></textarea>
+    <input id="endDateInput" type="date" />
+    <input id="bannerUpload" type="file" accept="image/*" />
+    <img id="bannerPreview" src="" alt="Banner" style="max-height: 150px;" />
+
+    <button id="saveBtn">Opslaan</button>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/editPanel.js" asp-append-version="true"></script>
+}

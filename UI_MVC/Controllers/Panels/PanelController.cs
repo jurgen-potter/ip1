@@ -375,6 +375,12 @@ public class PanelController(
 
         return View(viewModel); // Zorg dat je een View hebt genaamd "ViewAll.cshtml" of pas de naam aan.
     }
+
+    [HttpGet]
+    public IActionResult Edit(int panelId)
+    {
+        return View(panelId);
+    }
     
     [HttpPost]
     public async Task<IActionResult> Upload(IFormFile file, int panelId)
