@@ -35,7 +35,6 @@ public class MeetingController(
                 // Check if object exists first
                 await storageClient.GetObjectAsync(_bucketName, objectName);
                 
-                // Use proxy endpoint instead of signed URL
                 var proxyUrl = $"/api/FileProxy/meeting/{id}/{Uri.EscapeDataString(docName)}";
                 documents.Add(proxyUrl);
             }
@@ -154,7 +153,7 @@ public class MeetingController(
         return RedirectToAction("Details", new { id = meetingId });
     }
 
-    [HttpPost]
+    [HttpPost("remove-document")]
     public async Task<IActionResult> RemoveDocument(int meetingId, string fileName)
     {
         var objectName = $"{meetingId}/{fileName}";
@@ -163,19 +162,18 @@ public class MeetingController(
         {
             await storageClient.DeleteObjectAsync(_bucketName, objectName);
         }
-        catch (Google.GoogleApiException e) when (e.Error.Code == 404)
+        catch (GoogleApiException e) when (e.Error.Code == 404)
         {
-            // Bestand bestaat niet, negeer
+            Console.WriteLine($"File not found in bucket: {objectName}");
         }
         catch (Exception ex)
         {
-            // Log de fout, want nu weet je niet waarom het faalt
-            Console.WriteLine($"Error deleting object: {ex}");
-            return BadRequest("Kon bestand niet verwijderen.");
+            Console.WriteLine($"Error deleting object '{objectName}': {ex}");
+            return BadRequest($"Could not delete file: {ex.Message}");
         }
 
         var meeting = meetingManager.GetMeetingById(meetingId);
-        if (meeting.DocumentNames.Contains(fileName))
+        if (meeting?.DocumentNames?.Contains(fileName) == true)
         {
             meeting.DocumentNames.Remove(fileName);
             meetingManager.EditMeeting(meeting);
