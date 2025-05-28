@@ -179,16 +179,15 @@ form textarea.auth-input-field {
   }
 }
 
-.auth-checkbox-label {
+.auth-checkbox-label { 
   @apply flex items-center text-sm text-gray-700;
-  input[type="checkbox"].auth-checkbox-input {
-    @apply h-4 w-4 text-primary border-gray-300 rounded mr-2 focus:ring-primary;
-    border-radius: 0.25rem !important;
-    margin-top: 10px; /* Checkbox 3px naar beneden verplaatst */
+
+  input[type="checkbox"].auth-checkbox-input { 
+    @apply h-4 w-4 text-primary border-gray-300 rounded mr-2 focus:ring-offset-0 focus:ring-primary shrink-0;
+    border-radius: 0.25rem !important; 
   }
-  span {
-    @apply font-medium;
-    padding-top: 9px;
+  span.auth-checkbox-text {
+    @apply font-medium select-none; 
   }
 }
 

@@ -1,22 +1,50 @@
-﻿
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
-    ViewBag.Title = "Adminbeheer";
+    ViewData["Title"] = "Adminbeheer";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
 
-<h2>Adminbeheer</h2>
+<div class="admin-management-container">
+    <div class="admin-management-page-header">
+        <h2 class="admin-management-title">@ViewBag.Title</h2>
+        <div>
+            <a asp-page="/Account/RegisterAdmin" asp-area="Identity" class="btn btn-primary">
+                <i class="fas fa-user-shield mr-2"></i> Nieuwe Admin Toevoegen
+            </a>
+        </div>
+    </div>
 
-<table class="reg-overview-table table-striped">
-    <thead>
-    <tr>
-        <th>Admin</th>
-        <th>Verwijder admin?</th>
-    </tr>
-    </thead>
-    <tbody id="adminTableBody">
-    
-    </tbody>
-</table>
-
+    <div class="admin-table-wrapper">
+        <table class="reg-overview-table table-striped w-full">
+            <thead>
+            <tr>
+                <th>Admin</th>
+                <th>Acties</th>
+            </tr>
+            </thead>
+            <tbody id="adminTableBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="deleteConfirmationModal" class="member-reg-modal-overlay hidden" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="member-reg-modal-dialog">
+        <div class="member-reg-modal-header">
+            <h5 class="member-reg-modal-title" id="deleteConfirmationModalLabel">Bevestiging verwijderen</h5>
+        </div>
+        <div class="member-reg-modal-body">
+            <p>Weet u zeker dat u dit wilt verwijderen?</p>
+        </div>
+        <div class="member-reg-modal-footer">
+            <button type="button" class="btn btn-accent" id="cancelDelete">Annuleren</button>
+            <button type="button" class="btn btn-danger" id="confirmDelete">Verwijderen</button>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <script type="module" src="~/dist/clientapp/assets/manageAdmins.js" asp-append-version="true"></script>
+    <script type="module" src="~/dist/clientapp/assets/memberRegister.js"></script>
 }

@@ -1,30 +1,57 @@
-﻿
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
-    ViewBag.Title = "Organisatiebeheer";
+    ViewData["Title"] = "Organisatiebeheer";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
 
-<h2>Organisatiebeheer</h2>
-
-<form id="searchForm" class="mb-3">
-    <div class="form-group d-flex">
-        <input type="text" id="searchInput" placeholder="Zoek organisatie" class="form-control me-2" />
-        <button type="submit" class="btn btn-primary">Zoeken</button>
-        <button type="button" id="clearSearch" class="btn btn-secondary ms-2">Wissen</button>
+<div class="admin-management-container">
+    <div class="admin-management-page-header">
+        <h2 class="admin-management-title">@ViewBag.Title</h2>
     </div>
-</form>
 
-<table class="reg-overview-table table-striped">
-    <thead>
-    <tr>
-        <th>Organisatie</th>
-        <th>Verwijder organisatie?</th>
-    </tr>
-    </thead>
-    <tbody id="tenantTableBody">
-    
-    </tbody>
-</table>
+    <form id="searchForm" class="admin-search-form">
+        <div class="search-form-group">
+            <input type="text" id="searchInput" placeholder="Zoek organisatie op naam" class="search-input" />
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search mr-2"></i>Zoeken
+            </button>
+            <button type="button" id="clearSearch" class="btn btn-secondary">
+                <i class="fas fa-times mr-2"></i>Wissen
+            </button>
+        </div>
+    </form>
 
+    <div class="admin-table-wrapper">
+        <table class="reg-overview-table table-striped w-full">
+            <thead>
+            <tr>
+                <th>Organisatie</th>
+                <th>Acties</th> 
+            </tr>
+            </thead>
+            <tbody id="tenantTableBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="deleteConfirmationModal" class="member-reg-modal-overlay hidden" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="member-reg-modal-dialog">
+        <div class="member-reg-modal-header">
+            <h5 class="member-reg-modal-title" id="deleteConfirmationModalLabel">Bevestiging verwijderen</h5>
+        </div>
+        <div class="member-reg-modal-body">
+            <p>Weet u zeker dat u dit wilt verwijderen?</p>
+        </div>
+        <div class="member-reg-modal-footer">
+            <button type="button" class="btn btn-accent" id="cancelDelete">Annuleren</button>
+            <button type="button" class="btn btn-danger" id="confirmDelete">Verwijderen</button>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <script type="module" src="~/dist/clientapp/assets/manageOrganizations.js" asp-append-version="true"></script>
+    <script type="module" src="~/dist/clientapp/assets/memberRegister.js"></script>
 }
