@@ -30,153 +30,6 @@ const currRole = (document.getElementById('current-user-role') as HTMLInputEleme
 window.addEventListener('DOMContentLoaded', () => {
     loadMeetings();
 });
-
-function loadButtons() : void {
-    const confirmationModal = document.getElementById("confirmationModal") as HTMLElement;
-    const stopVotingButton = confirmationModal?.querySelector("#stopVotingBtn") as HTMLButtonElement;
-    const waitButton = confirmationModal?.querySelector("#cancel-stop-voting") as HTMLButtonElement;
-
-    const endVoteButtons = document.querySelectorAll('.btn-stop-voting');
-
-    endVoteButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            const recommendationId = (button as HTMLElement).getAttribute("data-recommendation-id");
-            if (recommendationId) {
-                selectedRecommendationId = parseInt(recommendationId);
-            }
-            confirmationModal.classList.remove('hidden');
-        });
-    });
-
-    stopVotingButton?.addEventListener("click", () => {
-        if (selectedRecommendationId === null) return;
-
-        fetch(`/Recommendation/StopVoting/${selectedRecommendationId}`, {
-            method: 'GET'
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw Error(`Received status code ${res.status}.`)
-                }
-                loadMeetings();
-            })
-            .catch(err => alert('Something went wrong: ' + err));
-
-        endVoteButtons.forEach(button => {
-            const recommendationId = (button as HTMLElement).getAttribute("data-recommendation-id");
-            if (recommendationId && parseInt(recommendationId) === selectedRecommendationId) {
-                (button as HTMLButtonElement).hidden = true;
-            }
-        })
-        
-        confirmationModal.classList.add('hidden');
-        selectedRecommendationId = null;
-        
-    });
-
-    waitButton?.addEventListener("click", () => {
-        confirmationModal.classList.add('hidden');
-        selectedRecommendationId = null;
-    });
-
-    const showVotersButtons = document.querySelectorAll('.btn-show-voters') as NodeListOf<HTMLButtonElement>;
-    const closeButton = votersModalElement?.querySelector("#closeModal") as HTMLButtonElement;
-
-    initializeModalButtons(closeButton, showVotersButtons);
-
-    const voteForms = document.querySelectorAll<HTMLFormElement>('.vote-form');
-    // Houd bij op welke items al gestemd is 
-    const votes: Record<string, boolean> = {};
-
-    const updateButton = (form: HTMLFormElement, voted: boolean) => {
-        // Vind de knop in het formulier
-        const btns = form.getElementsByTagName('button');
-        if (!btns) return; // typescript validatie
-        // Past de tekst van de btn aan
-        if (!voted) {
-            btns[0].classList.add('btn-success');
-            btns[0].classList.remove('btn-primary');
-            btns[0].textContent = 'Stem voor'
-            btns[1].hidden = false;
-            btns[1].textContent = 'Stem tegen'
-            // Als je deze tekst aanpast moet je bij let userVote de volgende lijn ook aanpassen(lijn 68: op het moment van schrijven)
-        }
-        else {
-            btns[0].classList.remove('btn-success');
-            btns[0].classList.add('btn-primary');
-            btns[0].textContent = 'Stem terugtrekken'
-            btns[1].hidden = true
-        }
-        //btnFor[0].textContent = voted ? 'Stem terugtrekken' : 'Stem voor';
-        //btn.classList.toggle('voted', voted);
-    };
-    const updateAllButtons = () => {
-        voteForms.forEach(form => {
-            // Haal het id op van recommendation
-            const id = form.querySelector<HTMLInputElement>('input[name="id"]')?.value;
-            if (id) updateButton(form, votes[id]);
-        });
-    };
-
-    fetch(`/${tenant}/api/Recommendations/userVotes`)
-        .then(res => res.ok ? res.json() : Promise.reject()) //bij fout gaat naar de catch
-        .then((ids: string[]) => {
-            // Zet voor elk ontvangen id de stemstatus op true
-            ids.forEach(id => votes[id] = true);
-            // Werk de knoppen bij volgens de opgehaalde data
-            updateAllButtons();
-        });
-
-    // Voeg submit-handler toe aan elk stem-formulier
-    voteForms.forEach(form => {
-        form.querySelectorAll('button').forEach(form2 => {
-            form2.addEventListener('click', async e => {
-                e.preventDefault();
-                const id = form.querySelector<HTMLInputElement>('input[name="id"]')?.value;
-                if (!id) return;
-
-                // Bepaal of we een stem trekken of uitbrengen
-                const voted = votes[id];
-                const url = voted
-                    ? `/${tenant}/api/Recommendations/remove-vote`
-                    : `/${tenant}/api/Recommendations/vote`;
-                // Vind de knop en zet deze tijdelijk uit
-                const btn = form.querySelector<HTMLButtonElement>('button');
-                btn?.setAttribute('disabled', '');
-
-                try {
-                    // Stuur het stemverzoek naar de server
-                    let userVote = {id: +id, recommended: true}
-                    if (form2.textContent === 'Stem tegen') {
-                        userVote.recommended = false;
-                    }
-                    const res = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        // Stuur het id als getal
-                        body: JSON.stringify(userVote)
-                    });
-
-                    // Ontvang het nieuwe stemtotaal
-                    const { id: returnedId, votes: voteCount } = await res.json();
-                    // Werk de teller op de pagina bij
-                    const countEl = document.getElementById(`vote-count-${returnedId}`);
-                    if (countEl) countEl.textContent = String(voteCount); //if statement staat er voor typescript
-
-                    // Update in-memory stemstatus en pas knoppen aan
-                    votes[id] = !voted;
-                    updateAllButtons();
-                } catch {
-                } finally {
-                    // Zet de knop weer aan
-                    btn?.removeAttribute('disabled');
-                }
-            })
-        })
-    });
-
-}
-
 function initializeModalButtons(closeButton :HTMLButtonElement, buttons : NodeListOf<HTMLButtonElement>) {
     buttons.forEach(button => {
         button.addEventListener("click", () => {
@@ -282,134 +135,329 @@ function addMeetings(meetings: MeetingDto[]) {
 
 
 function createMeeting(meeting: MeetingDto): void {
-    if (meeting.recs.length > 0){
-        if (meeting.amountVotable !== 0){
+    if (meeting.recs.length > 0) {
+        const activeRecs = meeting.recs.filter(r => r.votable);
+        const inactiveRecs = meeting.recs.filter(r => !r.votable);
+
+        if (activeRecs.length > 0) {
             const activeHeader = document.getElementById('active-header') as HTMLHeadElement;
             activeHeader.classList.remove('hidden');
-            const meetingsDiv = document.getElementById('active-body') as HTMLDivElement;
-            const newMeeting = generateMeetingHtml(meeting, 'active');
-            meetingsDiv.appendChild(newMeeting);
+            const activeDiv = document.getElementById('active-body') as HTMLDivElement;
+
+            const meetingContainer = document.createElement('div');
+            meetingContainer.className = 'recommendation-meeting-group-container';
+
+            const meetingTitle = document.createElement('h3');
+            meetingTitle.className = 'recommendation-meeting-title';
+            meetingTitle.textContent = meeting.meetingTitle;
+            meetingContainer.appendChild(meetingTitle);
+
+            const recsGrid = document.createElement('div');
+            recsGrid.className = 'recommendations-list-grid';
+
+            activeRecs.forEach(rec => {
+                recsGrid.appendChild(generateRecommendationHtml(rec, meeting.participants));
+            });
+
+            meetingContainer.appendChild(recsGrid);
+            activeDiv.appendChild(meetingContainer);
         }
-        if (meeting.amountVotable !== meeting.recs.length){
+
+        if (inactiveRecs.length > 0) {
             const notActiveHeader = document.getElementById('not-active-header') as HTMLHeadElement;
             notActiveHeader.classList.remove('hidden');
-            const meetingsDiv = document.getElementById('not-active-body') as HTMLDivElement;
-            const newMeeting = generateMeetingHtml(meeting, 'not-active');
-            meetingsDiv.appendChild(newMeeting);
+            const notActiveDiv = document.getElementById('not-active-body') as HTMLDivElement;
+
+            const meetingContainer = document.createElement('div');
+            meetingContainer.className = 'recommendation-meeting-group-container';
+
+            const meetingTitle = document.createElement('h3');
+            meetingTitle.className = 'recommendation-meeting-title';
+            meetingTitle.textContent = meeting.meetingTitle;
+            meetingContainer.appendChild(meetingTitle);
+
+            const recsGrid = document.createElement('div');
+            recsGrid.className = 'recommendations-list-grid';
+
+            inactiveRecs.forEach(rec => {
+                recsGrid.appendChild(generateRecommendationHtml(rec, meeting.participants));
+            });
+
+            meetingContainer.appendChild(recsGrid);
+            notActiveDiv.appendChild(meetingContainer);
         }
-        createRecommendations(meeting);
     }
 }
 
-function createRecommendations(meeting: MeetingDto): void {
-    for (let i = 0; i < meeting.recs.length; i++) {
+function generateRecommendationHtml(recommendation: RecDto, participants: number): HTMLElement {
+    const card = document.createElement('div');
+    card.className = 'recommendation-card';
 
-        if (meeting.recs[i].votable) {
-            const recsDiv = document.getElementById('active-recommendation-body-' + meeting.meetingId) as HTMLDivElement;
-            const newRec = generateRecommendationHtml(meeting.recs[i], meeting.participants);
-            recsDiv.appendChild(newRec);
-        }
-        else {
-            const recsDiv = document.getElementById('not-active-recommendation-body-' + meeting.meetingId) as HTMLDivElement;
-            const newRec = generateRecommendationHtml(meeting.recs[i], meeting.participants);
-            recsDiv.appendChild(newRec);
-        }
+    const body = document.createElement('div');
+    body.className = 'recommendation-card-body';
+
+    // Title with anonymous label if needed
+    const title = document.createElement('h4');
+    title.className = 'recommendation-card-title';
+    title.textContent = recommendation.title;
+    if (recommendation.anonymous) {
+        const anonymousLabel = document.createElement('span');
+        anonymousLabel.className = 'anonymous-label';
+        anonymousLabel.textContent = ' (Anonieme stemming)';
+        title.appendChild(anonymousLabel);
     }
+
+    // Description
+    const description = document.createElement('p');
+    description.className = 'recommendation-card-text';
+    description.textContent = recommendation.description;
+
+    // Status
+    const status = document.createElement('div');
+    status.className = `recommendation-card-status ${recommendation.votable ? 'status-votable' : 'status-ended'}`;
+    if (!recommendation.votable) {
+        const percFor = recommendation.votesFor / recommendation.votes;
+        status.textContent = `Het stemmen is afgelopen. ${(percFor >= (recommendation.neededPercentages / 100)) ? 'Aangenomen!' : 'Niet aangenomen.'}`;
+    } else {
+        status.textContent = 'Stemming open';
+    }
+
+    // Vote info (only for Organization)
+    if (currRole === 'Organization') {
+        const voteInfo = document.createElement('div');
+        voteInfo.className = 'recommendation-card-vote-info';
+
+        const votesList = document.createElement('ul');
+        votesList.innerHTML = `
+            <li><p>Stemmen: <span id="vote-count-${recommendation.id}">${recommendation.votes}/${participants}</span></p></li>
+            <li><p>Voor: <span class="vote-count-for">${recommendation.votesFor}</span></p></li>
+            <li><p>Tegen: <span class="vote-count-against">${recommendation.votesAgainst}</span></p></li>
+            <li><p>Percentage nodig: ${recommendation.neededPercentages}%</p></li>
+        `;
+        voteInfo.appendChild(votesList);
+        body.appendChild(voteInfo);
+    }
+
+    // Actions
+    const actions = document.createElement('div');
+    if (currRole === 'Organization') {
+        actions.className = 'recommendation-card-actions';
+        if (!recommendation.anonymous) {
+            const viewBtn = document.createElement('button');
+            viewBtn.className = 'btn btn-secondary btn-show-voters';
+            viewBtn.setAttribute('data-recommendation-id', recommendation.id.toString());
+            viewBtn.setAttribute('data-recommendation-title', recommendation.title);
+            viewBtn.innerHTML = '<i class="fas fa-users"></i> Bekijk stemmers';
+            actions.appendChild(viewBtn);
+        }
+
+        if (recommendation.votable) {
+            const stopBtn = document.createElement('button');
+            stopBtn.className = 'btn btn-primary btn-stop-voting';
+            stopBtn.setAttribute('data-recommendation-id', recommendation.id.toString());
+            stopBtn.innerHTML = '<i class="fas fa-stop-circle"></i> Stop stemming';
+            actions.appendChild(stopBtn);
+        }
+    } else if (currRole === 'Member' && recommendation.votable) {
+        actions.className = 'recommendation-vote-forms';
+
+        // Create separate forms for vote for and vote against (matching original structure)
+        const voteForForm = document.createElement('form');
+        voteForForm.className = 'vote-form';
+        voteForForm.innerHTML = `
+            <input type="hidden" name="id" value="${recommendation.id}">
+            <button type="submit" class="btn btn-success">Stem voor</button>
+        `;
+
+        const voteAgainstForm = document.createElement('form');
+        voteAgainstForm.className = 'vote-form';
+        voteAgainstForm.innerHTML = `
+            <input type="hidden" name="id" value="${recommendation.id}">
+            <button type="submit" class="btn btn-danger">Stem tegen</button>
+        `;
+
+        actions.appendChild(voteForForm);
+        actions.appendChild(voteAgainstForm);
+    }
+
+    // Append all elements
+    body.appendChild(title);
+    body.appendChild(description);
+    body.appendChild(status);
+    body.appendChild(actions);
+    card.appendChild(body);
+
+    return card;
 }
 
+// Modified loadButtons function to include vote form setup
+function loadButtons(): void {
+    const confirmationModal = document.getElementById("confirmationModal") as HTMLElement;
+    const stopVotingButton = confirmationModal?.querySelector("#stopVotingBtn") as HTMLButtonElement;
+    const waitButton = confirmationModal?.querySelector("#cancel-stop-voting") as HTMLButtonElement;
 
-function generateMeetingHtml(meeting: MeetingDto, active: string) : HTMLElement {
-    const newMeeting = document.createElement('div');
-    newMeeting.classList.add(active + '-meeting-body-' + meeting.meetingId);
-    newMeeting.innerHTML = `
-        <h3>${meeting.meetingTitle}</h3>
-        <div id="${active}-recommendation-body-${meeting.meetingId}">
-        
-        </div>`;
+    const endVoteButtons = document.querySelectorAll('.btn-stop-voting');
 
-    return newMeeting;
+    endVoteButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const recommendationId = (button as HTMLElement).getAttribute("data-recommendation-id");
+            if (recommendationId) {
+                selectedRecommendationId = parseInt(recommendationId);
+            }
+            confirmationModal.classList.remove('hidden');
+        });
+    });
+
+    stopVotingButton?.addEventListener("click", () => {
+        if (selectedRecommendationId === null) return;
+
+        fetch(`/Recommendation/StopVoting/${selectedRecommendationId}`, {
+            method: 'GET'
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw Error(`Received status code ${res.status}.`)
+                }
+                loadMeetings();
+            })
+            .catch(err => alert('Something went wrong: ' + err));
+
+        endVoteButtons.forEach(button => {
+            const recommendationId = (button as HTMLElement).getAttribute("data-recommendation-id");
+            if (recommendationId && parseInt(recommendationId) === selectedRecommendationId) {
+                (button as HTMLButtonElement).hidden = true;
+            }
+        })
+
+        confirmationModal.classList.add('hidden');
+        selectedRecommendationId = null;
+
+    });
+
+    waitButton?.addEventListener("click", () => {
+        confirmationModal.classList.add('hidden');
+        selectedRecommendationId = null;
+    });
+
+    const showVotersButtons = document.querySelectorAll('.btn-show-voters') as NodeListOf<HTMLButtonElement>;
+    const closeButton = votersModalElement?.querySelector("#closeModal") as HTMLButtonElement;
+
+    initializeModalButtons(closeButton, showVotersButtons);
+
+    // Setup voting forms
+    setupVoteForms();
 }
 
-function generateRecommendationHtml(recommendation: RecDto, participants: number) : HTMLElement {
-    const newRec = document.createElement('div');
-    newRec.classList.add('recommendation-body-' + recommendation.id);
-    const anonymousHeader = recommendation.anonymous 
-        ? "(Anonieme stemming) " 
-        : "";
-    
-    const percFor = recommendation.votesFor / recommendation.votes;
-    
-    const finished = (!recommendation.votable as boolean)
-        ? `<p class="mb-1"><strong>Het stemmen is afgelopen. ${(percFor >= (recommendation.neededPercentages / 100)) ? `De aanbeveling is aangenomen!` : `De aanbeveling is niet aangenomen`}</strong></p>`
-        : ""
-    
-    let text = "";
-    
-    if (currRole === 'Organization'){
-        let buttons = "";
-        if (!recommendation.anonymous){
-            buttons += `
-                <button type="button" class="btn btn-sm btn-outline-info btn-show-voters"
-                        data-recommendation-id="${recommendation.id}"
-                        data-recommendation-title="${recommendation.title}">
-                    Bekijk Stemmers
-                </button>`
-        }
-        if (recommendation.votable){
-            buttons += `
-                <button type="button" class="btn btn-sm btn-outline-danger btn-stop-voting"
-                        data-recommendation-id="${recommendation.id}">
-                    Stop stemronde
-                </button>
-            `
-        }
-        text += `
-            <div class="mt-auto">
-                <p class="mb-1">Stemmen: <span id="vote-count-${recommendation.id}">${recommendation.votes}/${participants}</span></p>
-                <p class="mb-1">Percentage nodig om te slagen: ${recommendation.neededPercentages}%</p>
-                <ul>
-                    <li>
-                        <p class="mb-1" style="color: limegreen">Voor deze aanbeveling: ${recommendation.votesFor}</p>
-                    </li>
-                    <li>
-                        <p class="mb-1" style="color: red">Tegen deze aanbeveling: ${recommendation.votesAgainst}</p>
-                    </li>
-                </ul>
-                <div class="d-flex justify-content-start mt-4 gap-2">
-                    ${buttons}
-                </div>
-            </div>`
-    }
-    else if (currRole === 'Member' && recommendation.votable){
-        text += `
-            <div class="vote-form">
-                <form class="mt-auto">
-                    <input type="hidden" name="id" value="${recommendation.id}">
-                    <button type="submit" id="vote-for" class="btn btn-success">Stem voor</button>
-                </form>
+function setupVoteForms(): void {
+    const voteForms = document.querySelectorAll<HTMLFormElement>('.vote-form');
+    const votes: Record<string, boolean> = {};
 
-                <form class="mt-auto">
-                    <input type="hidden" name="id" value="${recommendation.id}">
-                    <button type="submit" id="vote-against" class="btn btn-danger">Stem tegen</button>
-                </form>
-            </div>`
-    }
-    
-    newRec.innerHTML += `
-        <div class="card h-100 w-100">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">
-                    ${anonymousHeader}${recommendation.title}
-                </h5>
-                <p class="card-text flex-grow-1">${recommendation.description}</p>
-                <p class="mb-1" id="${recommendation.id}" hidden>
-                    <strong>Het stemmen is afgelopen</strong>
-                </p>
+    const updateButton = (form: HTMLFormElement, voted: boolean) => {
+        const btns = form.getElementsByTagName('button');
+        if (!btns || btns.length === 0) return;
 
-                ${finished}
-                ${text}
-            </div>
-        </div>`
-    return newRec;
+        // Find the parent container to access both forms
+        const parentContainer = form.parentElement;
+        if (!parentContainer) return;
+
+        const allForms = parentContainer.querySelectorAll<HTMLFormElement>('.vote-form');
+        if (allForms.length < 2) return;
+
+        const forForm = allForms[0];
+        const againstForm = allForms[1];
+        const forBtn = forForm.querySelector('button');
+        const againstBtn = againstForm.querySelector('button');
+
+        if (!forBtn || !againstBtn) return;
+
+        if (!voted) {
+            forBtn.classList.add('btn-success');
+            forBtn.classList.remove('btn-primary');
+            forBtn.textContent = 'Stem voor';
+            againstBtn.hidden = false;
+            againstBtn.textContent = 'Stem tegen';
+        } else {
+            forBtn.classList.remove('btn-success');
+            forBtn.classList.add('btn-primary');
+            forBtn.textContent = 'Stem terugtrekken';
+            againstBtn.hidden = true;
+        }
+    };
+
+    const updateAllButtons = () => {
+        const processedIds = new Set<string>();
+        voteForms.forEach(form => {
+            const id = form.querySelector<HTMLInputElement>('input[name="id"]')?.value;
+            if (id && !processedIds.has(id)) {
+                updateButton(form, votes[id]);
+                processedIds.add(id);
+            }
+        });
+    };
+
+    // Fetch existing votes
+    fetch(`/${tenant}/api/Recommendations/userVotes`)
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then((ids: string[]) => {
+            ids.forEach(id => votes[id] = true);
+            updateAllButtons();
+        })
+        .catch(err => console.error('Error fetching user votes:', err));
+
+    // Add event listeners to all vote forms
+    voteForms.forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = form.querySelector<HTMLInputElement>('input[name="id"]')?.value;
+            if (!id) return;
+
+            const voted = votes[id];
+            const url = voted
+                ? `/${tenant}/api/Recommendations/remove-vote`
+                : `/${tenant}/api/Recommendations/vote`;
+
+            const btn = form.querySelector<HTMLButtonElement>('button');
+            if (btn) btn.disabled = true;
+
+            try {
+                const isVoteFor = btn?.textContent?.includes('voor');
+                const userVote = {
+                    id: parseInt(id),
+                    recommended: voted ? true : (isVoteFor ? true : false)
+                };
+
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userVote)
+                });
+
+                if (!res.ok) {
+                    throw new Error(`Server returned ${res.status}`);
+                }
+
+                const { id: returnedId, votes: voteCount } = await res.json();
+
+                // Update vote count display
+                const countEl = document.getElementById(`vote-count-${returnedId}`);
+                if (countEl) {
+                    const currentText = countEl.textContent || '';
+                    const parts = currentText.split('/');
+                    if (parts.length === 2) {
+                        countEl.textContent = `${voteCount}/${parts[1]}`;
+                    }
+                }
+
+                // Update button states
+                votes[id] = !voted;
+                updateAllButtons();
+
+            } catch (error) {
+                console.error('Error during voting:', error);
+                alert('Er is een fout opgetreden bij het stemmen. Probeer het opnieuw.');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        });
+    });
 }
-

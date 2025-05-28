@@ -1,0 +1,149 @@
+.recommendations-page-container {
+  @apply container mx-auto py-8 px-4;
+}
+
+.recommendations-page-main-title {
+  @apply text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center;
+}
+
+.recommendation-section-title {
+  @apply text-2xl font-semibold text-gray-700 mt-8 mb-4 pb-2 border-b border-gray-300;
+  
+  &.hidden {
+    @apply hidden;
+  }
+}
+
+.recommendation-meeting-group-container {
+  @apply mb-10;
+}
+
+.recommendation-meeting-title {
+  @apply text-xl font-semibold text-gray-700 mb-4;
+}
+
+.recommendations-list-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.recommendation-card {
+  @apply bg-white rounded-xl shadow-lg border border-gray-200 flex flex-col h-full
+         transition-all duration-300 ease-in-out hover:shadow-2xl;
+  min-height: 180px;
+}
+
+.recommendation-card-body {
+  @apply p-5 flex flex-col flex-grow;
+}
+
+.recommendation-card-title {
+  @apply text-lg font-semibold text-gray-800 mb-2;
+  
+  .anonymous-label {
+    @apply text-xs font-normal text-gray-500 ml-1 italic;
+  }
+}
+
+.recommendation-card-text {
+  @apply text-gray-600 text-sm leading-relaxed flex-grow mb-3;
+}
+
+.recommendation-card-status {
+  @apply text-xs font-semibold mb-3 p-2 rounded-md;
+  
+  &.status-ended {
+    @apply text-red-700 bg-red-100;
+  }
+  
+  &.status-balanced {
+    @apply text-green-700 bg-green-100;
+  }
+  
+  &.status-votable {
+    @apply text-blue-700 bg-blue-100;
+  }
+}
+
+.recommendation-card-vote-info {
+  @apply text-xs text-gray-500 mb-3 space-y-1;
+  
+  ul {
+    @apply list-none p-0;
+  }
+  
+  li p {
+    @apply mb-0;
+  }
+  
+  .vote-count-for {
+    @apply text-green-600 font-medium;
+  }
+  
+  .vote-count-against {
+    @apply text-red-600 font-medium;
+  }
+}
+
+.recommendation-card-actions {
+  @apply mt-auto pt-4 border-t border-gray-200 flex flex-wrap justify-start gap-2;
+  
+  .btn {
+    @apply text-xs py-1.5 px-3;
+  }
+}
+
+.recommendation-vote-forms {
+  @apply mt-auto pt-4 border-t border-gray-200 flex flex-col sm:flex-row gap-2;
+  
+  form {
+    @apply w-full sm:w-auto flex-1;
+  }
+  
+  .btn {
+    @apply w-full py-2;
+  }
+}
+
+// Modal styling
+.member-reg-modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+  
+  &.hidden {
+    @apply hidden;
+  }
+}
+
+.member-reg-modal-dialog {
+  @apply bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4;
+  
+  &.modal-dialog-scrollable {
+    @apply overflow-y-auto;
+    max-height: calc(100vh - 8rem);
+  }
+}
+
+.member-reg-modal-header {
+  @apply px-6 py-4 border-b border-gray-200;
+}
+
+.member-reg-modal-title {
+  @apply text-xl font-semibold text-gray-800;
+}
+
+.member-reg-modal-body {
+  @apply px-6 py-4;
+}
+
+.member-reg-modal-footer {
+  @apply px-6 py-4 border-t border-gray-200 flex justify-end gap-2;
+}
+
+.member-reg-modal-button-confirm {
+  @apply px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 
+         transition-colors duration-200;
+}
+
+.member-reg-modal-button-cancel {
+  @apply px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 
+         transition-colors duration-200;
+}
