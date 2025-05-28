@@ -62,7 +62,7 @@
         }
         <input type="hidden" asp-for="@Model.TotalAvailablePotentialPanelmembers" />
         <input type="hidden" asp-for="@Model.TotalNeededPanelmembers" />
-        <input type="hidden" asp-for="TotalNeededInvitations" />
+        <input type="hidden" asp-for="@Model.TotalNeededInvitations" />
 
         @if (Model.Buckets != null) // Null check voor Buckets
         {
@@ -102,8 +102,15 @@
         
         <div class="recalculate-form-group">
             <label asp-for="TotalNeededPanelmembers">Eigen aantal gewenste panelleden</label>
-            <input asp-for="TotalNeededPanelmembers" type="number" class="auth-input-field" />
+            <input asp-for="TotalNeededPanelmembers" value="@Model.TotalNeededPanelmembers" min="5" max="500" type="number" class="auth-input-field" id="panelmember-count"/>
+            <span id="panelmember-warning" class="text-danger panelmember-warning" style="display:none;">
+                Er mogen minimaal 5 en maximaal 500 deelnemers zijn.
+            </span>
         </div>
         <button type="submit" class="btn btn-success">Bereken opnieuw met gekozen aantal panelleden</button>
     </form>
 </div>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/recruitmentResult.js" asp-append-version="true"></script>
+}

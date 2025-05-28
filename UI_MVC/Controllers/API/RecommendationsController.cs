@@ -84,4 +84,13 @@ public class RecommendationsController(
 
         return Ok(new { id = recommendation.Id, votes = recommendation.Votes });
     }
+
+    [HttpPut("edit")]
+    public IActionResult EditRecommendation([FromBody] RecDto recommendationDto)
+    {
+        var recommendation = panelManager.GetRecommendationById(recommendationDto.Id);
+        recommendation.IsDone = recommendationDto.IsDone;
+        panelManager.EditRecommendation(recommendation);
+        return Ok();
+    }
 }
