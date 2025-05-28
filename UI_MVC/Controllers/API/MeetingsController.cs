@@ -28,7 +28,7 @@ public class MeetingsController(IPanelManager panelManager) : ControllerBase
                     Id = recommendation.Id,
                     Title = recommendation.Title,
                     Description = recommendation.Description,
-                    Anon = recommendation.IsAnonymous,
+                    Anonymous = recommendation.IsAnonymous,
                     Votable = recommendation.IsVotable,
                     Votes = recommendation.Votes,
                     NeededPercentages = recommendation.NeededPercentage,

@@ -9,4 +9,5 @@ public interface IUtilityManager
     int CalculateMembers(int totalAvailablMembers);
     RecruitmentResult CalculateRecruitment(int totalToDraw, IEnumerable<Criteria> criteriaList);
     IEnumerable<Criteria> GetInitialCriteria();
+    byte[] GenerateExcelWithQrCodes(IEnumerable<Invitation> invitations);
 }

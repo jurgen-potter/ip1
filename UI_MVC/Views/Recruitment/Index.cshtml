@@ -12,7 +12,7 @@
 <div class="recruitment-criteria-page-container">
     <div class="recruitment-criteria-header">
         <h2>Wervingscriteria</h2>
-        <button type="button" class="btn btn-outline-primary btn-sm-equivalent" id="toggle-all-btn">
+        <button type="button" class="btn btn-primary btn-sm-equivalent" id="toggle-all-btn">
             Alles invouwen
         </button>
     </div>
@@ -32,9 +32,9 @@
                     </div>
                 </div>
             </div>
-            <input asp-for="TotalAvailablePotentialPanelmembers" type="number" value="100" class="auth-input-field" required/>
+            <input asp-for="TotalAvailablePotentialPanelmembers" type="number" min="100" max="1000000" value="100" class="auth-input-field" required/>
             <span class="text-danger panelmember-warning" style="display:none;">
-                Er moeten minstens 100 potentiële deelnemers zijn.
+                Er moeten tussen 100 - 1.000.000 potentiële deelnemers zijn.
             </span>
             <span asp-validation-for="TotalAvailablePotentialPanelmembers" class="auth-validation-message"></span>
         </div>

@@ -1,4 +1,3 @@
-
 .site-header {
   @apply bg-brand-black shadow-md sticky top-0 z-50;
 }
@@ -48,13 +47,5 @@
   @apply text-header-text px-4 py-2 rounded-lg transition-colors duration-150;
   &:hover {
     @apply text-header-text-hover bg-header-nav-item-bg-hover; /* Achtergrond op hover voor een meer knop-achtig gevoel */
-  }
-}
-
-.btn-solid-login { /* Voor "Aanmelden" knop */
-  @apply inline-block font-semibold text-center align-middle cursor-pointer select-none no-underline
-  bg-primary text-header-text px-4 py-2 rounded-lg transition-colors duration-150 border border-transparent;
-  &:hover {
-    @apply bg-primary-hover; /* Donkerdere primaire kleur op hover */
   }
 }

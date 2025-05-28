@@ -1,13 +1,57 @@
 ﻿/* Nieuwe, specifieke klassen voor de "Resultaten Panelberekening" pagina */
 
+.reg-overview-container {
+  @apply max-w-6xl mx-auto px-4 py-8;
+}
+
 .draw-calc-page-title { /* Titel van de pagina */
   @apply text-2xl sm:text-3xl font-bold text-gray-800 mb-6; /* Aangepast van text-primary naar text-gray-800 */
 }
 
+.reg-overview-alert {
+  @apply p-4 mb-6 rounded-lg;
+  
+  &.alert-info {
+    @apply bg-brand-celadon-light text-gray-700 border border-brand-celadon;
+  }
+  
+  strong {
+    @apply font-semibold;
+  }
+}
+
+.reg-overview-card {
+  @apply bg-surface rounded-lg shadow-md overflow-hidden h-full;
+  
+  .reg-overview-card-body {
+    @apply p-6;
+    
+    p {
+      @apply flex items-center justify-between text-gray-700 text-lg;
+      
+      strong {
+        @apply font-semibold text-lg;
+      }
+
+      .reg-overview-status-badge {
+        @apply text-lg font-bold px-3 py-1.5;
+      }
+    }
+  }
+}
+
 .draw-calc-summary-header { /* Specifieke header voor de "Samenvatting" kaart */
-  @apply bg-primary text-white p-4 border-b border-primary rounded-t-lg;
+  @apply bg-primary text-white p-4 border-b border-primary;
   h5 {
     @apply text-lg font-semibold text-white mb-0;
+  }
+}
+
+.reg-overview-status-badge {
+  @apply px-3 py-1 rounded-full text-sm font-medium bg-green-500;
+  
+  &.status-secondary {
+    @apply bg-secondary text-gray-700;
   }
 }
 
@@ -16,23 +60,110 @@
 }
 
 .draw-calc-bucket-card { /* Kaart voor elke bucket */
-  @apply bg-white p-4 rounded-lg shadow-md border border-gray-200 flex flex-col;
+  @apply bg-surface p-6 rounded-lg shadow-md border border-gray-200 flex flex-col transition-all duration-200;
+  
+  &:hover {
+    @apply shadow-lg border-primary-hover;
+  }
 }
 
 .draw-calc-bucket-title { /* Titel van de bucket (criteria combinatie) */
-  @apply text-base font-semibold text-gray-700 mb-2;
+  @apply text-base font-semibold text-gray-700 mb-3;
 }
 
 .draw-calc-bucket-text { /* Tekst "Nodig:" */
   @apply text-sm text-gray-600;
   strong {
-    @apply font-bold text-gray-800;
+    @apply font-bold text-primary;
   }
 }
 
 .draw-calc-actions { /* Container voor de actieknoppen onderaan het formulier */
-  @apply flex flex-col sm:flex-row justify-start mt-8 gap-3;
+  @apply flex flex-col sm:flex-row justify-start mt-8 gap-4;
   .btn {
-    @apply w-full sm:w-auto; /* Knoppen volledige breedte op mobiel */
+    @apply w-full sm:w-auto text-center py-2 px-6 rounded-md transition-all duration-200;
+    
+    &.btn-success {
+      @apply bg-accent text-gray-700 hover:bg-accent-hover;
+    }
+    
+    &.btn-outline-secondary {
+      @apply border border-gray-300 text-gray-700 hover:bg-gray-50;
+    }
+  }
+}
+
+.recalculate-form-group {
+  @apply hidden;
+}
+
+.recalculate-form {
+  @apply hidden;
+}
+
+.summary-section {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6 mb-8;
+
+  .summary-card {
+    @apply h-full;
+  }
+
+  .panel-members-card {
+    @apply h-full;
+  }
+}
+
+.panel-members-form {
+  @apply h-full;
+}
+
+.panel-members-input-group {
+  @apply flex flex-col;
+
+  label {
+    @apply block text-base font-semibold text-gray-700 mb-3;
+  }
+}
+
+.input-with-button {
+  @apply flex flex-col sm:flex-row gap-3 items-start sm:items-center;
+
+  .auth-input-field {
+    @apply w-full sm:w-48 px-4 py-2 border border-gray-300 rounded-md 
+           focus:ring-2 focus:ring-primary focus:border-primary
+           text-gray-700 text-lg;
+    
+    &::-webkit-inner-spin-button {
+      @apply opacity-100;
+    }
+  }
+
+  .btn-success {
+    @apply bg-accent hover:bg-accent-hover text-gray-700 font-medium
+           px-4 py-2 rounded-md transition-all duration-200
+           flex items-center justify-center gap-2 whitespace-nowrap;
+    
+    i {
+      @apply text-sm;
+    }
+
+    &:hover {
+      @apply transform -translate-y-0.5;
+    }
+
+    &:active {
+      @apply transform translate-y-0;
+    }
+  }
+}
+
+/* Responsive adjustments */
+@screen sm {
+  .reg-overview-container {
+    @apply py-12;
+  }
+  
+  .reg-overview-card {
+    @apply mb-0;
   }
 }

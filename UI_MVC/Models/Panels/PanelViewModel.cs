@@ -18,6 +18,8 @@ public class PanelViewModel
     public DateOnly EndDate { get; set; }
     
     public string CoverImagePath { get; set; }
+    
+    public List<string> PublicDocumentNames { get; set; } = new();
 
     public List<MeetingViewModel> Meetings { get; set; } = new();
     public List<RecommendationViewModel> Recommendations { get; set; } = new();
@@ -32,6 +34,7 @@ public class RecommendationViewModel
     public int    Id          { get; set; }
     public string Title       { get; set; }
     public string Description { get; set; }
+    public bool IsDone { get; set; }
 }
 
 public class MeetingViewModel

@@ -9,16 +9,16 @@
   @apply w-full max-w-md bg-white rounded-xl shadow-lg p-8 overflow-hidden;
   /* Specifiek voor login-kaart met absolute positionering: */
   &.login-card-absolute { /* Voeg deze klasse toe aan de kaart op de login pagina */
-    @apply absolute top-20 left-1/2;
+    @apply absolute top-4 left-1/2;
     transform: translateX(-50%);
     min-height: 450px;
-    transition: min-height 0.3s ease;
-  }
-  &.auth-card-container--wide {
-    @apply max-w-4xl; 
   }
 
+  &.auth-card-container--wide {
+    @apply max-w-4xl;
+  }
 }
+
 
 .auth-page-title { /* Voor H1 ViewData["Title"] */
   @apply text-2xl font-bold mb-6 text-center;
@@ -34,13 +34,6 @@
 
 .auth-form-label {
   @apply block text-sm font-medium mb-1;
-}
-
-.auth-submit-button {
-  @apply w-full bg-primary text-white px-4 py-2 rounded-lg transition-colors duration-150;
-  &:hover {
-    @apply bg-primary-hover;
-  }
 }
 
 .auth-links-section { /* Specifiek voor login, maar kan generiek zijn */
@@ -64,25 +57,8 @@
   @apply text-red-500 text-sm;
 }
 
-
-.login-type-button {
-  @apply flex-1 px-4 py-2 border border-primary text-primary transition-colors duration-150;
-  &:hover {
-    @apply bg-primary text-white;
-  }
-  &.active {
-    @apply bg-primary text-white;
-  }
-}
-#accountBtn.login-type-button { /* ID specificiteit om afronding te garanderen */
-  @apply rounded-l-lg;
-}
-#codeBtn.login-type-button { /* ID specificiteit om afronding te garanderen */
-  @apply rounded-r-lg;
-}
-
 .login-form-fields-container {
-  @apply relative;
+  @apply relative min-h-[300px];
 }
 
 .login-form-panel { /* Voor #accountFields en #codeFields */
@@ -98,18 +74,24 @@
   }
 }
 
-
 .login-page-wrapper {
-  @apply relative flex justify-center min-h-[calc(100vh-var(--header-height,80px)-var(--footer-height,80px))];
-  @apply pt-20;
+  @apply relative flex justify-center items-center min-h-[70vh];
+  &.login-wrapper-padding {
+    @apply pt-20;
+  }
 }
 
 .login-card-container {
   @apply w-full max-w-md bg-white rounded-xl shadow-lg p-8 overflow-hidden;
-  @apply absolute top-20 left-1/2;
-  transform: translateX(-50%);
-  min-height: 450px;
-  transition: min-height 0.3s ease;
+  /* Specifiek voor login-kaart met absolute positionering: */
+  &.login-card-absolute { /* Voeg deze klasse toe aan de kaart op de login pagina */
+    @apply absolute top-4 left-1/2;
+    transform: translateX(-50%);
+    min-height: 450px;
+  }
+  &.auth-card-container--wide {
+    @apply max-w-4xl;
+  }
 }
 
 .login-title {
@@ -119,7 +101,6 @@
 .login-subtitle {
   @apply text-xl font-semibold mb-4 text-center;
 }
-
 
 .login-divider {
   @apply my-4 border-gray-200;
@@ -155,13 +136,6 @@ input[type="text"].login-input-field { /* Ervan uitgaande dat 'Code' input type=
   }
 }
 
-.login-submit-button {
-  @apply w-full bg-primary text-white px-4 py-2 rounded-lg transition-colors duration-150;
-  &:hover {
-    @apply bg-primary-hover;
-  }
-}
-
 .login-links-section {
   @apply mt-4 space-y-2;
   a {
@@ -187,7 +161,6 @@ input[type="text"].login-input-field { /* Ervan uitgaande dat 'Code' input type=
   @apply mb-4; 
 }
 
-
 .member-reg-form-group input.auth-input-field,
 form input[type="email"].auth-input-field,
 form input[type="password"].auth-input-field,
@@ -202,9 +175,11 @@ form input[type="number"].auth-input-field
     outline: none; 
   }
 }
+
 .member-reg-selected-criteria-tag {
   @apply inline-block bg-secondary text-white text-sm font-medium mr-2 last:mr-0 mb-2 px-3 py-1 rounded-full;
 }
+
 .member-reg-criteria-group-label {
   @apply block text-sm font-medium text-gray-700 mb-2; /* Standaard label styling, mb-2 voor ruimte tot de tags */
 }
@@ -224,17 +199,15 @@ form textarea.auth-input-field {
   }
 }
 
-
-.auth-checkbox-label {
+.auth-checkbox-label { 
   @apply flex items-center text-sm text-gray-700;
-  input[type="checkbox"].auth-checkbox-input {
-    @apply h-4 w-4 text-primary border-gray-300 rounded mr-2 focus:ring-primary;
-    border-radius: 0.25rem !important;
-    margin-top: 10px; /* Checkbox 3px naar beneden verplaatst */
+
+  input[type="checkbox"].auth-checkbox-input { 
+    @apply h-4 w-4 text-primary border-gray-300 rounded mr-2 focus:ring-offset-0 focus:ring-primary shrink-0;
+    border-radius: 0.25rem !important; 
   }
-  span {
-    @apply font-medium;
-    padding-top: 9px;
+  span.auth-checkbox-text {
+    @apply font-medium select-none; 
   }
 }
 

@@ -4,19 +4,24 @@
     ViewData["Title"] = "Bevestigingsmail opnieuw verzenden";
 }
 
-<h1>@ViewData["Title"]</h1>
-<h2>Voer uw e-mailadres in.</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="auth-page-wrapper login-wrapper-padding">
+    <div class="login-card-container">
+        <h1 class="auth-page-title">@ViewData["Title"]</h1>
+        <h2 class="auth-form-title">Voer uw e-mailadres in.</h2>
+        <hr class="auth-divider" />
+
         <form method="post">
-            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email" class="form-label"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            <div asp-validation-summary="All" class="auth-validation-summary" role="alert"></div>
+
+            <div class="auth-form-group">
+                <label asp-for="Input.Email" class="auth-form-label"></label>
+                <input asp-for="Input.Email" class="auth-input-field" placeholder="name@example.com" aria-required="true" />
+                <span asp-validation-for="Input.Email" class="auth-validation-message"></span>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Resend</button>
+
+            <button type="submit" class="w-full bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg transition-colors duration-150">
+                Verstuur opnieuw
+            </button>
         </form>
     </div>
 </div>

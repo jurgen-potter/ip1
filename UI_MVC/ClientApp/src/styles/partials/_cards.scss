@@ -1,4 +1,4 @@
-
+/* Base Card Styles */
 .card {
   @apply bg-surface border border-gray-300 rounded-[0.45rem]
   mb-6 shadow-lg;
@@ -18,4 +18,181 @@
     text-sm
     rounded-b-[0.45rem];
   }
+}
+
+/* Auth Card Styles */
+.auth-card-container {
+  @apply w-full max-w-md bg-white rounded-xl shadow-lg p-8 overflow-hidden;
+  
+  &.login-card-absolute {
+    @apply absolute top-20 left-1/2;
+    transform: translateX(-50%);
+    min-height: 450px;
+    transition: min-height 0.3s ease;
+  }
+  
+  &.auth-card-container--wide {
+    @apply max-w-4xl; 
+  }
+}
+
+/* Panel Cards */
+.panel-content-card {
+  @apply bg-white shadow-lg rounded-xl p-6;
+
+  .card-title {
+    @apply text-2xl font-bold text-gray-800 mb-4;
+  }
+  .card-subtitle {
+    @apply text-xl font-semibold text-gray-700 mb-3;
+  }
+  .card-text {
+    @apply text-gray-600;
+  }
+}
+
+.panel-recommendation-card {
+  @apply bg-white border border-gray-300 p-4 rounded-lg shadow-md h-full flex flex-col
+  hover:shadow-lg hover:border-primary transition-all duration-300 ease-in-out;
+  
+  h6 {
+    @apply font-semibold text-gray-800 mb-2 text-base;
+  }
+  p {
+    @apply text-sm text-gray-600 flex-grow leading-normal;
+  }
+}
+
+.posts-card {
+  @apply bg-white shadow-lg rounded-xl p-6;
+  
+  .posts-header {
+    @apply flex justify-between items-center mb-4;
+    .posts-section-title {
+      @apply text-2xl font-bold text-gray-800;
+    }
+    .add-post-button {
+      @apply bg-primary text-white p-2 rounded-full hover:bg-primary-hover transition-colors duration-150;
+      i {
+        @apply text-lg;
+      }
+    }
+  }
+}
+
+/* Recruitment Cards */
+.criteria-item-card {
+  @apply bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden;
+}
+
+.criteria-card-header {
+  @apply flex items-start justify-between p-4 bg-gray-50 border-b border-gray-200;
+}
+
+.criteria-card-body {
+  @apply p-4;
+}
+
+/* Invitation Cards */
+.invitation-card {
+  @apply flex;
+}
+
+.invitation-card-content {
+  @apply bg-white rounded-lg shadow-md overflow-hidden w-full p-4 flex flex-col h-full border border-gray-200;
+  
+  p {
+    @apply mb-2 text-sm text-gray-700;
+    &.flex-grow {
+      flex-grow: 1;
+    }
+  }
+  strong.text-red-600 {
+    @apply text-sm;
+  }
+  img {
+    @apply w-[150px] h-[150px] object-contain mx-auto mt-2;
+  }
+}
+
+/* Home Cards */
+.home-detaild-panel-card {
+  @apply bg-surface p-4 rounded-xl shadow-lg text-center;
+  @apply flex flex-col items-center justify-center transition-all duration-300 ease-in-out;
+  @apply hover:shadow-xl hover:transform hover:-translate-y-1;
+  min-height: 120px;
+  text-decoration: none;
+
+  &:hover {
+    @apply bg-gray-50;
+  }
+}
+
+/* Registration Cards */
+.reg-overview-card {
+  @apply bg-white rounded-lg shadow-lg border border-gray-200;
+}
+
+.reg-overview-card-header {
+  @apply bg-gray-100 p-4 border-b border-gray-300 rounded-t-lg;
+  h5 {
+    @apply text-lg font-semibold text-gray-700 mb-0;
+  }
+}
+
+.reg-overview-card-body {
+  @apply p-4;
+  p {
+    @apply mb-2 text-sm text-gray-700;
+  }
+}
+
+/* Meeting Cards */
+.recommendation-card {
+  @apply bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col h-full
+  transition-all duration-300 ease-in-out hover:shadow-xl;
+}
+
+.recommendation-card-body {
+  @apply p-5 flex flex-col flex-grow;
+}
+
+.recommendation-card-title {
+  @apply text-lg font-semibold text-gray-800 mb-2;
+  .anonymous-label {
+    @apply text-sm font-normal text-gray-500 ml-2;
+  }
+}
+
+.recommendation-card-text {
+  @apply text-gray-700 text-sm leading-relaxed flex-grow mb-3;
+}
+
+.recommendation-card-status {
+  @apply text-sm font-semibold mb-3;
+  &.ended { @apply text-red-600; }
+  &.balanced { @apply text-green-600; }
+}
+
+.recommendation-card-actions {
+  @apply mt-auto pt-4 border-t border-gray-200 flex flex-wrap justify-start gap-2;
+  .btn {
+    @apply text-xs py-1 px-2 sm:py-1.5 sm:px-3;
+  }
+}
+
+/* Questionnaire Cards */
+.question-card {
+  @apply bg-white rounded-xl shadow-lg overflow-hidden mb-6 border border-gray-200;
+}
+
+.question-card-header {
+  @apply px-5 py-3 bg-gray-100 border-b border-gray-300;
+  strong {
+    @apply font-semibold text-gray-700;
+  }
+}
+
+.question-card-body {
+  @apply p-5 sm:p-6;
 }

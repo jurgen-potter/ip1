@@ -10,20 +10,7 @@
   @apply text-xl sm:text-2xl font-semibold text-gray-700 mb-8 text-center;
 }
 
-.question-card { /* Container voor elke vraag op invulpagina */
-  @apply bg-white rounded-xl shadow-lg overflow-hidden mb-6 border border-gray-200;
-}
 
-.question-card-header { /* Header binnen de vraag-kaart op invulpagina */
-  @apply px-5 py-3 bg-gray-100 border-b border-gray-300;
-  strong {
-    @apply font-semibold text-gray-700;
-  }
-}
-
-.question-card-body { /* Body van de vraag-kaart op invulpagina */
-  @apply p-5 sm:p-6;
-}
 
 .question-description { /* De paragraaf met de vraagtekst op invulpagina */
   @apply text-gray-800 text-base leading-relaxed mb-4;

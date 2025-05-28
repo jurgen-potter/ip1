@@ -10,22 +10,3 @@
   @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6;
 }
 
-.invitation-card {
-  @apply flex;
-}
-
-.invitation-card-content {
-  @apply bg-white rounded-lg shadow-md overflow-hidden w-full p-4 flex flex-col h-full border border-gray-200;
-  p {
-    @apply mb-2 text-sm text-gray-700;
-    &.flex-grow {
-      flex-grow: 1;
-    }
-  }
-  strong.text-red-600 {
-    @apply text-sm;
-  }
-  img {
-    @apply w-[150px] h-[150px] object-contain mx-auto mt-2;
-  }
-}

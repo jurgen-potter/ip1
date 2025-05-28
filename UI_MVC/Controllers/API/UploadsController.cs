@@ -14,10 +14,10 @@ public class UploadsController : Controller
 
         var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
         Directory.CreateDirectory(uploads);
-
+        
         var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
         var filePath = Path.Combine(uploads, uniqueFileName);
-
+        
         await using (var stream = new FileStream(filePath, FileMode.Create))
         {
             await file.CopyToAsync(stream);
@@ -28,7 +28,7 @@ public class UploadsController : Controller
     }
 }
 
-//deploye versie:
+// Dit is de gedployde versie
 /*using Google;
 using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Mvc;

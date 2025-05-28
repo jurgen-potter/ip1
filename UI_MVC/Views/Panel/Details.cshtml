@@ -49,13 +49,13 @@
 
             <section class="panel-content-card">
                 <h2 class="card-subtitle">Aangenomen aanbevelingen</h2>
-                <input type="hidden" value="@Model.ShowRejected.ToString().ToLower()" class="sr-only peer" id="rejectValue">
+                <input type="hidden" value="@Model.ShowRejected.ToString().ToLower()" class="sr-only peer" id="reject-value">
 
                 @if (User.IsInRole("Organization") && Model.CanManagePanel)
                 {
                     <label class="items-center me-5 cursor-pointer">
                         <p>Toon afgewezen aanbevelingen? </p>
-                        <input type="checkbox" checked="@Model.ShowRejected" class="sr-only peer" id="rejectBox">
+                        <input type="checkbox" checked="@Model.ShowRejected" class="sr-only peer" id="reject-box">
                         <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
                     </label>
                 }
@@ -66,9 +66,17 @@
                         {
                             @foreach (var rec in meeting.Recommendations)
                             {
-                                <li class="recommendation-item">
+                                <li class="recommendation-item" id="rec-item-@rec.Id">
                                     <strong>@rec.Title</strong>
                                     <p>@rec.Description</p>
+                                    <input type="hidden" data-recommendation-id="@rec.Id" value="@rec.IsDone.ToString().ToLower()"  class="sr-only peer finished-message">
+                                    @if (User.IsInRole("Organization") && Model.CanManagePanel)
+                                    {
+                                        <label class="items-center me-5 cursor-pointer">
+                                            <input type="checkbox" data-recommendation-id="@rec.Id" checked="@rec.IsDone" class="auth-checkbox-input finish-rec-checkbox">
+                                            <p>Heeft u deze aanbeveling gedaan?</p>
+                                        </label>
+                                    }
                                 </li>
                             }
                         }
@@ -87,15 +95,56 @@
                 </ul>
             </section>
 
-            @if (User.IsInRole("Organization")& Model.CanManagePanel) 
-            {// temp placeholder uploaden doc
-                <section class="document-upload-card">
-                    <a href="#" class="add-document-button" id="openAddDocumentModalBtn">
-                        <i class="fas fa-plus-circle"></i>
-                        DOCUMENT TOEVOEGEN
-                    </a>
-                </section>
-            }
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Documenten</h5>
+                </div>
+                <div class="card-body">
+
+                    @if (Model.PublicDocumentNames.Any())
+                    {
+                        <ul class="list-group mb-3">
+                            @foreach (var docUrl in Model.PublicDocumentNames)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-secondary">📄</span>
+                                        <a href="@docUrl" target="_blank">@System.IO.Path.GetFileName(docUrl)</a>
+                                    </div>
+                                    @if (User.IsInRole("Organization"))
+                                    {
+                                        <form asp-controller="Panel" asp-action="RemoveDocument" method="post" class="mb-0"
+                                              asp-route-panelId="@Model.PanelId"
+                                              asp-route-fileUrl="@docUrl">
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Verwijder document"
+                                                    onclick="return confirm('Weet je zeker dat u dit document wilt verwijderen?');">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Er zijn nog geen documenten toegevoegd voor dit panel.</p>
+                    }
+
+                    @if (User.IsInRole("Organization"))
+                    {
+                        <form asp-controller="Panel" asp-action="Upload" method="post" asp-route-panelId="@Model.PanelId" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <input type="file" name="file" class="form-control" />
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Document toevoegen
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
         </main>
 
         <aside class="citizen-panel-sidebar">

@@ -4,9 +4,30 @@ interface AdminDto {
     isSuper: boolean;
 }
 
+let currentAdminId: string | null = null;
+
 window.addEventListener("DOMContentLoaded", () => {
     loadAdmins();
+    setupDeleteAdminModal();
 });
+
+function setupDeleteAdminModal(): void {
+    const modal = document.getElementById("deleteConfirmationModal")!;
+    const confirmBtn = document.getElementById("confirmDelete")!;
+    const cancelBtn = document.getElementById("cancelDelete")!;
+
+    confirmBtn.addEventListener("click", () => {
+        if (currentAdminId) {
+            performDeleteAdmin(currentAdminId);
+            modal.classList.add("hidden");
+        }
+    });
+
+    cancelBtn.addEventListener("click", () => {
+        modal.classList.add("hidden");
+        currentAdminId = null;
+    });
+}
 
 function loadAdmins(): void {
     fetch("/api/Admins", {
@@ -54,8 +75,12 @@ function showAdmins(admins: AdminDto[]): void {
 }
 
 function deleteAdmin(adminId: string): void {
-    if (!confirm("Weet je zeker dat je deze admin wilt verwijderen?")) return;
+    currentAdminId = adminId;
+    const modal = document.getElementById("deleteConfirmationModal")!;
+    modal.classList.remove("hidden");
+}
 
+function performDeleteAdmin(adminId: string): void {
     fetch(`/api/Admins/${adminId}`, {
         method: "DELETE",
         headers: {
@@ -70,4 +95,6 @@ function deleteAdmin(adminId: string): void {
             }
         })
         .catch(error => alert(`Error bij verwijderen: ${error.message}`));
+    
+    currentAdminId = null;
 }

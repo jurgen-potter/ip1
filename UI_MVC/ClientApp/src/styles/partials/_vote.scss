@@ -1,7 +1,8 @@
 ﻿.custom-modal-overlay {
   @apply fixed inset-0 bg-gray-800 bg-opacity-75 items-center justify-center z-50
   transition-opacity duration-300 ease-in-out;
-  @apply hidden opacity-0;
+  display: none;
+  opacity: 0;
 
   &.is-open {
     display: flex !important;
