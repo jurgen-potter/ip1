@@ -109,6 +109,16 @@ function validateForm(): boolean {
     if (!endDate) {
         document.getElementById("endDateValidation")!.textContent = "Einddatum is verplicht.";
         valid = false;
+    } else {
+        const today = new Date();
+        const selectedDate = new Date(endDate);
+        
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate < today) {
+            document.getElementById("endDateValidation")!.textContent = "Einddatum mag niet in het verleden liggen.";
+            valid = false;
+        }
     }
 
     return valid;
