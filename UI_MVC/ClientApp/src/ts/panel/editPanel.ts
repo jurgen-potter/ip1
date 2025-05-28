@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function loadPanelData() {
-    fetch(`${editPanelTenantId}/api/Panels/${editPanelId}`, {
+    fetch(`/${editPanelTenantId}/api/Panels/${editPanelId}`, {
         method: "GET",
         headers: {"Accept": "application/json"}
     })
@@ -41,7 +41,16 @@ function showPanelData() {
     (document.getElementById("titleInput") as HTMLInputElement).value = panelData.name;
     (document.getElementById("descriptionInput") as HTMLTextAreaElement).value = panelData.description;
     (document.getElementById("endDateInput") as HTMLInputElement).value = panelData.endDate;
-    (document.getElementById("bannerPreview") as HTMLImageElement).src = panelData.coverImagePath || "";
+
+    const bannerImg = document.getElementById("bannerPreview") as HTMLImageElement;
+
+    if (panelData.coverImagePath) {
+        bannerImg.src = panelData.coverImagePath;
+        bannerImg.style.display = "block";
+    } else {
+        bannerImg.src = "";
+        bannerImg.style.display = "none";
+    }
 }
 
 function savePanel() {
@@ -49,14 +58,14 @@ function savePanel() {
     panelData.description = (document.getElementById("descriptionInput") as HTMLTextAreaElement).value;
     panelData.endDate = (document.getElementById("endDateInput") as HTMLInputElement).value;
     
-    fetch(`${editPanelTenantId}/api/Panels/${editPanelId}`, {
+    fetch(`/${editPanelTenantId}/api/Panels/${editPanelId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(panelData),
     })
         .then(res => {
             if (!res.ok) throw new Error("Opslaan mislukt");
-            window.location.href = "/Panel/Index";
+            window.location.href = `/Panel/Index/${editPanelId}`;
         })
         .catch(err => alert(err.message));
 }
@@ -68,12 +77,8 @@ function uploadBanner(event: Event) {
     const formData = new FormData();
     formData.append("file", input.files[0]);
 
-    fetch(`${editPanelTenantId}/api/Panels/${editPanelId}/UploadBanner`, {
+    fetch(`/${editPanelTenantId}/api/Panels/${editPanelId}/UploadBanner`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        },
         body: formData
     })
         .then(res => res.json())

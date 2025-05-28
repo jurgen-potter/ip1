@@ -42,10 +42,15 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
     private void SeedFiles()
     {
+        var bannerUploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bannerUploads");
         var meetingUploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads");
         var panelUploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "panelUploads");
         var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
 
+        if (Directory.Exists(bannerUploads))
+        {
+            Directory.Delete(bannerUploads, recursive: true);
+        }
         if (Directory.Exists(meetingUploads))
         {
             Directory.Delete(meetingUploads, recursive: true);
@@ -110,7 +115,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
             TotalNeededPanelmembers = 100,
             IsActive = true,
             MemberCount = 11,
-            CoverImagePath = "../../UI_MVC/wwwroot/Antwerpenbanner.jpg",
             Meetings = new List<Meeting>()
             {
                 new Meeting()

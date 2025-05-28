@@ -147,7 +147,8 @@ public class PanelController(
                 panelsData.Add(new PanelDto()
                 {
                     Id = panel.Id,
-                    Name = panel.Name
+                    Name = panel.Name,
+                    CoverImagePath = panel.CoverImagePath,
                 });
             }
 
@@ -175,7 +176,8 @@ public class PanelController(
                     Panels = panels.Select(p => new PanelSelectOptionViewModel
                     {
                         Id = p.Id,
-                        Name = p.Name
+                        Name = p.Name,
+                        CoverImagePath = p.CoverImagePath
                     }).ToList()
                 };
 

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CitizenPanel.UI.MVC.Controllers.API;
 [ApiController]
 [Route("{tenantId}/api/[controller]")]
-public class PanelsController(IPanelManager panelManager, IWebHostEnvironment env) : ControllerBase
+public class PanelsController(IPanelManager panelManager) : ControllerBase
 {
     [HttpPut("edit")]
     public IActionResult EditPanel([FromBody] PanelDto model)
@@ -62,23 +62,25 @@ public class PanelsController(IPanelManager panelManager, IWebHostEnvironment en
     }
 
     [Authorize(Roles = "Organization")]
-    [HttpPost("{id}/UploadBanner")]
+    [HttpPost("{panelId}/UploadBanner")]
     public async Task<IActionResult> UploadBannerImage(int panelId, IFormFile file)
     {
         if (file == null || file.Length == 0)
             return BadRequest();
 
-        var uploadsFolder = Path.Combine(env.WebRootPath, "uploads/banners");
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bannerUploads");
         Directory.CreateDirectory(uploadsFolder);
 
         var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-        await using var stream = new FileStream(filePath, FileMode.Create);
-        await file.CopyToAsync(stream);
+        await using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
 
         var panel = panelManager.GetPanelById(panelId);
-        panel.CoverImagePath = $"/uploads/banners/{uniqueFileName}";
+        panel.CoverImagePath = $"/bannerUploads/{uniqueFileName}";
         panelManager.EditPanel(panel);
 
         return Ok(new { path = panel.CoverImagePath });
