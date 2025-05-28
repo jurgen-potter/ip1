@@ -10,7 +10,7 @@
   @apply text-2xl font-semibold text-gray-700 mt-8 mb-4 pb-2 border-b border-gray-300;
   
   &.hidden {
-    @apply hidden;
+    display: none;
   }
 }
 
@@ -102,48 +102,4 @@
   .btn {
     @apply w-full py-2;
   }
-}
-
-// Modal styling
-.member-reg-modal-overlay {
-  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
-  
-  &.hidden {
-    @apply hidden;
-  }
-}
-
-.member-reg-modal-dialog {
-  @apply bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4;
-  
-  &.modal-dialog-scrollable {
-    @apply overflow-y-auto;
-    max-height: calc(100vh - 8rem);
-  }
-}
-
-.member-reg-modal-header {
-  @apply px-6 py-4 border-b border-gray-200;
-}
-
-.member-reg-modal-title {
-  @apply text-xl font-semibold text-gray-800;
-}
-
-.member-reg-modal-body {
-  @apply px-6 py-4;
-}
-
-.member-reg-modal-footer {
-  @apply px-6 py-4 border-t border-gray-200 flex justify-end gap-2;
-}
-
-.member-reg-modal-button-confirm {
-  @apply px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 
-         transition-colors duration-200;
-}
-
-.member-reg-modal-button-cancel {
-  @apply px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 
-         transition-colors duration-200;
 }
