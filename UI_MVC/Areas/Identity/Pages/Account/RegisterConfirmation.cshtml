@@ -1,23 +1,30 @@
 ﻿@page
 @model CitizenPanel.UI.MVC.Areas.Identity.Pages.Account.RegisterConfirmationModel
 @{
-    ViewData["Title"] = "Register confirmation";
+    ViewData["Title"] = "Registratiebevestiging";
 }
 
-<h1>@ViewData["Title"]</h1>
-@{
-    if (@Model.DisplayConfirmAccountLink)
-    {
-<p>
-    This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-    Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
-</p>
-    }
-    else
-    {
-<p>
-    Controleer je e-mail om je account te bevestigen.
-</p>
-    }
-}
+<div class="auth-page-wrapper login-wrapper-padding">
+    <div class="login-card-container text-center">
+        <h1 class="auth-page-title">@ViewData["Title"]</h1>
 
+        @if (Model.DisplayConfirmAccountLink)
+        {
+            <p>
+                Deze app heeft nog geen echte e-mailafzender geconfigureerd. Zie
+                <a class="text-primary underline" href="https://aka.ms/aspaccountconf" target="_blank" rel="noopener noreferrer">
+                    deze documentatie
+                </a> om een echte e-mailzender toe te voegen.
+                <br />
+                Normaal gesproken zou dit via e-mail worden gestuurd:
+                <a id="confirm-link" class="text-primary underline" href="@Model.EmailConfirmationUrl">Klik hier om je account te bevestigen</a>
+            </p>
+        }
+        else
+        {
+            <p>
+                Controleer je e-mail om je account te bevestigen.
+            </p>
+        }
+    </div>
+</div>

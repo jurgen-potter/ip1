@@ -1,5 +1,4 @@
-﻿
-.member-reg-page-container {
+﻿.member-reg-page-container {
   @apply container mx-auto py-8 px-4;
 }
 
@@ -79,24 +78,6 @@
 
 .member-reg-modal-footer {
   @apply border-t px-4 py-3 flex justify-end gap-2;
-}
-
-.member-reg-modal-button {
-  @apply px-4 py-2 rounded-lg transition-colors duration-150 font-semibold;
-}
-
-.member-reg-modal-button-cancel {
-  @apply member-reg-modal-button bg-red-500 text-white;
-  &:hover {
-    @apply bg-red-600;
-  }
-}
-
-.member-reg-modal-button-confirm {
-  @apply member-reg-modal-button bg-accent text-text-black;
-  &:hover {
-    @apply bg-accent-hover;
-  }
 }
 
 .member-reg-feedback-actions {

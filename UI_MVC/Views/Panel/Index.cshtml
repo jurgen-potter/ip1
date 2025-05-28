@@ -7,6 +7,7 @@
     CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
     ViewBag.Title = Model.Name;
 }
+
 @section Styles {
     <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
@@ -15,27 +16,36 @@
 
     <div class="panel-detail-header">
         <h1 class="panel-detail-title">@Model.Name</h1>
-      
+
         <div class="panel-detail-actions">
             @if (User.IsInRole("Organization"))
             {
-            <a asp-controller="Registration" asp-action="Index" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
-                <i class="fas fa-users"></i> Aanmeldingen
-            </a>
-            <a asp-controller="Panel" asp-action="Invitations" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
-                <i class="fas fa-envelope-open-text"></i> Uitnodigingen
-            </a>
-            <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
-                <i class="fas fa-user-plus"></i> Voeg panellid toe
-            </a>
-            <a asp-controller="Registration" asp-action="ReserveMembers" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
-                <i class="fas fa-user-plus"></i> Reserve leden
-            </a>
-            <a asp-controller="Panel" asp-action="Members" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
-                <i class="fa-solid fa-eye"></i> Panelleden
-            </a>
+                <a asp-controller="Registration" asp-action="Index" asp-route-panelId="@Model.PanelId"
+                   class="btn btn-primary">
+                    <i class="fas fa-users"></i> Aanmeldingen
+                </a>
+                <a asp-controller="Panel" asp-action="Invitations" asp-route-panelId="@Model.PanelId"
+                   class="btn btn-primary">
+                    <i class="fas fa-envelope-open-text"></i> Uitnodigingen
+                </a>
+                <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true"
+                   asp-route-panelId="@Model.PanelId" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Voeg panellid toe
+                </a>
+                <a asp-controller="Registration" asp-action="ReserveMembers" asp-route-panelId="@Model.PanelId"
+                   class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Reserve leden
+                </a>
+                <a asp-controller="Panel" asp-action="Members" asp-route-panelId="@Model.PanelId"
+                   class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-eye"></i> Panelleden
+                </a>
+                <a asp-controller="Panel" asp-action="Edit" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
+                    <i class="fa-solid fa-pen"></i> Bewerk panel
+                </a>
             }
-            <a asp-controller="Panel" asp-action="Details" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
+            <a asp-controller="Panel" asp-action="Details" asp-route-panelId="@Model.PanelId"
+               class="btn btn-primary btn-sm">
                 <i class="fa-solid fa-table-columns"></i> Projectpagina
             </a>
             @* <a asp-action="Edit" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm"> *@
@@ -46,7 +56,7 @@
 
     <div class="panel-detail-grid">
 
-        <div class="timeline-sidebar"> 
+        <div class="timeline-sidebar">
             <aside>
                 <div class="panel-timeline-header">
                     <h3>Tijdlijn</h3>
@@ -57,12 +67,13 @@
                         </button>
                     }
                 </div>
-                <div class="timeline-line"> 
+                <div class="timeline-line">
                     @if (Model.Meetings != null && Model.Meetings.Any())
                     {
                         @foreach (var meeting in Model.Meetings.OrderBy(m => m.Date))
                         {
-                            <div class="timeline-item" data-meeting-id="@meeting.Id" data-date="@meeting.Date.ToString("o")">
+                            <div class="timeline-item" data-meeting-id="@meeting.Id"
+                                 data-date="@meeting.Date.ToString("o")">
                                 <div class="timeline-box">
                                     <div class="date">@meeting.Date.ToString("dd MMM")</div>
                                     <h4 class="title">@(meeting.Title ?? "Meeting")</h4>
@@ -72,7 +83,8 @@
                     }
                     else
                     {
-                        <p id="noMeetingsMessage" class="text-sm text-gray-500 italic pl-[30px]">Nog geen meetings gepland.</p>
+                        <p id="noMeetingsMessage" class="text-sm text-gray-500 italic pl-[30px]">Nog geen meetings
+                            gepland.</p>
                     }
                 </div>
             </aside>
@@ -90,8 +102,9 @@
                 <section class="panel-content-section">
                     <div class="panel-section-header">
                         <h5>Aanbevelingen</h5>
-                        <a class="btn btn-primary" asp-route-panelId="@Model.PanelId" asp-controller="Recommendation" asp-action="Index">
-                            Aanbevelingen bekijken 
+                        <a class="btn btn-primary" asp-route-panelId="@Model.PanelId" asp-controller="Recommendation"
+                           asp-action="Index">
+                            Aanbevelingen bekijken
                             <i class="fas fa-chart-bar"></i>
                         </a>
                     </div>
@@ -121,20 +134,23 @@
         </div>
     </div>
 
-    <div id="createMeetingModal" class="custom-modal-overlay" aria-labelledby="createMeetingModalLabel" role="dialog" aria-modal="true">
+    <div id="createMeetingModal" class="custom-modal-overlay" aria-labelledby="createMeetingModalLabel" role="dialog"
+         aria-modal="true">
         <div class="custom-modal-dialog">
             <div class="custom-modal-header">
                 <h5 class="custom-modal-title" id="createMeetingModalLabel">Nieuwe Meeting Toevoegen</h5>
-                <button type="button" id="closeCreateMeetingModalBtn" class="custom-modal-close-button" aria-label="Close">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <button type="button" id="closeCreateMeetingModalBtn" class="custom-modal-close-button"
+                        aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
             <div class="custom-modal-body">
                 <form id="createMeetingForm" novalidate class="space-y-4" asp-controller="Meeting" asp-action="Create">
-                    <input type="hidden" name="PanelId" value="@Model.PanelId" />
-                    <input type="hidden" name="PanelPartcipants" value="@Model.PanelPartcipants" />
+                    <input type="hidden" name="PanelId" value="@Model.PanelId"/>
+                    <input type="hidden" name="PanelPartcipants" value="@Model.PanelPartcipants"/>
                     <div class="panel-form-group">
                         <label for="meetingTitle" class="auth-form-label">Titel</label>
                         <input type="text" class="auth-input-field" id="meetingTitle" name="Title" required>
@@ -149,7 +165,8 @@
             </div>
             <div class="custom-modal-footer">
                 <button type="button" id="cancelCreateMeetingBtn" class="btn btn-secondary">Annuleren</button>
-                <button type="submit" form="createMeetingForm" class="btn btn-primary" id="saveMeetingBtn">Opslaan</button>
+                <button type="submit" form="createMeetingForm" class="btn btn-primary" id="saveMeetingBtn">Opslaan
+                </button>
             </div>
         </div>
     </div>

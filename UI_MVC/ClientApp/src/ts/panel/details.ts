@@ -69,7 +69,7 @@ function showRejected(recs: RecDto[]): void  {
         }
     }
     else {
-        list.innerHTML = `<p>Er zijn nog geen afgewezen aanbevelingen.`;
+        list.innerHTML = `<p><em>Er zijn nog geen afgewezen aanbevelingen.</em></p>`;
     }
 }
 

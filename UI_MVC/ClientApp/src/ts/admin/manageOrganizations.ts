@@ -3,8 +3,11 @@ interface TenantDto {
     name: string;
 }
 
+let currentTenantId: string | null = null;
+
 window.addEventListener("DOMContentLoaded", () => {
     loadTenants();
+    setupDeleteTenantModal();
 
     document.getElementById("searchForm")!.addEventListener("submit", e => {
         e.preventDefault();
@@ -18,6 +21,24 @@ window.addEventListener("DOMContentLoaded", () => {
         loadTenants();
     });
 });
+
+function setupDeleteTenantModal(): void {
+    const modal = document.getElementById("deleteConfirmationModal")!;
+    const confirmBtn = document.getElementById("confirmDelete")!;
+    const cancelBtn = document.getElementById("cancelDelete")!;
+
+    confirmBtn.addEventListener("click", () => {
+        if (currentTenantId) {
+            performDeleteTenant(currentTenantId);
+            modal.classList.add("hidden");
+        }
+    });
+
+    cancelBtn.addEventListener("click", () => {
+        modal.classList.add("hidden");
+        currentTenantId = null;
+    });
+}
 
 function loadTenants(query: string = ""): void {
     fetch("/api/Tenants", {
@@ -40,7 +61,6 @@ function loadTenants(query: string = ""): void {
         })
         .catch(error => alert(`Failed to load tenants: ${error.message}`));
 }
-
 
 function showTenants(tenants: TenantDto[]): void {
     const tableBody = document.getElementById("tenantTableBody") as HTMLTableElement;
@@ -68,8 +88,12 @@ function showTenants(tenants: TenantDto[]): void {
 }
 
 function deleteTenant(tenantId: string): void {
-    if (!confirm("Weet je zeker dat je deze organisatie wilt verwijderen?")) return;
+    currentTenantId = tenantId;
+    const modal = document.getElementById("deleteConfirmationModal")!;
+    modal.classList.remove("hidden");
+}
 
+function performDeleteTenant(tenantId: string): void {
     fetch(`/api/Tenants/${tenantId}`, {
         method: "DELETE",
         headers: {
@@ -84,6 +108,8 @@ function deleteTenant(tenantId: string): void {
             }
         })
         .catch(error => alert(`Error bij verwijderen: ${error.message}`));
+    
+    currentTenantId = null;
 }
 
 function filterTenants(tenants: TenantDto[], query: string): TenantDto[] {

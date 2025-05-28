@@ -49,7 +49,7 @@
                 {
                      <a asp-controller="Panel" asp-action="Details" asp-route-tenantId="@panel.TenantId" asp-route-panelId="@panel.Id" class="panel-select-item group"> @*asp-route-tenantId="@panel.Tenant.Id" asp-route-id="@panel.Id"*@
 
-                        <img class="panel-item-image" src="/Antwerpenbanner.jpg" alt="Afbeelding voor @panel.Name"/>
+                        <img class="panel-item-image" src="@panel.CoverImagePath" alt="Afbeelding voor @panel.Name"/>
 
                         <div class="panel-item-content">
                             <div class="text-container">

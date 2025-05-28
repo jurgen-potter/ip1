@@ -22,12 +22,14 @@ public class MeetingController(
 
         if (Directory.Exists(uploadsPath))
         {
-            foreach (var docName in meeting.DocumentNames)
+            foreach (var docUrl in meeting.DocumentNames)
             {
-                var fullPath = Path.Combine(uploadsPath, docName);
-                if (System.IO.File.Exists(fullPath))
+                var webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var physicalPath = Path.Combine(webRoot, docUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+                if (System.IO.File.Exists(physicalPath))
                 {
-                    documents.Add(docName);
+                    documents.Add(docUrl);
                 }
             }
         }
@@ -133,7 +135,7 @@ public class MeetingController(
             if (!exists)
             {
                 var meeting = meetingManager.GetMeetingById(meetingId);
-                meeting.DocumentNames.Add(file.FileName);
+                meeting.DocumentNames.Add($"/meetingUploads/{meetingId.ToString()}/{file.FileName}");
                 meetingManager.EditMeeting(meeting);
             }
         }
@@ -142,25 +144,27 @@ public class MeetingController(
     }
     
     [HttpPost]
-    public IActionResult RemoveDocument(int meetingId, string fileName)
+    public IActionResult RemoveDocument(int meetingId, string fileUrl)
     {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads", meetingId.ToString(), fileName);
-        if (System.IO.File.Exists(filePath))
+        var webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        var physicalPath = Path.Combine(webRoot, fileUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+        if (System.IO.File.Exists(physicalPath))
         {
-            System.IO.File.Delete(filePath);
+            System.IO.File.Delete(physicalPath);
         }
         
         var meeting = meetingManager.GetMeetingById(meetingId);
-        meeting.DocumentNames.Remove(fileName);
+        meeting.DocumentNames.Remove(fileUrl);
         meetingManager.EditMeeting(meeting);
 
         return RedirectToAction("Details", new { id = meetingId });
     }
 }
-
-// Dit is de gedeployde versie
+//gedployde versie:
 /*using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Panels;
+using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.Panels;
 using Google;
 using Google.Cloud.Storage.V1;
@@ -176,6 +180,7 @@ public class MeetingController(
 
 {
     private readonly string _bucketName = "whimp24-bucket";
+    
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> Details(int id)
@@ -191,15 +196,17 @@ public class MeetingController(
 
             try
             {
-                var publicUrl = $"https://storage.googleapis.com/{_bucketName}/{objectName}";
-                documents.Add(publicUrl);
+                // Check if object exists first
+                await storageClient.GetObjectAsync(_bucketName, objectName);
+                
+                var proxyUrl = $"/api/FileProxy/meeting/{id}/{Uri.EscapeDataString(docName)}";
+                documents.Add(proxyUrl);
             }
             catch (Google.GoogleApiException e) when (e.Error.Code == 404)
             {
                 // Bestand niet gevonden in bucket
             }
         }
-
 
         var model = new MeetingDetailViewModel
         {
@@ -226,7 +233,6 @@ public class MeetingController(
 
         return View(model);
     }
-
 
     [HttpGet]
     [Authorize(Roles = "Organization")]
@@ -262,7 +268,6 @@ public class MeetingController(
 
         return RedirectToAction("Details", new { id = model.MeetingId, panelId = model.PanelId });
     }
-
 
     [HttpPost]
     [Authorize(Roles = "Organization")]
@@ -302,7 +307,6 @@ public class MeetingController(
                 return BadRequest("Upload gefaald: " + ex.Message);
             }
 
-
             var meeting = meetingManager.GetMeetingById(meetingId);
             if (!meeting.DocumentNames.Contains(file.FileName))
             {
@@ -314,27 +318,27 @@ public class MeetingController(
     }
 
     [HttpPost]
-    public async Task<IActionResult> RemoveDocument(int meetingId, string fileName)
+    public async Task<IActionResult> RemoveDocument(int meetingId, string fileUrl)
     {
+        var fileName = Uri.UnescapeDataString(fileUrl.Split('/').Last());
         var objectName = $"{meetingId}/{fileName}";
 
         try
         {
             await storageClient.DeleteObjectAsync(_bucketName, objectName);
         }
-        catch (Google.GoogleApiException e) when (e.Error.Code == 404)
+        catch (GoogleApiException e) when (e.Error.Code == 404)
         {
-            // Bestand bestaat niet, negeer
+            Console.WriteLine($"File not found in bucket: {objectName}");
         }
         catch (Exception ex)
         {
-            // Log de fout, want nu weet je niet waarom het faalt
-            Console.WriteLine($"Error deleting object: {ex}");
-            return BadRequest("Kon bestand niet verwijderen.");
+            Console.WriteLine($"Error deleting object '{objectName}': {ex}");
+            return BadRequest($"Could not delete file: {ex.Message}");
         }
 
         var meeting = meetingManager.GetMeetingById(meetingId);
-        if (meeting.DocumentNames.Contains(fileName))
+        if (meeting?.DocumentNames?.Contains(fileName) == true)
         {
             meeting.DocumentNames.Remove(fileName);
             meetingManager.EditMeeting(meeting);

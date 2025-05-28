@@ -9,6 +9,12 @@ const panelInput = document.querySelector<HTMLInputElement>('#panelId');
 const panelId = panelInput?.value;
 const memberTenantId = window.location.pathname.split('/')[1];
 
+// Modal elements
+const deleteModal = document.getElementById('deleteConfirmationModal') as HTMLElement;
+const cancelDeleteBtn = document.getElementById('cancelDelete') as HTMLButtonElement;
+const confirmDeleteBtn = document.getElementById('confirmDelete') as HTMLButtonElement;
+let currentMemberId: string | null = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     if (!panelId || !memberTenantId) {
         console.error('Missing panel ID or tenant ID');
@@ -16,7 +22,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadMembers();
+    setupModalListeners();
 });
+
+function setupModalListeners(): void {
+    cancelDeleteBtn?.addEventListener('click', () => {
+        hideModal();
+    });
+
+    confirmDeleteBtn?.addEventListener('click', () => {
+        if (currentMemberId) {
+            performDelete(currentMemberId);
+        }
+        hideModal();
+    });
+}
+
+function showModal(): void {
+    deleteModal?.classList.remove('hidden');
+}
+
+function hideModal(): void {
+    deleteModal?.classList.add('hidden');
+    currentMemberId = null;
+}
 
 function loadMembers() {
     fetch(`/${memberTenantId}/api/Members/${panelId}`, {
@@ -58,7 +87,10 @@ function showMembers(members: MemberDto[]): void {
         const deleteBtn = document.createElement("button");
         deleteBtn.className = "btn btn-danger btn-sm";
         deleteBtn.textContent = "Verwijderen";
-        deleteBtn.addEventListener("click", () => deleteMember(member.id));
+        deleteBtn.addEventListener("click", () => {
+            currentMemberId = member.id;
+            showModal();
+        });
 
         const deleteCell = row.querySelector("td:last-child");
         if (deleteCell) deleteCell.appendChild(deleteBtn);
@@ -67,9 +99,7 @@ function showMembers(members: MemberDto[]): void {
     });
 }
 
-function deleteMember(memberId: string): void {
-    if (!confirm("Weet je zeker dat je dit panellid wilt verwijderen?")) return;
-
+function performDelete(memberId: string): void {
     fetch(`/${memberTenantId}/api/Members/${memberId}`, {
         method: "DELETE",
         headers: {

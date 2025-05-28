@@ -18,7 +18,6 @@ public class UploadsController : Controller
         var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
         var filePath = Path.Combine(uploads, uniqueFileName);
         
-        bool exists = System.IO.File.Exists(filePath);
         await using (var stream = new FileStream(filePath, FileMode.Create))
         {
             await file.CopyToAsync(stream);

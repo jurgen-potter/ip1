@@ -16,3 +16,35 @@
     @apply w-full text-center block; /* Knoppen nemen volledige breedte en zijn blok-elementen */
   }
 }
+.admin-search-form {
+  @apply mb-6;
+  .search-form-group {
+    @apply flex flex-col sm:flex-row items-stretch gap-2;
+  }
+
+  .search-input {
+    @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm outline-none;
+    &:focus {
+      @apply ring-2 ring-primary border-primary;
+    }
+  }
+
+  .btn {
+    @apply shrink-0;
+  }
+}
+.admin-management-container {
+  @apply container mx-auto py-8 px-4;
+}
+
+.admin-management-page-header { 
+  @apply flex flex-col sm:flex-row justify-between items-center mb-6 pb-3 border-b border-gray-300;
+}
+
+.admin-management-title { 
+  @apply text-2xl sm:text-3xl font-bold text-gray-800 mb-2 sm:mb-0; 
+}
+
+.admin-table-wrapper { 
+  @apply overflow-x-auto bg-white rounded-xl shadow-lg border border-gray-200;
+}

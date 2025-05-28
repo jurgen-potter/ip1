@@ -9,50 +9,53 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BL\BL.csproj" />
-      <ProjectReference Include="..\Domain\Domain.csproj" />
+        <ProjectReference Include="..\BL\BL.csproj" />
+        <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Google.Cloud.Storage.V1" Version="4.13.0" />
-      <PackageReference Include="KdGTI.AspNetCore.LiveMonitoring" Version="1.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.13" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.13" />
-      <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.14" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.13">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+        <PackageReference Include="Google.Cloud.Storage.V1" Version="4.13.0" />
+        <PackageReference Include="KdGTI.AspNetCore.LiveMonitoring" Version="1.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="10.0.0-preview.4.25258.110" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.13" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.13" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.14" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.13">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.0-preview.4.25258.110" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+        <PackageReference Include="StackExchange.Redis" Version="2.8.37" />
     </ItemGroup>
 
     <ItemGroup>
-      <Content Update="main.js">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
-      <Content Update="ClientApp\src\styles\css\admin\editQuestionnaire.scss">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
-      <Content Update="ClientApp\src\styles\css\panel\dashboard.scss">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
-      <Content Update="ClientApp\src\styles\css\recruitment\index.scss">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
+        <Content Update="main.js">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\src\styles\css\admin\editQuestionnaire.scss">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\src\styles\css\panel\dashboard.scss">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="ClientApp\src\styles\css\recruitment\index.scss">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="wwwroot\Antwerpenbanner.jpg" />
+        <None Include="wwwroot\defaultbanner.jpg" />
     </ItemGroup>
-    
+
     <Target Name="FrontendBuild" BeforeTargets="Build">
         <Exec Command="npm install" WorkingDirectory="$(ProjectDir)/ClientApp" />
         <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)/ClientApp" />

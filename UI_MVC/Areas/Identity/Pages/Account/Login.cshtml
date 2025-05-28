@@ -38,7 +38,7 @@ ViewData["Title"] = "Aanmelden";
                     <div class="mb-4">
                         <label asp-for="Input.Password" class="login-form-label">Wachtwoord</label>
                         <input asp-for="Input.Password" class="login-input-field" autocomplete="current-password"
-                               aria-required="true" placeholder="password"/>
+                               aria-required="true" placeholder="Wachtwoord"/>
                         <span asp-validation-for="Input.Password"
                               class="login-validation-message @(TempData["SelectedLoginType"]?.ToString() == "Code" ? "form-hidden" : "")"></span>
                     </div>

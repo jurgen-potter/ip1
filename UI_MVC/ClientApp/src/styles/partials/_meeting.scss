@@ -10,11 +10,6 @@
   @apply mb-3 sm:mb-0;
 }
 
-.meeting-detail-back-link {
-  @apply btn btn-outline-secondary mb-2 text-xs py-1 px-2; /* btn-sm vervangen door Tailwind utilities */
-  i { @apply mr-1; }
-}
-
 .meeting-detail-title {
   @apply text-2xl sm:text-3xl font-semibold text-gray-800;
 }
@@ -49,11 +44,6 @@
   p {
     @apply text-gray-700 text-sm;
   }
-}
-
-.meeting-documents-add-button {
-  @apply btn btn-outline-primary mt-4;
-  i { @apply mr-2; }
 }
 
 .meeting-empty-state-text {
@@ -91,32 +81,6 @@
   @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6; /* Responsive grid */
 }
 
-.recommendation-card { 
-  @apply bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col h-full
-  transition-all duration-300 ease-in-out hover:shadow-xl;
-}
-
-.recommendation-card-body {
-  @apply p-5 flex flex-col flex-grow; 
-}
-
-.recommendation-card-title {
-  @apply text-lg font-semibold text-gray-800 mb-2;
-  .anonymous-label { 
-    @apply text-sm font-normal text-gray-500 ml-2;
-  }
-}
-
-.recommendation-card-text {
-  @apply text-gray-700 text-sm leading-relaxed flex-grow mb-3; /* flex-grow om ruimte te vullen */
-}
-
-.recommendation-card-status { /* Voor statusberichten zoals "Stemmen is afgelopen" */
-  @apply text-sm font-semibold mb-3;
-  &.ended { @apply text-red-600; }
-  &.balanced { @apply text-green-600; } /* Gebruik een van je success/brand kleuren */
-}
-
 .recommendation-card-vote-info { /* Container voor steminformatie */
   @apply text-xs text-gray-600 mb-3;
   ul { @apply list-none p-0 mt-1; }
@@ -125,16 +89,74 @@
   .vote-count-against { @apply text-red-500 font-medium; }
 }
 
-.recommendation-card-actions { /* Footer voor de knoppen */
-  @apply mt-auto pt-4 border-t border-gray-200 flex flex-wrap justify-start gap-2; /* mt-auto duwt naar beneden */
-  .btn { /* Kleinere knoppen voor in de kaart */
-    @apply text-xs py-1 px-2 sm:py-1.5 sm:px-3;
-  }
-}
-
 .recommendation-vote-forms { /* Container voor de stemknoppen voor gebruikers */
   @apply mt-auto pt-4 border-t border-gray-200 flex flex-col sm:flex-row gap-2;
   form { @apply w-full sm:w-auto; }
   .btn { @apply w-full; } /* Knoppen volledige breedte in hun form */
+}
+
+.meeting-documents-card {
+  @apply card shadow-sm bg-white rounded-lg border border-gray-200;
+}
+
+.meeting-documents-card-header {
+  @apply bg-white border-b border-gray-200 px-6 py-4;
+  h5 { @apply text-lg font-semibold text-gray-800 mb-0; }
+}
+
+.meeting-documents-card-body {
+  @apply p-6;
+}
+
+.meeting-documents-list {
+  @apply space-y-3 mb-4;
+}
+
+.meeting-document-item {
+  @apply flex justify-between items-center bg-gray-50 border border-gray-200 rounded-lg p-3;
+}
+
+.meeting-document-info {
+  @apply flex items-center gap-2;
+}
+
+.document-link {
+  @apply text-accent hover:underline;
+}
+
+.remove-document-button {
+  @apply btn btn-outline-danger btn-sm;
+}
+
+.upload-document-form {
+  @apply flex flex-col sm:flex-row items-center gap-4 w-full;
+}
+
+.upload-file-input {
+  @apply block w-full text-sm text-gray-700 border border-gray-300 rounded-lg shadow-sm file:bg-gray-100 file:border-0 file:mr-4 file:py-2 file:px-4 file:text-sm file:font-semibold file:text-gray-700 hover:file:bg-gray-200;
+}
+
+.upload-document-form {
+  @apply flex flex-col sm:flex-row items-center gap-4;
+}
+
+.upload-file-input {
+  @apply w-auto text-sm text-gray-700 border border-gray-300 rounded-lg shadow-sm file:bg-gray-100 file:border-0 file:py-2 file:px-4 file:text-sm file:font-semibold file:text-gray-700 hover:file:bg-gray-200;
+}
+
+.meeting-document-item {
+  @apply flex justify-between items-center bg-gray-50 border border-gray-200 rounded-lg p-3;
+}
+
+.meeting-document-info {
+  @apply flex items-center gap-2;
+}
+
+.document-link {
+  @apply text-accent hover:underline;
+}
+
+.remove-document-button {
+  @apply btn btn-outline-danger btn-sm;
 }
 
