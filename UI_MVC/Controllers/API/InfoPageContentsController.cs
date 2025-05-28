@@ -1,5 +1,6 @@
 ﻿using CitizenPanel.BL.Content;
 using CitizenPanel.UI.MVC.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers.API;
@@ -9,6 +10,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 public class InfoPageContentsController(IContentManager contentManager, IWebHostEnvironment env) : ControllerBase
 {
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult GetContents()
     {
         var content = contentManager.GetInfoPageContent();
@@ -34,6 +36,7 @@ public class InfoPageContentsController(IContentManager contentManager, IWebHost
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public IActionResult SaveContents(InfoPageContentDto newContentDto)
     {
         if (!ModelState.IsValid)

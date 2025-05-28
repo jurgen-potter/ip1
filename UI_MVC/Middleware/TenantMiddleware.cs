@@ -18,7 +18,8 @@ public class TenantMiddleware(
     // List of controllers that don't require a tenant context
     private readonly HashSet<string> _publicControllers = new(StringComparer.OrdinalIgnoreCase)
     {
-        "Home"
+        "Home",
+        "InfoPageContents"
     };
     
     private readonly HashSet<(string Controller, string Action)> _tenantSpecificRoutes = new()
