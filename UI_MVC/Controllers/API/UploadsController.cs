@@ -1,4 +1,35 @@
-﻿using Google;
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace CitizenPanel.UI.MVC.Controllers.API;
+
+[ApiController]
+[Route("/api/[controller]")]
+public class UploadsController : Controller
+{
+    [HttpPost]
+    public async Task<IActionResult> UploadFile(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest();
+
+        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        Directory.CreateDirectory(uploads);
+
+        var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+        var filePath = Path.Combine(uploads, uniqueFileName);
+
+        await using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        var fileUrl = $"/uploads/{uniqueFileName}";
+        return Ok(new { url = fileUrl });
+    }
+}
+
+//deploye versie:
+/*using Google;
 using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,4 +72,4 @@ public class UploadsController : Controller
         var fileUrl = $"https://storage.googleapis.com/{_bucketName}/{objectName}";
         return Ok(new { url = fileUrl });
     }
-}
+}*/
