@@ -13,9 +13,11 @@
     transform: translateX(-50%);
     min-height: 450px;
   }
+
   &.auth-card-container--wide {
-    @apply max-w-4xl; 
+    @apply max-w-4xl;
   }
+}
 
 
 .auth-page-title { /* Voor H1 ViewData["Title"] */
