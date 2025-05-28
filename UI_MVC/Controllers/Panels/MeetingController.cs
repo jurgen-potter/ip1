@@ -12,10 +12,12 @@ namespace CitizenPanel.UI.MVC.Controllers.Panels;
 public class MeetingController(
     IMeetingManager meetingManager,
     IPanelManager panelManager,
-    StorageClient storageClient) : Controller
+    StorageClient storageClient,
+    UrlSigner urlSigner) : Controller
 
 {
     private readonly string _bucketName = "whimp24-bucket";
+    
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> Details(int id)
@@ -31,15 +33,21 @@ public class MeetingController(
 
             try
             {
-                var publicUrl = $"https://storage.googleapis.com/{_bucketName}/{objectName}";
-                documents.Add(publicUrl);
+                await storageClient.GetObjectAsync(_bucketName, objectName);
+                
+                var signedUrl = await urlSigner.SignAsync(
+                    _bucketName, 
+                    objectName, 
+                    TimeSpan.FromHours(1), 
+                    HttpMethod.Get);
+                
+                documents.Add(signedUrl);
             }
             catch (Google.GoogleApiException e) when (e.Error.Code == 404)
             {
                 // Bestand niet gevonden in bucket
             }
         }
-
 
         var model = new MeetingDetailViewModel
         {
@@ -66,7 +74,6 @@ public class MeetingController(
 
         return View(model);
     }
-
 
     [HttpGet]
     [Authorize(Roles = "Organization")]
@@ -103,7 +110,6 @@ public class MeetingController(
         return RedirectToAction("Details", new { id = model.MeetingId, panelId = model.PanelId });
     }
 
-
     [HttpPost]
     [Authorize(Roles = "Organization")]
     public IActionResult Create(CreateMeetingViewModel viewModel)
@@ -126,7 +132,6 @@ public class MeetingController(
         });
     }
     
-    
     [HttpPost]
     public async Task<IActionResult> Upload(IFormFile file, int meetingId)
     {
@@ -142,7 +147,6 @@ public class MeetingController(
             {
                 return BadRequest("Upload gefaald: " + ex.Message);
             }
-
 
             var meeting = meetingManager.GetMeetingById(meetingId);
             if (!meeting.DocumentNames.Contains(file.FileName))
@@ -183,5 +187,4 @@ public class MeetingController(
 
         return RedirectToAction("Details", new { id = meetingId });
     }
-
 }

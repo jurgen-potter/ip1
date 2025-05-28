@@ -88,6 +88,17 @@ builder.Services.AddSingleton<StorageClient>(provider =>
     return StorageClient.Create(credential);
 });
 
+builder.Services.AddSingleton<UrlSigner>(provider =>
+{
+    var credential = GoogleCredential.GetApplicationDefault();
+    
+    if (credential.UnderlyingCredential is ServiceAccountCredential serviceAccountCredential)
+    {
+        return UrlSigner.FromCredential(serviceAccountCredential);
+    }
+    return UrlSigner.FromCredential(credential);
+});
+
 builder.Services.AddLiveMonitoring();
 
 builder.Services.AddSession(options =>
