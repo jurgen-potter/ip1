@@ -110,7 +110,7 @@ form .panel-form-textarea {
   bottom: 0;
   left: 5px;
   width: 2px;
-  background-color: #dee2e6;
+  @apply bg-brand-cadet-gray bg-opacity-30;
   z-index: 1;
 }
 
@@ -135,15 +135,15 @@ form .panel-form-textarea {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: #6c757d;
+  @apply bg-brand-cadet-gray;
   border: 2px solid #fff;
-  box-shadow: 0 0 0 2px #ced4da;
+  @apply shadow-[0_0_0_2px_theme(colors.brand-cadet-gray)];
   z-index: 2;
 }
 
 .timeline-item:hover::before {
-  background-color: #0d6efd;
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+  @apply bg-primary-hover;
+  box-shadow: 0 0 0 3px rgba(142, 159, 170, 0.25); /* primary-hover with 25% opacity */
 }
 
 .timeline-box {

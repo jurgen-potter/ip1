@@ -11,18 +11,56 @@
 }
 
 <div class="reg-overview-container"> 
-    <h2 class="draw-calc-page-title">Resultaten panelgrootte berekening@(panelName != null ? " voor:" + panelName : "")</h2>
+    <h2 class="draw-calc-page-title">Resultaten panelgrootte berekening</h2>
 
     <div class="reg-overview-alert alert-info">
         <strong>@Model.TotalNeededInvitations</strong> burgers moeten uitgenodigd worden om het benodigde aantal panelleden te bereiken.
     </div>
 
-    <div class="reg-overview-card mb-6"> 
-        <div class="draw-calc-summary-header">
-            <h5>Samenvatting</h5>
+    <div class="summary-section">
+        <div class="reg-overview-card summary-card">
+            <div class="draw-calc-summary-header">
+                <h5>Samenvatting</h5>
+            </div>
+            <div class="reg-overview-card-body">
+                <p><strong>Geadviseerd aantal panelleden voor een panel voor uw gemeente:</strong> <span class="reg-overview-status-badge status-secondary">@Model.TotalNeededPanelmembers</span></p>
+            </div>
         </div>
-        <div class="reg-overview-card-body">
-            <p><strong>Geadviseerd aantal panelleden:</strong> <span class="reg-overview-status-badge status-secondary">@Model.TotalNeededPanelmembers</span></p>
+
+        <div class="reg-overview-card panel-members-card">
+            <div class="draw-calc-summary-header">
+                <h5>Aanpassen</h5>
+            </div>
+            <div class="reg-overview-card-body">
+                <form asp-action="Recalculate" method="post" class="panel-members-form">
+                    @if (Model.Criteria != null)
+                    {
+                        @for (int i = 0; i < Model.Criteria.Count; i++)
+                        {
+                            <input type="hidden" name="Criteria[@i].Name" value="@Model.Criteria[i].Name"/>
+
+                            @for (int j = 0; j < Model.Criteria[i].SubCriteria.Count; j++)
+                            {
+                                <input type="hidden" name="Criteria[@i].SubCriteria[@j].Name" value="@Model.Criteria[i].SubCriteria[j].Name"/>
+                                <input type="hidden" name="Criteria[@i].SubCriteria[@j].Percentage" value="@Model.Criteria[i].SubCriteria[j].Percentage"/>
+                            }
+                        }
+                    }
+                    <input type="hidden" asp-for="@Model.TotalAvailablePotentialPanelmembers" />
+                    <input type="hidden" asp-for="@Model.TotalNeededInvitations" />
+                    
+                    <div class="panel-members-input-group">
+                        <label asp-for="TotalNeededPanelmembers">Eigen aantal gewenste panelleden</label>
+                        <div class="input-with-button">
+                            <input asp-for="TotalNeededPanelmembers" type="number" class="auth-input-field" min="1" />
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-calculator"></i>
+                                Herbereken
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -46,7 +84,6 @@
     }
 
     <form asp-controller="Recruitment" asp-action="ReadResult" method="post">
-        @* Verborgen velden blijven zoals ze zijn, geen directe styling nodig *@
         @if (Model.Criteria != null)
         {
             @for (int i = 0; i < Model.Criteria.Count; i++)
@@ -81,29 +118,5 @@
             <button type="submit" class="btn btn-success">Maak uw panel</button>
             <a href="@Url.Action("Index", "Recruitment")" class="btn btn-outline-secondary">Nieuwe berekening</a>
         </div>
-    </form>
-
-    <form asp-action="Recalculate" method="post">
-        @if (Model.Criteria != null)
-        {
-            @for (int i = 0; i < Model.Criteria.Count; i++)
-            {
-                <input type="hidden" name="Criteria[@i].Name" value="@Model.Criteria[i].Name"/>
-
-                @for (int j = 0; j < Model.Criteria[i].SubCriteria.Count; j++)
-                {
-                    <input type="hidden" name="Criteria[@i].SubCriteria[@j].Name" value="@Model.Criteria[i].SubCriteria[j].Name"/>
-                    <input type="hidden" name="Criteria[@i].SubCriteria[@j].Percentage" value="@Model.Criteria[i].SubCriteria[j].Percentage"/>
-                }
-            }
-        }
-        <input type="hidden" asp-for="@Model.TotalAvailablePotentialPanelmembers" />
-        <input type="hidden" asp-for="@Model.TotalNeededInvitations" />
-        
-        <div class="recalculate-form-group">
-            <label asp-for="TotalNeededPanelmembers">Eigen aantal gewenste panelleden</label>
-            <input asp-for="TotalNeededPanelmembers" type="number" class="auth-input-field" />
-        </div>
-        <button type="submit" class="btn btn-success">Bereken opnieuw met gekozen aantal panelleden</button>
     </form>
 </div>
