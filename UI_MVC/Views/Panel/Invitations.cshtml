@@ -11,7 +11,9 @@
 
 <div class="invitations-container">
     <h2 class="invitations-title">@ViewBag.Title</h2>
-
+    <button id="excel-download-button" data-panel-id="@Model.FirstOrDefault().PanelId" type="button" class="btn btn-outline-primary btn-sm-equivalent">
+        Download uitnodigingen met Excel
+    </button>
     @if (Model != null && Model.Any(i => !i.IsRegistered))
     {
         <div class="invitations-grid">
@@ -48,13 +50,13 @@
                         </p>
                         <p class="flex-grow">Code: @invitation.Code</p>
                         <div class="flex-grow mt-auto pt-2">
-                            @if (invitation.QRCodeString.IsNullOrEmpty())
+                            @if (invitation.QRCode.IsNullOrEmpty())
                             {
                                 <strong class="text-red-600">@($"Deze invitation heeft geen QR-code meer")</strong>
                             }
                             else
                             {
-                                <img src="data:image/png;base64,@invitation.QRCodeString" alt="QR Code voor uitnodiging @invitation.Code"/>
+                                <img src="data:image/png;base64,@invitation.QRCodeBase64" alt="QR Code voor uitnodiging @invitation.Code"/>
                             }
                         </div>
                     </div>
@@ -69,3 +71,7 @@
         </div>
     }
 </div>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/manageInvites.js" asp-append-version="true"></script>
+}

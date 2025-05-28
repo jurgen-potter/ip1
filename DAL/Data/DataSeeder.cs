@@ -1344,8 +1344,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Gender = Gender.Female,
             PanelId = 2,
             Town = "Antwerpen",
-            QRCodeString =
-                "",
             TenantId = "antwerpen"
         };
 
@@ -1357,8 +1355,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Gender = Gender.Male,
             PanelId = 2,
             Town = "Antwerpen",
-            QRCodeString =
-                "",
             TenantId = "antwerpen"
         };
 
@@ -1370,8 +1366,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Gender = Gender.Male,
             PanelId = 2,
             Town = "Antwerpen",
-            QRCodeString =
-                "",
             TenantId = "antwerpen"
         };
 
@@ -1383,8 +1377,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Gender = Gender.Female,
             PanelId = 2,
             Town = "Antwerpen",
-            QRCodeString =
-                "",
             TenantId = "antwerpen"
         };
 
@@ -1395,8 +1387,6 @@ public class DataSeeder(PanelDbContext panelDbContext)
             Gender = Gender.Male,
             PanelId = 2,
             Town = "Antwerpen",
-            QRCodeString =
-                "",
             Email = "drawn@example.com",
             IsRegistered = true,
             IsDrawn = true,
