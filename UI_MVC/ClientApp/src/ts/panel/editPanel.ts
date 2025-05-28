@@ -54,6 +54,8 @@ function showPanelData() {
 }
 
 function savePanel() {
+    if (!validateForm()) return;
+    
     panelData.name = (document.getElementById("titleInput") as HTMLInputElement).value;
     panelData.description = (document.getElementById("descriptionInput") as HTMLTextAreaElement).value;
     panelData.endDate = (document.getElementById("endDateInput") as HTMLInputElement).value;
@@ -87,4 +89,27 @@ function uploadBanner(event: Event) {
             panelData.coverImagePath = data.path;
         })
         .catch(err => alert("Fout bij uploaden: " + err.message));
+}
+
+function validateForm(): boolean {
+    let valid = true;
+
+    const title = (document.getElementById("titleInput") as HTMLInputElement).value.trim();
+    const endDate = (document.getElementById("endDateInput") as HTMLInputElement).value;
+
+    // Reset validation messages
+    document.getElementById("titleValidation")!.textContent = '';
+    document.getElementById("endDateValidation")!.textContent = '';
+
+    if (!title) {
+        document.getElementById("titleValidation")!.textContent = "Titel is verplicht.";
+        valid = false;
+    }
+
+    if (!endDate) {
+        document.getElementById("endDateValidation")!.textContent = "Einddatum is verplicht.";
+        valid = false;
+    }
+
+    return valid;
 }

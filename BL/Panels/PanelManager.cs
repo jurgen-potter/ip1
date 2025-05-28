@@ -14,6 +14,7 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
             Name = name,
             Description = description,
             MemberCount = 0,
+            StartDate = DateOnly.FromDateTime(DateTime.Today),
             EndDate = endDate,
             Criteria = criteria,
             TotalNeededPanelmembers = totNeedMem
