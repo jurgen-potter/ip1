@@ -15,7 +15,9 @@
 
     <ItemGroup>
       <PackageReference Include="Google.Cloud.Storage.V1" Version="4.13.0" />
+      <PackageReference Include="Google.Cloud.Storage.V1" Version="4.13.0" />
       <PackageReference Include="KdGTI.AspNetCore.LiveMonitoring" Version="1.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="10.0.0-preview.4.25258.110" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.13" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.13" />
       <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
@@ -27,7 +29,9 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.0-preview.4.25258.110" />
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+      <PackageReference Include="StackExchange.Redis" Version="2.8.37" />
     </ItemGroup>
 
     <ItemGroup>
@@ -53,7 +57,11 @@
       <None Include="wwwroot\Antwerpenbanner.jpg" />
     </ItemGroup>
     
+<<<<<<< HEAD
+    <Target Name="FrontendBuild" AfterTargets="Publish">
+=======
     <Target Name="FrontendBuild" BeforeTargets="Build">
+>>>>>>> master
         <Exec Command="npm install" WorkingDirectory="$(ProjectDir)/ClientApp" />
         <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)/ClientApp" />
     </Target>
@@ -65,5 +73,18 @@
             <Link>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</Link>
         </Content>
     </ItemGroup>
-
+      <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="10.0.0-preview.4.25258.110" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.0-preview.4.25258.110" />
+      <PackageReference Include="StackExchange.Redis" Version="2.8.37" />
+      <None Include="wwwroot\Antwerpenbanner.jpg" />
+    
+    <Target Name="FrontendBuild" BeforeTargets="Build">
+        <Exec Command="npm install" WorkingDirectory="$(ProjectDir)/ClientApp" />
+        <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)/ClientApp" />
+    </Target>
+        <DistFiles Include="ClientApp/dist/**" />
+        <Content Include="ClientApp/dist/**">
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+            <Link>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </Content>
 </Project>
