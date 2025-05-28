@@ -156,7 +156,8 @@ public class MeetingController(
     [HttpPost]
     public async Task<IActionResult> RemoveDocument(int meetingId, string fileUrl)
     {
-        var objectName = $"{meetingId}/{fileUrl}";
+        var fileName = Uri.UnescapeDataString(fileUrl.Split('/').Last());
+        var objectName = $"{meetingId}/{fileName}";
 
         try
         {
@@ -173,9 +174,9 @@ public class MeetingController(
         }
 
         var meeting = meetingManager.GetMeetingById(meetingId);
-        if (meeting?.DocumentNames?.Contains(fileUrl) == true)
+        if (meeting?.DocumentNames?.Contains(fileName) == true)
         {
-            meeting.DocumentNames.Remove(fileUrl);
+            meeting.DocumentNames.Remove(fileName);
             meetingManager.EditMeeting(meeting);
         }
 
