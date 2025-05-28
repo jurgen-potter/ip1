@@ -81,7 +81,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddErrorDescriber<DutchIdentityErrorDescriber>()
     .AddDefaultTokenProviders();
 
-// Existing StorageClient registration
+// Existing StorageClient registratio
 builder.Services.AddSingleton<StorageClient>(provider =>
 {
     var credential = GoogleCredential.GetApplicationDefault()
