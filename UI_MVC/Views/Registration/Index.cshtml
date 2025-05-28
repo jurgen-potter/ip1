@@ -43,7 +43,7 @@
                                 Start finale loting
                             </button>
                         </form>
-                        <button type="button" class="btn btn-primary" data-buckets="@bucketJson" data-panel-id="@panelId" id="generateInvites">
+                        <button type="button" class="btn btn-primary" data-modal-trigger="generateInvitesModal" data-buckets="@bucketJson" data-panel-id="@panelId" id="generateInvites">
                             Genereer meer uitnodigingen
                         </button>
                     </div>
@@ -164,6 +164,31 @@
 </div>
 
 <div id="hasSufficientRegistrations" data-value="@hasSufficientRegistrations.ToString().ToLower()" style="display: none;"></div>
+
+<div id="generateInvitesModal" class="custom-modal-overlay" aria-labelledby="generateInvitesModalLabel" role="dialog" aria-modal="true">
+    <div class="custom-modal-dialog modal-sm">
+        <div class="custom-modal-header">
+            <h5 class="custom-modal-title" id="generateInvitesModalLabel">Bevestiging</h5>
+            <button type="button" class="custom-modal-close-button" data-modal-close="generateInvitesModal" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="custom-modal-body">
+            <p>Weet u zeker dat u meer uitnodigingen wilt genereren?</p>
+        </div>
+        <div class="custom-modal-footer">
+            <button type="button" class="btn btn-secondary" data-modal-close="generateInvitesModal">Annuleren</button>
+            <button type="button" class="btn btn-primary" id="confirmGenerateInvitesBtn">Bevestigen</button>
+        </div>
+    </div>
+</div>
+
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-indicator">
+        <div class="spinner"></div>
+        <p class="loading-text">Uw uitnodigingen worden aangemaakt, een ogenblik geduld a.u.b.</p>
+    </div>
+</div>
 
 @section Scripts {
     <script type="module" src="~/dist/clientapp/assets/registration.js" asp-append-version="true"></script>
