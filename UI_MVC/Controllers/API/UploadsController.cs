@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Google;
+using Google.Cloud.Storage.V1;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers.API;
 
@@ -6,11 +8,12 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 [Route("/api/[controller]")]
 public class UploadsController : Controller
 {
-    private readonly IWebHostEnvironment _env;
+    private readonly StorageClient _storageClient;
+    private readonly string _bucketName = "whimp24-bucket-public";
 
-    public UploadsController(IWebHostEnvironment env)
+    public UploadsController(StorageClient storageClient)
     {
-        _env = env;
+        _storageClient = storageClient;
     }
 
     [HttpPost]
@@ -19,22 +22,23 @@ public class UploadsController : Controller
         if (file == null || file.Length == 0)
             return BadRequest("No file uploaded.");
 
-        var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
-        if (!Directory.Exists(uploadsFolder))
-        {
-            Directory.CreateDirectory(uploadsFolder);
-        }
-
         // Create unique filename to avoid collisions
         var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+        var objectName = $"uploads/{uniqueFileName}";
 
-        using (var stream = new FileStream(filePath, FileMode.Create))
+        using var stream = file.OpenReadStream();
+        
+        try
         {
-            await file.CopyToAsync(stream);
+            await _storageClient.UploadObjectAsync(_bucketName, objectName, file.ContentType, stream);
+        }
+        catch (GoogleApiException ex)
+        {
+            return BadRequest("Upload failed: " + ex.Message);
         }
 
-        var fileUrl = $"/uploads/{uniqueFileName}";
+        // Return the public URL to the uploaded file
+        var fileUrl = $"https://storage.googleapis.com/{_bucketName}/{objectName}";
         return Ok(new { url = fileUrl });
     }
 }
