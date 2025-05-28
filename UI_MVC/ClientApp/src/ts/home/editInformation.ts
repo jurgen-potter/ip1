@@ -176,7 +176,6 @@ function saveSections(): void {
     })
         .then(res => {
             if (res.ok) {
-                alert("Opgeslagen!");
                 window.location.href = "/Home/Information";
             } else {
                 throw new Error("Opslaan mislukt");
