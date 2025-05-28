@@ -650,3 +650,45 @@ form .panel-form-textarea {
     }
   }
 }
+
+/* Toggle Switch */
+.switch {
+  @apply relative inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  @apply opacity-0 w-0 h-0;
+}
+
+.slider {
+  @apply absolute cursor-pointer inset-0 bg-gray-300;
+  transition: .4s;
+
+  &:before {
+    @apply absolute bg-white;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    transition: .4s;
+  }
+}
+
+input:checked + .slider {
+  @apply bg-accent;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  @apply rounded-full;
+}
+
+.slider.round:before {
+  @apply rounded-full;
+}

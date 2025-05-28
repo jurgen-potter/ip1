@@ -5,85 +5,82 @@
 @{
     CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
     CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
-    ViewBag.Title = $"Meeting {Model.MeetingDate.ToString("dd MMMM yyyy")}";
+    ViewBag.Title = $"Meeting {Model.MeetingDate:dd MMMM yyyy}";
 }
+
 @section Styles {
-    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true" />
 }
 
 <div class="meeting-detail-page-container">
     <div class="meeting-detail-page-header">
         <div class="meeting-detail-back-link-wrapper">
-            <a href="@Url.Action("Index", "Panel", new { id = Model.PanelId })" class="meeting-detail-back-link">
-                <i class="fas fa-arrow-left"></i>Terug naar @Model.PanelName
+            <a href="@Url.Action("Index", "Panel", new { id = Model.PanelId })" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Terug naar @Model.PanelName
             </a>
             <h1 class="meeting-detail-title">Bijeenkomst: @Model.MeetingDate.ToString("dd MMMM yyyy")</h1>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"> 
-        <div class="meeting-content-card">
-            <div class="meeting-card-header">
-                <h5>Aanbevelingen</h5>
-                @if (User.IsInRole("Organization"))
-                {
-                    <a asp-action="AddRecommendation" asp-controller="Meeting"
-                       asp-route-meetingId="@Model.MeetingId"
-                       asp-route-panelId="@Model.PanelId"
-                       class="btn btn-success">
-                        <i class="fas fa-plus"></i> Aanbeveling Toevoegen
-                    </a>
-                }
-            </div>
+    <div class="meeting-content-card">
+        <div class="meeting-card-header">
+            <h5>Aanbevelingen</h5>
+            @if (User.IsInRole("Organization"))
+            {
+                <a asp-action="AddRecommendation"
+                   asp-controller="Meeting"
+                   asp-route-meetingId="@Model.MeetingId"
+                   asp-route-panelId="@Model.PanelId"
+                   class="btn btn-accent">
+                    <i class="fa-solid fa-plus"></i> Aanbeveling Toevoegen
+                </a>
+            }
+        </div>
 
-            <div class="meeting-card-body">
-                @if (Model.Recommendations != null && Model.Recommendations.Any())
-                {
-                    <div class="meeting-recommendations-grid"> 
-                        @foreach (var rec in Model.Recommendations)
-                        {
-                            <div class="meeting-recommendation-item">
-                                <h5>@rec.Title</h5>
-                                <p>@rec.Description</p>
-                            </div>
-                        }
-                    </div>
-                }
-                else
-                {
-                    <p class="meeting-empty-state-text">Er zijn geen aanbevelingen voor deze meeting.</p>
-                }
-            </div>
+        <div class="meeting-card-body">
+            @if (Model.Recommendations != null && Model.Recommendations.Any())
+            {
+                <div class="meeting-recommendations-grid">
+                    @foreach (var rec in Model.Recommendations)
+                    {
+                        <div class="meeting-recommendation-item">
+                            <h5>@rec.Title</h5>
+                            <p>@rec.Description</p>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="meeting-empty-state-text">Er zijn geen aanbevelingen voor deze meeting.</p>
+            }
         </div>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-header bg-white">
-            <h5 class="mb-0">Documenten</h5>
+    <div class="meeting-content-card">
+        <div class="meeting-card-header">
+            <h5>Documenten</h5>
         </div>
-        <div class="card-body">
-
+        <div class="meeting-documents-card-body">
             @if (Model.DocumentNames.Any())
             {
-                <ul class="list-group mb-3">
+                <ul class="meeting-documents-list">
                     @foreach (var docUrl in Model.DocumentNames)
                     {
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center gap-2">
+                        <li class="meeting-document-item">
+                            <div class="meeting-document-info">
                                 <span class="badge bg-secondary">📄</span>
-                                <a href="@docUrl" target="_blank">@System.IO.Path.GetFileName(docUrl)</a>
+                                <a class="document-link" href="@docUrl" target="_blank">@System.IO.Path.GetFileName(docUrl)</a>
                             </div>
                             @if (User.IsInRole("Organization"))
                             {
-                                <form asp-controller="Meeting" asp-action="RemoveDocument" method="post" class="mb-0" 
-                                      asp-route-meetingId="@Model.MeetingId" 
+                                <form asp-controller="Meeting" asp-action="RemoveDocument" method="post" class="mb-0"
+                                      asp-route-meetingId="@Model.MeetingId"
                                       asp-route-fileUrl="@docUrl">
-                                    <button type="submit" class="btn btn-sm btn-danger" title="Verwijder document" 
-                                            onclick="return confirm('Weet je zeker dat u dit document wilt verwijderen?');">
-                                        <i class="bi bi-trash"></i>
+                                    <button type="submit" class="remove-document-button" title="Verwijder document">
+                                        <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </form>
-
                             }
                         </li>
                     }
@@ -91,21 +88,25 @@
             }
             else
             {
-                <p class="text-muted">Er zijn nog geen documenten toegevoegd voor deze meeting.</p>
+                <p class="meeting-empty-state-text">Er zijn nog geen documenten toegevoegd voor deze meeting.</p>
             }
 
             @if (User.IsInRole("Organization"))
             {
-                <form asp-controller="Meeting" asp-action="Upload" method="post" asp-route-meetingId="@Model.MeetingId" asp-route-panelId="@Model.PanelId" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <input type="file" name="file" class="form-control" />
-                    </div>
-                    <button type="submit" class="btn btn-outline-primary">
-                        <i class="bi bi-plus-circle me-2"></i>Document toevoegen
+                <form asp-controller="Meeting"
+                      asp-action="Upload"
+                      method="post"
+                      asp-route-meetingId="@Model.MeetingId"
+                      asp-route-panelId="@Model.PanelId"
+                      enctype="multipart/form-data"
+                      class="upload-document-form">
+                    <input type="file" name="file" class="upload-file-input" />
+                    <button type="submit" class="btn btn-accent ml-auto">
+                        <i class="fa-solid fa-plus-circle"></i> Document toevoegen
                     </button>
                 </form>
+
             }
         </div>
     </div>
-    
 </div>
