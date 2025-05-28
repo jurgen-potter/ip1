@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CitizenPanel.UI.MVC.Controllers.API;
 
 [ApiController]
-[Route("/api/[controller]")]
+[Route("/{tenantId}/api/[controller]")]
 public class FileProxyController : Controller
 {
     private readonly StorageClient _storageClient;
