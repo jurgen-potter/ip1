@@ -11,7 +11,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 [ApiController]
 [Route("/{tenantId}/api/[controller]")]
 [Authorize(Roles = "Organization")]
-public class InvitationsController(IPanelManager panelManager, IUtilityManager utilityManager) : ControllerBase
+public class InvitationsController(IPanelManager panelManager, IDrawManager drawManager, IUtilityManager utilityManager) : ControllerBase
 {
     [HttpGet("{panelId}")]
     public IActionResult Get(int panelId)
@@ -56,5 +56,17 @@ public class InvitationsController(IPanelManager panelManager, IUtilityManager u
         panel.Invitations = invitations.ToList();
         panelManager.EditPanel(panel);
         return Ok();
+    }
+
+    [HttpGet("download/{panelId}")]
+    public IActionResult DownloadInvitationsExcel(int panelId)
+    {
+        var invitations = drawManager.GetAllInvitationsByPanelId(panelId);
+
+        byte[] excelFile = utilityManager.GenerateExcelWithQrCodes(invitations);
+        
+        string fileName = $"Uitnodigingen_{DateTime.Now:yyyy-MM-dd}.xlsx";
+
+        return File(excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
     }
 }

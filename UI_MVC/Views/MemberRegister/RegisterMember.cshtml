@@ -87,9 +87,9 @@
             <p>Weet u zeker dat u wilt meedoen?</p>
         </div>
         <div class="member-reg-modal-footer">
-            <a href="@Url.Action("Index", "Home")" class="member-reg-modal-button-cancel">Ik wil niet meedoen</a>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-danger">Ik wil niet meedoen</a>
             <input id="isConfirmed" type="hidden" asp-for="@Model.IsConfirmed"/>
-            <button id="confirmParticipation" type="button" class="member-reg-modal-button-confirm">Ik wil meedoen</button>
+            <button id="confirmParticipation" type="button" class="btn btn-accent">Ik wil meedoen</button>
         </div>
     </div>
 </div>

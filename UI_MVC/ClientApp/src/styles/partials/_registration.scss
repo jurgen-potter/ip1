@@ -1,5 +1,4 @@
-﻿
-.reg-overview-container {
+﻿.reg-overview-container {
   @apply container mx-auto py-8 px-4;
 }
 
@@ -11,26 +10,8 @@
   @apply grid grid-cols-1 md:grid-cols-2 gap-6 mb-8;
 }
 
-.reg-overview-card { /* Algemene kaartstijl voor deze pagina */
-  @apply bg-white rounded-lg shadow-lg border border-gray-200;
-}
-
-.reg-overview-card-header {
-  @apply bg-gray-100 p-4 border-b border-gray-300 rounded-t-lg;
-  h5 {
-    @apply text-lg font-semibold text-gray-700 mb-0;
-  }
-}
-
-.reg-overview-card-body {
-  @apply p-4;
-  p {
-    @apply mb-2 text-sm text-gray-700;
-  }
-}
-
 .reg-overview-status-badge { /* Basis voor badges */
-  @apply inline-block px-3 py-1 text-xs font-semibold rounded-full;
+  @apply inline-block px-2 py-1 text-xs font-semibold rounded-full ml-1;
   &.status-primary { /* Voor "Eerste fase actief" */
     @apply bg-primary text-white;
   }
@@ -42,6 +23,9 @@
   }
   &.status-warning { /* Voor "Onvoldoende" */
     @apply bg-yellow-400 text-black;
+  }
+  &.status-complete {
+    @apply bg-accent text-white;
   }
 }
 
@@ -120,7 +104,8 @@
 .custom-modal-overlay {
   @apply fixed inset-0 bg-gray-800 bg-opacity-75 items-center justify-center z-50
   transition-opacity duration-300 ease-in-out;
-  @apply hidden opacity-0;
+  display: none;
+  opacity: 0;
 
   &.is-open {
     display: flex !important;
@@ -157,7 +142,6 @@
 .custom-modal-footer {
   @apply flex justify-end gap-3 bg-gray-50 p-4 border-t border-gray-200;
 }
-
 
 .draw-results-section { /* Wrapper voor elke groep (Geselecteerden, Reserves) */
   @apply mt-8 mb-10; 

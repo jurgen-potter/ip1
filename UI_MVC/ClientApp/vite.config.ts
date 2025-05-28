@@ -37,6 +37,7 @@ export default defineConfig({
         loadInformation: path.resolve('src/ts/home/loadInformation.ts'),
         reserveMembers: path.resolve('src/ts/registration/reserveMembers.ts'),
         createPanel: path.resolve('src/ts/panel/createPanel.ts'),
+        manageInvites: path.resolve('src/ts/panel/manageInvites.ts'),
         editPanel: path.resolve('src/ts/panel/editPanel.ts')
       },
       output: {

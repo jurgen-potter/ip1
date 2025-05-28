@@ -43,8 +43,10 @@
             @if (isSuper)
             {
                 <div class="auth-form-group">
-                    <label asp-for="Input.IsSuper" class="auth-form-label">Maak superadmin</label>
-                    <input asp-for="Input.IsSuper" class="auth-input-field" type="checkbox" aria-required="false" />
+                    <label class="auth-checkbox-label" asp-for="Input.IsSuper">
+                        <input asp-for="Input.IsSuper" type="checkbox" class="auth-checkbox-input" aria-required="false" />
+                        <span class="auth-checkbox-text">Maak superadmin</span>
+                    </label>
                     <span asp-validation-for="Input.IsSuper" class="auth-validation-message"></span>
                 </div>
             }

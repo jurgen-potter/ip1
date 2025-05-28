@@ -1,101 +1,209 @@
-
 .btn {
   @apply inline-block cursor-pointer select-none text-center no-underline
   font-semibold align-middle
   border border-transparent
-  rounded-[0.3rem]
-  py-[0.6rem] px-[1.2rem]
+  rounded-lg 
+  px-5 py-2.5 
   transition-all duration-200 ease-in-out;
 
-  &:focus {
-    @apply outline-none ring-4;
-  }
-
-  @apply bg-primary text-white border-primary;
-  &:hover {
-    @apply bg-primary-hover border-primary-hover;
-  }
-  &:focus {
-    @apply ring-primary/50;
+  &:focus-visible {
+    @apply outline-none ring-2 ring-offset-2;
   }
 }
 
 .btn-primary {
-  @apply bg-accent text-brand-black border-accent;
+  @apply bg-accent text-text-black border-accent; 
   &:hover {
-    @apply bg-accent-hover border-accent-hover;
+    @apply bg-accent-hover border-accent-hover text-text-black;
   }
-  &:focus {
+  &:focus-visible {
     @apply ring-accent/50;
   }
 }
 
 .btn-accent {
-  @apply bg-accent text-brand-black border-accent;
+  @apply bg-accent text-text-black border-accent;
   &:hover {
-    @apply bg-accent-hover border-accent-hover;
+    @apply bg-accent-hover border-accent-hover text-text-black;
   }
-  &:focus {
+  &:focus-visible {
     @apply ring-accent/50;
+  }
+}
+
+.btn-secondary {
+  @apply bg-primary text-white border-primary;
+  &:hover {
+    @apply bg-primary-hover border-primary-hover text-white;
+  }
+  &:focus-visible {
+    @apply ring-primary/50;
   }
 }
 
 .btn-success {
   @apply bg-brand-celadon text-white border-brand-celadon;
   &:hover {
-    @apply bg-opacity-80 border-opacity-80;
+    @apply bg-opacity-80 border-opacity-80 text-white;
   }
-  &:focus {
+  &:focus-visible {
     @apply ring-brand-celadon/50;
   }
 }
 
+// 6. Danger knop
 .btn-danger {
   @apply bg-red-500 text-white border-red-500;
   &:hover {
-    @apply bg-red-600 border-red-600;
+    @apply bg-red-600 border-red-600 text-white;
   }
-  &:focus {
+  &:focus-visible {
     @apply ring-red-500/50;
   }
 }
 
+// 7. Warning knop
 .btn-warning {
-  @apply bg-yellow-500 text-brand-black border-yellow-500;
+  @apply bg-yellow-500 text-text-black border-yellow-500;
   &:hover {
-    @apply bg-yellow-600 border-yellow-600;
+    @apply bg-yellow-600 border-yellow-600 text-text-black;
   }
-  &:focus {
+  &:focus-visible {
     @apply ring-yellow-500/50;
   }
 }
 
+// 8. Info knop
 .btn-info {
   @apply bg-sky-500 text-white border-sky-500;
   &:hover {
-    @apply bg-sky-600 border-sky-600;
+    @apply bg-sky-600 border-sky-600 text-white;
   }
-  &:focus {
+  &:focus-visible {
     @apply ring-sky-500/50;
   }
 }
 
-.btn-outline-secondary {
-  @apply bg-transparent text-primary border-primary;
+// 9. Outline varianten
+.btn-outline-primary { /* Outline van de "groene" primaire knop */
+  @apply bg-transparent text-accent border-accent;
+  &:hover {
+    @apply bg-accent text-text-black; /* Achtergrond wordt accent, tekst text-black */
+  }
+  &:focus-visible {
+    @apply ring-accent/50;
+  }
+}
+
+.btn-outline-secondary { /* Outline van de "grijze" secondary knop */
+  @apply bg-transparent text-primary border-primary; /* Gebruikt nu je 'primary' (grijze) kleur */
   &:hover {
     @apply bg-primary text-white;
   }
-  &:focus {
+  &:focus-visible {
     @apply ring-primary/50;
   }
 }
 
-.btn-outline-primary {
-  @apply bg-transparent text-accent border-accent;
+.btn-outline-info {
+  @apply bg-transparent text-sky-600 border-sky-600;
   &:hover {
-    @apply bg-accent text-brand-black;
+    @apply bg-sky-600 text-white;
   }
-  &:focus {
-    @apply ring-accent/50;
+  &:focus-visible {
+    @apply ring-sky-600/50;
+  }
+}
+
+.btn-outline-danger {
+  @apply bg-transparent text-red-600 border-red-600;
+  &:hover {
+    @apply bg-red-600 text-white;
+  }
+  &:focus-visible {
+    @apply ring-red-600/50;
+  }
+}
+
+.btn-sm {
+  @apply text-xs px-3 py-1.5 rounded-md;
+}
+
+.login-type-button {
+  @apply flex-1 px-4 py-2 border border-primary text-primary bg-white
+  transition-colors duration-150 rounded-md;
+  &:hover, &.active {
+    @apply bg-primary text-white;
+  }
+  &:focus-visible {
+    @apply ring-primary/50 ring-offset-1;
+  }
+}
+#accountBtn.login-type-button, .login-type-button:first-child {
+  @apply rounded-r-none;
+}
+#codeBtn.login-type-button, .login-type-button:last-child {
+  @apply rounded-l-none border-l-0;
+}
+
+.btn-solid-login {
+  @extend .btn;
+  @apply bg-primary text-header-text border-primary px-4 py-2; 
+  &:hover {
+    @apply bg-primary-hover text-header-text;
+  }
+  &:focus-visible {
+    @apply ring-primary/50;
+  }
+}
+
+.btn-full {
+  @apply w-full;
+}
+
+.btn-remove-criteria, .btn-remove-subcriteria {
+  @extend .btn, .btn-danger, .btn-sm;
+  @apply px-3 text-white;
+  &:hover {
+    @apply text-white;
+  }
+}
+
+.btn-add-subcriteria {
+  @extend .btn, .btn-secondary, .btn-sm; 
+  @apply py-[0.375rem] px-[0.875rem] text-white;
+  &:hover {
+    @apply text-white;
+  }
+}
+.auth-submit-button{
+  @apply w-full bg-primary text-white px-4 py-2 rounded-lg transition-colors duration-150;
+  &:hover {
+    @apply bg-primary-hover;
+  }
+}
+
+.login-submit-button{
+  @apply w-full bg-primary text-white px-4 py-2 rounded-lg transition-colors duration-150;
+  &:hover {
+    @apply bg-primary-hover;
+  }
+}
+
+.criteria-expand-button {
+  @extend .btn, .btn-sm;
+  @apply ml-2 p-1 text-gray-500 bg-transparent border-transparent;
+  &:hover {
+    @apply text-primary bg-gray-100;
+  }
+  &:focus-visible {
+    @apply ring-primary/50 ring-offset-0;
+  }
+}
+
+.mobile-menu-button {
+  @apply text-header-text p-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary;
+  &:hover {
+    @apply text-white;
   }
 }

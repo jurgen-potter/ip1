@@ -91,45 +91,12 @@
   @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6; /* Responsive grid */
 }
 
-.recommendation-card { 
-  @apply bg-white rounded-lg shadow-lg border border-gray-200 flex flex-col h-full
-  transition-all duration-300 ease-in-out hover:shadow-xl;
-}
-
-.recommendation-card-body {
-  @apply p-5 flex flex-col flex-grow; 
-}
-
-.recommendation-card-title {
-  @apply text-lg font-semibold text-gray-800 mb-2;
-  .anonymous-label { 
-    @apply text-sm font-normal text-gray-500 ml-2;
-  }
-}
-
-.recommendation-card-text {
-  @apply text-gray-700 text-sm leading-relaxed flex-grow mb-3; /* flex-grow om ruimte te vullen */
-}
-
-.recommendation-card-status { /* Voor statusberichten zoals "Stemmen is afgelopen" */
-  @apply text-sm font-semibold mb-3;
-  &.ended { @apply text-red-600; }
-  &.balanced { @apply text-green-600; } /* Gebruik een van je success/brand kleuren */
-}
-
 .recommendation-card-vote-info { /* Container voor steminformatie */
   @apply text-xs text-gray-600 mb-3;
   ul { @apply list-none p-0 mt-1; }
   li p { @apply mb-0; }
   .vote-count-for { @apply text-green-500 font-medium; }
   .vote-count-against { @apply text-red-500 font-medium; }
-}
-
-.recommendation-card-actions { /* Footer voor de knoppen */
-  @apply mt-auto pt-4 border-t border-gray-200 flex flex-wrap justify-start gap-2; /* mt-auto duwt naar beneden */
-  .btn { /* Kleinere knoppen voor in de kaart */
-    @apply text-xs py-1 px-2 sm:py-1.5 sm:px-3;
-  }
 }
 
 .recommendation-vote-forms { /* Container voor de stemknoppen voor gebruikers */

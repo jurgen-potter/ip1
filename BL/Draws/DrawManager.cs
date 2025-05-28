@@ -7,18 +7,19 @@ namespace CitizenPanel.BL.Draws;
 
 public class DrawManager(IDrawRepository repository, TenantContext tenantContext) : IDrawManager
 {
-    public Invitation AddInvitation(string code, string qrCodeString, int panelId, Gender gender, int age)
+    public Invitation AddInvitation(string code, byte[] qrCodeAsPngByteArr, int panelId, Gender gender, int age)
     {
         Invitation invitation = new Invitation()
         {
             Code = code,
-            QRCodeString = qrCodeString,
+            QRCode = qrCodeAsPngByteArr,
             PanelId = panelId,
             Gender = gender,
             Age = age,
             Town = tenantContext.Tenant.Name,
             TenantId = tenantContext.Tenant.Id
         };
+
         repository.CreateInvitation(invitation);
         return invitation;
     }
