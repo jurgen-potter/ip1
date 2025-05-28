@@ -6,7 +6,7 @@ namespace CitizenPanel.BL.Panels;
 
 public interface IPanelManager
 {
-    Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totAvPotMem);
+    Panel AddPanel(string name, string description, DateOnly endDate, ICollection<Criteria> criteria, int totAvPotMem);
     IEnumerable<Panel> GetAllPanels(); // wordt al gefilterd op tenant
     IEnumerable<Panel> GetAllPanelsWithoutTentant();
     IEnumerable<Panel> GetThreeActivePanels();

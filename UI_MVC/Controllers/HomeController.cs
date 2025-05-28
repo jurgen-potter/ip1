@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CitizenPanel.UI.MVC.Controllers;
 
-public class HomeController(ILogger<HomeController> logger, IPanelManager panelManager) : Controller
+public class HomeController(IPanelManager panelManager) : Controller
 {
 
     [HttpGet]

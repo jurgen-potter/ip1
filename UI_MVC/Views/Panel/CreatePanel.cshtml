@@ -23,6 +23,12 @@
             <textarea rows="5" asp-for="Description" class="panel-form-textarea">Geef hier uw beschrijving</textarea>
             <span asp-validation-for="Description" class="panel-form-validation-message"></span>
         </div>
+
+        <div class="panel-form-group">
+            <label asp-for="EndDate" class="panel-form-label"></label>
+            <input asp-for="EndDate" type="date" class="panel-form-input"  value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="EndDate" class="panel-form-validation-message"></span>
+        </div>
         
         <div>
             @if (Model.Result.Criteria != null)

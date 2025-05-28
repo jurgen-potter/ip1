@@ -1,6 +1,5 @@
 using CitizenPanel.BL.Panels;
 using CitizenPanel.UI.MVC.Models.DTO;
-using CitizenPanel.UI.MVC.Models.Panels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,5 +31,58 @@ public class PanelsController(IPanelManager panelManager) : ControllerBase
         }
         
         return Ok(recs);
+    }
+    
+    [Authorize]
+    [HttpGet("{id}")]
+    public IActionResult GetPanel(int id)
+    {
+        var panel = panelManager.GetPanelById(id);
+        return panel == null ? NotFound() : Ok(panel);
+    }
+
+    [Authorize(Roles = "Organization")]
+    [HttpPost("{id}")]
+    public IActionResult UpdatePanel(EditPanelDto panelDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        var panel = panelManager.GetPanelById(panelDto.Id);
+        if (panel == null) return NotFound();
+
+        panel.Name = panelDto.Name;
+        panel.Description = panelDto.Description;
+        panel.EndDate = panelDto.EndDate;
+
+        panelManager.EditPanel(panel);
+        return Ok();
+    }
+
+    [Authorize(Roles = "Organization")]
+    [HttpPost("{panelId}/UploadBanner")]
+    public async Task<IActionResult> UploadBannerImage(int panelId, IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest();
+
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bannerUploads");
+        Directory.CreateDirectory(uploadsFolder);
+
+        var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        await using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        var panel = panelManager.GetPanelById(panelId);
+        panel.CoverImagePath = $"/bannerUploads/{uniqueFileName}";
+        panelManager.EditPanel(panel);
+
+        return Ok(new { path = panel.CoverImagePath });
     }
 }

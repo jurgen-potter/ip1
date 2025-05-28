@@ -53,7 +53,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="wwwroot\Antwerpenbanner.jpg" />
+        <None Include="wwwroot\defaultbanner.jpg" />
     </ItemGroup>
 
     <Target Name="FrontendBuild" BeforeTargets="Build">

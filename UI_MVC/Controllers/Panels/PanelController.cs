@@ -108,7 +108,7 @@ public class PanelController(
             }
         }
 
-        Panel newPanel = panelManager.AddPanel(model.Name, model.Description, criteria,
+        Panel newPanel = panelManager.AddPanel(model.Name, model.Description, model.EndDate, criteria,
             model.Result.TotalNeededPanelmembers);
         var invitations = utilityManager.GenerateInvitations(model.Result.TotalNeededInvitations, criteria, newPanel);
         newPanel.Invitations = invitations.ToList();
@@ -147,7 +147,8 @@ public class PanelController(
                 panelsData.Add(new PanelDto()
                 {
                     Id = panel.Id,
-                    Name = panel.Name
+                    Name = panel.Name,
+                    CoverImagePath = panel.CoverImagePath,
                 });
             }
 
@@ -175,7 +176,8 @@ public class PanelController(
                     Panels = panels.Select(p => new PanelSelectOptionViewModel
                     {
                         Id = p.Id,
-                        Name = p.Name
+                        Name = p.Name,
+                        CoverImagePath = p.CoverImagePath
                     }).ToList()
                 };
 
@@ -374,6 +376,12 @@ public class PanelController(
         };
 
         return View(viewModel); // Zorg dat je een View hebt genaamd "ViewAll.cshtml" of pas de naam aan.
+    }
+
+    [HttpGet]
+    public IActionResult Edit(int panelId)
+    {
+        return View(panelId);
     }
     
     [HttpPost]

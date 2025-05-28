@@ -1,0 +1,62 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "Bewerk panel";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true" />
+}
+
+<div class="max-w-3xl mx-auto mt-10 bg-white shadow-md rounded-xl p-8 space-y-6">
+    <h2 class="text-2xl font-semibold text-gray-800">Bewerk uw panel</h2>
+
+    <input type="hidden" id="panelId" value="@Model" />
+
+    <div class="space-y-4">
+        <div>
+            <label for="titleInput" class="block text-sm font-medium text-gray-700">Titel</label>
+            <input id="titleInput" type="text"
+                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                   placeholder="Titel" />
+            <span id="titleValidation" class="panel-form-validation-message text-sm text-red-600 mt-1 block"></span>
+        </div>
+
+        <div>
+            <label for="descriptionInput" class="block text-sm font-medium text-gray-700">Beschrijving</label>
+            <textarea id="descriptionInput"
+                      class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      placeholder="Beschrijving" rows="4"></textarea>
+        </div>
+
+        <div>
+            <label for="endDateInput" class="block text-sm font-medium text-gray-700">Einddatum</label>
+            <input id="endDateInput" type="date"
+                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+            <span id="endDateValidation" class="panel-form-validation-message text-sm text-red-600 mt-1 block"></span>
+        </div>
+
+        <div>
+            <label for="bannerUpload" style="display: none;" class="block text-sm font-medium text-gray-700">Banner afbeelding</label>
+            <input id="bannerUpload" type="file"
+                   class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                          file:rounded-lg file:border-0
+                          file:text-sm file:font-semibold
+                          file:bg-indigo-50 file:text-indigo-700
+                          hover:file:bg-indigo-100"
+                   accept="image/*" />
+            <img id="bannerPreview" src="" alt="Banner" class="mt-4 rounded shadow-md max-h-[150px]" />
+        </div>
+
+        <div class="flex justify-end">
+            <button id="saveBtn"
+                    class="inline-flex items-center px-5 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <i class="fas fa-save mr-2"></i> Opslaan
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/editPanel.js" asp-append-version="true"></script>
+}

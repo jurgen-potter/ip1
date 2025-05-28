@@ -38,6 +38,7 @@ export default defineConfig({
         reserveMembers: path.resolve('src/ts/registration/reserveMembers.ts'),
         createPanel: path.resolve('src/ts/panel/createPanel.ts'),
         manageInvites: path.resolve('src/ts/panel/manageInvites.ts'),
+        editPanel: path.resolve('src/ts/panel/editPanel.ts')
       },
       output: {
         assetFileNames: 'assets/[name][extname]',
