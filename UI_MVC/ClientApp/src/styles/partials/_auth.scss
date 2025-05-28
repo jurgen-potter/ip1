@@ -5,19 +5,7 @@
   }
 }
 
-.auth-card-container {
-  @apply w-full max-w-md bg-white rounded-xl shadow-lg p-8 overflow-hidden;
-  /* Specifiek voor login-kaart met absolute positionering: */
-  &.login-card-absolute { /* Voeg deze klasse toe aan de kaart op de login pagina */
-    @apply absolute top-20 left-1/2;
-    transform: translateX(-50%);
-    min-height: 450px;
-    transition: min-height 0.3s ease;
-  }
-  &.auth-card-container--wide {
-    @apply max-w-4xl; 
-  }
-}
+
 
 .auth-page-title { /* Voor H1 ViewData["Title"] */
   @apply text-2xl font-bold mb-6 text-center;

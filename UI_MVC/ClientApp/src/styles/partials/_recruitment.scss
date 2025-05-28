@@ -60,14 +60,6 @@
   @apply list-none p-0 space-y-4;
 }
 
-.criteria-item-card {
-  @apply bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden;
-}
-
-.criteria-card-header {
-  @apply flex items-start justify-between p-4 bg-gray-50 border-b border-gray-200;
-}
-
 .criteria-header-content {
   @apply flex-grow space-y-2;
 }
@@ -91,10 +83,6 @@
   &.is-collapsed {
     @apply hidden;
   }
-}
-
-.criteria-card-body {
-  @apply p-4;
 }
 
 .subcriteria-list-label,

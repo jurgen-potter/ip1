@@ -11,23 +11,7 @@
   @apply grid grid-cols-1 md:grid-cols-2 gap-6 mb-8;
 }
 
-.reg-overview-card { /* Algemene kaartstijl voor deze pagina */
-  @apply bg-white rounded-lg shadow-lg border border-gray-200;
-}
 
-.reg-overview-card-header {
-  @apply bg-gray-100 p-4 border-b border-gray-300 rounded-t-lg;
-  h5 {
-    @apply text-lg font-semibold text-gray-700 mb-0;
-  }
-}
-
-.reg-overview-card-body {
-  @apply p-4;
-  p {
-    @apply mb-2 text-sm text-gray-700;
-  }
-}
 
 .reg-overview-status-badge { /* Basis voor badges */
   @apply inline-block px-3 py-1 text-xs font-semibold rounded-full;
