@@ -7,7 +7,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 public class UploadsController : Controller
 {
     private readonly StorageClient _storageClient;
-    private readonly string _bucketName = "whimp24-bucket-public";
+    private readonly string _bucketName = "whimp24-bucket";
 
     public UploadsController(StorageClient storageClient)
     {
