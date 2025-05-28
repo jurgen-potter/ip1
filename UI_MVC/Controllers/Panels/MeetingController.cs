@@ -153,7 +153,7 @@ public class MeetingController(
         return RedirectToAction("Details", new { id = meetingId });
     }
 
-    [HttpPost("remove-document")]
+    [HttpPost]
     public async Task<IActionResult> RemoveDocument(int meetingId, string fileUrl)
     {
         var objectName = $"{meetingId}/{fileUrl}";
