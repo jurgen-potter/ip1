@@ -12,8 +12,7 @@ namespace CitizenPanel.UI.MVC.Controllers.Panels;
 public class MeetingController(
     IMeetingManager meetingManager,
     IPanelManager panelManager,
-    StorageClient storageClient,
-    UrlSigner urlSigner) : Controller
+    StorageClient storageClient) : Controller
 
 {
     private readonly string _bucketName = "whimp24-bucket";
@@ -33,15 +32,12 @@ public class MeetingController(
 
             try
             {
+                // Check if object exists first
                 await storageClient.GetObjectAsync(_bucketName, objectName);
                 
-                var signedUrl = await urlSigner.SignAsync(
-                    _bucketName, 
-                    objectName, 
-                    TimeSpan.FromHours(1), 
-                    HttpMethod.Get);
-                
-                documents.Add(signedUrl);
+                // Use proxy endpoint instead of signed URL
+                var proxyUrl = $"/api/FileProxy/meeting/{id}/{Uri.EscapeDataString(docName)}";
+                documents.Add(proxyUrl);
             }
             catch (Google.GoogleApiException e) when (e.Error.Code == 404)
             {

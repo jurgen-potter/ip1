@@ -81,29 +81,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddErrorDescriber<DutchIdentityErrorDescriber>()
     .AddDefaultTokenProviders();
 
+// Existing StorageClient registration
 builder.Services.AddSingleton<StorageClient>(provider =>
 {
     var credential = GoogleCredential.GetApplicationDefault()
-        .CreateScoped(
-            "https://www.googleapis.com/auth/devstorage.read_write",
-            "https://www.googleapis.com/auth/iam"
-        );
+        .CreateScoped("https://www.googleapis.com/auth/devstorage.read_write");
     return StorageClient.Create(credential);
-});
-
-builder.Services.AddSingleton<UrlSigner>(provider =>
-{
-    var credential = GoogleCredential.GetApplicationDefault()
-        .CreateScoped(
-            "https://www.googleapis.com/auth/devstorage.read_write",
-            "https://www.googleapis.com/auth/iam"
-        );
-    
-    if (credential.UnderlyingCredential is ServiceAccountCredential serviceAccountCredential)
-    {
-        return UrlSigner.FromCredential(serviceAccountCredential);
-    }
-    return UrlSigner.FromCredential(credential);
 });
 
 builder.Services.AddLiveMonitoring();
