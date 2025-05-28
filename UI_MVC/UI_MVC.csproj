@@ -14,6 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Google.Cloud.Storage.V1" Version="4.13.0" />
       <PackageReference Include="KdGTI.AspNetCore.LiveMonitoring" Version="1.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.13" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.13" />
@@ -52,9 +53,17 @@
       <None Include="wwwroot\Antwerpenbanner.jpg" />
     </ItemGroup>
     
-    <Target Name="FrontendBuild" AfterTargets="Publish">
+    <Target Name="FrontendBuild" BeforeTargets="Build">
         <Exec Command="npm install" WorkingDirectory="$(ProjectDir)/ClientApp" />
         <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)/ClientApp" />
     </Target>
+
+    <ItemGroup>
+        <DistFiles Include="ClientApp/dist/**" />
+        <Content Include="ClientApp/dist/**">
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+            <Link>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </Content>
+    </ItemGroup>
 
 </Project>

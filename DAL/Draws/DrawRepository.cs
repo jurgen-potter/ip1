@@ -11,6 +11,10 @@ public class DrawRepository(PanelDbContext dbContext) : IDrawRepository
         dbContext.Invitations.Add(invitation);
         dbContext.SaveChanges();
     }
+    public Invitation ReadInvitationById(int id)
+    {
+        return dbContext.Invitations.Find(id);
+    }
 
     public Invitation ReadInvitationByCode(string code)
     {

@@ -23,11 +23,17 @@ using CitizenPanel.UI.MVC.Areas.Identity.Managers;
 using CitizenPanel.UI.MVC.Areas.Identity.Services;
 using CitizenPanel.UI.MVC.Middleware;
 using CitizenPanel.UI.MVC.Services;
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    ContentRootPath = AppContext.BaseDirectory
+});
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -75,6 +81,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddErrorDescriber<DutchIdentityErrorDescriber>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddSingleton<StorageClient>(provider =>
+{
+    var credential = GoogleCredential.GetApplicationDefault()
+        .CreateScoped("https://www.googleapis.com/auth/devstorage.read_write");
+    return StorageClient.Create(credential);
+});
 
 builder.Services.AddLiveMonitoring();
 
@@ -138,7 +150,6 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.UseAndMapLiveMonitoring();

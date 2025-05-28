@@ -50,6 +50,9 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
         return dbContext.Panels
             .Include(p => p.Invitations)
             .Include(p => p.DrawResult)
+            .ThenInclude(dr => dr.SelectedInvitations)
+            .Include(p => p.DrawResult)
+            .ThenInclude(dr => dr.ReserveInvitations)
             .SingleOrDefault(p => p.Id == panelId);
     }
 
@@ -213,5 +216,12 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .Include(m => m.Recommendations)
             .ThenInclude(r => r.UserVotes)
             .Where(m => m.PanelId == panelId).ToList();
+    }
+
+    public IEnumerable<Invitation> ReadReservesByPanelId(int panelId)
+    {
+        return dbContext.Panels
+            .SelectMany(p => p.DrawResult.ReserveInvitations)
+            .ToList();
     }
 }

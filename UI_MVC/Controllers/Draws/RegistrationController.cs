@@ -6,6 +6,7 @@ using CitizenPanel.BL.Utilities;
 using CitizenPanel.UI.MVC.Models.Draws;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CitizenPanel.UI.MVC.Controllers.Panels;
 
@@ -155,5 +156,45 @@ public class RegistrationController(
         ViewBag.PanelId = panelId;
         ViewBag.DrawStatus = panel.DrawStatus;
         return View(dr);
+    }
+
+    [HttpGet]
+    public IActionResult ReserveMembers(int panelId)
+    {
+        var model = new ReserveMailModel()
+        {
+            PanelId = panelId
+        };
+        return View(model);
+    }
+    
+    [HttpPost]
+    public IActionResult SendInvitations(ReserveMailModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View("ReserveMembers", model);
+        }
+
+        var invitationIds = JsonConvert.DeserializeObject<List<int>>(model.SelectedInvitationIds);
+        var panel = panelManager.GetPanelByIdWithInvitations(model.PanelId);
+
+
+        foreach (var invitationId in invitationIds)
+        {
+            var inv = drawManager.GetInvitationById(invitationId);
+            if (inv != null)
+            {
+                mailSender.SendEmailAsync(inv.Email, model.Subject,
+                    model.Message.Replace(Environment.NewLine, "<br />"));
+                panel.DrawResult.ReserveInvitations.Remove(inv);
+                panel.DrawResult.SelectedInvitations.Add(inv);
+                inv.IsDrawn = true;
+                drawManager.EditInvitation(inv);
+            }
+        }
+        panelManager.EditPanel(panel);
+        
+        return RedirectToAction("Index", "Panel", new { id = model.PanelId });
     }
 }

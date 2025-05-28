@@ -2,6 +2,8 @@
 using CitizenPanel.BL.Panels;
 using CitizenPanel.UI.MVC.Models;
 using CitizenPanel.UI.MVC.Models.Panels;
+using Google;
+using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,29 +11,35 @@ namespace CitizenPanel.UI.MVC.Controllers.Panels;
 
 public class MeetingController(
     IMeetingManager meetingManager,
-    IPanelManager panelManager) : Controller
+    IPanelManager panelManager,
+    StorageClient storageClient) : Controller
+
 {
+    private readonly string _bucketName = "whimp24-bucket";
     [HttpGet]
     [Authorize]
-    public IActionResult Details(int id)
+    public async Task<IActionResult> Details(int id)
     {
         var meeting = meetingManager.GetMeetingByIdWithRecommendations(id);
         var panel = panelManager.GetPanelById(meeting.PanelId);
         
-        var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads", id.ToString());
         var documents = new List<string>();
 
-        if (Directory.Exists(uploadsPath))
+        foreach (var docName in meeting.DocumentNames)
         {
-            foreach (var docName in meeting.DocumentNames)
+            var objectName = $"{id}/{docName}";
+
+            try
             {
-                var fullPath = Path.Combine(uploadsPath, docName);
-                if (System.IO.File.Exists(fullPath))
-                {
-                    documents.Add(docName);
-                }
+                var publicUrl = $"https://storage.googleapis.com/{_bucketName}/{objectName}";
+                documents.Add(publicUrl);
+            }
+            catch (Google.GoogleApiException e) when (e.Error.Code == 404)
+            {
+                // Bestand niet gevonden in bucket
             }
         }
+
 
         var model = new MeetingDetailViewModel
         {
@@ -123,40 +131,56 @@ public class MeetingController(
     {
         if (file != null && file.Length > 0)
         {
-            var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads", meetingId.ToString());
-            Directory.CreateDirectory(uploads);
-
-            var filePath = Path.Combine(uploads, Path.GetFileName(file.FileName));
-            bool exists = System.IO.File.Exists(filePath);
-            await using (var stream = new FileStream(filePath, FileMode.Create))
+            var objectName = $"{meetingId}/{file.FileName}";
+            using var stream = file.OpenReadStream();
+            try
             {
-                await file.CopyToAsync(stream);
+                await storageClient.UploadObjectAsync(_bucketName, objectName, file.ContentType, stream);
+            }
+            catch (GoogleApiException ex)
+            {
+                return BadRequest("Upload gefaald: " + ex.Message);
             }
 
-            if (!exists)
+
+            var meeting = meetingManager.GetMeetingById(meetingId);
+            if (!meeting.DocumentNames.Contains(file.FileName))
             {
-                var meeting = meetingManager.GetMeetingById(meetingId);
                 meeting.DocumentNames.Add(file.FileName);
                 meetingManager.EditMeeting(meeting);
             }
         }
-
         return RedirectToAction("Details", new { id = meetingId });
     }
-    
+
     [HttpPost]
-    public IActionResult RemoveDocument(int meetingId, string fileName)
+    public async Task<IActionResult> RemoveDocument(int meetingId, string fileName)
     {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads", meetingId.ToString(), fileName);
-        if (System.IO.File.Exists(filePath))
+        var objectName = $"{meetingId}/{fileName}";
+
+        try
         {
-            System.IO.File.Delete(filePath);
+            await storageClient.DeleteObjectAsync(_bucketName, objectName);
         }
-        
+        catch (Google.GoogleApiException e) when (e.Error.Code == 404)
+        {
+            // Bestand bestaat niet, negeer
+        }
+        catch (Exception ex)
+        {
+            // Log de fout, want nu weet je niet waarom het faalt
+            Console.WriteLine($"Error deleting object: {ex}");
+            return BadRequest("Kon bestand niet verwijderen.");
+        }
+
         var meeting = meetingManager.GetMeetingById(meetingId);
-        meeting.DocumentNames.Remove(fileName);
-        meetingManager.EditMeeting(meeting);
+        if (meeting.DocumentNames.Contains(fileName))
+        {
+            meeting.DocumentNames.Remove(fileName);
+            meetingManager.EditMeeting(meeting);
+        }
 
         return RedirectToAction("Details", new { id = meetingId });
     }
+
 }
