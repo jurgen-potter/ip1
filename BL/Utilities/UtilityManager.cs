@@ -12,7 +12,7 @@ namespace CitizenPanel.BL.Utilities;
 
 public class UtilityManager(IDrawManager drawManager) : IUtilityManager
 {
-    public IEnumerable<Invitation> GenerateInvitations(int amount, List<Criteria> criteria, Panel panel)
+    public IEnumerable<Invitation> GenerateInvitations(int amount, List<Criteria> criteria, Panel panel, int batch)
     {
         QRCodeGenerator qrGenerator = new QRCodeGenerator();
         List<Invitation> invitations = new List<Invitation>();
@@ -81,7 +81,7 @@ public class UtilityManager(IDrawManager drawManager) : IUtilityManager
                 PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
                 byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
 
-                Invitation newInvitation = drawManager.AddInvitation(code, qrCodeAsPngByteArr, panel.Id, gender, age);
+                Invitation newInvitation = drawManager.AddInvitation(code, qrCodeAsPngByteArr, panel.Id, gender, age, batch);
                 invitations.Add(newInvitation);
             }
         }

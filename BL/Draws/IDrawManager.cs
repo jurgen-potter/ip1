@@ -6,7 +6,7 @@ namespace CitizenPanel.BL.Draws;
 
 public interface IDrawManager
 {
-    Invitation AddInvitation(string code, byte[] qrCodeAsPngByteArr, int panelId, Gender gender, int age);
+    Invitation AddInvitation(string code, byte[] qrCodeAsPngByteArr, int panelId, Gender gender, int age, int batch);
     Invitation GetInvitationById(int id);
     Invitation GetInvitationByCode(string code);
     IEnumerable<Invitation> GetAllInvitationsByPanelId(int panelId);
