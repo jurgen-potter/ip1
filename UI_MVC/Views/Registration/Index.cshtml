@@ -24,14 +24,13 @@
             </div>
             <div class="reg-overview-card-body">
                 <p>
-                    Status:
-                    <span class="reg-overview-status-badge @(drawStatus == DrawStatus.FirstPhaseActive ? "status-primary" : drawStatus == DrawStatus.Complete ? "status-success" : "status-secondary")">
+                    <span class="reg-overview-status-badge status-complete @(drawStatus == DrawStatus.FirstPhaseActive ? "status-primary" : drawStatus == DrawStatus.Complete ? "status-success" : "status-secondary")">
                         @(drawStatus == DrawStatus.FirstPhaseActive ? "Eerste fase actief" : "Loting afgerond")
                     </span>
                 </p>
                 @if (drawStatus == DrawStatus.Complete)
                 {
-                <a asp-action="DrawResults" asp-route-panelId="@panelId" class="btn btn-info mt-2">
+                <a asp-action="DrawResults" asp-route-panelId="@panelId" class="btn btn-primary">
                     Bekijk lotingsresultaten
                 </a>
                 }

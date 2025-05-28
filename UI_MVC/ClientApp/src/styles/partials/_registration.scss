@@ -11,7 +11,7 @@
 }
 
 .reg-overview-status-badge { /* Basis voor badges */
-  @apply inline-block px-3 py-1 text-xs font-semibold rounded-full;
+  @apply inline-block px-2 py-1 text-xs font-semibold rounded-full ml-1;
   &.status-primary { /* Voor "Eerste fase actief" */
     @apply bg-primary text-white;
   }
@@ -23,6 +23,9 @@
   }
   &.status-warning { /* Voor "Onvoldoende" */
     @apply bg-yellow-400 text-black;
+  }
+  &.status-complete {
+    @apply bg-accent text-white;
   }
 }
 
