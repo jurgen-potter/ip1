@@ -72,7 +72,7 @@ builder.Services.AddScoped<ITenantAccessService, TenantAccessService>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
-// Redis setup
+/*// Redis setup
 var redisIp = Environment.GetEnvironmentVariable("REDIS_IP");
 var redisConnection = $"{redisIp}:6379,abortConnect=false";
 
@@ -94,7 +94,7 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
-});
+});*/
 
 // Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
