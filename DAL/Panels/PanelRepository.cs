@@ -100,6 +100,11 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
         dbContext.Panels.Remove(panel);
     }
 
+    public Recommendation ReadRecommendationById(int recommendationDtoId)
+    {
+        return dbContext.Recommendations.Find(recommendationDtoId);
+    }
+
     public Recommendation ReadRecommendationByIdWithVotes(int recommendationId)
     {
         return dbContext.Recommendations

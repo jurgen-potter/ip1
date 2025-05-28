@@ -56,7 +56,8 @@ public class PanelController(
                     {
                         Id = rec.Id,
                         Title = rec.Title,
-                        Description = rec.Description
+                        Description = rec.Description,
+                        IsDone = rec.IsDone
                     });
                 }
             }
@@ -232,7 +233,8 @@ public class PanelController(
                     {
                         Id = rec.Id,
                         Title = rec.Title,
-                        Description = rec.Description
+                        Description = rec.Description,
+                        IsDone = rec.IsDone
                     });
                 }
 
@@ -244,7 +246,8 @@ public class PanelController(
                         {
                             Id = rec.Id,
                             Title = rec.Title,
-                            Description = rec.Description
+                            Description = rec.Description,
+                            IsDone = rec.IsDone
                         });
                     }
                 }

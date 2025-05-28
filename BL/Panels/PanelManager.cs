@@ -73,7 +73,12 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         repository.DeletePanel(panel);
     }
-    
+
+    public Recommendation GetRecommendationById(int recommendationDtoId)
+    {
+        return repository.ReadRecommendationById(recommendationDtoId);
+    }
+
     public Recommendation GetRecommendationByIdWithVotes(int recommendationId)
     {
         return repository.ReadRecommendationByIdWithVotes(recommendationId);

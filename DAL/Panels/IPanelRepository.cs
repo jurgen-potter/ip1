@@ -20,6 +20,7 @@ public interface IPanelRepository
     void UpdatePanel(Panel panel);
     void DeletePanel(Panel panel);
     
+    Recommendation ReadRecommendationById(int recommendationDtoId);
     Recommendation ReadRecommendationByIdWithVotes(int recommendationId);
     Recommendation ReadRecommendationByIdWithVoters(int recommendationId);
     void UpdateRecommendation(Recommendation recommendation);
