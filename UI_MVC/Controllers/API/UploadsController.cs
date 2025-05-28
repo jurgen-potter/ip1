@@ -1,9 +1,11 @@
-﻿using Google.Cloud.Storage.V1;
+﻿using Google;
+using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitizenPanel.UI.MVC.Controllers.API;
 
-
+[ApiController]
+[Route("/api/[controller]")]
 public class UploadsController : Controller
 {
     private readonly StorageClient _storageClient;
@@ -20,27 +22,23 @@ public class UploadsController : Controller
         if (file == null || file.Length == 0)
             return BadRequest("No file uploaded.");
 
-        // Genereer unieke bestandsnaam
-        var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+        // Create unique filename to avoid collisions
+        var uniqueFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+        var objectName = $"uploads/{uniqueFileName}";
 
+        using var stream = file.OpenReadStream();
+        
         try
         {
-            using var stream = file.OpenReadStream();
-            await _storageClient.UploadObjectAsync(
-                bucket: _bucketName,
-                objectName: $"uploads/{uniqueFileName}",  // Opslaan in "uploads/" map in de bucket
-                contentType: file.ContentType,
-                source: stream
-            );
+            await _storageClient.UploadObjectAsync(_bucketName, objectName, file.ContentType, stream);
         }
-        catch (Google.GoogleApiException ex)
+        catch (GoogleApiException ex)
         {
-            return BadRequest("Upload gefaald: " + ex.Message);
+            return BadRequest("Upload failed: " + ex.Message);
         }
 
-        // Genereer publieke URL (aangezien je bucket openbaar is gemaakt in je startup script)
-        var publicUrl = $"https://storage.googleapis.com/{_bucketName}/uploads/{uniqueFileName}";
-
-        return Ok(new { url = publicUrl });
+        // Return the public URL to the uploaded file
+        var fileUrl = $"https://storage.googleapis.com/{_bucketName}/{objectName}";
+        return Ok(new { url = fileUrl });
     }
 }
