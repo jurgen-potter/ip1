@@ -7,13 +7,14 @@ namespace CitizenPanel.BL.Panels;
 
 public class PanelManager(IPanelRepository repository) : IPanelManager
 {
-    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totNeedMem)
+    public Panel AddPanel(string name, string description, DateOnly endDate, ICollection<Criteria> criteria, int totNeedMem)
     {
         Panel newPanel = new Panel()
         {
             Name = name,
             Description = description,
             MemberCount = 0,
+            EndDate = endDate,
             Criteria = criteria,
             TotalNeededPanelmembers = totNeedMem
         };

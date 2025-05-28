@@ -108,7 +108,7 @@ public class PanelController(
             }
         }
 
-        Panel newPanel = panelManager.AddPanel(model.Name, model.Description, criteria,
+        Panel newPanel = panelManager.AddPanel(model.Name, model.Description, model.EndDate, criteria,
             model.Result.TotalNeededPanelmembers);
         var invitations = utilityManager.GenerateInvitations(model.Result.TotalNeededInvitations, criteria, newPanel);
         newPanel.Invitations = invitations.ToList();
