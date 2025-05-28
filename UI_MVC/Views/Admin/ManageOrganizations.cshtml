@@ -3,13 +3,14 @@
 @{
     ViewData["Title"] = "Organisatiebeheer";
 }
+
 @section Styles {
     <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
 }
 
 <div class="admin-management-container">
     <div class="admin-management-page-header">
-        <h2 class="admin-management-title">@ViewBag.Title</h2>
+        <h2 class="admin-management-title">@ViewData["Title"]</h2>
     </div>
 
     <form id="searchForm" class="admin-search-form">
@@ -29,7 +30,7 @@
             <thead>
             <tr>
                 <th>Organisatie</th>
-                <th>Acties</th> 
+                <th>Acties</th>
             </tr>
             </thead>
             <tbody id="tenantTableBody">
@@ -37,6 +38,7 @@
         </table>
     </div>
 </div>
+
 <div id="deleteConfirmationModal" class="member-reg-modal-overlay hidden" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
     <div class="member-reg-modal-dialog">
         <div class="member-reg-modal-header">
@@ -51,6 +53,7 @@
         </div>
     </div>
 </div>
+
 @section Scripts {
     <script type="module" src="~/dist/clientapp/assets/manageOrganizations.js" asp-append-version="true"></script>
     <script type="module" src="~/dist/clientapp/assets/memberRegister.js"></script>

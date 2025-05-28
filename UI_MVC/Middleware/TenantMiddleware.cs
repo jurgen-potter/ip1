@@ -16,10 +16,11 @@ public class TenantMiddleware(
     ITenantManager tenantManager) : IMiddleware
 {
     // List of controllers that don't require a tenant context
-    private readonly HashSet<string> _publicControllers = new(StringComparer.OrdinalIgnoreCase)
+    private readonly HashSet<string> _tenantIndependentControllers = new(StringComparer.OrdinalIgnoreCase)
     {
         "Home",
-        "InfoPageContents"
+        "InfoPageContents",
+        "Admin"
     };
     
     private readonly HashSet<(string Controller, string Action)> _tenantSpecificRoutes = new()
@@ -37,7 +38,7 @@ public class TenantMiddleware(
         var routeTenantId = context.Request.RouteValues["tenantId"]?.ToString();
         
         var isIdentityArea = area?.Equals("Identity", StringComparison.OrdinalIgnoreCase) == true;
-        var isPublicController = _publicControllers.Contains(controller);
+        var isPublicController = _tenantIndependentControllers.Contains(controller);
         var isTenantSpecificRoute = controller != null && action != null && _tenantSpecificRoutes.Contains((controller, action));
         
         // Skip setting tenant context for Identity and public controllers
