@@ -11,7 +11,7 @@
 <div class="panel-create-container">
     <h2 class="panel-create-title">Begin met uw panel te maken</h2>
     
-    <form asp-controller="Panel" asp-action="CreatePanel" method="post" class="panel-create-form">
+    <form asp-controller="Panel" asp-action="CreatePanel" method="post" class="panel-create-form" id="createPanelForm">
         <div class="panel-form-group">
             <label asp-for="Name" class="panel-form-label">Naam van uw panel:</label>
             <input asp-for="Name" type="text" class="panel-form-input" />
@@ -38,13 +38,22 @@
                     }
                 }
             }
-            <input type="hidden" asp-for="@Model.Result.TotalAvailablePotentialPanelmembers"/>
             <input type="hidden" asp-for="@Model.Result.TotalNeededPanelmembers"/>
-            <input type="hidden" asp-for="@Model.Result.ReservePotPanelmembers"/>
+            <input type="hidden" asp-for="@Model.Result.TotalNeededInvitations"/>
         </div>
-        
         <div>
-            <button type="submit" class="panel-form-submit-button">Maak uw panel</button>
+            <button type="submit" class="panel-form-submit-button" id="createPanelSubmitBtn" name="submitButton" value="create">Maak uw panel</button>
         </div>
     </form>
 </div>
+
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-indicator">
+        <div class="spinner"></div>
+        <p class="loading-text">Uw uitnodigingen worden aangemaakt, een ogenblik geduld a.u.b.</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/createPanel.js" asp-append-version="true"></script>
+}

@@ -15,26 +15,33 @@
 
     <div class="panel-detail-header">
         <h1 class="panel-detail-title">@Model.Name</h1>
-        @if (User.IsInRole("Organization"))
-        {
-            <div class="panel-detail-actions">
-                <a asp-controller="Registration" asp-action="Index" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
-                    <i class="fas fa-users"></i> Aanmeldingen Bekijken
-                </a>
-                <a asp-controller="Panel" asp-action="Invitations" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
-                    <i class="fas fa-envelope-open-text"></i> Uitnodigingen bekijken
-                </a>
-                <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i> Voeg panellid toe
-                </a>
-                <a asp-controller="Panel" asp-action="SeeMembers" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
-                    <i class="bi bi-eye me-1"></i> Panelleden bekijken
-                </a>
-                @* <a asp-action="Edit" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm"> *@
-                @*     <i class="bi bi-pencil-square me-1"></i> Edit Panel *@
-                @* </a> *@
-            </div>
-        }
+      
+        <div class="panel-detail-actions">
+            @if (User.IsInRole("Organization"))
+            {
+            <a asp-controller="Registration" asp-action="Index" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
+                <i class="fas fa-users"></i> Aanmeldingen
+            </a>
+            <a asp-controller="Panel" asp-action="Invitations" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
+                <i class="fas fa-envelope-open-text"></i> Uitnodigingen
+            </a>
+            <a asp-page="/Account/RegisterMember" asp-area="Identity" asp-route-staff="true" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Voeg panellid toe
+            </a>
+            <a asp-controller="Registration" asp-action="ReserveMembers" asp-route-panelId="@Model.PanelId" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Reserve leden
+            </a>
+            <a asp-controller="Panel" asp-action="Members" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-eye"></i> Panelleden
+            </a>
+            }
+            <a asp-controller="Panel" asp-action="Details" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-table-columns"></i> Projectpagina
+            </a>
+            @* <a asp-action="Edit" asp-route-panelId="@Model.PanelId" class="btn btn-primary btn-sm"> *@
+            @*     <i class="bi bi-pencil-square me-1"></i> Edit Panel *@
+            @* </a> *@
+        </div>
     </div>
 
     <div class="panel-detail-grid">
@@ -125,7 +132,9 @@
                 </button>
             </div>
             <div class="custom-modal-body">
-                <form id="createMeetingForm" novalidate class="space-y-4">
+                <form id="createMeetingForm" novalidate class="space-y-4" asp-controller="Meeting" asp-action="Create">
+                    <input type="hidden" name="PanelId" value="@Model.PanelId" />
+                    <input type="hidden" name="PanelPartcipants" value="@Model.PanelPartcipants" />
                     <div class="panel-form-group">
                         <label for="meetingTitle" class="auth-form-label">Titel</label>
                         <input type="text" class="auth-input-field" id="meetingTitle" name="Title" required>

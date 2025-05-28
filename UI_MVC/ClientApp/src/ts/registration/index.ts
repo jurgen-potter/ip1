@@ -1,4 +1,12 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+﻿interface Bucket {
+    criteriaNames: string[];
+    subCriteriaNames: string[];
+    count: number;
+    registeredCount: number;
+    isSufficient: boolean;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
     const startSecondPhaseBtn = document.getElementById('startSecondPhaseBtn') as HTMLButtonElement | null;
     const confirmationModal = document.getElementById('confirmationModalOverview') as HTMLElement | null;
     const insufficientWarning = document.getElementById('insufficientWarningOverview') as HTMLElement | null;
@@ -63,4 +71,26 @@
             }
         });
     }
+    
+    const generateButton = document.getElementById('generateInvites') as HTMLButtonElement;
+    generateButton.addEventListener('click', () => {
+        const panelId = generateButton.dataset.panelId;
+        const bucketJson = generateButton.dataset.buckets as string;
+        const parsedBuckets = JSON.parse(bucketJson);
+        const body = {panelId: panelId, buckets: parsedBuckets};
+        fetch(`api/Invitations/makeInvitations/${panelId}`, {
+          method: 'POST', 
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+          },
+          body: JSON.stringify(body)
+      })
+          .then(response => {
+              if (response.ok) {
+                  alert('Nieuwe uitnodigingen zijn aangemaakt.');
+              }
+          })
+          .catch(err => alert('Er ging iets fout: ' + err));
+    })
 });

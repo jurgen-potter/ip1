@@ -2,6 +2,25 @@
   @apply max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-md my-8;
 }
 
+.loading-overlay {
+  @apply fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-[9999]; /* Zeer hoge z-index */
+  @apply hidden; 
+
+  &.is-active {
+    @apply flex;
+  }
+}
+
+.loading-indicator {
+  @apply bg-white p-8 rounded-lg shadow-xl text-center max-w-sm mx-auto;
+  .spinner {
+    @apply block w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4;
+  }
+  .loading-text {
+    @apply text-gray-700 font-semibold text-lg;
+  }
+}
+
 .panel-create-title {
   @apply text-2xl font-semibold mb-6 text-center sm:text-left;
 }
@@ -315,6 +334,345 @@ form .panel-form-textarea {
   .text-container {
     h5 {
       @apply font-semibold text-gray-800 text-base sm:text-lg;
+    }
+  }
+}
+
+.detail-panel-page-container {
+  @apply container mx-auto px-4 py-6;
+}
+
+.detail-panel-banner {
+  @apply w-full bg-gray-200 h-48 md:h-64 flex items-center justify-center text-gray-500 mb-8 rounded-lg shadow-md overflow-hidden;
+
+  img {
+    @apply w-full h-full object-cover;
+  }
+
+  .banner-placeholder-text {
+    @apply text-3xl font-bold;
+  }
+}
+
+.detail-panel-layout {
+  @apply flex flex-col md:flex-row gap-6;
+}
+
+.detail-panel-main-content {
+  @apply flex-grow md:w-2/3 space-y-6;
+}
+
+.detail-panel-sidebar {
+  @apply md:w-1/3 space-y-6;
+}
+
+.panel-content-card {
+  @apply bg-white shadow-lg rounded-xl p-6; // Consistent met auth-card-container styling
+
+  .card-title {
+    @apply text-2xl font-bold text-gray-800 mb-4;
+  }
+  .card-subtitle {
+    @apply text-xl font-semibold text-gray-700 mb-3;
+  }
+  .card-text {
+    @apply text-gray-600;
+  }
+}
+
+.panel-recommendations-list {
+  @apply list-none p-0 space-y-3;
+  .recommendation-item {
+    @apply bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm;
+    strong {
+      @apply block text-primary font-semibold;
+    }
+    p {
+      @apply text-gray-700 text-sm;
+    }
+  }
+  .no-recommendations {
+    @apply text-sm text-gray-500 italic;
+  }
+}
+
+.posts-card {
+  @apply bg-white shadow-lg rounded-xl p-6;
+  .posts-header {
+    @apply flex justify-between items-center mb-4;
+    .posts-section-title {
+      @apply text-2xl font-bold text-gray-800;
+    }
+    .add-post-button {
+      @apply bg-primary text-white p-2 rounded-full hover:bg-primary-hover transition-colors duration-150;
+      i {
+        @apply text-lg; // Font Awesome icon size
+      }
+    }
+  }
+}
+
+.posts-list {
+  @apply space-y-4;
+  .post-item {
+    @apply bg-gray-100 p-4 rounded-lg shadow; // Schaduw zoals in de afbeelding
+    .post-item-title {
+      @apply font-semibold text-gray-700 mb-1;
+    }
+    .post-item-summary {
+      @apply text-sm text-gray-600;
+    }
+    .post-item-link {
+      @apply text-sm text-primary hover:underline mt-1 inline-block;
+    }
+  }
+  .no-posts {
+    @apply text-sm text-gray-500 italic;
+  }
+}
+
+.document-upload-card {
+  @apply bg-white shadow-lg rounded-xl p-6 mt-6; // mt-6 om het onderaan de linkerkolom te plaatsen
+
+  .add-document-button {
+    @apply w-full flex items-center justify-center bg-primary text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-150 hover:bg-primary-hover;
+    i {
+      @apply mr-2 text-xl; // Font Awesome icon styling
+    }
+  }
+}
+
+.create-post-modal-overlay {
+   @apply fixed inset-0 z-40 bg-gray-800 bg-opacity-60 backdrop-blur-sm overflow-y-auto h-full w-full flex items-center justify-center;
+   // De 'hidden' klasse wordt beheerd door JavaScript om de modal te tonen/verbergen
+ }
+
+.create-post-modal-dialog {
+  @apply relative mx-auto p-6 border-0 w-full bg-surface shadow-xl rounded-xl; // Gebruikt 'surface' uit je config
+  max-width: theme('maxWidth.lg');
+}
+
+.create-post-modal-header {
+  @apply flex justify-between items-center pb-4 border-b border-gray-200; // gray-200 is in je config
+}
+
+.create-post-modal-title {
+  @apply text-xl font-semibold text-gray-800; // gray-800 is in je config
+}
+
+.create-post-modal-close-btn {
+  @apply text-gray-400 p-1 -mr-1 rounded-full transition-colors; // gray-400 is in je config
+  &:hover {
+    @apply text-gray-600; // gray-600 is in je config
+  }
+  &:focus {
+    @apply outline-none ring-2 ring-primary; // 'primary' is '#A5B5BF' uit je config
+  }
+}
+
+.create-post-modal-body {
+  @apply mt-5;
+}
+
+.modal-form-group {
+  @apply mb-5;
+}
+
+.modal-form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1; // gray-700 is in je config
+}
+
+.modal-form-input,
+.modal-form-textarea {
+  @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm outline-none transition-shadow bg-white; // gray-300 is in je config, bg-white voor input achtergrond
+  color: theme('colors.text-black'); // Gebruik 'text-black' voor input tekst
+  &:focus {
+    @apply ring-2 ring-primary border-primary; // 'primary' is '#A5B5BF' uit je config
+  }
+}
+
+.modal-form-textarea {
+  min-height: 120px;
+}
+
+.modal-validation-message {
+  @apply text-red-600 text-xs mt-1; // red-600 is in je config
+}
+
+.modal-validation-summary {
+  @apply text-red-600 text-sm mb-4; // red-600 is in je config
+  ul {
+    @apply list-disc pl-5;
+  }
+}
+
+.create-post-modal-footer {
+  @apply mt-8 flex justify-end space-x-3 pt-4 border-t border-gray-200; // gray-200 is in je config
+}
+
+.modal-btn {
+  @apply px-5 py-2.5 rounded-lg transition-colors font-medium focus:outline-none;
+}
+
+.modal-btn-secondary {
+  @apply bg-gray-100 text-gray-700; // gray-100 en gray-700 zijn in je config
+  &:hover {
+    @apply bg-gray-200; // gray-200 is in je config
+  }
+  &:active {
+    @apply bg-gray-300; // gray-300 is in je config
+  }
+  &:focus {
+    @apply ring-2 ring-gray-400; // gray-400 is in je config
+  }
+}
+
+.modal-btn-primary {
+  @apply bg-primary text-white; // 'primary' is '#A5B5BF', 'text-white' is standaard, maar je hebt geen expliciete witte kleur gedefinieerd anders dan background-page/surface. Text-white is prima hier.
+  &:hover {
+    @apply bg-primary-hover; // 'primary-hover' is '#8E9FAA' uit je config
+  }
+  &:active {
+    @apply bg-primary-hover; // Gebruik 'primary-hover' voor active state, aangezien 'primary-dark' niet expliciet is gedefinieerd
+  }
+  &:focus {
+    @apply ring-2 ring-primary ring-offset-1; // 'primary' is '#A5B5BF'
+    // ring-offset-color kan je eventueel instellen op theme('colors.surface') als nodig
+  }
+}
+
+
+
+//panel list start
+
+.panel-list-container {
+  @apply container mx-auto px-4 py-8;
+}
+
+.panel-list-title {
+  @apply text-3xl font-bold mb-8 text-gray-800;
+}
+
+// Zoekformulier
+.panel-list-search-form {
+  @apply mb-8 p-6 bg-gray-50 rounded-lg shadow;
+
+  .search-form-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6 items-end;
+  }
+
+  .search-form-group {
+    // Geen specifieke wrapperstijl nodig als de grid de layout doet
+  }
+
+  .search-form-label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+
+  .search-form-input {
+    @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm outline-none;
+    &:focus {
+      @apply ring-2 ring-primary border-primary;
+    }
+  }
+
+  .search-form-actions {
+    @apply flex space-x-3;
+  }
+
+  // Basis knopstijlen (kunnen algemeen zijn)
+  .btn {
+    @apply w-full md:w-auto px-6 py-2.5 rounded-lg font-semibold transition-colors text-center;
+    i {
+      @apply mr-2;
+    }
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white;
+    &:hover {
+      @apply bg-primary-hover;
+    }
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-700;
+    &:hover {
+      @apply bg-gray-300;
+    }
+  }
+}
+
+// Resultaten (tabel)
+.panel-list-table-wrapper {
+  @apply overflow-x-auto bg-white shadow-md rounded-lg;
+}
+
+.panel-list-table {
+  @apply min-w-full divide-y divide-gray-200;
+
+  .panel-list-table-head {
+    @apply bg-gray-100;
+  }
+
+  .panel-list-th {
+    @apply px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider;
+  }
+
+  .panel-list-table-body {
+    @apply bg-white divide-y divide-gray-200;
+  }
+
+  .panel-list-td {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-600;
+
+    &--panel-name {
+      @apply font-medium text-gray-900;
+    }
+
+    &--actions {
+      @apply text-right;
+    }
+  }
+
+  .status-badge {
+    @apply px-2 inline-flex text-xs leading-5 font-semibold rounded-full;
+
+    &--active {
+      @apply bg-green-100 text-green-800; // Standaard Tailwind kleuren
+    }
+    &--planned {
+      @apply bg-yellow-100 text-yellow-800; // Standaard Tailwind kleuren
+    }
+    &--ended {
+      @apply bg-gray-100 text-gray-800;
+    }
+  }
+
+  .panel-list-details-link {
+    @apply text-primary font-medium; // Gebruikt 'primary' uit je config
+    &:hover {
+      @apply text-primary-hover; // Gebruikt 'primary-hover' uit je config
+    }
+  }
+}
+
+// Geen resultaten sectie
+.panel-list-no-results {
+  @apply text-center py-12;
+
+  .no-results-icon {
+    @apply text-3xl text-gray-400 mb-4; // fas fa-folder-open wordt in HTML gebruikt
+  }
+
+  .no-results-text {
+    @apply text-xl text-gray-600;
+  }
+
+  .no-results-clear-link {
+    @apply mt-4 inline-block font-semibold text-primary;
+    &:hover {
+      @apply text-primary-hover;
     }
   }
 }

@@ -1,5 +1,4 @@
-﻿﻿using System.Security.Claims;
-using CitizenPanel.BL.Domain.Panels;
+﻿using System.Security.Claims;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Users;
@@ -11,7 +10,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 
 
 [ApiController]
-[Route("{tenant}/api/[controller]")]
+[Route("{tenantId}/api/[controller]")]
 [Authorize]
 public class RecommendationsController(
     IPanelManager panelManager,
@@ -84,5 +83,14 @@ public class RecommendationsController(
         panelManager.EditRecommendation(recommendation);
 
         return Ok(new { id = recommendation.Id, votes = recommendation.Votes });
+    }
+
+    [HttpPut("edit")]
+    public IActionResult EditRecommendation([FromBody] RecDto recommendationDto)
+    {
+        var recommendation = panelManager.GetRecommendationById(recommendationDto.Id);
+        recommendation.IsDone = recommendationDto.IsDone;
+        panelManager.EditRecommendation(recommendation);
+        return Ok();
     }
 }

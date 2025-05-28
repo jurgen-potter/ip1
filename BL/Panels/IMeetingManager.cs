@@ -4,7 +4,7 @@ namespace CitizenPanel.BL.Panels;
 
 public interface IMeetingManager
 {
-    Meeting AddMeeting(string title, DateOnly date,int panelId);
+    Meeting AddMeeting(string title, DateOnly date,int panelId, int panelParticipants);
     Meeting GetMeetingById(int id);
     Meeting GetMeetingByIdWithRecommendations(int id);
     bool EditMeeting(Meeting meeting);

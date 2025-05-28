@@ -19,9 +19,22 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
         return dbContext.Panels.ToList();
     }
 
+    public IEnumerable<Panel> ReadAllPanelsWithoutTentant()
+    {
+        return dbContext.Panels
+            .IgnoreQueryFilters()
+            .Where(p => p.IsActive)
+            .ToList();
+    }
+
     public Panel ReadPanelById(int panelId)
     {
         return dbContext.Panels.Find(panelId);
+    }
+
+    public IEnumerable<Panel> ReadThreeActivePanels()
+    {
+        return dbContext.Panels.Where(p => p.IsActive).Take(3).IgnoreQueryFilters().ToList();
     }
 
     public Panel ReadPanelByIdWithMembers(int panelId)
@@ -35,11 +48,14 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
     public Panel ReadPanelByIdWithInvitations(int panelId)
     {
         return dbContext.Panels
-            .Include(p => p.Invitations) 
+            .Include(p => p.Invitations)
             .Include(p => p.DrawResult)
+            .ThenInclude(dr => dr.SelectedInvitations)
+            .Include(p => p.DrawResult)
+            .ThenInclude(dr => dr.ReserveInvitations)
             .SingleOrDefault(p => p.Id == panelId);
     }
-    
+
     public Panel ReadPanelByIdWithRecommendations(int panelId)
     {
         return dbContext.Panels
@@ -47,6 +63,25 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .ThenInclude(m => m.Recommendations)
             .SingleOrDefault(p => p.Id == panelId);
     }
+    
+    public Panel ReadPanelByIdWithRecommendationsWithoutTenant(int panelId)
+    {
+        return dbContext.Panels
+            .IgnoreQueryFilters()
+            .Include(r => r.Meetings)
+            .ThenInclude(m => m.Recommendations)
+            .SingleOrDefault(p => p.Id == panelId);
+    }
+
+    public Panel ReadPanelByIdWithRecommendationsAndPosts(int panelId)
+    {
+        return dbContext.Panels
+            .Include(p => p.Posts)
+            .Include(p => p.Meetings)
+            .ThenInclude(m => m.Recommendations.Where(r => !r.IsVotable))
+            .SingleOrDefault(p => p.Id == panelId);
+    }
+
 
     public Panel ReadPanelByIdWithRecommendationsAndVotes(int panelId)
     {
@@ -56,7 +91,7 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .ThenInclude(r => r.UserVotes)
             .SingleOrDefault(p => p.Id == panelId);
     }
-    
+
     public void UpdatePanel(Panel panel)
     {
         dbContext.Update(panel);
@@ -67,7 +102,12 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
     {
         dbContext.Panels.Remove(panel);
     }
-    
+
+    public Recommendation ReadRecommendationById(int recommendationDtoId)
+    {
+        return dbContext.Recommendations.Find(recommendationDtoId);
+    }
+
     public Recommendation ReadRecommendationByIdWithVotes(int recommendationId)
     {
         return dbContext.Recommendations
@@ -117,16 +157,29 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
         }
 
         dbContext.UserVotes.Remove(userVote);
-        
+
         dbContext.SaveChanges();
     }
-    
+    public bool DeleteUserVotesByMember(ApplicationUser member)
+    {
+        var userVotes = dbContext.UserVotes
+            .Where(uv => uv.Voter == member)
+            .ToList();
+
+        foreach (var vote in userVotes)
+        {
+            dbContext.UserVotes.Remove(vote);
+        }
+        
+        return dbContext.SaveChanges() > 0;
+    }
+
     public bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation)
     {
         return dbContext.UserVotes
             .Any(uv => uv.Voter == member && uv.Recommendation == recommendation);
     }
-    
+
     public IEnumerable<Criteria> ReadExtraCriteriaByPanelId(int panelId)
     {
         var panel = dbContext.Panels
@@ -150,6 +203,30 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
             .FirstOrDefault(p => p.Id == panelId);
 
         return panel?.Criteria
+            .ToList();
+    }
+    
+    public IEnumerable<ApplicationUser> ReadMembersByPanelId(int panelId)
+    {
+        return dbContext.Panels
+            .Where(p => p.Id == panelId)
+            .SelectMany(p => p.Members.Select(m => m.ApplicationUser))
+            .Include(u => u.MemberProfile)
+            .ToList();
+    }
+
+    public IEnumerable<Meeting> ReadMeetingsById(int panelId)
+    {
+        return dbContext.Meetings
+            .Include(m => m.Recommendations)
+            .ThenInclude(r => r.UserVotes)
+            .Where(m => m.PanelId == panelId).ToList();
+    }
+
+    public IEnumerable<Invitation> ReadReservesByPanelId(int panelId)
+    {
+        return dbContext.Panels
+            .SelectMany(p => p.DrawResult.ReserveInvitations)
             .ToList();
     }
 }

@@ -6,6 +6,8 @@ public class PanelViewModel
 {
     public int PanelId { get; set; }
     
+    public int PanelPartcipants { get; set; }
+    
     [Required]
     public string Name { get; set; }
     
@@ -19,13 +21,18 @@ public class PanelViewModel
 
     public List<MeetingViewModel> Meetings { get; set; } = new();
     public List<RecommendationViewModel> Recommendations { get; set; } = new();
+    public List<PostViewModel> Posts { get; set; } = new();
+    public bool CanManagePanel { get; set; }
+    public bool ShowRejected { get; set; }
 }
+
 
 public class RecommendationViewModel
 {
     public int    Id          { get; set; }
     public string Title       { get; set; }
     public string Description { get; set; }
+    public bool IsDone { get; set; }
 }
 
 public class MeetingViewModel
@@ -34,6 +41,8 @@ public class MeetingViewModel
     public string Title { get; set; }
     public DateOnly Date { get; set; }
     public List<RecommendationViewModel> Recommendations { get; set; } = new();
+    public List<RecommendationViewModel> RejectedRecommendations { get; set; } = new();
+    public List<string> DocumentNames { get; set; } = new();
     
 }
 

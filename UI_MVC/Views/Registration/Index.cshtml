@@ -1,5 +1,6 @@
 ﻿@using CitizenPanel.BL.Domain.Draws
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Newtonsoft.Json
 @model CitizenPanel.UI.MVC.Models.Draws.ResultViewModel
 @{
     ViewData["Title"] = "Registratie-overzicht";
@@ -7,6 +8,7 @@
     var panelName = ViewBag.PanelName;
     var drawStatus = ViewBag.DrawStatus != null ? (DrawStatus)ViewBag.DrawStatus : DrawStatus.FirstPhaseActive;
     var hasSufficientRegistrations = ViewBag.HasSufficientRegistrations ?? false;
+    var bucketJson = JsonConvert.SerializeObject(Model.Buckets);
 }
 @section Styles {
     <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
@@ -36,11 +38,16 @@
 
                 @if (drawStatus == DrawStatus.FirstPhaseActive)
                 {
-                    <form asp-action="EditMail" asp-route-panelId="@panelId" method="post" id="StartFinalPhaseForm" class="mt-2">
-                        <button type="button" class="btn btn-primary" id="startSecondPhaseBtn" data-modal-trigger="confirmationModalOverview">
-                            Start finale loting
+                    <div class="flex flex-row gap-4 mt-2">
+                        <form asp-action="EditMail" asp-route-panelId="@panelId" method="post" id="StartFinalPhaseForm">
+                            <button type="button" class="btn btn-primary" id="startSecondPhaseBtn" data-modal-trigger="confirmationModalOverview">
+                                Start finale loting
+                            </button>
+                        </form>
+                        <button type="button" class="btn btn-primary" data-buckets="@bucketJson" data-panel-id="@panelId" id="generateInvites">
+                            Genereer meer uitnodigingen
                         </button>
-                    </form>
+                    </div>
                 }
             </div>
         </div>
@@ -119,7 +126,7 @@
                     <td>
                         <div class="progress-bar-container" title="@bucket.RegisteredCount/@bucket.Count">
                             <div class="progress-bar-fill @(bucket.IsSufficient ? "is-sufficient" : (percentage < 30 ? "is-low" : ""))" 
-                                 style="width: @(percentage)%;">
+                                 style="width: @((int)percentage)%;">
                                 <span class="progress-bar-text">@bucket.RegisteredCount/@bucket.Count</span>
                             </div>
                         </div>

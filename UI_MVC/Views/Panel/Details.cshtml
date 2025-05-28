@@ -1,0 +1,149 @@
+﻿@model CitizenPanel.UI.MVC.Models.Panels.PanelViewModel
+@using System.Globalization
+@using CitizenPanel.UI.MVC.Models.Panels
+@using CitizenPanel.UI.MVC.Services
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject ITenantAccessService TenantAccessService;
+@{
+    CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
+    CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
+    ViewBag.Title = $"Burgerpanel: {Model.Name}";
+    var inTenant = await TenantAccessService.IsUserInCurrentTenantAsync();
+    var internalAllowed = User.IsInRole("Organization") && inTenant || User.IsInRole("Admin");
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/> 
+}
+
+<div class="citizen-panel-page-container">
+
+    <section class="citizen-panel-banner">
+        @if (!string.IsNullOrEmpty(Model.CoverImagePath))
+        {
+            //<img src="@Model.CoverImagePath" alt="Panel Banner" />
+        }
+        else
+        {
+            <span class="banner-placeholder-text">BANNER</span> 
+        }
+    </section>
+
+    <div class="citizen-panel-layout">
+        <main class="citizen-panel-main-content">
+            <section class="panel-content-card">
+                <h1 class="card-title">@Model.Name</h1>
+
+                @if (internalAllowed)
+                {
+                    <a asp-action="Index" asp-route-id="@Model.PanelId" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-table-columns"></i> Interne pagina
+                    </a>
+                }
+            </section>
+
+            <section class="panel-content-card">
+                <h2 class="card-subtitle">Beschrijving</h2>
+                <p class="card-text">@Model.Description</p>
+            </section>
+
+            <section class="panel-content-card">
+                <h2 class="card-subtitle">Aangenomen aanbevelingen</h2>
+                <input type="hidden" value="@Model.ShowRejected.ToString().ToLower()" class="sr-only peer" id="reject-value">
+
+                @if (User.IsInRole("Organization") && Model.CanManagePanel)
+                {
+                    <label class="items-center me-5 cursor-pointer">
+                        <p>Toon afgewezen aanbevelingen? </p>
+                        <input type="checkbox" checked="@Model.ShowRejected" class="sr-only peer" id="reject-box">
+                        <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-400 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600 dark:peer-checked:bg-green-600"></div>
+                    </label>
+                }
+                <ul class="panel-recommendations-list">
+                    @if (Model.Meetings != null && Model.Meetings.Any(m => m.Recommendations.Count > 0))
+                    {
+                        @foreach (var meeting in Model.Meetings.Where(m => m.Recommendations.Any()).OrderByDescending(m => m.Date))
+                        {
+                            @foreach (var rec in meeting.Recommendations)
+                            {
+                                <li class="recommendation-item" id="rec-item-@rec.Id">
+                                    <strong>@rec.Title</strong>
+                                    <p>@rec.Description</p>
+                                    <input type="hidden" data-recommendation-id="@rec.Id" value="@rec.IsDone.ToString().ToLower()"  class="sr-only peer finished-message">
+                                    @if (User.IsInRole("Organization") && Model.CanManagePanel)
+                                    {
+                                        <label class="items-center me-5 cursor-pointer">
+                                            <input type="checkbox" data-recommendation-id="@rec.Id" checked="@rec.IsDone" class="auth-checkbox-input finish-rec-checkbox">
+                                            <p>Heeft u deze aanbeveling gedaan?</p>
+                                        </label>
+                                    }
+                                </li>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <li>Er zijn nog geen aanbevelingen.</li>
+                    }
+                </ul>
+            </section>
+            
+            <section class="panel-content-card hidden" id="rejected" data-panel-id="@Model.PanelId">
+                <h2 class="card-subtitle">Afgewezen aanbevelingen</h2>
+                <ul class="panel-recommendations-list" id="rejectedList">
+                    <li>Er zijn nog geen afgewezen aanbevelingen.</li>
+                </ul>
+            </section>
+
+            @if (User.IsInRole("Organization")& Model.CanManagePanel) 
+            {// temp placeholder uploaden doc
+                <section class="document-upload-card">
+                    <a href="#" class="add-document-button" id="openAddDocumentModalBtn">
+                        <i class="fas fa-plus-circle"></i>
+                        DOCUMENT TOEVOEGEN
+                    </a>
+                </section>
+            }
+        </main>
+
+        <aside class="citizen-panel-sidebar">
+            <div class="posts-card">
+                <div class="posts-header">
+                    <h2 class="posts-section-title">Posts</h2>
+                    @if (User.IsInRole("Organization")& Model.CanManagePanel) 
+                    {
+                        <a href="#" class="add-post-button" title="Nieuwe post toevoegen" data-panel-id="@Model.PanelId">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    }
+                </div>
+
+                <div class="posts-list">
+                    @if (Model.Posts != null && Model.Posts.Any())
+                    {
+                        @foreach (var post in Model.Posts)
+                        {
+                            <div class="post-item">
+                                <h3 class="post-item-title">@post.Title</h3>
+                                <p class="post-item-summary">@post.Description</p>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="no-posts">Er zijn momenteel geen posts.</p>
+                    }
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+@if (Model.CanManagePanel)
+{
+    <partial name="_CreatePostModalPartial" model="new CreatePostViewModel { PanelId = Model.PanelId }" />
+}
+@section Scripts {
+    <script defer src="~/dist/clientapp/assets/postModal.js" asp-append-version="true"></script>
+    <script defer src="~/dist/clientapp/assets/details.js" asp-append-version="true"></script>
+}

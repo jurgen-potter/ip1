@@ -1,8 +1,14 @@
-﻿// Interfaces blijven hetzelfde
-interface Meeting {
+﻿interface Meeting {
     id: number;
     title: string;
-    date: string; // Verwacht ISO date string (YYYY-MM-DDTHH:mm:ss)
+    date: string; 
+}
+
+type MeetingValidationErrors = Record<string, string | string[]> | string;
+interface CreateMeetingResponse {
+    success: boolean;
+    meeting?: Meeting;
+    errors?: Record<string, string | string[]> | string;
 }
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -28,6 +34,7 @@ document.addEventListener('DOMContentLoaded', init);
 async function init(): Promise<void> {
     const panelEl = document.body.querySelector<HTMLElement>('[data-panel-id]');
     const panelId = panelEl?.dataset.panelId ?? '';
+    const tenantId = window.location.pathname.split('/')[1];
 
     // Initialize modal elements
     createMeetingModal = document.getElementById('createMeetingModal');
@@ -40,10 +47,9 @@ async function init(): Promise<void> {
     setupCustomModalListeners();
 
     if (createMeetingForm) {
-        setupForm(panelId, createMeetingForm);
+        setupForm(panelId, tenantId,createMeetingForm);
     }
 }
-
 //Set up click handling for timeline items
 function setupTimelineItemClicks(panelId: string): void {
     document.body.addEventListener('click', (e) => {
@@ -139,7 +145,7 @@ function getTodayAtMidnight(): Date {
 }
 
 //Set up the meeting creation form
-function setupForm(panelId: string, form: MeetingFormElement): void {
+function setupForm(panelId: string,tenantId: string, form: MeetingFormElement): void {
     const elements = {
         saveBtn: document.getElementById('saveMeetingBtn') as HTMLButtonElement,
         dateInput: form.elements.Date,
@@ -152,7 +158,7 @@ function setupForm(panelId: string, form: MeetingFormElement): void {
         initializeDateInput(elements.dateInput, elements.errorDate, today);
     }
     setupInputListeners(elements);
-    form.addEventListener('submit', (e) => handleFormSubmit(e, form, elements, panelId));
+    form.addEventListener('submit', (e) => handleFormSubmit(e, form, elements, panelId, tenantId));
 }
 
 //Initialize date input with validation and defaults
@@ -202,7 +208,8 @@ async function handleFormSubmit(
         errorTitle: HTMLElement | null;
         errorDate: HTMLElement | null;
     },
-    panelId: string
+    panelId: string,
+    tenantId: string
 ): Promise<void> {
     e.preventDefault();
     const { saveBtn, dateInput, titleInput, errorTitle, errorDate } = elements;
@@ -220,7 +227,7 @@ async function handleFormSubmit(
     setButtonLoadingState(saveBtn, true);
 
     try {
-        const result = await submitFormData(form, panelId);
+        const result = await submitFormData(form,tenantId, panelId);
         if (result.success && result.meeting) { // Controleer ook of result.meeting bestaat
             addToTimeline(result.meeting);
             closeModal(createMeetingModal);
@@ -295,24 +302,50 @@ function setButtonLoadingState(button: HTMLButtonElement | null, isLoading: bool
 }
 
 //Submit form data to server
-async function submitFormData(form: HTMLFormElement, panelId: string): Promise<any> {
+async function submitFormData(
+    form: HTMLFormElement,
+    tenantId: string,
+    panelId: string
+): Promise<CreateMeetingResponse> {
     const data = new FormData(form);
-    data.set('panelId', panelId); // Zorg ervoor dat panelId correct wordt meegestuurd
-    const response = await fetch('/Meeting/Create', { // Controleer of dit het juiste endpoint is
-        method: 'POST',
-        body: data
-    });
-    if (!response.ok) {
-        // Probeer de error body te lezen als die er is
-        const errorData = await response.json().catch(() => ({ errors: "Serverfout: " + response.statusText }));
-        return { success: false, errors: errorData.errors || errorData.message || "Serverfout" };
+    data.set('panelId', panelId);
+
+    try {
+        const response = await fetch(`/${tenantId}/Meeting/Create`, {
+            method: 'POST',
+            body: data
+        });
+
+        const json = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                errors: json.errors || json.message || `Serverfout: ${response.statusText}`
+            };
+        }
+
+        // Extra validatie op structuur van json
+        if (typeof json.success === 'boolean' && (json.meeting || json.errors)) {
+            return json as CreateMeetingResponse;
+        }
+
+        return {
+            success: false,
+            errors: 'Ongeldig antwoord van de server'
+        };
+    } catch (err) {
+        return {
+            success: false,
+            errors: 'Netwerkfout of server niet bereikbaar'
+        };
     }
-    return await response.json();
 }
+
 
 //Handle validation errors returned from server
 function handleServerValidationErrors(
-    errors: any,
+    errors: MeetingValidationErrors,
     elements: {
         titleInput: HTMLInputElement;
         dateInput: HTMLInputElement;

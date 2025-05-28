@@ -6,4 +6,7 @@ public interface ITenantManager
 {
     Tenant AddTenant(string name);
     Tenant GetTenantById(string name);
+    ICollection<Tenant> GetAllTenants();
+    bool RemoveTenant(Tenant tenant);
+    bool TenantExists(string tenantId);
 }

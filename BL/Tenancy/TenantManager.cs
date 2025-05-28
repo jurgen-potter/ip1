@@ -30,4 +30,18 @@ public class TenantManager(ITenantRepository repository) : ITenantManager
     {
         return repository.ReadTenantById(id);
     }
+
+    public ICollection<Tenant> GetAllTenants()
+    {
+        return repository.ReadAllTenants();
+    }
+    public bool RemoveTenant(Tenant tenant)
+    {
+        return repository.DeleteTenant(tenant);
+    }
+
+    public bool TenantExists(string tenantId)
+    {
+        return repository.TenantIdExists(tenantId);
+    }
 }

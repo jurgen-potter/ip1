@@ -1,0 +1,29 @@
+@model CitizenPanel.BL.Domain.Panels.Panel
+
+@{
+    ViewBag.Title = "Members";
+}
+
+<div class="draw-results-section">
+    <h2 class="draw-results-group-title">Alle deelnemers</h2>
+    <input type="hidden" id="panelId" value="@Model.Id" />
+
+    <div>
+        <table class="reg-overview-table table-striped">
+            <thead>
+            <tr>
+                <th>Naam</th>
+                <th>Email</th>
+                <th>Verwijder panellid?</th>
+            </tr>
+            </thead>
+            <tbody id="memberTableBody">
+            
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/manageMembers.js" asp-append-version="true"></script>
+}

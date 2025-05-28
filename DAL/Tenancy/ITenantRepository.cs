@@ -7,4 +7,6 @@ public interface ITenantRepository
     void CreateTenant(Tenant tenant);
     Tenant ReadTenantById(string id);
     bool TenantIdExists(string tenantId);
+    ICollection<Tenant> ReadAllTenants();
+    bool DeleteTenant(Tenant tenant);
 }

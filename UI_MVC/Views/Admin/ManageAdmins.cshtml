@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Adminbeheer";
+}
+
+<h2>Adminbeheer</h2>
+
+<table class="reg-overview-table table-striped">
+    <thead>
+    <tr>
+        <th>Admin</th>
+        <th>Verwijder admin?</th>
+    </tr>
+    </thead>
+    <tbody id="adminTableBody">
+    
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/manageAdmins.js" asp-append-version="true"></script>
+}

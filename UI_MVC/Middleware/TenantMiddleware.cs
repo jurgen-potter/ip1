@@ -18,34 +18,88 @@ public class TenantMiddleware(
     // List of controllers that don't require a tenant context
     private readonly HashSet<string> _publicControllers = new(StringComparer.OrdinalIgnoreCase)
     {
-        "Home"
+        "Home",
+        "InfoPageContents"
+    };
+    
+    private readonly HashSet<(string Controller, string Action)> _tenantSpecificRoutes = new()
+    {
+        ("panel", "details"),
+        ("panels","editpanel"),
     };
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        Console.WriteLine("Route values:");
-        foreach (var kvp in context.Request.RouteValues)
-        {
-            Console.WriteLine($"  {kvp.Key}: {kvp.Value}");
-        }
-        
         var path = context.Request.Path.Value ?? "";
-
+        var area = context.Request.RouteValues.TryGetValue("area", out var areaObj) ? areaObj?.ToString() : null;
+        var controller = context.Request.RouteValues.TryGetValue("controller", out var controllerObj) ? controllerObj?.ToString()?.ToLower() : null;
+        var action = context.Request.RouteValues.TryGetValue("action", out var actionObj) ? actionObj?.ToString()?.ToLower() : null;
+        var routeTenantId = context.Request.RouteValues["tenantId"]?.ToString();
+        
+        var isIdentityArea = area?.Equals("Identity", StringComparison.OrdinalIgnoreCase) == true;
+        var isPublicController = _publicControllers.Contains(controller);
+        var isTenantSpecificRoute = controller != null && action != null && _tenantSpecificRoutes.Contains((controller, action));
+        
         // Skip setting tenant context for Identity and public controllers
-        var isIdentityArea = context.Request.RouteValues.TryGetValue("area", out var area) &&
-                             area?.ToString()?.Equals("Identity", StringComparison.OrdinalIgnoreCase) == true;
-
-        var isPublicController = context.Request.RouteValues.TryGetValue("controller", out var controllerObj) &&
-                                 controllerObj is string controller &&
-                                 _publicControllers.Contains(controller);
-
         if (isIdentityArea || isPublicController)
         {
+            if (!string.IsNullOrEmpty(routeTenantId) && path.StartsWith($"/{routeTenantId}", StringComparison.OrdinalIgnoreCase))
+            {
+                var newPath = path[$"/{routeTenantId}".Length..];
+                if (string.IsNullOrWhiteSpace(newPath))
+                    newPath = "/";
+
+                var query = context.Request.QueryString;
+                context.Response.Redirect($"{newPath}{query}");
+                return;
+            }
+            
             await next(context);
             return;
         }
 
-        // 1. Check for tenantId in route
+        if (!isTenantSpecificRoute)
+        {
+            // Resolve from logged in user
+            if (context.User.Identity?.IsAuthenticated == true)
+            {
+                var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var user = userProfileManager.GetUserByIdWithProfile(userId);
+                    var tenant = tenantResolver.ResolveTenantFromUser(user);
+
+                    if (tenant is not null)
+                    {
+                        tenantContext.Tenant = tenant;
+
+                        if (string.IsNullOrEmpty(routeTenantId) /*|| routeTenantId.ToLower() == controller ||
+                            (controller == null && action == null)*/)
+                        {
+                            var newPath = $"/{tenant.Id}{path}{context.Request.QueryString}";
+                            context.Response.Redirect(newPath);
+                            return;
+                        }
+                        else if (routeTenantId != tenant.Id)
+                        {
+                            var newPath = path[$"/{routeTenantId}".Length..];
+                            if (string.IsNullOrWhiteSpace(newPath))
+                                newPath = "/";
+
+                            var correctedUrl = $"/{tenant.Id}{newPath}{context.Request.QueryString}";
+                            
+                            context.Response.Redirect(correctedUrl);
+                            return;
+                        }
+
+                        await next(context);
+                        return;
+                    }
+                }
+            }
+        }
+        
+        // Check for tenantId in route
         var tenantIdFromRoute = context.Request.RouteValues["tenantId"]?.ToString();
         if (!string.IsNullOrEmpty(tenantIdFromRoute))
         {
@@ -61,33 +115,7 @@ public class TenantMiddleware(
             return;
         }
 
-        // 2. If logged in, resolve from user and redirect to tenant URL if needed
-        if (context.User.Identity?.IsAuthenticated == true)
-        {
-            var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (!string.IsNullOrEmpty(userId))
-            {
-                var user = userProfileManager.GetUserByIdWithProfile(userId);
-                var tenant = tenantResolver.ResolveTenantFromUser(user);
-
-                if (tenant is not null)
-                {
-                    tenantContext.Tenant = tenant;
-
-                    if (!path.StartsWith($"/{tenant.Id}", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var newPath = $"/{tenant.Id}{path}{context.Request.QueryString}";
-                        context.Response.Redirect(newPath);
-                        return;
-                    }
-
-                    await next(context);
-                    return;
-                }
-            }
-        }
-
-        // 3. Try resolving from invitation
+        // Resolve from invitation
         var invitationTenant = tenantResolver.ResolveTenantFromQuery(context);
         if (invitationTenant is not null)
         {

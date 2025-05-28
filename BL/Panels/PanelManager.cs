@@ -7,7 +7,7 @@ namespace CitizenPanel.BL.Panels;
 
 public class PanelManager(IPanelRepository repository) : IPanelManager
 {
-    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totAvPotMem)
+    public Panel AddPanel(string name, string description, ICollection<Criteria> criteria, int totNeedMem)
     {
         Panel newPanel = new Panel()
         {
@@ -15,7 +15,7 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
             Description = description,
             MemberCount = 0,
             Criteria = criteria,
-            TotalAvailablePotentialPanelmembers = totAvPotMem
+            TotalNeededPanelmembers = totNeedMem
         };
         repository.CreatePanel(newPanel);
         return newPanel;
@@ -25,6 +25,12 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         return repository.ReadPanelById(panelId);
     }
+
+    public IEnumerable<Panel> GetThreeActivePanels()
+    {
+        return repository.ReadThreeActivePanels();
+    }
+
 
     public Panel GetPanelByIdWithMembers(int panelId)
     {
@@ -41,6 +47,18 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
         return repository.ReadPanelByIdWithRecommendations(panelId);
     }
     
+    public Panel GetPanelByIdWithRecommendationsWithoutTenant(int panelId)
+    {
+        return repository.ReadPanelByIdWithRecommendationsWithoutTenant(panelId);
+    }
+
+
+    public Panel GetPanelByIdWithRecommendationsAndPosts(int panelId)
+    {
+        return repository.ReadPanelByIdWithRecommendationsAndPosts(panelId);
+    }
+
+    
     public Panel GetPanelByIdWithRecommendationsAndVotes(int panelId)
     {
         return repository.ReadPanelByIdWithRecommendationsAndVotes(panelId);
@@ -55,7 +73,12 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         repository.DeletePanel(panel);
     }
-    
+
+    public Recommendation GetRecommendationById(int recommendationDtoId)
+    {
+        return repository.ReadRecommendationById(recommendationDtoId);
+    }
+
     public Recommendation GetRecommendationByIdWithVotes(int recommendationId)
     {
         return repository.ReadRecommendationByIdWithVotes(recommendationId);
@@ -106,7 +129,11 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
             recommendation.Votes--;
         }
     }
-    
+    public bool RemoveUserVotesByMember(ApplicationUser member)
+    {
+        return repository.DeleteUserVotesByMember(member);
+    }
+
     public bool DoesUserVoteExist(ApplicationUser member, Recommendation recommendation)
     {
         return repository.DoesUserVoteExist(member, recommendation);
@@ -121,7 +148,16 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     {
         return repository.ReadCriteriaByPanelIdWithSubcriteria(panelId);
     }
-    
+
+    public IEnumerable<Meeting> GetMeetingsById(int panelId)
+    {
+        return repository.ReadMeetingsById(panelId);
+    }
+    public IEnumerable<Invitation> GetReservesByPanelId(int panelId)
+    {
+        return repository.ReadReservesByPanelId(panelId);
+    }
+
     public void EditRecommendation(Recommendation recommendation)
     {
         repository.UpdateRecommendation(recommendation);
@@ -130,5 +166,15 @@ public class PanelManager(IPanelRepository repository) : IPanelManager
     public IEnumerable<Panel> GetAllPanels()
     {
         return repository.ReadAllPanels();
+    }
+
+    public IEnumerable<Panel> GetAllPanelsWithoutTentant()
+    {
+        return repository.ReadAllPanelsWithoutTentant();
+    }
+
+    public IEnumerable<ApplicationUser> GetMembersByPanelId(int panelId)
+    {
+        return repository.ReadMembersByPanelId(panelId);
     }
 }

@@ -6,6 +6,7 @@ public class Meeting : ITenanted
 {
     public int Id { get; set; }
     public int PanelId { get; set; }
+    public int PanelParticipants { get; set; }
     public string Title { get; set; }
     public DateOnly Date { get; set; }
     public ICollection<Recommendation> Recommendations { get; set; }

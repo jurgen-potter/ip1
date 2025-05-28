@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Over BurgerPanels";
+    var isAdmin = User.IsInRole("Admin");
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
+}
+
+<div id="infoSection" class="info-section container mx-auto px-4 py-10">
+    <h1 id="mainTitle" class="text-3xl font-bold mb-6">Laden...</h1>
+
+    <div id="sectionsContainer"></div>
+
+    <div class="text-center mt-12">
+        <a asp-controller="Recruitment" asp-action="Index" class="home-hero-button">Start een nieuw panel</a>
+    </div>
+
+    @if (isAdmin)
+    {
+        <div class="admin-edit-section mt-10 p-4 border border-yellow-400 bg-yellow-100 rounded-xl">
+            <h3 class="text-lg font-semibold mb-2">Beheerder Modus: Tekst Bewerken</h3>
+            <a asp-action="EditInformation" class="text-blue-600 underline">Naar bewerkpagina &rarr;</a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/dist/clientapp/assets/loadInformation.js" asp-append-version="true"></script>
+}
