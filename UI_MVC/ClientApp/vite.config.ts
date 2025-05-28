@@ -32,6 +32,8 @@ export default defineConfig({
         manageStaff: path.resolve('src/ts/organization/manageStaff.ts'),
         addMember: path.resolve('src/ts/organization/addMember.ts'),
         details: path.resolve('src/ts/panel/details.ts'),
+        editInformation: path.resolve('src/ts/home/editInformation.ts'),
+        loadInformation: path.resolve('src/ts/home/loadInformation.ts'),
         reserveMembers: path.resolve('src/ts/registration/reserveMembers.ts'),
         createPanel: path.resolve('src/ts/panel/createPanel.ts')
       },

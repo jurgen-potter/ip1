@@ -517,3 +517,4 @@ $RECYCLE.BIN/
 */package-lock.json
 *wwwroot/dist
 */wwwroot/meetingUploads
+*/wwwroot/uploads

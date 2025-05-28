@@ -1,3 +1,4 @@
+using CitizenPanel.BL.Domain.Content;
 using CitizenPanel.BL.Domain.Draws;
 using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Questionnaires;
@@ -26,6 +27,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
     public void Seed()
     {
+        SeedContent();
         SeedPanels();
         panelDbContext.SaveChanges();
         panelDbContext.ChangeTracker.Clear();
@@ -35,6 +37,42 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
         panelDbContext.SaveChanges();
         panelDbContext.ChangeTracker.Clear();
+    }
+
+    private void SeedContent()
+    {
+        if (panelDbContext.InfoPageContents.Any()) return;
+
+        var infoPageContent = new InfoPageContent
+        {
+            MainTitle = "Wat zijn BurgerPanels?",
+            Sections = new List<InfoSection>
+            {
+                new InfoSection
+                {
+                    Title = "Wat zijn BurgerPanels?",
+                    Text = "BurgerPanels zijn gestructureerde vormen van burgerparticipatie waarbij inwoners hun mening kunnen geven over actuele onderwerpen in hun gemeente. Ze helpen beleidsmakers betere beslissingen te nemen die gedragen worden door de gemeenschap."
+                },
+                new InfoSection
+                {
+                    Title = "Waarom deelnemen of organiseren?",
+                    Text = "• Inspraak verhogen in het beleid\n• Verbinding tussen burgers en bestuur versterken\n• Nieuwe ideeën en perspectieven ophalen"
+                },
+                new InfoSection
+                {
+                    Title = "Hoe werkt het?",
+                    Text = "1. De gemeente start een panel rond een thema\n2. Burgers worden uitgenodigd om deel te nemen\n3. Meningen worden verzameld via vragenlijsten of sessies\n4. Resultaten worden geanalyseerd en gedeeld"
+                },
+                new InfoSection
+                {
+                    Title = "Voorbeelden van thema's",
+                    Text = "• Mobiliteit: Hoe kan verkeer veiliger of vlotter worden in jouw buurt?\n• Woonbeleid: Wat heb jij nodig om comfortabel te wonen in jouw stad?"
+                }
+            }
+        };
+
+        panelDbContext.InfoPageContents.Add(infoPageContent);
+        panelDbContext.SaveChanges();
     }
 
     private void SeedPanels()

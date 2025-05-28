@@ -1,3 +1,4 @@
+using CitizenPanel.BL.Domain.Content;
 using CitizenPanel.BL.Domain.Draws;
 using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Domain.Questionnaires;
@@ -38,6 +39,8 @@ public class PanelDbContext(
     public DbSet<MemberProfile> MemberProfiles { get; set; }
     public DbSet<OrganizationProfile> OrganizationProfiles { get; set; }
     public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<InfoPageContent> InfoPageContents { get; set; }
+    public DbSet<InfoSection> InfoSections { get; set; }
 
     public string TenantId => tenantContext.Tenant.Id;
     public bool IsAdmin => currentUserService.IsAdmin;
@@ -79,6 +82,12 @@ public class PanelDbContext(
 
         modelBuilder.Entity<Tenant>()
             .HasKey(t => t.Id);
+        
+        modelBuilder.Entity<InfoPageContent>()
+            .HasMany(p => p.Sections)
+            .WithOne(s => s.InfoPageContent)
+            .HasForeignKey(s => s.InfoPageContentId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         modelBuilder.Entity<ApplicationUser>()
             .HasOne(u => u.MemberProfile)

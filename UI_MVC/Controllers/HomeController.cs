@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using CitizenPanel.BL.Domain.Panels;
 using CitizenPanel.BL.Panels;
 using Microsoft.AspNetCore.Mvc;
 using CitizenPanel.UI.MVC.Models;
@@ -42,5 +41,19 @@ public class HomeController(ILogger<HomeController> logger, IPanelManager panelM
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+    
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Information()
+    {
+        return View();
+    }
+    
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public IActionResult EditInformation()
+    {
+        return View();
     }
 }
