@@ -19,13 +19,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const totalAvailableInput = document.getElementById('TotalAvailablePotentialPanelmembers') as HTMLInputElement | null;
     totalAvailableInput?.addEventListener('input', () => {
         validateAllFormInputs();
-    });
-
-    const input = document.getElementById('panelmember-count') as HTMLInputElement;
-    const warning = document.querySelector('.panelmember-warning') as HTMLElement;
-    
-    input.addEventListener('input', () => {
-        const rawValue = input.value;
+        const rawValue = totalAvailableInput.value;
         const value = parseInt(rawValue, 10);
 
         if (isNaN(value)) {
@@ -34,11 +28,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const min = 100;
         const max = 1_000_000;
-        
+
         // Show or hide warning based on range
         warning.style.display = (value < min || value > max) ? 'block' : 'none';
+
     });
 
+    const warning = document.querySelector('.panelmember-warning') as HTMLElement;
 });
 
 // ----------------------
