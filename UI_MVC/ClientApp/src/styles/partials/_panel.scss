@@ -456,10 +456,12 @@ form .panel-form-textarea {
 
 .modal-form-input,
 .modal-form-textarea {
-  @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm outline-none transition-shadow bg-white; // gray-300 is in je config, bg-white voor input achtergrond
-  color: theme('colors.text-black'); // Gebruik 'text-black' voor input tekst
+  @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm outline-none transition-shadow bg-white !important;
+  color: theme('colors.text-black');
+  border-radius: 0.5rem !important;
   &:focus {
-    @apply ring-2 ring-primary border-primary; // 'primary' is '#A5B5BF' uit je config
+    @apply ring-2 ring-primary border-primary !important;
+    outline: none !important;
   }
 }
 
