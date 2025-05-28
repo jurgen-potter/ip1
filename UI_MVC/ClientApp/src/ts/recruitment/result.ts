@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const min = 0;
+        const min = 5;
         const max = 500;
 
         // Show or hide warning based on range
