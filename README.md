@@ -15,6 +15,13 @@ Whimps/24
 Dit project is ontwikkeld in het kader van het vak **Integratieproject 1**.  
 Het doel van het project is om een platform te maken voor organisaties om de meningen van de bevolking op te kunnen volgen.
 
+## Start instructies
+Run eerst vanuit de ClientApp de volgende commandos
+```
+npm install
+npm run build
+```
+
 ## Testgebruikers
 
 | Gebruikersnaam         | Wachtwoord | Rol          | Extra info                                   |
