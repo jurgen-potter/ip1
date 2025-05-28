@@ -24,7 +24,7 @@ let lastFocusedTrigger: HTMLElement | null = null;
 const votersModalElement = document.getElementById('votersModal') as HTMLElement;
 
 const tenant = window.location.pathname.split('/')[1];
-const panelId = Number(document.getElementById('panel-id')?.dataset.panelId);
+const recPanelId = Number(document.getElementById('panel-id')?.dataset.panelId);
 const currRole = (document.getElementById('current-user-role') as HTMLInputElement).value;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -98,7 +98,7 @@ async function setModalBodyText(response: Response) {
 }
 
 function loadMeetings() {
-    fetch(`/${tenant}/api/Meetings/getMeetings/${panelId}`, {
+    fetch(`/${tenant}/api/Meetings/getMeetings/${recPanelId}`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -129,7 +129,7 @@ function addMeetings(meetings: MeetingDto[]) {
     notActiveDiv.innerHTML = '';
     activeHeader.classList.add('hidden');
     notActiveHeader.classList.add('hidden');
-    
+
     meetings.forEach((meeting: MeetingDto) => createMeeting(meeting));
 }
 
@@ -212,13 +212,23 @@ function generateRecommendationHtml(recommendation: RecDto, participants: number
     description.className = 'recommendation-card-text';
     description.textContent = recommendation.description;
 
-    // Status
+    // Status - Updated logic for color coding
     const status = document.createElement('div');
-    status.className = `recommendation-card-status ${recommendation.votable ? 'status-votable' : 'status-ended'}`;
+    status.className = 'recommendation-card-status';
+
     if (!recommendation.votable) {
         const percFor = recommendation.votesFor / recommendation.votes;
-        status.textContent = `Het stemmen is afgelopen. ${(percFor >= (recommendation.neededPercentages / 100)) ? 'Aangenomen!' : 'Niet aangenomen.'}`;
+        const isAccepted = percFor >= (recommendation.neededPercentages / 100);
+
+        if (isAccepted) {
+            status.classList.add('status-accepted'); 
+            status.textContent = 'Het stemmen is afgelopen. Aangenomen!';
+        } else {
+            status.classList.add('status-rejected');
+            status.textContent = 'Het stemmen is afgelopen. Niet aangenomen.';
+        }
     } else {
+        status.classList.add('status-votable'); 
         status.textContent = 'Stemming open';
     }
 
