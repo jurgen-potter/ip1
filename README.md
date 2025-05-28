@@ -39,3 +39,8 @@ npm run build
 
 - Invitatie HEMf-Xu0L-1ETh-urZJ-26s9 kan zich aanmelden voor panel 2
 - Invitatie blLy-Tvxl-1TXG-nYg3-CBtD moet zich nog registreren en hierna geloot (getrokken) worden
+
+## Auteurs
+- Jurgen Potter
+- Xander Verbruggen
+- Lars Veringmeier
