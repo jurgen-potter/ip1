@@ -11,9 +11,10 @@
 
 <div class="invitations-container">
     <h2 class="invitations-title">@ViewBag.Title</h2>
-    <button id="excel-download-button" data-panel-id="@Model.FirstOrDefault().PanelId" type="button" class="btn btn-outline-primary btn-sm-equivalent">
+    <button id="excel-download-button" data-panel-id="@Model.FirstOrDefault()?.PanelId" type="button" class="btn btn-outline-primary btn-sm-equivalent">
         Download uitnodigingen met Excel
     </button>
+    
     @if (Model != null && Model.Any(i => !i.IsRegistered))
     {
         <div class="invitations-grid">
