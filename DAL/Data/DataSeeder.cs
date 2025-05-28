@@ -27,6 +27,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
     public void Seed()
     {
+        SeedFiles();
         SeedContent();
         SeedPanels();
         panelDbContext.SaveChanges();
@@ -37,6 +38,26 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
         panelDbContext.SaveChanges();
         panelDbContext.ChangeTracker.Clear();
+    }
+
+    private void SeedFiles()
+    {
+        var meetingUploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads");
+        var panelUploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "panelUploads");
+        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
+        if (Directory.Exists(meetingUploads))
+        {
+            Directory.Delete(meetingUploads, recursive: true);
+        }
+        if (Directory.Exists(panelUploads))
+        {
+            Directory.Delete(panelUploads, recursive: true);
+        }
+        if (Directory.Exists(uploads))
+        {
+            Directory.Delete(uploads, recursive: true);
+        }
     }
 
     private void SeedContent()

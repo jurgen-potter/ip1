@@ -22,12 +22,14 @@ public class MeetingController(
 
         if (Directory.Exists(uploadsPath))
         {
-            foreach (var docName in meeting.DocumentNames)
+            foreach (var docUrl in meeting.DocumentNames)
             {
-                var fullPath = Path.Combine(uploadsPath, docName);
-                if (System.IO.File.Exists(fullPath))
+                var webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var physicalPath = Path.Combine(webRoot, docUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+                if (System.IO.File.Exists(physicalPath))
                 {
-                    documents.Add(docName);
+                    documents.Add(docUrl);
                 }
             }
         }
@@ -133,7 +135,7 @@ public class MeetingController(
             if (!exists)
             {
                 var meeting = meetingManager.GetMeetingById(meetingId);
-                meeting.DocumentNames.Add(file.FileName);
+                meeting.DocumentNames.Add($"/meetingUploads/{meetingId.ToString()}/{file.FileName}");
                 meetingManager.EditMeeting(meeting);
             }
         }
@@ -142,16 +144,18 @@ public class MeetingController(
     }
     
     [HttpPost]
-    public IActionResult RemoveDocument(int meetingId, string fileName)
+    public IActionResult RemoveDocument(int meetingId, string fileUrl)
     {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "meetingUploads", meetingId.ToString(), fileName);
-        if (System.IO.File.Exists(filePath))
+        var webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        var physicalPath = Path.Combine(webRoot, fileUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+        if (System.IO.File.Exists(physicalPath))
         {
-            System.IO.File.Delete(filePath);
+            System.IO.File.Delete(physicalPath);
         }
         
         var meeting = meetingManager.GetMeetingById(meetingId);
-        meeting.DocumentNames.Remove(fileName);
+        meeting.DocumentNames.Remove(fileUrl);
         meetingManager.EditMeeting(meeting);
 
         return RedirectToAction("Details", new { id = meetingId });

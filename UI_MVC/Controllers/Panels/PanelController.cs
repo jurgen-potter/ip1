@@ -206,6 +206,23 @@ public class PanelController(
     {
         Panel panel = panelManager.GetPanelByIdWithRecommendationsAndPosts(panelId);
 
+        var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "panelUploads", panelId.ToString());
+        var documents = new List<string>();
+
+        if (Directory.Exists(uploadsPath))
+        {
+            foreach (var docUrl in panel.PublicDocumentNames)
+            {
+                var webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var physicalPath = Path.Combine(webRoot, docUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+                if (System.IO.File.Exists(physicalPath))
+                {
+                    documents.Add(docUrl);
+                }
+            }
+        }
+        
         PanelViewModel model = new PanelViewModel()
         {
             PanelId = panel.Id,
@@ -214,9 +231,11 @@ public class PanelController(
             StartDate = panel.StartDate,
             EndDate = panel.EndDate,
             CoverImagePath = panel.CoverImagePath,
+            PublicDocumentNames = documents,
             ShowRejected = panel.ShowRejectedRecommendations
         };
-        foreach (Meeting meeting in panel.Meetings.OrderBy(m => m.Date)) // TEMP voor aanbevelingen testen 
+        
+        foreach (Meeting meeting in panel.Meetings.OrderBy(m => m.Date))
         {
             MeetingViewModel meetingViewModel = new MeetingViewModel
             {
@@ -355,5 +374,49 @@ public class PanelController(
         };
 
         return View(viewModel); // Zorg dat je een View hebt genaamd "ViewAll.cshtml" of pas de naam aan.
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Upload(IFormFile file, int panelId)
+    {
+        if (file != null && file.Length > 0)
+        {
+            var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "panelUploads", panelId.ToString());
+            Directory.CreateDirectory(uploads);
+
+            var filePath = Path.Combine(uploads, Path.GetFileName(file.FileName));
+            bool exists = System.IO.File.Exists(filePath);
+            await using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            if (!exists)
+            {
+                var panel = panelManager.GetPanelById(panelId);
+                panel.PublicDocumentNames.Add($"/panelUploads/{panelId.ToString()}/{file.FileName}");
+                panelManager.EditPanel(panel);
+            }
+        }
+
+        return RedirectToAction("Details", new { panelId = panelId });
+    }
+    
+    [HttpPost]
+    public IActionResult RemoveDocument(int panelId, string fileUrl)
+    {
+        var webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        var physicalPath = Path.Combine(webRoot, fileUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+        if (System.IO.File.Exists(physicalPath))
+        {
+            System.IO.File.Delete(physicalPath);
+        }
+        
+        var panel = panelManager.GetPanelById(panelId);
+        panel.PublicDocumentNames.Remove(fileUrl);
+        panelManager.EditPanel(panel);
+
+        return RedirectToAction("Details", new { panelId = panelId });
     }
 }
