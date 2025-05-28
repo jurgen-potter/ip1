@@ -50,19 +50,28 @@
 
 .recommendation-card-status {
   @apply text-xs font-semibold mb-3 p-2 rounded-md;
-  
+
   &.status-ended {
     @apply text-red-700 bg-red-100;
   }
-  
+
   &.status-balanced {
     @apply text-green-700 bg-green-100;
   }
-  
+
   &.status-votable {
     @apply text-blue-700 bg-blue-100;
   }
+
+  &.status-accepted {
+    @apply text-green-700 bg-green-100;
+  }
+
+  &.status-rejected {
+    @apply text-red-700 bg-red-100;
+  }
 }
+
 
 .recommendation-card-vote-info {
   @apply text-xs text-gray-500 mb-3 space-y-1;
