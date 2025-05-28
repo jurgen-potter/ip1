@@ -61,7 +61,7 @@ function initForm() {
 
         if (selectedIds.length === 0) {
             e.preventDefault();
-            alert("Selecteer ten minste één gebruiker.");
+            console.log("Selecteer ten minste één gebruiker.");
             return;
         }
 

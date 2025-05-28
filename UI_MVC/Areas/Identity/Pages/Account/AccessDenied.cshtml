@@ -4,7 +4,9 @@
     ViewData["Title"] = "Toegang geweigerd";
 }
 
-<header>
-    <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-danger">U heeft geen toegang tot deze pagina.</p>
-</header>
+<div class="auth-page-wrapper login-wrapper-padding">
+    <div class="login-card-container text-center">
+        <h1 class="auth-page-title text-red-600">@ViewData["Title"]</h1>
+        <p class="text-red-600">U heeft geen toegang tot deze pagina.</p>
+    </div>
+</div>

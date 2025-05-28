@@ -8,19 +8,23 @@
         User.IsInRole("Organization") ? "Organization" :
         User.IsInRole("Member") ? "Member" : "";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/dist/clientapp/assets/styles.css" asp-append-version="true"/>
+}
 
-<h1>Panel-aanbevelingen</h1>
-<h2 id="active-header">Actieve aanbevelingen</h2>
-<input type="hidden" id="panel-id" data-panel-id="@Model.FirstOrDefault()?.PanelId" />
-<input type="hidden" id="current-user-id" data-user-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
-<input type="hidden" id="current-user-role" value="@currentUser"/>
+<div class="recommendations-page-container">
+    <h1 class="recommendations-page-main-title">Panel-aanbevelingen</h1>
+    
+    <input type="hidden" id="panel-id" data-panel-id="@Model.FirstOrDefault()?.PanelId" />
+    <input type="hidden" id="current-user-id" data-user-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+    <input type="hidden" id="current-user-role" value="@currentUser"/>
 
-<div id="active-body" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <h2 id="active-header" class="recommendation-section-title hidden">Actieve aanbevelingen</h2>
+    <div id="active-body"></div>
+
+    <h2 id="not-active-header" class="recommendation-section-title hidden">Afgesloten aanbevelingen</h2>
+    <div id="not-active-body"></div>
 </div>
-<h2 id="not-active-header" class="hidden">Afgesloten aanbevelingen</h2>
-<div id="not-active-body" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-</div>
-
 
 <div id="votersModal" class="member-reg-modal-overlay hidden" aria-labelledby="votersModalLabel" aria-hidden="true">
     <div class="member-reg-modal-dialog modal-dialog-scrollable max-w-lg">
@@ -28,10 +32,13 @@
             <h5 class="member-reg-modal-title" id="votersModalLabel">Stemmers voor Aanbeveling</h5>
         </div>
         <div class="member-reg-modal-body" id="votersModalBody">
-            Laden...
+            <div class="flex items-center justify-center p-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <span class="ml-2 text-gray-600">Laden...</span>
+            </div>
         </div>
         <div class="member-reg-modal-footer">
-            <button type="button" class="member-reg-modal-button-confirm" id="closeModal">Sluiten</button>
+            <button type="button" class="btn btn-accent" id="closeModal">Sluiten</button>
         </div>
     </div>
 </div>
@@ -45,8 +52,8 @@
             <p>Weet u zeker dat het stemmen wilt stoppen?</p>
         </div>
         <div class="member-reg-modal-footer">
-            <button type="button" class="member-reg-modal-button-confirm" id="stopVotingBtn">Stop de stemming</button>
-            <button type="button" class="member-reg-modal-button-cancel" id="cancel-stop-voting">Even wachten</button>
+            <button type="button" class="btn btn-danger" id="stopVotingBtn">Stop de stemming</button>
+            <button type="button" class="btn btn-accent" id="cancel-stop-voting">Even wachten</button>
         </div>
     </div>
 </div>

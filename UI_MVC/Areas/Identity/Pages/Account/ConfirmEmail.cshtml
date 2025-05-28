@@ -4,5 +4,9 @@
     ViewData["Title"] = "Email bevestiging";
 }
 
-<h1>@ViewData["Title"]</h1>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="auth-page-wrapper login-wrapper-padding">
+    <div class="login-card-container text-center">
+        <h1 class="auth-page-title">@ViewData["Title"]</h1>
+        <partial name="_StatusMessage" model="Model.StatusMessage" />
+    </div>
+</div>
