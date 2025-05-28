@@ -1,6 +1,8 @@
 ﻿interface InfoSectionDto {
     title: string;
     text: string;
+    videoUrl: string;
+    fileUrl: string;
 }
 
 interface InfoPageDto {
@@ -55,6 +57,26 @@ function renderInfoPage(infoPage: InfoPageDto): void {
 
             sectionDiv.appendChild(titleEl);
             sectionDiv.appendChild(textEl);
+
+            // If there's a video URL, add a video player
+            if (section.videoUrl) {
+                const videoEl = document.createElement("video");
+                videoEl.controls = true;
+                videoEl.className = "w-full max-w-lg my-4";
+                videoEl.src = section.videoUrl;
+                videoEl.setAttribute("preload", "metadata");
+                sectionDiv.appendChild(videoEl);
+            }
+
+            // If there's a file URL, add a download link
+            if (section.fileUrl) {
+                const fileLink = document.createElement("a");
+                fileLink.href = section.fileUrl;
+                fileLink.textContent = "Download bestand";
+                fileLink.className = "block mt-2 text-blue-600 underline";
+                fileLink.target = "_blank";
+                sectionDiv.appendChild(fileLink);
+            }
 
             sectionsContainer.appendChild(sectionDiv);
         });

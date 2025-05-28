@@ -10,4 +10,6 @@ public class InfoSectionDto
 {
     public string Title { get; set; }
     public string Text { get; set; }
+    public string VideoUrl { get; set; }
+    public string FileUrl { get; set; }
 }

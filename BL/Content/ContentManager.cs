@@ -16,12 +16,14 @@ public class ContentManager(IContentRepository repository) : IContentManager
         return repository.UpdateInfoPageContent(infoPageContent);
     }
 
-    public InfoSection AddInfoSection(string title, string text, int contentId)
+    public InfoSection AddInfoSection(string title, string text, string videoUrl, string fileUrl, int contentId)
     {
         var section = new InfoSection()
         {
             Title = title,
             Text = text,
+            VideoUrl = videoUrl,
+            FileUrl = fileUrl,
             InfoPageContentId = contentId
         };
         return repository.CreateInfoSection(section);

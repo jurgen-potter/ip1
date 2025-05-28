@@ -7,6 +7,6 @@ public interface IContentManager
     InfoPageContent GetInfoPageContent();
     bool EditInfoPageContent(InfoPageContent infoPageContent);
     
-    InfoSection AddInfoSection(string title, string text, int contentId);
+    InfoSection AddInfoSection(string title, string text, string videoUrl, string fileUrl, int contentId);
     void RemoveAllInfoSectionsByPageId(int pageId);
 }
