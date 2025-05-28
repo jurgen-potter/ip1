@@ -144,7 +144,8 @@ public class RecruitmentController(IUtilityManager utilityManager) : Controller
         var result = utilityManager.CalculateRecruitment(model.TotalNeededPanelmembers, criteria);
 
         model.TotalNeededInvitations = result.TotalNeededInvitations;
-
+        ModelState.Remove(nameof(model.TotalNeededInvitations));
+        
         List<BucketViewModel> newBuckets = new List<BucketViewModel>();
         foreach (var bucket in result.Buckets)
         {

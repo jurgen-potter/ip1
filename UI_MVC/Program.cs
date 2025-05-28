@@ -1,4 +1,5 @@
 using AspNetCoreLiveMonitoring.Extensions;
+using CitizenPanel.BL.Content;
 using CitizenPanel.BL.Domain.Tenancy;
 using CitizenPanel.BL.Domain.Users;
 using CitizenPanel.BL.Draws;
@@ -8,6 +9,7 @@ using CitizenPanel.BL.Registrations;
 using CitizenPanel.BL.Tenancy;
 using CitizenPanel.BL.Users;
 using CitizenPanel.BL.Utilities;
+using CitizenPanel.DAL.Content;
 using CitizenPanel.DAL.Data;
 using CitizenPanel.DAL.Draws;
 using CitizenPanel.DAL.Panels;
@@ -26,6 +28,8 @@ using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -56,6 +60,8 @@ builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUserProfileManager, UserProfileManager>();
 builder.Services.AddScoped<IUtilityManager, UtilityManager>();
+builder.Services.AddScoped<IContentManager, ContentManager>();
+builder.Services.AddScoped<IContentRepository, ContentRepository>();
 builder.Services.AddScoped<ITenantManager, TenantManager>();
 builder.Services.AddScoped<ITenantRepository, TenantRepository>();
 builder.Services.AddScoped<ITenantResolver, TenantResolver>();
@@ -66,12 +72,36 @@ builder.Services.AddScoped<ITenantAccessService, TenantAccessService>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
-// Add Identity
+/*// Redis setup
+var redisIp = Environment.GetEnvironmentVariable("REDIS_IP");
+var redisConnection = $"{redisIp}:6379,abortConnect=false";
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnection;
+    options.InstanceName = "redisdb";
+});
+
+var redis = ConnectionMultiplexer.Connect(redisConnection);
+builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+
+builder.Services.AddDataProtection()
+    .PersistKeysToStackExchangeRedis(redis, "BurgerPanel-DataProtection-Keys");
+
+// Session via Redis
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});*/
+
+// Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-    {
-        options.User.RequireUniqueEmail = true;
-        options.SignIn.RequireConfirmedAccount = true;
-    })
+{
+    options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedAccount = true;
+})
     .AddUserManager<ApplicationUserManager>()
     .AddEntityFrameworkStores<PanelDbContext>()
     .AddErrorDescriber<DutchIdentityErrorDescriber>()
@@ -100,6 +130,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
 
+// Tenant + Route config
 builder.Services.Configure<RouteOptions>(options =>
 {
     options.ConstraintMap.Add("validTenant", typeof(ValidTenantConstraint));
@@ -126,7 +157,6 @@ using (var scope = app.Services.CreateScope())
 using (IServiceScope scope = app.Services.CreateScope()) {
     PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
     if (context.CreateDatabase(true)) {
-        
         var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
         IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
@@ -137,19 +167,20 @@ using (IServiceScope scope = app.Services.CreateScope()) {
     }
 }
 
-// Configure the HTTP request pipeline.
+// Configure HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAndMapLiveMonitoring();
 
+// Order is important!
 app.UseSession();
 
 app.UseAuthentication();

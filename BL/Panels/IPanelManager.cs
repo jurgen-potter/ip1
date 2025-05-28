@@ -20,6 +20,7 @@ public interface IPanelManager
     void EditPanel(Panel panel);
     void RemovePanel(Panel panel);
     
+    Recommendation GetRecommendationById(int recommendationDtoId);
     Recommendation GetRecommendationByIdWithVotes(int recommendationId);
     Recommendation GetRecommendationByIdWithVoters(int recommendationId);
     void EditRecommendation(Recommendation recommendation);

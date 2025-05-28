@@ -1,4 +1,5 @@
-﻿using CitizenPanel.BL.Domain.Users;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using CitizenPanel.BL.Domain.Users;
 
 namespace CitizenPanel.BL.Domain.Draws;
 
@@ -6,7 +7,7 @@ public class Invitation
 {
     public int Id { get; set; }
     public string Code { get; set; }
-    public string QRCodeString { get; set; }
+    public byte[] QRCode { get; set; }
     public int PanelId {get; set;}
     public Gender Gender { get; set; }
     public int Age { get; set; }
@@ -17,4 +18,7 @@ public class Invitation
     public string Email { get; set; }
     public string UserId { get; set; }
     public string TenantId { get; set; }
+    
+    [NotMapped]
+    public string QRCodeBase64 => QRCode != null ? Convert.ToBase64String(QRCode) : null;
 }

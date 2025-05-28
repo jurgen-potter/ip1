@@ -5,6 +5,17 @@
   }
 }
 
+.auth-card-container {
+  @apply w-full max-w-md bg-white rounded-xl shadow-lg p-8 overflow-hidden;
+  /* Specifiek voor login-kaart met absolute positionering: */
+  &.login-card-absolute { /* Voeg deze klasse toe aan de kaart op de login pagina */
+    @apply absolute top-4 left-1/2;
+    transform: translateX(-50%);
+    min-height: 450px;
+  }
+  &.auth-card-container--wide {
+    @apply max-w-4xl; 
+  }
 
 
 .auth-page-title { /* Voor H1 ViewData["Title"] */
@@ -45,7 +56,7 @@
 }
 
 .login-form-fields-container {
-  @apply relative;
+  @apply relative min-h-[300px];
 }
 
 .login-form-panel { /* Voor #accountFields en #codeFields */
@@ -62,16 +73,23 @@
 }
 
 .login-page-wrapper {
-  @apply relative flex justify-center min-h-[calc(100vh-var(--header-height,80px)-var(--footer-height,80px))];
-  @apply pt-20;
+  @apply relative flex justify-center items-center min-h-[70vh];
+  &.login-wrapper-padding {
+    @apply pt-20;
+  }
 }
 
 .login-card-container {
   @apply w-full max-w-md bg-white rounded-xl shadow-lg p-8 overflow-hidden;
-  @apply absolute top-20 left-1/2;
-  transform: translateX(-50%);
-  min-height: 450px;
-  transition: min-height 0.3s ease;
+  /* Specifiek voor login-kaart met absolute positionering: */
+  &.login-card-absolute { /* Voeg deze klasse toe aan de kaart op de login pagina */
+    @apply absolute top-4 left-1/2;
+    transform: translateX(-50%);
+    min-height: 450px;
+  }
+  &.auth-card-container--wide {
+    @apply max-w-4xl;
+  }
 }
 
 .login-title {

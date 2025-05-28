@@ -99,7 +99,7 @@
         }
         <input type="hidden" asp-for="@Model.TotalAvailablePotentialPanelmembers" />
         <input type="hidden" asp-for="@Model.TotalNeededPanelmembers" />
-        <input type="hidden" asp-for="TotalNeededInvitations" />
+        <input type="hidden" asp-for="@Model.TotalNeededInvitations" />
 
         @if (Model.Buckets != null) // Null check voor Buckets
         {
@@ -119,4 +119,35 @@
             <a href="@Url.Action("Index", "Recruitment")" class="btn btn-outline-secondary">Nieuwe berekening</a>
         </div>
     </form>
+
+    <form asp-action="Recalculate" method="post">
+        @if (Model.Criteria != null)
+        {
+            @for (int i = 0; i < Model.Criteria.Count; i++)
+            {
+                <input type="hidden" name="Criteria[@i].Name" value="@Model.Criteria[i].Name"/>
+
+                @for (int j = 0; j < Model.Criteria[i].SubCriteria.Count; j++)
+                {
+                    <input type="hidden" name="Criteria[@i].SubCriteria[@j].Name" value="@Model.Criteria[i].SubCriteria[j].Name"/>
+                    <input type="hidden" name="Criteria[@i].SubCriteria[@j].Percentage" value="@Model.Criteria[i].SubCriteria[j].Percentage"/>
+                }
+            }
+        }
+        <input type="hidden" asp-for="@Model.TotalAvailablePotentialPanelmembers" />
+        <input type="hidden" asp-for="@Model.TotalNeededInvitations" />
+        
+        <div class="recalculate-form-group">
+            <label asp-for="TotalNeededPanelmembers">Eigen aantal gewenste panelleden</label>
+            <input asp-for="TotalNeededPanelmembers" value="@Model.TotalNeededPanelmembers" min="5" max="500" type="number" class="auth-input-field" id="panelmember-count"/>
+            <span id="panelmember-warning" class="text-danger panelmember-warning" style="display:none;">
+                Er mogen minimaal 5 en maximaal 500 deelnemers zijn.
+            </span>
+        </div>
+        <button type="submit" class="btn btn-success">Bereken opnieuw met gekozen aantal panelleden</button>
+    </form>
 </div>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/recruitmentResult.js" asp-append-version="true"></script>
+}

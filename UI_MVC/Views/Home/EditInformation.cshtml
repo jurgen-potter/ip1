@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Bewerk Informatie";
+}
+
+<input id="mainTitleInput" type="text" class="w-full mb-4 p-2 text-xl font-semibold" placeholder="Hoofdtitel...">
+<div id="sectionsContainer"></div>
+
+<button id="addSectionBtn" class="btn btn-outline mt-4">Sectie toevoegen</button>
+<button id="saveSectionsBtn" class="btn btn-primary mt-4 ml-2">Opslaan</button>
+
+@section Scripts {
+    <script type="module" src="~/dist/clientapp/assets/editInformation.js" asp-append-version="true"></script>
+}

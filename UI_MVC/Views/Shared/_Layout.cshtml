@@ -63,7 +63,7 @@
         <div class="md:hidden hidden" id="mobile-menu-dropdown">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="mobile-nav-item">Home</a>
-                <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="mobile-nav-item">Demografische data invullen</a>
+                <a asp-area="" asp-controller="Recruitment" asp-action="Index" class="mobile-nav-item">Panel maken</a>
                 <a asp-area="" asp-route-questionnaireId="1" asp-controller="Questionnaire" asp-action="Index" class="mobile-nav-item">Verkenningsmodule</a>
                 <a asp-area="" asp-route-questionnaireId="2" asp-controller="Questionnaire" asp-action="Index" class="mobile-nav-item">Procesbepalingsmodule</a>
                 @if (User.IsInRole("Member") || User.IsInRole("Organization"))
@@ -89,7 +89,7 @@
         </div>
     </header>
 
-    <main role="main" class="flex-grow">
+    <main role="main" class="grow">
         @if (ViewData["Title"]?.ToString() == "Home")
         {
             @RenderBody()

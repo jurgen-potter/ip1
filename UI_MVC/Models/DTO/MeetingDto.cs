@@ -14,11 +14,11 @@ public class RecDto
     public int Id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
-    public bool Anon { get; set; }
+    public bool Anonymous { get; set; }
     public bool Votable { get; set; }
     public int Votes { get; set; }
     public int VotesFor { get; set; }
     public int VotesAgainst { get; set; }
     public double NeededPercentages { get; set; }
-
+    public bool IsDone { get; set; }
 }

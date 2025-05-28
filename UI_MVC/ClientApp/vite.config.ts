@@ -22,6 +22,7 @@ export default defineConfig({
         dashboard: path.resolve('src/ts/dashboard/timeline.ts'),
         postModal: path.resolve('src/ts/dashboard/createPostModal.ts'),
         recruitment: path.resolve('src/ts/recruitment/index.ts'),
+        recruitmentResult: path.resolve('src/ts/recruitment/result.ts'),
         registration: path.resolve('src/ts/registration/index.ts'),
         memberRegister: path.resolve('src/ts/memberRegister/registerMember.ts'),
         admin: path.resolve('src/ts/admin/editQuestionnaire.ts'),
@@ -32,8 +33,11 @@ export default defineConfig({
         manageStaff: path.resolve('src/ts/organization/manageStaff.ts'),
         addMember: path.resolve('src/ts/organization/addMember.ts'),
         details: path.resolve('src/ts/panel/details.ts'),
+        editInformation: path.resolve('src/ts/home/editInformation.ts'),
+        loadInformation: path.resolve('src/ts/home/loadInformation.ts'),
         reserveMembers: path.resolve('src/ts/registration/reserveMembers.ts'),
-        createPanel: path.resolve('src/ts/panel/createPanel.ts')
+        createPanel: path.resolve('src/ts/panel/createPanel.ts'),
+        manageInvites: path.resolve('src/ts/panel/manageInvites.ts'),
       },
       output: {
         assetFileNames: 'assets/[name][extname]',
