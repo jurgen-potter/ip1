@@ -17,7 +17,6 @@
   &.auth-card-container--wide {
     @apply max-w-4xl; 
   }
-
 }
 
 .auth-page-title { /* Voor H1 ViewData["Title"] */
@@ -34,13 +33,6 @@
 
 .auth-form-label {
   @apply block text-sm font-medium mb-1;
-}
-
-.auth-submit-button {
-  @apply w-full bg-primary text-white px-4 py-2 rounded-lg transition-colors duration-150;
-  &:hover {
-    @apply bg-primary-hover;
-  }
 }
 
 .auth-links-section { /* Specifiek voor login, maar kan generiek zijn */
@@ -64,23 +56,6 @@
   @apply text-red-500 text-sm;
 }
 
-
-.login-type-button {
-  @apply flex-1 px-4 py-2 border border-primary text-primary transition-colors duration-150;
-  &:hover {
-    @apply bg-primary text-white;
-  }
-  &.active {
-    @apply bg-primary text-white;
-  }
-}
-#accountBtn.login-type-button { /* ID specificiteit om afronding te garanderen */
-  @apply rounded-l-lg;
-}
-#codeBtn.login-type-button { /* ID specificiteit om afronding te garanderen */
-  @apply rounded-r-lg;
-}
-
 .login-form-fields-container {
   @apply relative;
 }
@@ -97,7 +72,6 @@
     transform: translateY(0);
   }
 }
-
 
 .login-page-wrapper {
   @apply relative flex justify-center min-h-[calc(100vh-var(--header-height,80px)-var(--footer-height,80px))];
@@ -119,7 +93,6 @@
 .login-subtitle {
   @apply text-xl font-semibold mb-4 text-center;
 }
-
 
 .login-divider {
   @apply my-4 border-gray-200;
@@ -155,13 +128,6 @@ input[type="text"].login-input-field { /* Ervan uitgaande dat 'Code' input type=
   }
 }
 
-.login-submit-button {
-  @apply w-full bg-primary text-white px-4 py-2 rounded-lg transition-colors duration-150;
-  &:hover {
-    @apply bg-primary-hover;
-  }
-}
-
 .login-links-section {
   @apply mt-4 space-y-2;
   a {
@@ -187,7 +153,6 @@ input[type="text"].login-input-field { /* Ervan uitgaande dat 'Code' input type=
   @apply mb-4; 
 }
 
-
 .member-reg-form-group input.auth-input-field,
 form input[type="email"].auth-input-field,
 form input[type="password"].auth-input-field,
@@ -202,9 +167,11 @@ form input[type="number"].auth-input-field
     outline: none; 
   }
 }
+
 .member-reg-selected-criteria-tag {
   @apply inline-block bg-secondary text-white text-sm font-medium mr-2 last:mr-0 mb-2 px-3 py-1 rounded-full;
 }
+
 .member-reg-criteria-group-label {
   @apply block text-sm font-medium text-gray-700 mb-2; /* Standaard label styling, mb-2 voor ruimte tot de tags */
 }
@@ -223,7 +190,6 @@ form textarea.auth-input-field {
     min-height: 120px; 
   }
 }
-
 
 .auth-checkbox-label {
   @apply flex items-center text-sm text-gray-700;
