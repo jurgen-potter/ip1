@@ -33,7 +33,7 @@ export default defineConfig({
         addMember: path.resolve('src/ts/organization/addMember.ts'),
         details: path.resolve('src/ts/panel/details.ts'),
         reserveMembers: path.resolve('src/ts/registration/reserveMembers.ts'),
-        CreatePanel: path.resolve('src/ts/panel/CreatePanel.ts')
+        createPanel: path.resolve('src/ts/panel/createPanel.ts')
       },
       output: {
         assetFileNames: 'assets/[name][extname]',
