@@ -68,22 +68,22 @@
                 <ul class="list-group mb-3">
                     @foreach (var docUrl in Model.DocumentNames)
                     {
+                        var fileName = System.IO.Path.GetFileName(docUrl);
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center gap-2">
                                 <span class="badge bg-secondary">📄</span>
-                                <a href="@docUrl" target="_blank">@System.IO.Path.GetFileName(docUrl)</a>
+                                <a href="@docUrl" target="_blank">@fileName</a>
                             </div>
                             @if (User.IsInRole("Organization"))
                             {
                                 <form asp-controller="Meeting" asp-action="RemoveDocument" method="post" class="mb-0" 
                                       asp-route-meetingId="@Model.MeetingId" 
-                                      asp-route-fileUrl="@docUrl">
+                                      asp-route-fileUrl="@fileName">
                                     <button type="submit" class="btn btn-sm btn-danger" title="Verwijder document" 
                                             onclick="return confirm('Weet je zeker dat u dit document wilt verwijderen?');">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
-
                             }
                         </li>
                     }
