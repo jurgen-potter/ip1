@@ -3,8 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
     excelButton.addEventListener("click", () => {
         const panelId = excelButton.dataset.panelId;
         const tenant = window.location.pathname.split('/')[1];
+        let selectedBatch = (document.querySelector("input[name='inline-radio-group']:checked") as HTMLInputElement)?.value;
 
-        fetch(`/${tenant}/api/Invitations/download/${panelId}`, {
+        if (!selectedBatch) {
+            selectedBatch = "1";
+        }
+        fetch(`/${tenant}/api/Invitations/download/${panelId}/${selectedBatch}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -20,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = `Uitnodigingen_${new Date().toISOString().split("T")[0]}.xlsx`;
+                a.download = `Invitations_${new Date().toISOString().replace(/[:.]/g, '-')}.xlsx`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);

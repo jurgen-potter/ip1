@@ -10,12 +10,29 @@
 }
 
 <div class="invitations-container">
-    <h2 class="invitations-title">@ViewBag.Title</h2>
-    <button id="excel-download-button" data-panel-id="@Model.FirstOrDefault().PanelId" type="button" class="btn btn-outline-primary btn-sm-equivalent">
-        Download uitnodigingen met Excel
-    </button>
     @if (Model != null && Model.Any(i => !i.IsRegistered))
     {
+        <h2 class="invitations-title">@ViewBag.Title</h2>
+        <button id="excel-download-button" data-panel-id="@Model.FirstOrDefault()?.PanelId" type="button" class="btn btn-outline-primary btn-sm-equivalent">
+            Download uitnodigingen met Excel
+        </button>
+        
+        <div class="flex">
+            <div class="flex items-center me-4">
+                <input id="inline-radio" name="inline-radio-group" type="radio" checked value="1"
+                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <label for="inline-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-500">Batch 1</label>
+            </div>
+            @for (int i = 2; i <= @Model?.Max(inv => inv.Batch); i++)
+            {
+                <div class="flex items-center me-4">
+                    <input id="inline-@i-radio" name="inline-radio-group" type="radio" value="@i"
+                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="inline-@i-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-500">Batch @i</label>
+                </div>
+            }
+        </div>
+
         <div class="invitations-grid">
             @foreach (var invitation in Model.Where(i => !i.IsRegistered))
             {

@@ -5,7 +5,7 @@ namespace CitizenPanel.BL.Utilities;
 
 public interface IUtilityManager
 {
-    IEnumerable<Invitation> GenerateInvitations(int amount, List<Criteria> criteria, Panel panel);
+    IEnumerable<Invitation> GenerateInvitations(int amount, List<Criteria> criteria, Panel panel, int batch);
     int CalculateMembers(int totalAvailablMembers);
     RecruitmentResult CalculateRecruitment(int totalToDraw, IEnumerable<Criteria> criteriaList);
     IEnumerable<Criteria> GetInitialCriteria();
