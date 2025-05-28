@@ -125,7 +125,7 @@ using (var scope = app.Services.CreateScope())
 
 using (IServiceScope scope = app.Services.CreateScope()) {
     PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
-    if (context.CreateDatabase(false)) {
+    if (context.CreateDatabase(true)) {
         
         var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
