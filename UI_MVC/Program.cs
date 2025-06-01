@@ -28,8 +28,6 @@ using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-//using StackExchange.Redis;
-using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -72,36 +70,18 @@ builder.Services.AddScoped<ITenantAccessService, TenantAccessService>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
-/*// Redis setup
-var redisIp = Environment.GetEnvironmentVariable("REDIS_IP");
-var redisConnection = $"{redisIp}:6379,abortConnect=false";
 
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = redisConnection;
-    options.InstanceName = "redisdb";
-});
 
-var redis = ConnectionMultiplexer.Connect(redisConnection);
-builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 
-builder.Services.AddDataProtection()
-    .PersistKeysToStackExchangeRedis(redis, "BurgerPanel-DataProtection-Keys");
 
-// Session via Redis
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});*/
+
 
 // Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-{
-    options.User.RequireUniqueEmail = true;
-    options.SignIn.RequireConfirmedAccount = true;
-})
+    {
+        options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedAccount = true;
+    })
     .AddUserManager<ApplicationUserManager>()
     .AddEntityFrameworkStores<PanelDbContext>()
     .AddErrorDescriber<DutchIdentityErrorDescriber>()
