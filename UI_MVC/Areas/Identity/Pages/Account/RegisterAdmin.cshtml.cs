@@ -139,10 +139,10 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateWithTenantAsync(user, Input.Password);
-                var roleResult = await _userManager.AddToRoleAsync(user, "Admin");
 
-                if (result.Succeeded && roleResult.Succeeded)
+                if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "Admin");
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);

@@ -186,10 +186,10 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                     user.IsStaff = true;
                     result = await _userManager.CreateWithTenantAsync(user, Input.Password);
                 }
-                await _userManager.AddToRoleAsync(user, "Organization");
 
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "Organization");
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
