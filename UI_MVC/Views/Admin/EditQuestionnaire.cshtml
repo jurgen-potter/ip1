@@ -71,8 +71,8 @@
                                         <input asp-for="@Model.Questions[@i].Answers[@j].Id" type="hidden" class="answer-id"
                                                value="@Model.Questions[@i].Answers[@j].Id" />
                                         <input asp-for="@Model.Questions[@i].Answers[@j].ToDelete" type="hidden" class="answer-delete" />
-                                        <div class="col-auto fs-5 p-0">
-                                            <span class="drag-handle">&#x2630;</span>
+                                        <div class="col-auto fs-5 p-0 flex items-center">
+                                            <span class="drag-handle cursor-move">&#x2630;</span>
                                         </div>
                                         <div class="flex flex-col flex-grow gap-2"> <!-- Nieuwe wrapper voor inputs links -->
                                             <div class="subcriteria-input-name-wrapper">
