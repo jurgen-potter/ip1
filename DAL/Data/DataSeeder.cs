@@ -299,10 +299,10 @@ Tijdens meerdere sessies krijgen deelnemers info van experten en belanghebbenden
 
         var panel3 = new Panel()
         {
-            Name = "Panel Brussel",
-            Description = "Dit is een panel om te zien wat de mensen over Brussel denken.",
-            StartDate = new DateOnly(2025, 3, 1),
-            EndDate = new DateOnly(2025, 8, 14),
+            Name = "Brussel digitaliseren",
+            Description = "Hoe zie jij de technologische toekomst van Brussel?",
+            StartDate = new DateOnly(2025, 7, 1),
+            EndDate = new DateOnly(2025, 11, 14),
             TenantId = "brussel",
             DrawStatus = DrawStatus.FirstPhaseActive,
             TotalNeededPanelmembers = 20
