@@ -132,13 +132,22 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 // Tenant + Route config
-builder.Services.Configure<RouteOptions>(options =>
-{
-    options.ConstraintMap.Add("validTenant", typeof(ValidTenantConstraint));
-});
-
 var tenantStore = new TenantStore();
 builder.Services.AddSingleton(tenantStore);
+
+builder.Services.AddSingleton<ValidTenantConstraint>(sp =>
+    new ValidTenantConstraint(
+        sp.GetRequiredService<TenantStore>(),
+        sp
+    )
+);
+
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.ConstraintMap["validTenant"] = typeof(ValidTenantConstraint);
+});
+
+
 
 
 builder.Services
