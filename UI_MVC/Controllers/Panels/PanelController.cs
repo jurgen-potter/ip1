@@ -110,7 +110,7 @@ public class PanelController(
 
         Panel newPanel = panelManager.AddPanel(model.Name, model.Description, model.EndDate, criteria,
             model.Result.TotalNeededPanelmembers);
-        var invitations = utilityManager.GenerateInvitations(model.Result.TotalNeededInvitations, criteria, newPanel);
+        var invitations = utilityManager.GenerateInvitations(model.Result.TotalNeededInvitations, criteria, newPanel, 1);
         newPanel.Invitations = invitations.ToList();
         panelManager.EditPanel(newPanel);
         return RedirectToAction("Index", "Panel", new { id = newPanel.Id });

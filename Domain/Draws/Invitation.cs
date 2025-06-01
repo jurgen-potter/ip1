@@ -18,6 +18,7 @@ public class Invitation
     public string Email { get; set; }
     public string UserId { get; set; }
     public string TenantId { get; set; }
+    public int Batch { get; set; }
     
     [NotMapped]
     public string QRCodeBase64 => QRCode != null ? Convert.ToBase64String(QRCode) : null;

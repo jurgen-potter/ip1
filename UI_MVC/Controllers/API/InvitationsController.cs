@@ -1,3 +1,4 @@
+using CitizenPanel.BL.Domain.Draws;
 using CitizenPanel.BL.Draws;
 using CitizenPanel.BL.Panels;
 using CitizenPanel.BL.Utilities;
@@ -5,6 +6,7 @@ using CitizenPanel.UI.MVC.Models.Draws;
 using CitizenPanel.UI.MVC.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Packaging;
 
 namespace CitizenPanel.UI.MVC.Controllers.API;
 
@@ -40,8 +42,7 @@ public class InvitationsController(IPanelManager panelManager, IDrawManager draw
     public IActionResult MakeInvitations([FromBody] NewInvitationsDto model)
     {
         var criteria = panelManager.GetCriteriaByPanelIdWithSubcriteria(model.PanelId).ToList();
-        var panel = panelManager.GetPanelById(model.PanelId);
-        
+        var panel = panelManager.GetPanelByIdWithInvitations(model.PanelId);
         var buckets = model.Buckets.Where(b => !b.IsSufficient);
 
         var missingMembers = 0;
@@ -50,20 +51,19 @@ public class InvitationsController(IPanelManager panelManager, IDrawManager draw
             missingMembers += bucket.Count - bucket.RegisteredCount;
         }
         var result = utilityManager.CalculateRecruitment(missingMembers, criteria);
-        
-        
-        var invitations = utilityManager.GenerateInvitations(result.TotalNeededInvitations, criteria, panel);
-        panel.Invitations = invitations.ToList();
+
+        var invitations = utilityManager.GenerateInvitations(result.TotalNeededInvitations, criteria, panel, panel.Invitations.Max(i => i.Batch) + 1);
+        panel.Invitations.AddRange(invitations.ToList());
         panelManager.EditPanel(panel);
         return Ok();
     }
 
-    [HttpGet("download/{panelId}")]
-    public IActionResult DownloadInvitationsExcel(int panelId)
+    [HttpGet("download/{panelId}/{batchNr}")]
+    public IActionResult DownloadInvitationsExcel(int panelId, int batchNr)
     {
         var invitations = drawManager.GetAllInvitationsByPanelId(panelId);
 
-        byte[] excelFile = utilityManager.GenerateExcelWithQrCodes(invitations);
+        byte[] excelFile = utilityManager.GenerateExcelWithQrCodes(invitations.Where(i => i.Batch == batchNr));
         
         string fileName = $"Uitnodigingen_{DateTime.Now:yyyy-MM-dd}.xlsx";
 
