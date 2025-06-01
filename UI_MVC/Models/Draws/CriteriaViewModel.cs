@@ -18,7 +18,7 @@ public class SubCriteriaViewModel
     public int Id { get; set; }
     
     [Required(ErrorMessage = "Geef een naam op voor het subcriteria.")]
-    public string Name { get; set; } // bv. “Male”, “Female” of “18-25”, “Bus”, etc.
+    public string Name { get; set; } // bv. “Male”, “Female” of “18-24”, “Bus”, etc.
     
     [Range(0, 100, ErrorMessage = "Percentage moet tussen 0 en 100 zijn.")]
     public double Percentage { get; set; }

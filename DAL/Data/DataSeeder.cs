@@ -181,17 +181,16 @@ public class DataSeeder(PanelDbContext panelDbContext)
         //criteria
         var subCrit21 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
         var subCrit22 = new SubCriteria() { Name = "Vrouw", Percentage = 60, TenantId = "antwerpen" };
-        var subCrit23 = new SubCriteria() { Name = "18-25", Percentage = 20, TenantId = "antwerpen" };
-        var subCrit24 = new SubCriteria() { Name = "26-35", Percentage = 50, TenantId = "antwerpen" };
-        var subCrit25 = new SubCriteria() { Name = "36-50", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit26 = new SubCriteria() { Name = "51-60", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit27 = new SubCriteria() { Name = "60+", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit28 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
-        var subCrit29 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
-        var subCrit210 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
-        var subCrit211 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit23 = new SubCriteria() { Name = "18-24", Percentage = 20, TenantId = "antwerpen" };
+        var subCrit24 = new SubCriteria() { Name = "25-49", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit25 = new SubCriteria() { Name = "50-64", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit26 = new SubCriteria() { Name = "65+", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit27 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
+        var subCrit28 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
+        var subCrit29 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit210 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
 
-        panelDbContext.SubCriteria.AddRange(subCrit21, subCrit22, subCrit23, subCrit24, subCrit25, subCrit26, subCrit27, subCrit28, subCrit29, subCrit210, subCrit211);
+        panelDbContext.SubCriteria.AddRange(subCrit21, subCrit22, subCrit23, subCrit24, subCrit25, subCrit26, subCrit27, subCrit28, subCrit29, subCrit210);
 
         var crit21 = new Criteria()
         {
@@ -202,19 +201,19 @@ public class DataSeeder(PanelDbContext panelDbContext)
         var crit22 = new Criteria()
         {
             Name = "Leeftijd",
-            SubCriteria = { subCrit23, subCrit24, subCrit25, subCrit26, subCrit27 },
+            SubCriteria = { subCrit23, subCrit24, subCrit25, subCrit26 },
             TenantId = "antwerpen"
         };
         var crit23 = new Criteria()
         {
             Name = "Vervoer",
-            SubCriteria = { subCrit28, subCrit29 },
+            SubCriteria = { subCrit27, subCrit28 },
             TenantId = "antwerpen"
         };
         var crit24 = new Criteria()
         {
             Name = "Opleiding",
-            SubCriteria = { subCrit210, subCrit211 },
+            SubCriteria = { subCrit29, subCrit210 },
             TenantId = "antwerpen"
         };
         panelDbContext.Criteria.AddRange(crit21, crit22, crit23, crit24);
@@ -249,17 +248,16 @@ public class DataSeeder(PanelDbContext panelDbContext)
         //criteria
         var subCrit1 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
         var subCrit2 = new SubCriteria() { Name = "Vrouw", Percentage = 60, TenantId = "antwerpen" };
-        var subCrit3 = new SubCriteria() { Name = "18-25", Percentage = 20, TenantId = "antwerpen" };
-        var subCrit4 = new SubCriteria() { Name = "26-35", Percentage = 50, TenantId = "antwerpen" };
-        var subCrit5 = new SubCriteria() { Name = "36-50", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit6 = new SubCriteria() { Name = "51-60", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit7 = new SubCriteria() { Name = "60+", Percentage = 10, TenantId = "antwerpen" };
-        var subCrit8 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
-        var subCrit9 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
-        var subCrit10 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
-        var subCrit11 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit3 = new SubCriteria() { Name = "18-24", Percentage = 20, TenantId = "antwerpen" };
+        var subCrit4 = new SubCriteria() { Name = "25-49", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit5 = new SubCriteria() { Name = "50-64", Percentage = 20, TenantId = "antwerpen" };
+        var subCrit6 = new SubCriteria() { Name = "65+", Percentage = 10, TenantId = "antwerpen" };
+        var subCrit7 = new SubCriteria() { Name = "Fiets", Percentage = 30, TenantId = "antwerpen" };
+        var subCrit8 = new SubCriteria() { Name = "Auto", Percentage = 70, TenantId = "antwerpen" };
+        var subCrit9 = new SubCriteria() { Name = "Hoog opgeleid", Percentage = 50, TenantId = "antwerpen" };
+        var subCrit10 = new SubCriteria() { Name = "Laag opgeleid", Percentage = 50, TenantId = "antwerpen" };
 
-        panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4, subCrit5, subCrit6, subCrit7, subCrit8, subCrit9, subCrit10, subCrit11);
+        panelDbContext.SubCriteria.AddRange(subCrit1, subCrit2, subCrit3, subCrit4, subCrit5, subCrit6, subCrit7, subCrit8, subCrit9, subCrit10);
 
         var crit1 = new Criteria()
         {
@@ -270,19 +268,19 @@ public class DataSeeder(PanelDbContext panelDbContext)
         var crit2 = new Criteria()
         {
             Name = "Leeftijd",
-            SubCriteria = { subCrit3, subCrit4, subCrit5, subCrit6, subCrit7 },
+            SubCriteria = { subCrit3, subCrit4, subCrit5, subCrit6 },
             TenantId = "antwerpen"
         };
         var crit3 = new Criteria()
         {
             Name = "Vervoer",
-            SubCriteria = { subCrit8, subCrit9 },
+            SubCriteria = { subCrit7, subCrit8 },
             TenantId = "antwerpen"
         };
         var crit4 = new Criteria()
         {
             Name = "Opleiding",
-            SubCriteria = { subCrit10, subCrit11 },
+            SubCriteria = { subCrit9, subCrit10 },
             TenantId = "antwerpen"
         };
         panelDbContext.Criteria.AddRange(crit1, crit2, crit3, crit4);
@@ -312,7 +310,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
             {
                 Email = "kate@example.com",
                 Gender = Gender.Female,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 1,
                 TenantId = "antwerpen",
@@ -320,13 +318,13 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Code = "inv-kate",
                 IsRegistered = true,
                 IsDrawn = true,
-                SelectedCriteria = new List<int> { 20, 21 }
+                SelectedCriteria = new List<int> { 18, 19 }
             },
             new Invitation
             {
                 Email = "rozie@example.com",
                 Gender = Gender.Female,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 1,
                 TenantId = "antwerpen",
@@ -334,13 +332,13 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Code = "inv-rozie",
                 IsRegistered = true,
                 IsDrawn = true,
-                SelectedCriteria = new List<int> { 20, 21 }
+                SelectedCriteria = new List<int> { 18, 19 }
             },
             new Invitation
             {
                 Email = "rozalinda@example.com",
                 Gender = Gender.Female,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 1,
                 TenantId = "antwerpen",
@@ -348,13 +346,13 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Code = "inv-rozalinda",
                 IsRegistered = true,
                 IsDrawn = true,
-                SelectedCriteria = new List<int> { 19, 21 }
+                SelectedCriteria = new List<int> { 17, 19 }
             },
             new Invitation
             {
                 Email = "alice2@example.com",
                 Gender = Gender.Female,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 1,
                 TenantId = "antwerpen",
@@ -362,13 +360,13 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Code = "inv-alice",
                 IsRegistered = true,
                 IsDrawn = true,
-                SelectedCriteria = new List<int> { 19, 21 }
+                SelectedCriteria = new List<int> { 17, 19 }
             },
             new Invitation
             {
                 Email = "emma3@example.com",
                 Gender = Gender.Female,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 1,
                 TenantId = "antwerpen",
@@ -376,13 +374,13 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Code = "inv-emma",
                 IsRegistered = true,
                 IsDrawn = true,
-                SelectedCriteria = new List<int> { 19, 21 }
+                SelectedCriteria = new List<int> { 17, 19 }
             },
             new Invitation
             {
                 Email = "emilie@example.com",
                 Gender = Gender.Female,
-                Age = 36,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 1,
                 TenantId = "antwerpen",
@@ -390,7 +388,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Code = "inv-emilie",
                 IsRegistered = true,
                 IsDrawn = true,
-                SelectedCriteria = new List<int> { 19, 21 }
+                SelectedCriteria = new List<int> { 17, 19 }
             },
             new Invitation
             {
@@ -404,13 +402,13 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Code = "inv-jurgen",
                 IsRegistered = true,
                 IsDrawn = true,
-                SelectedCriteria = new List<int> { 19, 21 }
+                SelectedCriteria = new List<int> { 17, 19 }
             },
             new Invitation
             {
                 Email = "xander@example.com",
                 Gender = Gender.Male,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 1,
                 TenantId = "antwerpen",
@@ -418,7 +416,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Code = "inv-xander",
                 IsRegistered = true,
                 IsDrawn = true,
-                SelectedCriteria = new List<int> { 19, 21 }
+                SelectedCriteria = new List<int> { 17, 19 }
             },
             new Invitation
             {
@@ -432,7 +430,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Code = "inv-lars",
                 IsRegistered = true,
                 IsDrawn = true,
-                SelectedCriteria = new List<int> { 19, 21 }
+                SelectedCriteria = new List<int> { 17, 19 }
             }
         };
         panelDbContext.AddRange(selectedInvitations);
@@ -460,7 +458,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria> { subCrit9, subCrit10 }
+                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit9 }
                 }
             },
             new ApplicationUser
@@ -476,7 +474,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria> { subCrit9, subCrit10 }
+                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit9 }
                 }
             },
             new ApplicationUser
@@ -492,7 +490,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
+                    SelectedCriteria = new List<SubCriteria> { subCrit7, subCrit9 }
                 }
             },
             new ApplicationUser
@@ -508,7 +506,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
+                    SelectedCriteria = new List<SubCriteria> { subCrit7, subCrit9 }
                 }
             },
             new ApplicationUser
@@ -524,7 +522,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
+                    SelectedCriteria = new List<SubCriteria> { subCrit7, subCrit9 }
                 }
             },
             new ApplicationUser
@@ -539,7 +537,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
+                    SelectedCriteria = new List<SubCriteria> { subCrit7, subCrit9 }
                 }
             },
             new ApplicationUser
@@ -554,7 +552,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
+                    SelectedCriteria = new List<SubCriteria> { subCrit7, subCrit9}
                 }
             },
             new ApplicationUser
@@ -569,7 +567,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
+                    SelectedCriteria = new List<SubCriteria> { subCrit7, subCrit9 }
                 }
             },
             new ApplicationUser
@@ -584,7 +582,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria> { subCrit8, subCrit10 }
+                    SelectedCriteria = new List<SubCriteria> { subCrit7, subCrit9 }
                 }
             }
         };
@@ -704,7 +702,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([7, 10]),
             },
 
             // Panel 2 members
@@ -712,53 +710,53 @@ public class DataSeeder(PanelDbContext panelDbContext)
             {
                 Email = "els@example.com",
                 Gender = Gender.Female,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "1wer-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([7, 10]),
             },
             new Invitation()
             {
                 Email = "bart@example.com",
                 Gender = Gender.Male,
-                Age = 36,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "q1er-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
                 Email = "sophie2@example.com",
                 Gender = Gender.Female,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qw1r-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 11]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
             new Invitation()
             {
                 Email = "tom@example.com",
                 Gender = Gender.Male,
-                Age = 36,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwe1-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
+                SelectedCriteria = new List<int>([7, 9]),
             },
 
             // Additional members for Panel 1
@@ -773,7 +771,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-1yui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([7, 10]),
             },
             new Invitation()
             {
@@ -786,7 +784,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-t1ui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
@@ -799,7 +797,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-ty1i-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
+                SelectedCriteria = new List<int>([7, 9]),
             },
             new Invitation()
             {
@@ -812,7 +810,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-tyu1-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([9, 10]),
             },
             new Invitation()
             {
@@ -825,7 +823,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-tyui-1pas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
@@ -838,250 +836,252 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-tyui-o1as-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([7, 10]),
             },
 
-            // Men 26-40
+            // Men 25-49
             new Invitation()
             {
                 Email = "thomas@example.com",
                 Gender = Gender.Male,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-op1s-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
                 Email = "maarten@example.com",
                 Gender = Gender.Male,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opa1-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
                 Email = "jeroen@example.com",
                 Gender = Gender.Male,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-1fgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([7, 10]),
             },
             new Invitation()
             {
                 Email = "pieter@example.com",
                 Gender = Gender.Male,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-d1gh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
+                SelectedCriteria = new List<int>([7, 9]),
             },
             new Invitation()
             {
                 Email = "wouter@example.com",
                 Gender = Gender.Male,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-df1h-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
+                SelectedCriteria = new List<int>([7, 9]),
             },
             new Invitation()
             {
                 Email = "michel@example.com",
                 Gender = Gender.Male,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-dfg1-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
+                SelectedCriteria = new List<int>([7, 9]),
             },
-
-            // Men 41-60
             new Invitation()
             {
                 Email = "frank@example.com",
                 Gender = Gender.Male,
-                Age = 36,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-dfgh-1klz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
-            },
-            new Invitation()
-            {
-                Email = "marc@example.com",
-                Gender = Gender.Male,
-                Age = 51,
-                Town = "Antwerpen",
-                PanelId = 2,
-                TenantId = "antwerpen",
-                Batch = 1,
-                Code = "qwer-tyui-opas-dfgh-j1lz",
-                IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
-            },
-            new Invitation()
-            {
-                Email = "patrick@example.com",
-                Gender = Gender.Male,
-                Age = 51,
-                Town = "Antwerpen",
-                PanelId = 2,
-                TenantId = "antwerpen",
-                Batch = 1,
-                Code = "qwer-tyui-opas-dfgh-jk1z",
-                IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
+                SelectedCriteria = new List<int>([7, 9]),
             },
             new Invitation()
             {
                 Email = "dirk@example.com",
                 Gender = Gender.Male,
-                Age = 36,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-dfgh-jkl1",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
+                SelectedCriteria = new List<int>([7, 9]),
             },
             new Invitation()
             {
                 Email = "hans@example.com",
                 Gender = Gender.Male,
-                Age = 36,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "2wer-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
+                SelectedCriteria = new List<int>([7, 9]),
+            },
+
+
+            // Men 50-64
+            new Invitation()
+            {
+                Email = "marc@example.com",
+                Gender = Gender.Male,
+                Age = 50,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Batch = 1,
+                Code = "qwer-tyui-opas-dfgh-j1lz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([7, 9]),
+            },
+            new Invitation()
+            {
+                Email = "patrick@example.com",
+                Gender = Gender.Male,
+                Age = 50,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Batch = 1,
+                Code = "qwer-tyui-opas-dfgh-jk1z",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([7, 9]),
             },
             new Invitation()
             {
                 Email = "erik@example.com",
                 Gender = Gender.Male,
-                Age = 51,
+                Age = 50,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "q2er-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
+                SelectedCriteria = new List<int>([7, 9]),
             },
 
-            // Men 60+
+
+            // Men 65+
             new Invitation()
             {
                 Email = "jozef@example.com",
                 Gender = Gender.Male,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qw2r-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([7, 10]),
             },
             new Invitation()
             {
                 Email = "willem@example.com",
                 Gender = Gender.Male,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwe2-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([7, 9]),
             },
             new Invitation()
             {
                 Email = "gerard@example.com",
                 Gender = Gender.Male,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-2yui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
             new Invitation()
             {
                 Email = "robert@example.com",
                 Gender = Gender.Male,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-t2ui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
             new Invitation()
             {
                 Email = "hugo@example.com",
                 Gender = Gender.Male,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-ty2i-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([7, 9]),
             },
             new Invitation()
             {
                 Email = "albert@example.com",
                 Gender = Gender.Male,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyu2-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
 
-            // Women 18-25
+            // Women 18-24
             new Invitation()
             {
                 Email = "anna@example.com",
@@ -1093,7 +1093,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-tyui-2pas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([7, 10]),
             },
             new Invitation()
             {
@@ -1106,7 +1106,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-tyui-o2as-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 11]),
+                SelectedCriteria = new List<int>([7, 10]),
             },
             new Invitation()
             {
@@ -1119,7 +1119,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-tyui-op2s-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 11]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
             new Invitation()
             {
@@ -1132,7 +1132,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-tyui-opa2-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 11]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
             new Invitation()
             {
@@ -1145,7 +1145,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-tyui-opas-2fgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 11]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
             new Invitation()
             {
@@ -1158,254 +1158,254 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-tyui-opas-d2gh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 11]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
 
-            // Women 26-40
+            // Women 25-49
             new Invitation()
             {
                 Email = "eva@example.com",
                 Gender = Gender.Female,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-df2h-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 11]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
             new Invitation()
             {
                 Email = "sophie@example.com",
                 Gender = Gender.Female,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-dfg2-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 11]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
             new Invitation()
             {
                 Email = "julie@example.com",
                 Gender = Gender.Female,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-dfgh-2klz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 11]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
             new Invitation()
             {
                 Email = "els2@example.com",
                 Gender = Gender.Female,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-dfgh-j2lz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 11]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
             new Invitation()
             {
                 Email = "lieve@example.com",
                 Gender = Gender.Female,
-                Age = 26,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-dfgh-jk2z",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
                 Email = "anja@example.com",
                 Gender = Gender.Female,
-                Age = 36,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opas-dfgh-jkl2",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
-
-            // Women 41-60
             new Invitation()
             {
                 Email = "maria@example.com",
                 Gender = Gender.Female,
-                Age = 36,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "3wer-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
-            },
-            new Invitation()
-            {
-                Email = "ann@example.com",
-                Gender = Gender.Female,
-                Age = 51,
-                Town = "Antwerpen",
-                PanelId = 2,
-                TenantId = "antwerpen",
-                Batch = 1,
-                Code = "q3er-tyui-opas-dfgh-jklz",
-                IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
-            },
-            new Invitation()
-            {
-                Email = "ingrid@example.com",
-                Gender = Gender.Female,
-                Age = 51,
-                Town = "Antwerpen",
-                PanelId = 2,
-                TenantId = "antwerpen",
-                Batch = 1,
-                Code = "qw3r-tyui-opas-dfgh-jklz",
-                IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
                 Email = "martine@example.com",
                 Gender = Gender.Female,
-                Age = 36,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwe3-tyui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
                 Email = "hilde@example.com",
                 Gender = Gender.Female,
-                Age = 36,
+                Age = 25,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-3yui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
+            },
+
+            // Women 50-64
+            new Invitation()
+            {
+                Email = "ann@example.com",
+                Gender = Gender.Female,
+                Age = 50,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Batch = 1,
+                Code = "q3er-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 9]),
+            },
+            new Invitation()
+            {
+                Email = "ingrid@example.com",
+                Gender = Gender.Female,
+                Age = 50,
+                Town = "Antwerpen",
+                PanelId = 2,
+                TenantId = "antwerpen",
+                Batch = 1,
+                Code = "qw3r-tyui-opas-dfgh-jklz",
+                IsRegistered = true,
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
                 Email = "sonja@example.com",
                 Gender = Gender.Female,
-                Age = 51,
+                Age = 50,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-t3ui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
 
-            // Women 60+
+            // Women 65+
             new Invitation()
             {
                 Email = "helena@example.com",
                 Gender = Gender.Female,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-ty3i-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
                 Email = "godelieve@example.com",
                 Gender = Gender.Female,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyu3-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
                 Email = "rosa@example.com",
                 Gender = Gender.Female,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-3pas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
                 Email = "margareta@example.com",
                 Gender = Gender.Female,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-o3as-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
                 Email = "mariette@example.com",
                 Gender = Gender.Female,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-op3s-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
+                SelectedCriteria = new List<int>([7, 9]),
             },
             new Invitation()
             {
                 Email = "alice@example.com",
                 Gender = Gender.Female,
-                Age = 61,
+                Age = 65,
                 Town = "Antwerpen",
                 PanelId = 2,
                 TenantId = "antwerpen",
                 Batch = 1,
                 Code = "qwer-tyui-opa3-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 10]),
+                SelectedCriteria = new List<int>([7, 9]),
             }
         };
         //invitations
         var invitation1 = new Invitation()
         {
             Email = "invi1@example.com",
-            Age = 26,
+            Age = 25,
             Code = "blLy-Tvxl-1TXG-nYg3-CBtD",
             Gender = Gender.Female,
             PanelId = 2,
@@ -1429,7 +1429,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
         var invitation3 = new Invitation
         {
             Email = "invi3@example.com",
-            Age = 36,
+            Age = 25,
             Code = "Iga7-FHyw-yVfo-8wvN-Bxa8",
             Gender = Gender.Male,
             PanelId = 2,
@@ -1441,7 +1441,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
         var invitation4 = new Invitation
         {
             Email = "invi4@example.com",
-            Age = 36,
+            Age = 25,
             Code = "FIcV-zyXs-reXO-I6dh-rMCB",
             Gender = Gender.Female,
             PanelId = 2,
@@ -1452,7 +1452,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
         var invitation5 = new Invitation
         {
-            Age = 26,
+            Age = 25,
             Code = "HEMf-Xu0L-1ETh-urZJ-26s9",
             Gender = Gender.Male,
             PanelId = 2,

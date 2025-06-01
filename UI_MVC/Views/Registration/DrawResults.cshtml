@@ -64,10 +64,10 @@
 
                             string ageGroupDisplay;
                             if (invitation.Age <= 0) { ageGroupDisplay = "[Onbekende leeftijd]"; }
-                            else if (invitation.Age >= 18 && invitation.Age <= 25) { ageGroupDisplay = "18-25"; }
-                            else if (invitation.Age <= 40) { ageGroupDisplay = "26-40"; } 
-                            else if (invitation.Age <= 60) { ageGroupDisplay = "41-60"; } 
-                            else { ageGroupDisplay = "60+"; }   
+                            else if (invitation.Age >= 18 && invitation.Age <= 24) { ageGroupDisplay = "18-24"; }
+                            else if (invitation.Age <= 49) { ageGroupDisplay = "25-49"; } 
+                            else if (invitation.Age <= 64) { ageGroupDisplay = "50-64"; } 
+                            else { ageGroupDisplay = "65+"; }   
 
                             var criteriaDisplayList = new List<string> { genderDisplay, ageGroupDisplay }; 
                             if (invitation.SelectedCriteria != null)
