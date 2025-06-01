@@ -184,6 +184,7 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                 else
                 {
                     user.IsStaff = true;
+                    user.IsSuper = Input.IsSuper;
                     result = await _userManager.CreateWithTenantAsync(user, Input.Password);
                 }
 
