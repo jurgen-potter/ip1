@@ -73,7 +73,8 @@ public class IdentitySeeder(UserManager<ApplicationUser> userManager, RoleManage
         var user4 = new ApplicationUser()
         {
             UserName = "brussel@example.com",
-            Email = "brussel@example.com"
+            Email = "brussel@example.com",
+            IsSuper = true
         };
         await userManager.CreateAsync(user4, "Test1!");
         

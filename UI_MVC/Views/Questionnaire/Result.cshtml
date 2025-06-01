@@ -29,15 +29,15 @@
                 }
 
                 <div class="questionnaire-result-item">
-                    <span class="questionnaire-result-label">Vraag:</span>
+                    <span class="questionnaire-result-label"><strong>Vraag:</strong></span>
                     <p class="questionnaire-result-text">@question.Description</p>
                     
-                    <span class="questionnaire-result-label mt-2">Uw antwoord:</span>
+                    <span class="questionnaire-result-label mt-2"><strong>Uw antwoord:</strong></span>
                     <p class="questionnaire-result-text">@selectedAnswer.Description</p>
                     
                     @if (!string.IsNullOrWhiteSpace(selectedAnswer.Advice))
                     {
-                        <span class="questionnaire-result-label mt-2">Aanbeveling:</span>
+                        <span class="questionnaire-result-label mt-2"><strong>Aanbeveling:</strong></span>
                         <p class="questionnaire-result-text">@selectedAnswer.Advice</p>
                     }
                 </div>
@@ -64,12 +64,12 @@
             <div class="questionnaire-result-card">
                 <h5 class="questionnaire-result-card-title">@question.Description</h5>
                 
-                <span class="questionnaire-result-label">Uw antwoord:</span>
+                <span class="questionnaire-result-label"><strong>Uw antwoord:</strong></span>
                 <p class="questionnaire-result-text">@selectedAnswer.Description</p>
 
                 @if (!string.IsNullOrWhiteSpace(selectedAnswer.Advice))
                 {
-                    <span class="questionnaire-result-label mt-2">Aanbeveling:</span>
+                    <span class="questionnaire-result-label mt-2"><strong>Aanbeveling:</strong></span>
                     <p class="questionnaire-result-text">@selectedAnswer.Advice</p>
                 }
             </div>
