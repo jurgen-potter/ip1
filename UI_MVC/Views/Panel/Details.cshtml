@@ -41,7 +41,7 @@
                     }
                 </div>
                 <div class="meeting-documents-card-body">
-                    <p>@Model.Description</p>
+                    <div>@Html.Raw(Model.Description.Replace("\n", "<br />"))</div>
                 </div>
             </section>
 
@@ -170,7 +170,7 @@
                         {
                             <div class="post-item">
                                 <h3 class="post-item-title">@post.Title</h3>
-                                <p class="post-item-summary">@post.Description</p>
+                                <p class="post-item-summary">@Html.Raw(post.Description.Replace("\n", "<br />"))</p>
                             </div>
                         }
                     }

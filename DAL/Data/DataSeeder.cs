@@ -47,22 +47,10 @@ public class DataSeeder(PanelDbContext panelDbContext)
         var panelUploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "panelUploads");
         var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
 
-        if (Directory.Exists(bannerUploads))
-        {
-            Directory.Delete(bannerUploads, recursive: true);
-        }
-        if (Directory.Exists(meetingUploads))
-        {
-            Directory.Delete(meetingUploads, recursive: true);
-        }
-        if (Directory.Exists(panelUploads))
-        {
-            Directory.Delete(panelUploads, recursive: true);
-        }
-        if (Directory.Exists(uploads))
-        {
-            Directory.Delete(uploads, recursive: true);
-        }
+        if (Directory.Exists(bannerUploads)) { Directory.Delete(bannerUploads, recursive: true); }
+        if (Directory.Exists(meetingUploads)) { Directory.Delete(meetingUploads, recursive: true); }
+        if (Directory.Exists(panelUploads)) { Directory.Delete(panelUploads, recursive: true); }
+        if (Directory.Exists(uploads)) { Directory.Delete(uploads, recursive: true); }
     }
 
     private void SeedContent()
@@ -106,8 +94,21 @@ public class DataSeeder(PanelDbContext panelDbContext)
         // Create panel objects
         var panel1 = new Panel()
         {
-            Name = "Panel Antwerpen",
-            Description = "Dit is de omschrijving van het panel.",
+            Name = "Leefbare Binnenstad Antwerpen",
+            Description = @"De stad Antwerpen wil haar historische binnenstad leefbaar houden voor bewoners, ondernemers en bezoekers. Toenemende drukte, mobiliteit, toerisme, woningprijzen, overlast en klimaatuitdagingen zetten de leefkwaliteit onder druk. Daarom organiseert de stad een burgerpanel over leefbaarheid.
+
+Het panel formuleert op participatieve en representatieve wijze aanbevelingen voor een leefbare binnenstad op lange termijn. Zo benut de stad de kennis en ervaringen van burgers bij toekomstgericht beleid.
+
+Kernvragen van het panel:
+- Hoe houden we wonen betaalbaar en kwalitatief?
+- Hoe combineren we economische activiteit met rust voor bewoners?
+- Hoe maken we de binnenstad groener, gezonder en beter bereikbaar?
+
+Het panel bestaat uit een aantal willekeurig geselecteerde Antwerpenaren, geloot met aandacht voor diversiteit in leeftijd, geslacht, woonplaats, opleiding en achtergrond. Deelnemers ontvangen een vergoeding en goede begeleiding.
+
+Tijdens meerdere sessies krijgen deelnemers informatie van experten en stadsdiensten, waarna ze in dialoog beleidsaanbevelingen formuleren. Een onafhankelijke begeleider ondersteunt het proces.
+
+De aanbevelingen worden publiek gedeeld en aan het stadsbestuur voorgelegd, dat belooft er binnen een afgesproken termijn op te reageren. Zo krijgt het panel echte impact.",
             StartDate = new DateOnly(2025, 1, 12),
             EndDate = new DateOnly(2025, 7, 22),
             DrawStatus = DrawStatus.Complete,
@@ -128,18 +129,21 @@ public class DataSeeder(PanelDbContext panelDbContext)
                         {
                             Title = "Meer bomen",
                             Description = "We willen graag meer bomen planten in de stad",
-                            Votes = 0,
+                            Votes = 7,
                             TenantId = "antwerpen",
-                            IsVotable = true,
+                            IsVotable = false,
+                            Accepted = true,
+                            IsDone = true,
                             NeededPercentage = 50,
                         },
                         new Recommendation()
                         {
                             Title = "Minder afval",
                             Description = "Minder afval op de straat door meer vuilnisbakken te plaatsen",
-                            Votes = 0,
+                            Votes = 4,
                             TenantId = "antwerpen",
-                            IsVotable = true,
+                            IsVotable = false,
+                            Accepted = false,
                             NeededPercentage = 50,
                         }
                     },
@@ -177,6 +181,29 @@ public class DataSeeder(PanelDbContext panelDbContext)
         };
         panelDbContext.Panels.Add(panel1);
         panelDbContext.SaveChanges();
+
+        var posts = new List<Post>()
+        {
+            new Post()
+            {
+                Title = "Eerste bomen geplant",
+                Description = "Beste Antwerpenaren,\nWe hebben sinds het aannemen van het voorstel al 63 nieuwe bomen geplant op diverse plaatsen in de binnenstad. In het kader van een groener Antwerpen zullen er ook nog vele volgen",
+                AuthorName = "antwerpen@example.com",
+                DatePosted = new DateTime(2025, 4, 27, 14, 28, 58, 689, DateTimeKind.Utc).AddTicks(6340),
+                PanelId = 1,
+                TenantId = "antwerpen"
+            },
+            new Post()
+            {
+                Title = "Verdere bomen geplant",
+                Description = "Beste Antwerpenaren,\nSinds onze laatste post zijn er nog eens 58 extra bomen geplant.",
+                AuthorName = "antwerpen@example.com",
+                DatePosted = new DateTime(2025, 5, 2, 14, 28, 58, 689, DateTimeKind.Utc).AddTicks(6340),
+                PanelId = 1,
+                TenantId = "antwerpen"
+            }
+        };
+        panelDbContext.Posts.AddRange(posts);
 
         //criteria
         var subCrit21 = new SubCriteria() { Name = "Man", Percentage = 40, TenantId = "antwerpen" };
@@ -220,8 +247,17 @@ public class DataSeeder(PanelDbContext panelDbContext)
 
         var panel2 = new Panel()
         {
-            Name = "Panel Antwerpen 2",
-            Description = "Dit is ook nog een omschrijving van een panel",
+            Name = "Toegankelijke en Veilige Mobiliteit in Antwerpen",
+            Description = @"De stad Antwerpen wil mobiliteit duurzaam, veilig en inclusief maken — voor voetgangers, fietsers, mensen met een beperking en andere weggebruikers. Ook wil ze de verkeersdruk verlagen en de leefkwaliteit verbeteren. Daarom wordt een burgerpanel opgericht dat meedenkt over betere en eerlijkere mobiliteit.
+
+Het panel bestaat uit gelote Antwerpenaren die samen nadenken over vragen zoals:
+
+    Hoe maken we verkeer veiliger voor kwetsbare weggebruikers?
+    Hoe stimuleren we fietsen en stappen?
+    Hoe maken we het openbaar vervoer toegankelijk?
+    Hoe verdelen we de schaarse ruimte in de stad rechtvaardig?
+
+Tijdens meerdere sessies krijgen deelnemers info van experten en belanghebbenden, en formuleren ze samen aanbevelingen. De stad engageert zich om deze grondig te bekijken en publiek te beantwoorden.",
             StartDate = new DateOnly(2025, 3, 11),
             EndDate = new DateOnly(2025, 7, 17),
             DrawStatus = DrawStatus.FirstPhaseActive,
@@ -581,7 +617,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                     Town = "Antwerpen",
                     Panels = new List<Panel> { panel1 },
                     TenantId = "antwerpen",
-                    SelectedCriteria = new List<SubCriteria> { subCrit7, subCrit9}
+                    SelectedCriteria = new List<SubCriteria> { subCrit7, subCrit9 }
                 }
             },
             new ApplicationUser

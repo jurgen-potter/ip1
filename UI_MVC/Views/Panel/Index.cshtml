@@ -95,7 +95,7 @@
                 <section class="panel-content-section">
                     <div class="panel-section-body">
                         <h5 class="text-lg font-medium mb-3">Beschrijving</h5>
-                        <p class="panel-description-text">@Model.Description</p>
+                        <div class="panel-description-text">@Html.Raw(Model.Description.Replace("\n", "<br />"))</div>
                     </div>
                 </section>
 
