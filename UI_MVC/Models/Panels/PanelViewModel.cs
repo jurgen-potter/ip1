@@ -18,6 +18,8 @@ public class PanelViewModel
     public DateOnly EndDate { get; set; }
     
     public string CoverImagePath { get; set; }
+    public string BannerImagePath { get; set; }
+    
     
     public List<string> PublicDocumentNames { get; set; } = new();
 

@@ -80,7 +80,32 @@ public class PanelsController(IPanelManager panelManager) : ControllerBase
         }
 
         var panel = panelManager.GetPanelById(panelId);
-        panel.CoverImagePath = $"/bannerUploads/{uniqueFileName}";
+        panel.BannerImagePath = $"/bannerUploads/{uniqueFileName}";
+        panelManager.EditPanel(panel);
+
+        return Ok(new { path = panel.BannerImagePath });
+    }
+    
+    [Authorize(Roles = "Organization")]
+    [HttpPost("{panelId}/UploadCover")]
+    public async Task<IActionResult> UploadCoverImage(int panelId, IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest();
+
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "coverUploads");
+        Directory.CreateDirectory(uploadsFolder);
+
+        var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        await using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        var panel = panelManager.GetPanelById(panelId);
+        panel.CoverImagePath = $"/coverUploads/{uniqueFileName}";
         panelManager.EditPanel(panel);
 
         return Ok(new { path = panel.CoverImagePath });

@@ -4,6 +4,7 @@
     description: string;
     endDate: string;
     coverImagePath: string;
+    bannerImagePath: string;
 }
 
 let panelData: PanelDto;
@@ -22,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("saveBtn")?.addEventListener("click", savePanel);
     document.getElementById("bannerUpload")?.addEventListener("change", uploadBanner);
+    document.getElementById("coverUpload")?.addEventListener("change", uploadCover);
 });
 
 function loadPanelData() {
@@ -43,9 +45,17 @@ function showPanelData() {
     (document.getElementById("endDateInput") as HTMLInputElement).value = panelData.endDate;
 
     const bannerImg = document.getElementById("bannerPreview") as HTMLImageElement;
+    const coverImg = document.getElementById("coverPreview") as HTMLImageElement;
 
     if (panelData.coverImagePath) {
-        bannerImg.src = panelData.coverImagePath;
+        coverImg.src = panelData.coverImagePath;
+        coverImg.style.display = "block";
+    } else {
+        coverImg.src = "";
+        coverImg.style.display = "none";
+    }
+    if (panelData.bannerImagePath) {
+        bannerImg.src = panelData.bannerImagePath;
         bannerImg.style.display = "block";
     } else {
         bannerImg.src = "";
@@ -91,6 +101,24 @@ function uploadBanner(event: Event) {
         .catch(err => alert("Fout bij uploaden: " + err.message));
 }
 
+function uploadCover(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const formData = new FormData();
+    formData.append("file", input.files[0]);
+
+    fetch(`/${editPanelTenantId}/api/Panels/${editPanelId}/uploadCover`, {
+        method: "POST",
+        body: formData
+    })
+        .then(res => res.json())
+        .then(data => {
+            (document.getElementById("coverPreview") as HTMLImageElement).src = data.path;
+            panelData.coverImagePath = data.path;
+        })
+        .catch(err => alert("Fout bij uploaden: " + err.message));
+}
 function validateForm(): boolean {
     let valid = true;
 

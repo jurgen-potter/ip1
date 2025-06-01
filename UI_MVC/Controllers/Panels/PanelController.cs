@@ -233,6 +233,7 @@ public class PanelController(
             StartDate = panel.StartDate,
             EndDate = panel.EndDate,
             CoverImagePath = panel.CoverImagePath,
+            BannerImagePath = panel.BannerImagePath,
             PublicDocumentNames = documents,
             ShowRejected = panel.ShowRejectedRecommendations
         };

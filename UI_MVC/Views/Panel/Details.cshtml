@@ -20,7 +20,7 @@
     <section class="citizen-panel-banner">
         @if (!string.IsNullOrEmpty(Model.CoverImagePath))
         {
-            //<img src="@Model.CoverImagePath" alt="Panel Banner" />
+            <img src="@Model.BannerImagePath" alt="Panel Banner" style=" width: 200%; height: 200px;"  />
         }
         else
         {
@@ -64,7 +64,7 @@
                     }
 
                     <div id="accepted-recommendations">
-                        <h6 class="mb-3">Aangenomen aanbevelingen</h6>
+                        <h6 class="mb-3"><strong>Aangenomen aanbevelingen</strong></h6>
                         <ul class="panel-recommendations-list">
                             @if (Model.Meetings != null && Model.Meetings.Any(m => m.Recommendations.Count > 0))
                             {
@@ -95,7 +95,7 @@
                     </div>
 
                     <div id="rejected" class="mt-4 hidden" data-panel-id="@Model.PanelId">
-                        <h6 class="mb-3">Afgewezen aanbevelingen</h6>
+                        <h6 class="mb-3"><strong>Afgewezen aanbevelingen</strong></h6>
                         <ul class="panel-recommendations-list" id="rejectedList">
                             <li><em>Er zijn nog geen afgewezen aanbevelingen.</em></li>
                         </ul>

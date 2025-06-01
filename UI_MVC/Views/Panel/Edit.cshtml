@@ -35,9 +35,9 @@
                    class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
             <span id="endDateValidation" class="panel-form-validation-message text-sm text-red-600 mt-1 block"></span>
         </div>
-
+            
         <div>
-            <label for="bannerUpload" style="display: none;" class="block text-sm font-medium text-gray-700">Banner afbeelding</label>
+            <label for="bannerUpload" class="block text-sm font-medium text-gray-700">Banner afbeelding</label>
             <input id="bannerUpload" type="file"
                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
                           file:rounded-lg file:border-0
@@ -47,6 +47,19 @@
                    accept="image/*" />
             <img id="bannerPreview" src="" alt="Banner" class="mt-4 rounded shadow-md max-h-[150px]" />
         </div>
+        
+        <div>
+            <label for="coverUpload" class="block text-sm font-medium text-gray-700">Cover afbeelding</label>
+            <input id="coverUpload" type="file"
+                   class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                          file:rounded-lg file:border-0
+                          file:text-sm file:font-semibold
+                          file:bg-indigo-50 file:text-indigo-700
+                          hover:file:bg-indigo-100"
+                   accept="image/*" />
+            <img id="coverPreview" src="" alt="Banner" class="mt-4 rounded shadow-md max-h-[150px]" />
+        </div>
+      
 
         <div class="flex justify-end">
             <button id="saveBtn"

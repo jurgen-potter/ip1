@@ -19,6 +19,7 @@ public class Panel : ITenanted
     public DateOnly EndDate { get; set; }
 
     public string CoverImagePath { get; set; } = "/defaultbanner.jpg";
+    public string BannerImagePath { get; set; } = "/skyline.jpg";
     
     public IList<string> PublicDocumentNames { get; set; } = new List<string>();
     public ICollection<Meeting> Meetings { get; set; }
