@@ -78,9 +78,9 @@
                                             <input type="hidden" data-recommendation-id="@rec.Id" value="@rec.IsDone.ToString().ToLower()"  class="sr-only peer finished-message">
                                             @if (User.IsInRole("Organization") && Model.CanManagePanel)
                                             {
-                                                <label class="items-center me-5 cursor-pointer">
+                                                <label class="auth-checkbox-label cursor-pointer">
                                                     <input type="checkbox" data-recommendation-id="@rec.Id" checked="@rec.IsDone" class="auth-checkbox-input finish-rec-checkbox">
-                                                    <p>Heeft u deze aanbeveling gedaan?</p>
+                                                    <span class="auth-checkbox-text">Heeft u deze aanbeveling gedaan?</span>
                                                 </label>
                                             }
                                         </li>
