@@ -9,7 +9,7 @@
     CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
     ViewBag.Title = $"Burgerpanel: {Model.Name}";
     var inTenant = await TenantAccessService.IsUserInCurrentTenantAsync();
-    var internalAllowed = User.IsInRole("Organization") && inTenant || User.IsInRole("Admin");
+    var internalAllowed = (User.IsInRole("Organization") || User.IsInRole("Member")) && inTenant || User.IsInRole("Admin");
 }
 
 @section Styles {
@@ -137,7 +137,7 @@
                         <p class="meeting-empty-state-text">Er zijn nog geen documenten toegevoegd voor dit panel.</p>
                     }
 
-                    @if (User.IsInRole("Organization"))
+                    @if (User.IsInRole("Organization") && inTenant)
                     {
                         <form asp-controller="Panel" asp-action="Upload" method="post" asp-route-panelId="@Model.PanelId" 
                               enctype="multipart/form-data" class="upload-document-form">
