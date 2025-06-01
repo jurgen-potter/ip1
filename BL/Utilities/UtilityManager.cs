@@ -66,12 +66,11 @@ public class UtilityManager(IDrawManager drawManager) : IUtilityManager
             {
                 int age = ageGroup switch
                 {
-                    "18-25" => 18,
-                    "26-35" => 26,
-                    "36-50" => 36,
-                    "51-60" => 51,
-                    "60+" => 61,
-                    _ => 36
+                    "18-24" => 18,
+                    "25-49" => 25,
+                    "50-64" => 50,
+                    "65+" => 65,
+                    _ => 25
                 };
 
                 string code = GenerateCode();
@@ -225,27 +224,22 @@ public class UtilityManager(IDrawManager drawManager) : IUtilityManager
                 {
                     new SubCriteria()
                     {
-                        Name = "18-25",
+                        Name = "18-24",
                         Percentage = 0
                     },
                     new SubCriteria()
                     {
-                        Name = "26-35",
+                        Name = "25-49",
                         Percentage = 0
                     },
                     new SubCriteria()
                     {
-                        Name = "36-50",
+                        Name = "50-64",
                         Percentage = 0
                     },
                     new SubCriteria()
                     {
-                        Name = "51-60",
-                        Percentage = 0
-                    },
-                    new SubCriteria()
-                    {
-                        Name = "60+",
+                        Name = "65+",
                         Percentage = 0
                     }
                 }
@@ -293,11 +287,10 @@ public class UtilityManager(IDrawManager drawManager) : IUtilityManager
             string leeftijdsCategorie;
             switch (invitation.Age)
             {
-                case 18: leeftijdsCategorie = "18-25"; break;
-                case 26: leeftijdsCategorie = "26-35"; break;
-                case 36: leeftijdsCategorie = "36-50"; break;
-                case 51 : leeftijdsCategorie = "51-60"; break;
-                default: leeftijdsCategorie = "60+"; break;
+                case 18: leeftijdsCategorie = "18-24"; break;
+                case 25: leeftijdsCategorie = "25-49"; break;
+                case 50: leeftijdsCategorie = "50-64"; break;
+                default: leeftijdsCategorie = "65+"; break;
             }
             worksheet.Cell(currRow, 3).Value = leeftijdsCategorie;
 
