@@ -784,7 +784,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-t1ui-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([8, 9]),
+                SelectedCriteria = new List<int>([8, 10]),
             },
             new Invitation()
             {
@@ -810,7 +810,7 @@ public class DataSeeder(PanelDbContext panelDbContext)
                 Batch = 1,
                 Code = "qwer-tyu1-opas-dfgh-jklz",
                 IsRegistered = true,
-                SelectedCriteria = new List<int>([9, 10]),
+                SelectedCriteria = new List<int>([8, 9]),
             },
             new Invitation()
             {
