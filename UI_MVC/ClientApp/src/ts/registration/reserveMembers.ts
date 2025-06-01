@@ -42,6 +42,14 @@ function showReserves(reserves: ReserveDto[]): void {
     const tableBody = document.getElementById("reservesTableBody") as HTMLTableElement;
     tableBody.innerHTML = "";
 
+    const inviteForm = document.getElementById("inviteForm") as HTMLElement;
+    if (reserves.length === 0) {
+        if (inviteForm) {
+            inviteForm.style.display = "none";
+        }
+        return;
+    }
+
     reserves.forEach(reserve => {
         const row = document.createElement("tr");
         row.innerHTML = `

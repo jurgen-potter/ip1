@@ -227,6 +227,7 @@ public class PanelRepository(PanelDbContext dbContext) : IPanelRepository
     {
         return dbContext.Panels
             .SelectMany(p => p.DrawResult.ReserveInvitations)
+            .Where(p => p.PanelId == panelId)
             .ToList();
     }
 }
