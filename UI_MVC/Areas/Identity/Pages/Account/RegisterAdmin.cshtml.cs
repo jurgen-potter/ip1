@@ -154,8 +154,23 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Bevestig uw email",
-                        $"Bevestig uw account door <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>hier te klikken</a>.");
+                    await _emailSender.SendEmailAsync(Input.Email, "Uw beheerdersaccount is aangemaakt", $@"
+<html>
+  <body style='font-family: Montserrat, sans-serif; background-color: #F9FAFB; color: #080708; padding: 2rem;'>
+    <div style='max-width: 600px; margin: auto; background-color: #FFFFFF; border-radius: 8px; padding: 2rem; border: 1px solid #E5E7EB;'>
+      <h2 style='color: #080708;'>Welkom als beheerder</h2>
+      <p>Een collega-beheerder heeft een account voor u aangemaakt binnen Panello.</p>
+      <p>Om toegang te krijgen tot uw beheerdersomgeving, vragen we u uw e-mailadres te bevestigen:</p>
+      <p style='text-align: center;'>
+        <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'
+           style='display: inline-block; padding: 12px 24px; background-color: #ABC8C7; color: #080708; text-decoration: none; border-radius: 6px; font-weight: bold;'>
+          Activeer mijn account
+        </a>
+      </p>
+      <p>Indien u deze rol niet verwachtte, neem dan contact op met een beheerder of negeer deze e-mail.</p>
+    </div>
+  </body>
+</html>");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

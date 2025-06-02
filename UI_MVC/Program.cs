@@ -70,12 +70,6 @@ builder.Services.AddScoped<ITenantAccessService, TenantAccessService>();
 builder.Services.AddLiveMonitoring();
 builder.Services.AddRazorPages();
 
-
-
-
-
-
-
 // Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
@@ -126,9 +120,6 @@ builder.Services.Configure<RouteOptions>(options =>
 {
     options.ConstraintMap["validTenant"] = typeof(ValidTenantConstraint);
 });
-
-
-
 
 builder.Services
     .AddTenantContext()
@@ -187,8 +178,6 @@ app.MapControllerRoute(
     name: "tenant-api",
     pattern: "{tenantId:validTenant}/api/{controller=Home}/{action=Index}/{id?}",
     constraints: new { tenantId = @"^[a-zA-Z0-9_-]+$" });
-
-
 
 app.MapControllerRoute(
     name: "public",

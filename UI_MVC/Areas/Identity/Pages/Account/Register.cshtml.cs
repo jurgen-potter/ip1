@@ -202,8 +202,48 @@ namespace CitizenPanel.UI.MVC.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Bevestig uw email",
-                        $"Bevestig uw account door <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>hier te klikken</a>.");
+                    if (Input.IsStaff == "false")
+                    {
+                        await _emailSender.SendEmailAsync(Input.Email, "Bevestig uw account", $@"
+<html>
+  <body style='font-family: Montserrat, sans-serif; background-color: #F9FAFB; color: #080708; padding: 2rem;'>
+    <div style='max-width: 600px; margin: auto; background-color: #FFFFFF; border-radius: 8px; padding: 2rem; border: 1px solid #E5E7EB;'>
+      <h2 style='color: #080708;'>Welkom bij Panello</h2>
+      <p>Bedankt voor uw registratie. Om uw account te activeren, vragen we u uw e-mailadres te bevestigen.</p>
+      <p>
+        Klik op onderstaande knop om uw registratie te voltooien:
+      </p>
+      <p style='text-align: center;'>
+        <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'
+           style='display: inline-block; padding: 12px 24px; background-color: #ABC8C7; color: #080708; text-decoration: none; border-radius: 6px; font-weight: bold;'>
+          Bevestig mijn account
+        </a>
+      </p>
+      <p>Heeft u zich niet zelf geregistreerd? Dan kunt u deze e-mail negeren.</p>
+    </div>
+  </body>
+</html>");
+                    }
+                    else
+                    {
+                        await _emailSender.SendEmailAsync(user.Email, "Activeer uw account", $@"
+<html>
+  <body style='font-family: Montserrat, sans-serif; background-color: #F9FAFB; color: #080708; padding: 2rem;'>
+    <div style='max-width: 600px; margin: auto; background-color: #FFFFFF; border-radius: 8px; padding: 2rem; border: 1px solid #E5E7EB;'>
+      <h2 style='color: #080708;'>U bent uitgenodigd als beheerder van een burgerpanel</h2>
+      <p>Een organisatie heeft voor u een account aangemaakt om een burgerpanel te beheren.</p>
+      <p>Om toegang te krijgen tot uw profiel, vragen we u uw account te activeren via onderstaande knop:</p>
+      <p style='text-align: center;'>
+        <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'
+           style='display: inline-block; padding: 12px 24px; background-color: #ABC8C7; color: #080708; text-decoration: none; border-radius: 6px; font-weight: bold;'>
+          Activeer mijn account
+        </a>
+      </p>
+      <p>Heeft u hier vragen over? Neem dan contact op met de organisatie die u heeft uitgenodigd.</p>
+    </div>
+  </body>
+</html>");
+                    }
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
