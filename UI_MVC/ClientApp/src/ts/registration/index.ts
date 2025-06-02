@@ -114,9 +114,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const bucketJson = generateButton.dataset.buckets as string;
             const parsedBuckets = JSON.parse(bucketJson);
             const body = {panelId: panelId, buckets: parsedBuckets};
+            const tenantId = window.location.pathname.split('/')[1];
 
             try {
-                const response = await fetch(`/antwerpen/api/Invitations/makeInvitations/${panelId}`, {
+                const response = await fetch(`/${tenantId}/api/Invitations/makeInvitations/${panelId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
