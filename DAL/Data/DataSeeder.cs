@@ -117,13 +117,11 @@ De aanbevelingen worden publiek gedeeld en aan het stadsbestuur voorgelegd, dat 
             TenantId = "antwerpen",
             TotalNeededPanelmembers = 100,
             IsActive = true,
-            MemberCount = 11,
             Meetings = new List<Meeting>()
             {
                 new Meeting()
                 {
                     Title = "Eerste bijeenkomst",
-                    PanelParticipants = 11,
                     Date = new DateOnly(2025, 4, 12),
                     Recommendations = new List<Recommendation>()
                     {
@@ -154,7 +152,6 @@ De aanbevelingen worden publiek gedeeld en aan het stadsbestuur voorgelegd, dat 
                 new Meeting()
                 {
                     Title = "Tweede bijeenkomst",
-                    PanelParticipants = 11,
                     Date = new DateOnly(2025, 5, 1),
                     Recommendations = new List<Recommendation>()
                     {
@@ -174,7 +171,6 @@ De aanbevelingen worden publiek gedeeld en aan het stadsbestuur voorgelegd, dat 
                 new Meeting()
                 {
                     Title = "Derde bijeenkomst",
-                    PanelParticipants = 11,
                     Date = new DateOnly(2025, 6, 12),
                     Recommendations = new List<Recommendation>(),
                     TenantId = "antwerpen"

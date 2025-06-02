@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace CitizenPanel.UI.MVC.Controllers.Panels;
+namespace CitizenPanel.UI.MVC.Controllers.Draws;
 
 public class RegistrationController(
     IRegistrationManager registrationManager,

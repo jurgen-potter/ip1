@@ -4,7 +4,6 @@ public class MeetingDto
 {
     public int MeetingId { get; set; }
     public string MeetingTitle { get; set; }
-    public int Participants { get; set; }
     public int AmountVotable { get; set; }
     public List<RecDto> Recs { get; set; }
 }

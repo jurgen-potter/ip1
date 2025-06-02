@@ -6,9 +6,7 @@ public class CreateMeetingViewModel : IValidatableObject
 {
     
     public int PanelId { get; set; }
-
-    public int PanelPartcipants { get; set; }
-
+    
     [Required(ErrorMessage = "Vul een titel in")]
     public string Title { get; set; }
 

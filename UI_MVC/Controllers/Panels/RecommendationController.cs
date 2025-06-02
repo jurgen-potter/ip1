@@ -11,9 +11,8 @@ public class RecommendationController(
 {
     public IActionResult Index(int panelId)
     {
-        var panel = panelManager.GetPanelByIdWithRecommendationsAndVotes(panelId);
-        var meetings = panel.Meetings;
-        return View(meetings);
+        var panel = panelManager.GetPanelByIdWithMembers(panelId);
+        return View(panel);
     }
 
     [HttpGet]

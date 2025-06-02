@@ -24,8 +24,6 @@ public class Panel : ITenanted
     public IList<string> PublicDocumentNames { get; set; } = new List<string>();
     public ICollection<Meeting> Meetings { get; set; }
     
-    public int MemberCount { get; set; }
-    
     public ICollection<Invitation> Invitations { get; set; } = new List<Invitation>();
     
     public ICollection<MemberProfile> Members { get; set; } = new List<MemberProfile>();

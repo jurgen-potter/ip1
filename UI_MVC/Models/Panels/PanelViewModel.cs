@@ -6,8 +6,6 @@ public class PanelViewModel
 {
     public int PanelId { get; set; }
     
-    public int PanelPartcipants { get; set; }
-    
     [Required]
     public string Name { get; set; }
     

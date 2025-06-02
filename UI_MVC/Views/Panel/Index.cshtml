@@ -2,6 +2,7 @@
 
 @using System.Globalization
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.IdentityModel.Tokens
 @{
     CultureInfo.CurrentCulture = new CultureInfo("nl-NL");
     CultureInfo.CurrentUICulture = new CultureInfo("nl-NL");
@@ -95,7 +96,12 @@
                 <section class="panel-content-section">
                     <div class="panel-section-body">
                         <h5 class="text-lg font-medium mb-3">Beschrijving</h5>
-                        <div class="panel-description-text">@Html.Raw(Model.Description.Replace("\n", "<br />"))</div>
+                        <div class="panel-description-text">
+                            @if (!@Model.Description.IsNullOrEmpty())
+                            {
+                                @Html.Raw(Model.Description.Replace("\n", "<br />"))
+                            }
+                        </div>
                     </div>
                 </section>
 
@@ -150,7 +156,6 @@
             <div class="custom-modal-body">
                 <form id="createMeetingForm" novalidate class="space-y-4" asp-controller="Meeting" asp-action="Create">
                     <input type="hidden" name="PanelId" value="@Model.PanelId"/>
-                    <input type="hidden" name="PanelPartcipants" value="@Model.PanelPartcipants"/>
                     <div class="panel-form-group">
                         <label for="meetingTitle" class="auth-form-label">Titel</label>
                         <input type="text" class="auth-input-field" id="meetingTitle" name="Title" required>

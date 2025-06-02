@@ -1,7 +1,6 @@
 interface MeetingDto {
     meetingId: number;
     meetingTitle: string;
-    participants: number;
     amountVotable: number;
     recs: RecDto[];
 }
@@ -25,6 +24,7 @@ const votersModalElement = document.getElementById('votersModal') as HTMLElement
 
 const tenant = window.location.pathname.split('/')[1];
 const recPanelId = Number(document.getElementById('panel-id')?.dataset.panelId);
+const participants = Number(document.getElementById('panel-id')?.dataset.participants);
 const currRole = (document.getElementById('current-user-role') as HTMLInputElement).value;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -156,7 +156,7 @@ function createMeeting(meeting: MeetingDto): void {
             recsGrid.className = 'recommendations-list-grid';
 
             activeRecs.forEach(rec => {
-                recsGrid.appendChild(generateRecommendationHtml(rec, meeting.participants));
+                recsGrid.appendChild(generateRecommendationHtml(rec, participants));
             });
 
             meetingContainer.appendChild(recsGrid);
@@ -180,7 +180,7 @@ function createMeeting(meeting: MeetingDto): void {
             recsGrid.className = 'recommendations-list-grid';
 
             inactiveRecs.forEach(rec => {
-                recsGrid.appendChild(generateRecommendationHtml(rec, meeting.participants));
+                recsGrid.appendChild(generateRecommendationHtml(rec, participants));
             });
 
             meetingContainer.appendChild(recsGrid);
@@ -240,8 +240,8 @@ function generateRecommendationHtml(recommendation: RecDto, participants: number
         const votesList = document.createElement('ul');
         votesList.innerHTML = `
             <li><p>Stemmen: <span id="vote-count-${recommendation.id}">${recommendation.votes}/${participants}</span></p></li>
-            <li><p>Voor: <span class="vote-count-for">${recommendation.votesFor}</span></p></li>
-            <li><p>Tegen: <span class="vote-count-against">${recommendation.votesAgainst}</span></p></li>
+            <li><p>Voor: <span class="vote-count-for">${recommendation.votesFor}/${recommendation.votes}</span></p></li>
+            <li><p>Tegen: <span class="vote-count-against">${recommendation.votesAgainst}/${recommendation.votes}</span></p></li>
             <li><p>Percentage nodig: ${recommendation.neededPercentages}%</p></li>
         `;
         voteInfo.appendChild(votesList);

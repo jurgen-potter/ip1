@@ -180,7 +180,6 @@ public class RegistrationManager(
             ReservePanelmembers = recruitmentPlan.TotalNeededInvitations,
             TenantId = panel.TenantId
         };
-
         panelManager.EditPanel(panel);
     }
     
