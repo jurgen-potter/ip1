@@ -117,6 +117,7 @@ De aanbevelingen worden publiek gedeeld en aan het stadsbestuur voorgelegd, dat 
             TenantId = "antwerpen",
             TotalNeededPanelmembers = 100,
             IsActive = true,
+            CoverImagePath = "/CoverAnt.png",
             Meetings = new List<Meeting>()
             {
                 new Meeting()
@@ -260,6 +261,7 @@ Tijdens meerdere sessies krijgen deelnemers info van experten en belanghebbenden
             EndDate = new DateOnly(2025, 7, 17),
             DrawStatus = DrawStatus.FirstPhaseActive,
             TenantId = "antwerpen",
+            BannerImagePath = "/BannerPanel2.png",
             TotalNeededPanelmembers = 100
         };
         panelDbContext.Panels.Add(panel2);
@@ -301,8 +303,10 @@ Tijdens meerdere sessies krijgen deelnemers info van experten en belanghebbenden
             EndDate = new DateOnly(2025, 11, 14),
             TenantId = "brussel",
             DrawStatus = DrawStatus.FirstPhaseActive,
-            TotalNeededPanelmembers = 20
-
+            TotalNeededPanelmembers = 20,
+            CoverImagePath = "/coverbrussel.jpg",
+            BannerImagePath = "/BrusBan.png"
+            
         };
         panelDbContext.Panels.Add(panel3);
         panel3.Criteria.Add(crit31);
