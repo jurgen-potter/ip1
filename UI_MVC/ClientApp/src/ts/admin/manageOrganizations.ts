@@ -74,6 +74,11 @@ function showTenants(tenants: TenantDto[]): void {
             ${tenant.name}
         `;
 
+        const tenantIdCell = document.createElement("td");
+        tenantIdCell.innerHTML = `
+            ${tenant.id}
+        `;
+
         const deleteCell = document.createElement("td");
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Verwijderen";
@@ -82,6 +87,7 @@ function showTenants(tenants: TenantDto[]): void {
         deleteCell.appendChild(deleteBtn);
 
         row.appendChild(tenantCell);
+        row.appendChild(tenantIdCell);
         row.appendChild(deleteCell);
         tableBody.appendChild(row);
     });
