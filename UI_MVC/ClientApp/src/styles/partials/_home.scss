@@ -1,9 +1,10 @@
 ﻿
 .home-hero-section {
-  @apply bg-brand-ash-gray flex items-center justify-center text-center px-4 sm:px-6 lg:px-8;
+  @apply flex items-center justify-center text-center px-4 sm:px-6 lg:px-8;
   min-height: 60vh;
   @apply mt-0 pt-0;
 }
+
 
 .home-hero-content {
   @apply max-w-3xl mx-auto py-16 sm:py-24;
