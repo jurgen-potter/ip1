@@ -58,14 +58,27 @@ function renderInfoPage(infoPage: InfoPageDto): void {
             sectionDiv.appendChild(titleEl);
             sectionDiv.appendChild(textEl);
 
-            // If there's a video URL, add a video player
+            // Render video OR image from videoUrl
             if (section.videoUrl) {
-                const videoEl = document.createElement("video");
-                videoEl.controls = true;
-                videoEl.className = "w-full max-w-lg my-4";
-                videoEl.src = section.videoUrl;
-                videoEl.setAttribute("preload", "metadata");
-                sectionDiv.appendChild(videoEl);
+                const extension = section.videoUrl.split('.').pop()?.toLowerCase() || "";
+
+                const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
+                const videoExtensions = ["mp4", "webm", "ogg"];
+
+                if (videoExtensions.includes(extension)) {
+                    const videoEl = document.createElement("video");
+                    videoEl.controls = true;
+                    videoEl.className = "w-full max-w-lg my-4";
+                    videoEl.src = section.videoUrl;
+                    videoEl.setAttribute("preload", "metadata");
+                    sectionDiv.appendChild(videoEl);
+                } else if (imageExtensions.includes(extension)) {
+                    const imgEl = document.createElement("img");
+                    imgEl.className = "w-full max-w-lg my-4 rounded";
+                    imgEl.src = section.videoUrl;
+                    imgEl.alt = "Afbeelding";
+                    sectionDiv.appendChild(imgEl);
+                }
             }
 
             // If there's a file URL, add a download link
@@ -82,3 +95,4 @@ function renderInfoPage(infoPage: InfoPageDto): void {
         });
     }
 }
+
