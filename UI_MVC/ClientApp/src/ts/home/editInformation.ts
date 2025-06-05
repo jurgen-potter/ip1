@@ -57,18 +57,18 @@ function renderEditor(): void {
             <input type="text" class="title-input w-full mb-2 p-2" value="${section.title}" placeholder="Titel..." />
             <textarea class="text-input w-full p-2" rows="4" placeholder="Tekst...">${section.text}</textarea>
 
-            <label class="block mt-2">Video upload:</label>
-            <input type="file" accept="video/*" class="video-upload-input" />
+            <label class="block mt-2">Media upload:</label>
+            <input type="file" accept="video/*,image/*" class="video-upload-input" />
 
             <label class="block mt-2">Bestand upload:</label>
             <input type="file" class="file-upload-input" />
 
             <div class="uploaded-video-url">
-                ${section.videoUrl ? `URL: <a href="${section.videoUrl}" target="_blank">${section.videoUrl}</a> 
-                <button class="remove-video-btn text-red-600 ml-2">Verwijder video</button>` : ""}
+                ${section.videoUrl ? `Media URL: <a href="${section.videoUrl}" target="_blank">${section.videoUrl}</a> 
+                <button class="remove-video-btn text-red-600 ml-2">Verwijder media</button>` : ""}
             </div>
             <div class="uploaded-file-url">
-                ${section.fileUrl ? `URL: <a href="${section.fileUrl}" target="_blank">${section.fileUrl}</a> 
+                ${section.fileUrl ? `Document URL: <a href="${section.fileUrl}" target="_blank">${section.fileUrl}</a> 
                 <button class="remove-file-btn text-red-600 ml-2">Verwijder bestand</button>` : ""}
             </div>
 
@@ -99,20 +99,23 @@ function renderEditor(): void {
             if (!input.files || input.files.length === 0) return;
 
             const file = input.files[0];
+
             const formData = new FormData();
             formData.append("file", file);
 
             try {
-                const res = await fetch("/api/Uploads", { method: "POST", body: formData });
-                if (!res.ok) throw new Error("Upload failed");
+                const res = await fetch("/api/Uploads?isMedia=true", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!res.ok) throw new Error(await res.text());
 
                 const data = await res.json();
                 infoPage.sections[index].videoUrl = data.url;
-
-                // Update UI
                 renderEditor();
             } catch (err) {
-                alert("Fout bij uploaden video: " + err);
+                alert("Fout bij uploaden media: " + err);
             }
         });
 
@@ -141,7 +144,7 @@ function renderEditor(): void {
 
         // Remove video button handler
         div.querySelector(".remove-video-btn")?.addEventListener("click", () => {
-            if (confirm("Video verwijderen?")) {
+            if (confirm("Media verwijderen?")) {
                 infoPage.sections[index].videoUrl = "";
                 renderEditor();
             }

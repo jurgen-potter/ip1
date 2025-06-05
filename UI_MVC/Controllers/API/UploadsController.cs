@@ -7,10 +7,28 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 public class UploadsController : Controller
 {
     [HttpPost]
-    public async Task<IActionResult> UploadFile(IFormFile file)
+    public async Task<IActionResult> UploadFile(IFormFile file, bool isMedia = false)
     {
         if (file == null || file.Length == 0)
-            return BadRequest();
+            return BadRequest("Geen bestand geüpload.");
+
+        if (isMedia)
+        {
+            var allowedMediaTypes = new[] {
+                "video/mp4", "video/webm", "video/ogg",
+                "image/jpeg", "image/png", "image/gif", "image/webp"
+            };
+            var allowedExtensions = new[] {
+                ".mp4", ".webm", ".ogg",
+                ".jpg", ".jpeg", ".png", ".gif", ".webp"
+            };
+
+            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            var contentType = file.ContentType.ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(fileExtension) || !allowedMediaTypes.Contains(contentType))
+                return BadRequest("Ongeldig video- of afbeeldingsformaat.");
+        }
 
         var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
         Directory.CreateDirectory(uploads);

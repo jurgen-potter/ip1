@@ -7,7 +7,7 @@ namespace CitizenPanel.UI.MVC.Controllers.API;
 
 [Route("api/[controller]")]
 [ApiController]
-public class InfoPageContentsController(IContentManager contentManager, IWebHostEnvironment env) : ControllerBase
+public class InfoPageContentsController(IContentManager contentManager) : ControllerBase
 {
     [HttpGet]
     [AllowAnonymous]
@@ -80,7 +80,7 @@ public class InfoPageContentsController(IContentManager contentManager, IWebHost
         if (string.IsNullOrEmpty(url)) return;
 
         var fileName = Path.GetFileName(url);
-        var uploadsFolder = Path.Combine(env.WebRootPath, "uploads");
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
         var filePath = Path.Combine(uploadsFolder, fileName);
 
         if (System.IO.File.Exists(filePath))
