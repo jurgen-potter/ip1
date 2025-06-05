@@ -183,6 +183,7 @@ function addQuestion(): void {
     const newQuestion = generateQuestionHtml(index);
     questions.appendChild(newQuestion);
     addAnswer(index.toString());
+    addAnswer(index.toString());
     addQuestionHandlers(newQuestion);
 }
 
