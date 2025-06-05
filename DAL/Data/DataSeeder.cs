@@ -1588,14 +1588,14 @@ Tijdens meerdere sessies krijgen deelnemers info van experten en belanghebbenden
         {
             Description = "Ja",
             Position = 1,
-            Advice = "U heeft genoeg tijd dus een panel kan een goed idee zijn.",
+            Advice = "Het gebruik van burgerpanels is een goed idee. U beschikt over voldoende tijd om een zorgvuldig samengesteld burgerpanel op te zetten en het proces degelijk te begeleiden.",
             IsCritical = false
         };
         var answer2 = new Answer
         {
             Description = "Nee",
             Position = 2,
-            Advice = "U heeft niet genoeg tijd dus een panel is geen goed idee voor u.",
+            Advice = "Het gebruik van burgerpanels is geen goed idee. Een representatief panel vraagt tijd. Overweeg snellere vormen van participatie zoals een digitale bevraging of publieksconsultatie.",
             IsCritical = true
         };
         var question2 = new Question
@@ -1609,14 +1609,14 @@ Tijdens meerdere sessies krijgen deelnemers info van experten en belanghebbenden
         {
             Description = "Ja",
             Position = 1,
-            Advice = "Als u bereid bent om de voorstellen ernstig te nemen is een panel een goed idee voor u.",
+            Advice = "Het gebruik van burgerpanels is een goed idee. Een panel verdient serieus genomen te worden. Als u openstaat voor impactvolle participatie, sluit Panello perfect aan.",
             IsCritical = false
         };
         var answer4 = new Answer
         {
             Description = "Nee",
             Position = 2,
-            Advice = "Als u niet bereid bent om de voorstellen ernstig te nemen is een panel geen goed idee voor u.",
+            Advice = "Het gebruik van burgerpanels is geen goed idee. Een panel schept verwachtingen. Kies liever voor vrijblijvender methoden zoals een online discussieforum of ideeënbox.",
             IsCritical = true
         };
         var question3 = new Question
@@ -1629,21 +1629,21 @@ Tijdens meerdere sessies krijgen deelnemers info van experten en belanghebbenden
         {
             Description = "We willen de mening horen van al wie vrijwillig wil deelnemen aan het debat. Iedereen moet kunnen deelnemen.",
             Position = 1,
-            Advice = "Een panel wordt zorgvuldig bijeengesteld zodat iedereen gerepresenteerd wordt, als iedereen kan meedoen is dit panel geen goed idee voor u.",
+            Advice = "Het gebruik van burgerpanels is geen goed idee. Panello focust op representatieve selectie, niet op open participatie. Overweeg een laagdrempelig participatieplatform of townhall-formaat.",
             IsCritical = true
         };
         var answer6 = new Answer
         {
             Description = "We willen de mening horen van doelgroepen die vaak afwezig blijven bij participatie.",
             Position = 2,
-            Advice = "Een panel wordt zorgvuldig bijeengesteld zodat iedereen gerepresenteerd wordt, een panel is dus een goed idee voor u.",
+            Advice = "Het gebruik van burgerpanels is een goed idee. Panello helpt om gericht en actief ondervertegenwoordigde groepen aan tafel te brengen via slimme werving en selectie.",
             IsCritical = false
         };
         var answer7 = new Answer
         {
-            Description = "We willen de mening van een representatief staal participanten horen.",
+            Description = "We willen de mening van een representatief aantal participanten horen.",
             Position = 5,
-            Advice = "Een panel wordt zorgvuldig bijeengesteld zodat iedereen gerepresenteerd wordt, een panel is dus een goed idee voor u.",
+            Advice = "Het gebruik van burgerpanels is een goed idee. De kracht van Panello ligt precies in het samenstellen van evenwichtige panels die de samenleving goed weerspiegelen.",
             IsCritical = false
         };
 
@@ -1770,15 +1770,15 @@ Tijdens meerdere sessies krijgen deelnemers info van experten en belanghebbenden
         };
         var answer18 = new Answer
         {
-            Description = "Ambitieus en duur",
-            Advice = "een “state of the art” loting",
+            Description = "U wilt een representatief en objectief samengesteld panel via een professionele, willekeurige selectie.",
+            Advice = "Kies voor een “state of the art” loting op basis van relevante demografische kenmerken, om maximale representativiteit te garanderen.",
             Position = 1,
             Question = question8
         };
         var answer19 = new Answer
         {
-            Description = "Weinig ambitieus en goedkoop",
-            Advice = "open oproep voor deelnemers, selectie daaruit per bevolkingssegment en verder actief aangevuld met “afwezige doelgroepen”",
+            Description = "U ziet liever een laagdrempelige aanpak, zonder hoge kosten.",
+            Advice = "Start met een open oproep. Selecteer deelnemers per bevolkingssegment en vul ondervertegenwoordigde groepen gericht aan voor evenwicht.",
             Position = 2,
             Question = question8
         };
@@ -1791,22 +1791,22 @@ Tijdens meerdere sessies krijgen deelnemers info van experten en belanghebbenden
         };
         var answer20 = new Answer
         {
-            Description = "Heel ambitieus",
-            Advice = "1 weekend vorming en informatie van talrijke experts, betrokkenen... over de materie, exhaustief infopakket; 2 debatweekends met finaal een stemming via digitale tool",
+            Description = "U voorziet intensieve begeleiding, diepgaande inhoudelijke voorbereiding en meerdere contactmomenten.",
+            Advice = "Organiseer een vormingsweekend met experten en betrokkenen, gevolgd door twee inhoudelijke debatweekends. Eindig met een digitale stemming op Panello.",
             Position = 1,
             Question = question9
         };
         var answer21 = new Answer
         {
-            Description = "Redelijke ambitieus",
-            Advice = "1 halve dag vorming en informatie..., infopakket; 2 debatdagen met finaal stemming via digitale tool",
+            Description = "U wil voldoende diepgang, maar binnen haalbare tijd en middelen.",
+            Advice = "Plan een halve dag vorming met experten en een degelijk infopakket. Laat het panel in twee bijeenkomsten delibereren en stemmen via Panello.",
             Position = 2,
             Question = question9
         };
         var answer22 = new Answer
         {
-            Description = "Weinig ambitieus",
-            Advice = "Een folder en korte introductie bij start van de deliberatie zelf, stemming bij handopsteking",
+            Description = "U kiest voor een korte en eenvoudige aanpak",
+            Advice = "Voorzie een beknopte folder en een korte toelichting bij aanvang. Laat de groep beslissingen nemen via handopsteking.",
             Position = 3,
             Question = question9
         };
@@ -1819,15 +1819,15 @@ Tijdens meerdere sessies krijgen deelnemers info van experten en belanghebbenden
         };
         var answer23 = new Answer
         {
-            Description = "Heel ambitieus",
-            Advice = "campagne met online filmpjes enz.",
+            Description = "U streeft naar brede zichtbaarheid en sterke communicatie.",
+            Advice = "Zet in op een publiekscampagne met online video’s, visuals en mediapartners voor maximale impact.",
             Position = 1,
             Question = question10
         };
         var answer24 = new Answer
         {
-            Description = "Weinig ambitieus",
-            Advice = "artikel op website en infoblad",
+            Description = "U wilt de resultaten toegankelijk maken zonder grote middelen.",
+            Advice = "Publiceer een helder artikel op uw website en neem het op in uw (digitale of papieren) infoblad.",
             Position = 2,
             Question = question10
         };
