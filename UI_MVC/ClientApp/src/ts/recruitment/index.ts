@@ -171,7 +171,7 @@ function addCriteria(): void {
     list.appendChild(newLi);
     addCriteriaHandlers(newLi);
     addSubCriteria(ci.toString()); // Voegt een eerste subcriteria toe
-
+    addSubCriteria(ci.toString()); // Voegt een tweede subcriteria toe
     updateCriteriaLimitUI();
     // initSubcriteriaSums(); // Wordt aangeroepen via addSubCriteria -> updateSumForCriteria
 }
