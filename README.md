@@ -12,7 +12,6 @@ Built with ASP.NET Core 8 MVC, PostgreSQL, and a Vite/TypeScript/Tailwind CSS fr
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
 - [Configuration](#configuration)
-- [Running the Application](#running-the-application)
 - [Test Accounts](#test-accounts)
 - [Seeded Test Data](#seeded-test-data)
 - [Architecture Overview](#architecture-overview)
