@@ -129,12 +129,6 @@ var app = builder.Build();
 
 app.MapRazorPages();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
-    tenantStore.TenantIds.UnionWith(db.Tenants.Select(t => t.Id));
-}
-
 using (IServiceScope scope = app.Services.CreateScope()) {
     PanelDbContext context = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
     if (context.CreateDatabase(true)) {
@@ -146,6 +140,12 @@ using (IServiceScope scope = app.Services.CreateScope()) {
         await identitySeeder.SeedAsync();
         dataSeeder.Seed();
     }
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<PanelDbContext>();
+    tenantStore.TenantIds.UnionWith(db.Tenants.Select(t => t.Id));
 }
 
 // Configure HTTP request pipeline
