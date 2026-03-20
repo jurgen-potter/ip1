@@ -44,7 +44,9 @@ Make sure the following are installed before you begin:
 |------|--------------|
 | [.NET SDK](https://dotnet.microsoft.com/download) | 8.0.x        |
 | [Node.js](https://nodejs.org/) | 18 or higher |
-| [PostgreSQL](https://www.postgresql.org/download/) | 13 or higher |
+| [Docker Desktop](https://www.docker.com/products/docker-desktop/) | any recent version |
+
+If you prefer not to use Docker, PostgreSQL 13+ installed locally works too.
 
 ---
 
@@ -59,20 +61,17 @@ cd ip1
 
 ### 2. Set up the database
 
-Create a PostgreSQL database. The default configuration expects:
+The easiest way is with Docker:
+```powershell
+docker run --name citizenpanel-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Student_1234 -e POSTGRES_DB=PanelManager -p 5432:5432 -d postgres
+```
 
-- **Host:** `localhost`
-- **Database:** `PanelManager`
-- **Username:** `postgres`
-- **Password:** `Student_1234`
-
-You can create the database with:
-
+Alternatively, if you have PostgreSQL installed locally, create the database manually:
 ```sql
 CREATE DATABASE "PanelManager";
 ```
 
-The application automatically runs migrations and seeds initial data on first start.
+The default connection string expects host `localhost`, username `postgres`, and password `Student_1234`. The application automatically creates all tables and seeds initial data on first start.
 
 ### 3. Configure the application
 
