@@ -119,9 +119,7 @@ All settings live in `UI_MVC/appsettings.json`:
 }
 ```
 
-**Email confirmation** is required for new accounts. You need a valid SMTP configuration (or a Gmail App Password) for registration emails to be delivered.
-
-For development you can override settings in `appsettings.Development.json` without touching the main config file.
+Email confirmation is required for new accounts. If SMTP is not configured or the credentials are invalid, email sending will silently fail and log a warning — the app will still work and registration can be completed via the confirmation link shown on screen.
 
 ---
 
