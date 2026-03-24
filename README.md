@@ -1,6 +1,6 @@
-﻿# CitizenPanel
+﻿# Panello - Integration Project 1
 
-A multi-tenant web platform that allows organisations to manage citizen panels — groups of residents that are recruited, drawn by lottery, and consulted on local policy topics.
+A multi-tenant web platform that allows organisations to manage citizen panels: groups of residents that are recruited, drawn by lottery, and consulted on local policy topics.
 
 Built with ASP.NET Core 8 MVC, PostgreSQL, and a Vite/TypeScript/Tailwind CSS front-end.
 
@@ -118,7 +118,7 @@ All settings live in `UI_MVC/appsettings.json`:
 }
 ```
 
-Email confirmation is required for new accounts. If SMTP is not configured or the credentials are invalid, email sending will silently fail and log a warning — the app will still work and registration can be completed via the confirmation link shown on screen.
+Email confirmation is required for new accounts. If SMTP is not configured or the credentials are invalid, email sending will silently fail and log a warning. The app will still work and registration can be completed via the confirmation link shown on screen.
 
 ---
 
@@ -157,9 +157,9 @@ The seed data includes two tenants (`antwerpen` and `brussel`) with pre-configur
 
 The project follows a layered architecture:
 
-- **Domain** — Plain C# classes representing the core entities (panels, meetings, draws, questionnaires, users).
-- **DAL** — Entity Framework Core repositories backed by PostgreSQL. Contains `PanelDbContext`, migrations, and data seeding.
-- **BL** — Business logic managers that sit between the UI and the DAL. Each domain area has a matching manager and interface.
-- **UI_MVC** — ASP.NET Core MVC application with Razor views, API controllers, ASP.NET Identity, and multi-tenancy middleware. The front-end (TypeScript + Tailwind CSS) is bundled with Vite and served as static files.
+- **Domain**: Plain C# classes representing the core entities (panels, meetings, draws, questionnaires, users).
+- **DAL**: Entity Framework Core repositories backed by PostgreSQL. Contains `PanelDbContext`, migrations, and data seeding.
+- **BL**: Business logic managers that sit between the UI and the DAL. Each domain area has a matching manager and interface.
+- **UI_MVC**: ASP.NET Core MVC application with Razor views, API controllers, ASP.NET Identity, and multi-tenancy middleware. The front-end (TypeScript + Tailwind CSS) is bundled with Vite and served as static files.
 
 Multi-tenancy is implemented via a URL prefix (`/{tenantId}/...`) and resolved through `TenantMiddleware` at request time.
